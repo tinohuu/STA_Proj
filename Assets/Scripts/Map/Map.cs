@@ -26,6 +26,7 @@ public class Map : MonoBehaviour
 
         // Test: get map data
         Data = MapManager.Instance.Data.MapDatas[0];
+
     }
 
     void Start()

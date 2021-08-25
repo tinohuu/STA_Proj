@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
@@ -10,6 +12,8 @@ public class MapManager : MonoBehaviour
     public MapManagerData Data = new MapManagerData();
     public static MapManager Instance = null;
     public List<PublicConfig> PublicConfigs;
+    public Text Text;
+    GameObject obj;
     private void Awake()
     {
         // Singleton
@@ -17,6 +21,12 @@ public class MapManager : MonoBehaviour
 
         // Bind to save
         Data = SaveManager.Bind(InitializeData());
+
+        string filePath = Path.Combine(Application.dataPath, "jiahuitest");
+        AssetBundle bundle = AssetBundle.LoadFromFile(filePath);
+        var asset = bundle.LoadAsset<GameObject>("Assets/Prefabs/Canvas_Haha.prefab");
+        Instantiate(asset);
+
     }
     MapManagerData InitializeData()
     {

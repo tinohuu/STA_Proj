@@ -23,8 +23,7 @@ public class ConfigsAsset : ScriptableObject
         //{
 
         //UnityEngine.Object levelFile = levelBundle.LoadAsset(strLevelName);
-
-        IEnumerable<AssetBundle> bundles = AssetBundle.GetAllLoadedAssetBundles();
+        /*IEnumerable<AssetBundle> bundles = AssetBundle.GetAllLoadedAssetBundles();
         foreach (AssetBundle bundle in bundles)
             foreach (string assetName in bundle.GetAllAssetNames())
             {
@@ -34,7 +33,7 @@ public class ConfigsAsset : ScriptableObject
                     Debug.Log("ConfigAsset::GetFromAssetBundles");
                     return bundle.LoadAsset(assetName).ToString();
                 }
-            }
+            }*/
 
         ConfigsAsset asset = Resources.Load<ConfigsAsset>("Configs");
         if (!asset) asset = Resources.Load<ConfigsAsset>("Configs/Configs");
