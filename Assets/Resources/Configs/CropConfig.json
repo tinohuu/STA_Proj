@@ -1,0 +1,79 @@
+[
+  {
+    "ID": 1,
+    "Name": "Cabbage",
+    "Level": 4,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 2,
+    "Name": "Carrot",
+    "Level": 11,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 3,
+    "Name": "Wheat",
+    "Level": 26,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 4,
+    "Name": "Cherry",
+    "Level": 46,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 5,
+    "Name": "Pumpkin",
+    "Level": 66,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 6,
+    "Name": "Corn",
+    "Level": 86,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 7,
+    "Name": "Eggplant",
+    "Level": 106,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 8,
+    "Name": "Reed",
+    "Level": 126,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 9,
+    "Name": "Sunflower",
+    "Level": 146,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 10,
+    "Name": "Tomato",
+    "Level": 166,
+    "CoinReward": 50,
+    "VipReward": 0
+  },
+  {
+    "ID": 11,
+    "Name": "Watermelon",
+    "Level": 186,
+    "CoinReward": 50,
+    "VipReward": 0
+  }
+]

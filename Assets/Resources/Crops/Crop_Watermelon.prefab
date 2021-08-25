@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2771757302548880857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2771757302548880856}
+  - component: {fileID: 2771757302548880855}
+  - component: {fileID: 7614711795172194215}
+  m_Layer: 0
+  m_Name: Crop_Watermelon
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2771757302548880856
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2771757302548880857}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11.89, y: -5.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2771757302548880855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2771757302548880857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a74c9cd2a20ec4693c85ce75db469a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Watermelon
+  Scale: 0.5
+  Variant: 0
+  SpinePrefab: {fileID: 7985948938082395273, guid: d18e6b7beec3deb47ab30b5f9fc596dd, type: 3}
+  MinState: 1
+  MaxState: 3
+  Controllers:
+  - {fileID: 22100000, guid: 75362093eb3b3824faff1626a7137205, type: 2}
+  - {fileID: 22100000, guid: 0801dc01d7350b647a66b2a9de8a8159, type: 2}
+  - {fileID: 22100000, guid: da53c75bf12050d41b822bbe9f8df9fc, type: 2}
+  - {fileID: 22100000, guid: 72150b4cd7ebf3443968607af4df35b4, type: 2}
+  Config:
+    ID: 0
+    Name: Crop
+    Level: 0
+    MinLevel: 0
+    CoinReward: 50
+    VipReward: 0
+  OrderRatio: 0
+  CropState: 0
+  YDis: 0
+--- !u!210 &7614711795172194215
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2771757302548880857}
+  m_Enabled: 1
+  m_SortingLayerID: 1226231663
+  m_SortingLayer: 1
+  m_SortingOrder: 0

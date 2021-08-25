@@ -1,0 +1,17 @@
+[
+  {
+    "DailyShareReward": "250_250",
+    "AdCondition": "36_",
+    "StageMultiplierCoin": "",
+    "StageEnterTips": "Excellent_Great_Good Luck",
+    "StageClearBonus": "8000_11000",
+    "StreakBonus": "1_5_2_6_3_4",
+    "SuperWheelRate": "1_100;2_200;3_300",
+    "LuckyWheelPeriod": "20_300_25",
+    "QuestTime": 86400,
+    "FarmReward": 2000,
+    "HarvestTime": 3600,
+    "CardCoinFunctionParm": "1.667_0.85_0.95",
+    "StartCoin": 20000
+  }
+]

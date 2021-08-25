@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2771757302548880857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2771757302548880856}
+  - component: {fileID: 2771757302548880855}
+  - component: {fileID: -8253609381880885448}
+  m_Layer: 0
+  m_Name: Crop_Reed
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2771757302548880856
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2771757302548880857}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11.89, y: -5.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2771757302548880855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2771757302548880857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a74c9cd2a20ec4693c85ce75db469a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Reed
+  Scale: 0.5
+  Variant: 0
+  SpinePrefab: {fileID: 1194546251490018786, guid: 44a633198e4bc504bbbc7796410af3a1, type: 3}
+  MinState: 1
+  MaxState: 3
+  Controllers:
+  - {fileID: 22100000, guid: 98e1c2e506349754faca9dd8e81511b9, type: 2}
+  - {fileID: 22100000, guid: d201a406d058fff4abf18be15d641845, type: 2}
+  - {fileID: 22100000, guid: be38e0d318bb1f1428a289d17ac896d7, type: 2}
+  - {fileID: 22100000, guid: 357038a4c7f87dc4594df062d3d3f36d, type: 2}
+  - {fileID: 22100000, guid: 3b1032180ff3acd4e9f17eb282c72f66, type: 2}
+  Config:
+    ID: 0
+    Name: Crop
+    Level: 0
+    MinLevel: 0
+    CoinReward: 50
+    VipReward: 0
+  OrderRatio: 0
+  CropState: 0
+  YDis: 0
+--- !u!210 &-8253609381880885448
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2771757302548880857}
+  m_Enabled: 1
+  m_SortingLayerID: 1226231663
+  m_SortingLayer: 1
+  m_SortingOrder: 0
