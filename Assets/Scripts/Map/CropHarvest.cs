@@ -8,7 +8,11 @@ using UnityEngine.UI;
 
 public class CropHarvest : MonoBehaviour
 {
-    public TMP_Text Text;
+    public TMP_Text MainText;
+    public TMP_Text SecondaryText;
+    public Material GoldMat;
+    public Material WhiteMat;
+    public Animator TextGroupAnimator;
     public TMP_Text CropList;
     public Image Image;
     public Button Button;
@@ -17,6 +21,7 @@ public class CropHarvest : MonoBehaviour
     public Vector2 Debug_AchorPos;
     public Vector2 Debug_SizeDelta;
     public string CoinString = "";
+    public GameObject HarvestParticle;
     private void Awake()
     {
         Instance = this;
@@ -39,9 +44,14 @@ public class CropHarvest : MonoBehaviour
         {
 
         }
+        MainText.text = timeSpan.TotalSeconds > 0 ? "Next Harvest" : "Harvest";
+        SecondaryText.text = timeSpan.TotalSeconds > 0 ? timeSpan.ToString(@"mm\:ss") : "Now";
+        SecondaryText.fontMaterial = timeSpan.TotalSeconds > 0 ? WhiteMat : GoldMat;
+        TextGroupAnimator.enabled = timeSpan.TotalSeconds <= 0;
+        TextGroupAnimator.transform.localScale = Vector3.one;
+        HarvestParticle.SetActive(timeSpan.TotalSeconds <= 0);
 
-        Text.text = timeSpan.TotalSeconds > 0 ? "Harvest...\n" + timeSpan.ToString(@"dd\:hh\:mm\:ss") : "Harvest!";
-        Image.color = timeSpan.TotalSeconds > 0 ? Color.white : Color.white;
+        //Image.color = timeSpan.TotalSeconds > 0 ? Color.white : Color.white;
         Button.interactable = timeSpan.TotalSeconds <= 0;
 
         IsReady = timeSpan.TotalSeconds <= 0; // TEST
@@ -74,6 +84,8 @@ public class CropHarvest : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(CropList.rectTransform);
 
         CropList.rectTransform.DOAnchorPosY(CropList.rectTransform.sizeDelta.y + CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y, 10);
+
+        CropManager.Instance.PlayHarvestEffects();
     }
 
     void RefreshTime(bool b)

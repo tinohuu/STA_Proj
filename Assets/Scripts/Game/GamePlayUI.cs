@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GamePlayUI : MonoBehaviour
 {
@@ -46,7 +47,8 @@ public class GamePlayUI : MonoBehaviour
 
         newPos = add5Btn.GetComponent<Transform>().position;
         newPos.x = Screen.width * 0.4f;
-        newPos.y = Screen.height * 0.15f;
+        //newPos.y = Screen.height * 0.15f;
+        newPos.y = 0.0f;
         add5Btn.GetComponent<Transform>().position = newPos;
 
         add5Btn.onClick.AddListener(delegate { this.OnClickAdd5Btn(); });
@@ -136,13 +138,63 @@ public class GamePlayUI : MonoBehaviour
 
     public void ShowAdd5Btn()
     {
-        add5Btn.gameObject.SetActive(true);
+        /*Vector3 destPos = new Vector3(add5Btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
+        add5Btn.transform.DOMove(destPos, 0.7f);*/
+
+        StopAllCoroutines();
+        StartCoroutine(ShowButton(add5Btn));
+
+        //add5Btn.gameObject.SetActive(true);
     }
 
     public void HideAdd5Btn()
     {
-        add5Btn.gameObject.SetActive(false);
+        /*Vector3 destPos = new Vector3(add5Btn.transform.position.x, 0.0f, add5Btn.transform.position.z);
+        add5Btn.transform.DOMove(destPos, 0.7f);*/
+
+        //add5Btn.gameObject.SetActive(false);
+
+        StopAllCoroutines();
+        StartCoroutine(HideButton(add5Btn));
     }
+
+    IEnumerator  ShowButton(Button  btn)
+    {
+        btn.gameObject.SetActive(true);
+
+        float fBeginTime = 0.0f; ;
+
+        Vector3 destPos = new Vector3(btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
+        float fSpeed = Screen.height * 0.15f / 0.7f;
+        while(fBeginTime < 0.7f)
+        {
+            fBeginTime += Time.deltaTime;
+            btn.transform.position += new Vector3(0.0f, fSpeed * Time.deltaTime, 0.0f);
+            yield return null;
+        }
+
+        //btn.transform.DOMove(destPos, 0.7f);
+    }
+
+    IEnumerator HideButton(Button btn)
+    {
+        //Vector3 destPos = new Vector3(btn.transform.position.x, 0.0f, add5Btn.transform.position.z);
+        //btn.transform.DOMove(destPos, 0.7f);
+        float fBeginTime = 0.0f; ;
+
+        Vector3 destPos = new Vector3(btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
+        float fSpeed = -Screen.height * 0.15f / 0.7f;
+        while (fBeginTime < 0.7f)
+        {
+            fBeginTime += Time.deltaTime;
+            btn.transform.position += new Vector3(0.0f, fSpeed * Time.deltaTime, 0.0f);
+            yield return null;
+        }
+
+        btn.gameObject.SetActive(false);
+    }
+
+    
 
     public void ShowEndGameBtn()
     {

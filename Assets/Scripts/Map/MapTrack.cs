@@ -34,8 +34,15 @@ public class MapTrack : MonoBehaviour
         transform.localScale = Vector3.one * MapScale;
 
         // Get waypoints
+        MapMakerConfig config = MapMaker.Config;
         points = new List<Transform>(TrackPointsGroup.GetComponentsInChildren<Transform>());
+
+        Debug.Log(points.Count);
         points.RemoveAt(0);
+        for (int i = 0; i < points.Count; i++)
+        {
+            points[i].transform.localPosition = new Vector2(config.TrackDatas[i].PosX, config.TrackDatas[i].PosY);
+        }
 
         // Get moveable range data
         moveMaxH = canvasScaler.referenceResolution.y;

@@ -58,6 +58,8 @@ public class LoseGameUI : MonoBehaviour
     void OnClickGotoMapBtn()
     {
         Debug.Log("you clicked goto map Button!");
+
+        GameplayMgr.Instance.ReturnToMap();
     }
 
     void OnClickRetryBtn()

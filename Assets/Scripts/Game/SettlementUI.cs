@@ -59,7 +59,7 @@ public class SettlementUI : MonoBehaviour
     {
         Debug.Log("you clicked Retry Button!");
 
-        //GameplayMgr.Instance.RestartGame();
+        GameplayMgr.Instance.RestartGame();
     }
 
     void OnClickNextBtn()

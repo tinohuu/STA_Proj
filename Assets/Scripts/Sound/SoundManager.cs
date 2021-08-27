@@ -22,7 +22,7 @@ public class SoundManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayBGM("Main");
+        PlayBGM("main");
         StartCoroutine(ITest());
         StartCoroutine(ITest());
         UpdateMusicVolume();
@@ -53,6 +53,7 @@ public class SoundManager : MonoBehaviour
 
         // Create audio source
         AudioSource audioSource = audioObj.AddComponent<AudioSource>();
+        audioSource.volume = 0.5f;
         audioSource.clip = clip;
         Clips.Add(clip);
         audioObj.AddComponent<SoundEffect>();

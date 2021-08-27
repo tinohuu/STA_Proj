@@ -13,6 +13,7 @@ public class Map : MonoBehaviour
     public Transform LevelPointsGroup;
     public Transform LevelsGroup;
     public GameObject MapMakerPrefab;
+    public ScrollRect MapScrollView;
     [Header("Config")]
     public bool ShowPath = true;
     [Header("Debug")]
@@ -26,13 +27,13 @@ public class Map : MonoBehaviour
 
         // Test: get map data
         Data = MapManager.Instance.Data.MapDatas[0];
+        CreateLevelButtons();
 
     }
 
     void Start()
     {
-        CreateLevelButtons();
-        MapPlayer.Instance.MoveToLevel(mapLevels[0], false);
+        MapPlayer.Instance.MoveToLevel(mapLevels[MapManager.Instance.Data.SelectedLevel - 1], false);
         if (Debug.isDebugBuild) Instantiate(MapMakerPrefab);
 
     }
@@ -118,5 +119,13 @@ public class Map : MonoBehaviour
         CropManager.Instance.UpdateCropsView();
         UpdateLevelButtons();
         //foreach (MapLevel lvl in FindObjectsOfType<MapLevel>()) lvl.UpdateView();
+    }
+
+    public MapLevel GetMapLevelButton(int level)
+    {
+        int firstLevelNumber = Data.MapLevelDatas[0].Order;
+        int index = level - firstLevelNumber;
+        if (index < 0 || index >= mapLevels.Count) return null;
+        else return mapLevels[index];
     }
 }

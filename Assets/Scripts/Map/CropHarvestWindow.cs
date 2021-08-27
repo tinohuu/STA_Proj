@@ -146,6 +146,7 @@ public class CropHarvestWindow : MonoBehaviour
     public void Harvest()
     {
         FindObjectOfType<CropHarvest>().Harvest();
-        SoundManager.Instance.PlaySFX("Coin", true);
+        SoundManager.Instance.PlaySFX("coin", true);
+        SoundManager.Instance.PlaySFX("harvestStart");
     }
 }

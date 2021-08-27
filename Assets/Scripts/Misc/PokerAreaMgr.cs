@@ -70,6 +70,9 @@ public class PokerAreaMgr : MonoBehaviour
         trans = GetComponent<Transform>();
         rectTransform = GetComponent<RectTransform>();
 
+        //Debug.Log("the transformation of PokerAreaMgr is: " + trans.position);
+        //Debug.Log("the rect transform of PokerAreaMgr is: " + rectTransform.position);
+
         if (pokerPrefab == null)
             pokerPrefab = (GameObject)Resources.Load("LevelEditor/DragButton");
 
@@ -188,7 +191,7 @@ public class PokerAreaMgr : MonoBehaviour
         for(int i = 0; i < data.LockAreaCount; ++i)
         {
             Vector3 posOffset = new Vector3(data.lockAreas[i].fPosX, data.lockAreas[i].fPosY, 0.0f);
-            GameObject lockArea = (GameObject)Instantiate(scalableImagePrefab, trans.position + posOffset, trans.rotation);
+            GameObject lockArea = (GameObject)Instantiate(scalableImagePrefab, trans.position, trans.rotation);
 
             lockArea.transform.SetParent(trans);
             lockArea.tag = "lockArea";
@@ -1092,8 +1095,13 @@ public class PokerAreaMgr : MonoBehaviour
 
             lockArea.nAreaID = lockEdits[i].nGroupID;
             RectTransform _rectTrans = lockEdits[i].GetComponent<RectTransform>();
-            lockArea.fPosX = _rectTrans.position.x - trans.position.x;
-            lockArea.fPosY = _rectTrans.position.y - trans.position.y;
+            //Debug.Log("the lock area transformation position is: " + _rectTrans.localPosition);
+            //Debug.Log("the editor position is: " + trans.position);
+            //Debug.Log("the transformation scale is: " + _rectTrans.localScale);
+            /*lockArea.fPosX = (_rectTrans.position.x - trans.position.x) * _rectTrans.localScale.x;
+            lockArea.fPosY = _rectTrans.position.y - trans.position.y;*/
+            lockArea.fPosX = _rectTrans.localPosition.x;
+            lockArea.fPosY = _rectTrans.localPosition.y;
             lockArea.fWidth = _rectTrans.rect.width;
             lockArea.fHeight = _rectTrans.rect.height;
 

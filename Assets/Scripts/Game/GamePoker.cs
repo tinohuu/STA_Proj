@@ -114,33 +114,28 @@ public class GamePoker : MonoBehaviour
             Quaternion quatFrom = Quaternion.Euler(-90.0f, 0.0f, -90.0f);
             Quaternion quatTo = Quaternion.Euler(0.0f, 0.0f, pokerInfo.fRotation);
 
-            //transform.rotation = quatTo;
-
-            //Debug.Log(transform.localRotation);
-
             if (!bHasWithdrawed)
+            {
                 transform.rotation = Quaternion.Lerp(quatFrom, quatTo, fTime / fRotateTime);
+
+                if (fTime > fRotateTime && !bFlip && Mathf.Abs(pokerInfo.fRotation) > 0.1f)
+                {
+                    transform.rotation = Quaternion.Lerp(quatFrom, quatTo, fTime / fRotateTime);
+                }
+            }
             else
-                Debug.Log(strName + " is withdrawed, the target pos is: " + targetPos);
+            {
+                //Debug.Log(strName + " is withdrawed, the target pos is: " + targetPos);
+                quatTo = Quaternion.Euler(0.0f, 180.0f, -pokerInfo.fRotation);
+                transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fTime / fRotateTime);
+            }
 
             fFlipTime += Time.deltaTime;
 
-            if (fTime > fRotateTime && !bFlip && Mathf.Abs(pokerInfo.fRotation) > 0.1f)
-            {
-                /*Debug.Log("the game poker rotation is: " + transform.rotation);
-                Quaternion quatRot = Quaternion.AngleAxis(pokerInfo.fRotation, Vector3.forward);
-                transform.rotation = quatRot;*/
-
-                //Quaternion quatRot = Quaternion.Euler(0.0f, 0.0f, pokerInfo.fRotation);
-                
-                
-                transform.rotation = Quaternion.Lerp(quatFrom, quatTo, fTime / fRotateTime);
-            }
-
-            if (fFlipTime >= fFlipTotalTime)
+            /*if (fFlipTime >= fFlipTotalTime)
             {
                 bIsFlipping = false;
-            }
+            }*/
         }
 
         if(bFlip && bIsFlipping)
@@ -148,13 +143,20 @@ public class GamePoker : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.08f);
 
             fFlipTime += Time.deltaTime;
-            Quaternion quatTo = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+            Quaternion quatTo = Quaternion.Euler(0.0f, 180.0f, -pokerInfo.fRotation);
 
             transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fFlipTime / fFlipTotalTime);
 
             if(fFlipTime >= fFlipTotalTime)
             {
                 bIsFlipping = false;
+
+                //2021.8.26 added by pengyaun to adjust the rotation of the poker.
+                /*if(Mathf.Abs(pokerInfo.fRotation) > 0.1f)
+                {
+                    quatTo = Quaternion.Euler(0.0f, 180.0f, -pokerInfo.fRotation);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fFlipTime / fFlipTotalTime);
+                }*/
             }
         }
 
@@ -165,50 +167,12 @@ public class GamePoker : MonoBehaviour
             Vector3 pos = GameplayMgr.Instance.GetFoldPokerPosition();
 
             Vector3 oldPos = trans.position;
-            //Vector3 posTemp = curveHelper.UpdatePos();
-
-            //trans.position = new Vector3(oldPos.x + posTemp.x, oldPos.y + posTemp.y, oldPos.z + posTemp.z);
-            //transform.localPosition = new Vector3(transform.localPosition.x + posTemp.x, transform.localPosition.y + posTemp.y, transform.localPosition.z + posTemp.z);
-
-            //transform.Translate(posTemp);
-
-            /*if (fFoldTime < fFoldFirstStage)
-            {
-                foldPeekPoint.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
-                foldPeekPoint.z = -1.5f;
-                transform.position = Vector3.Lerp(transform.position, foldPeekPoint, fFoldTime / fFoldFirstStage);
-
-                Quaternion quatTo = Quaternion.Euler(0.0f, 180.0f, -350.0f);
-                transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fFoldTime / fFoldFirstStage);
-
-                if(Vector3.Distance(transform.position, foldPeekPoint) <= 0.1f)
-                {
-                    transform.position = foldPeekPoint;
-                    transform.rotation = quatTo;
-                    fFoldTime = fFoldFirstStage + 0.001f;
-                }
-            }
-            else if( fFoldTime < fFoldTotalTime )
-            {
-                pos = GameplayMgr.Instance.GetFoldPokerPosition();
-                pos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
-                pos.z = -1.5f;
-
-                transform.position = Vector3.Lerp(foldPeekPoint, pos, (fFoldTime - fFoldFirstStage) / (fFoldTotalTime - fFoldFirstStage));
-
-                Quaternion quatTo = Quaternion.Euler(0.0f, 180.0f, -360.0f);
-            }
-            else
-            {
-                pos = GameplayMgr.Instance.GetFoldPokerPosition();
-                pos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
-
-            }*/
-            
+            //transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
 
             if (fFoldTime >= fFoldTotalTime)
             {
                 bIsFolding = false;
+                transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
             }
         }
     }
@@ -374,7 +338,7 @@ public class GamePoker : MonoBehaviour
 
         bHasWithdrawed = true;
 
-        transform.DOMove(targetPos, 1.0f);
+        transform.DOMove(targetPos, 0.8f);
     }
 
     IEnumerator CardJump(Transform card, float cardWidth, Vector3 target)
@@ -393,6 +357,10 @@ public class GamePoker : MonoBehaviour
         {
             _ySpeed -= (25f * cardWidth) * Time.deltaTime;
             card.position += new Vector3(_xSpeed, _ySpeed, 0) * Time.deltaTime;
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            card.position = newPosZ;
+
             yield return null;
         }
         _ySpeed = 0;
@@ -403,6 +371,10 @@ public class GamePoker : MonoBehaviour
             _xSpeed -= (25f / 6 * _Width) * Time.deltaTime;
             _ySpeed += (50f / 3 * (2 * cardWidth + Mathf.Abs(_Height))) * Time.deltaTime;
             card.position += new Vector3(_xSpeed, -_ySpeed, 0) * Time.deltaTime;
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            card.position = newPosZ;
+
             yield return null;
         }
         _ySpeed = 10f / 3 * (2 * cardWidth + Mathf.Abs(_Height));
@@ -413,6 +385,12 @@ public class GamePoker : MonoBehaviour
         while (Time.time - _StartTime < 0.8f)
         {
             card.position = Vector3.Lerp(oriPos, target, (Time.time - _StartTime - 0.7f) / 0.1f);
+
+            //Debug.Log("the old z is: " + oriPos.z + "  the new z is: " + target.z);
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            card.position = newPosZ;
+
             yield return null;
         }
 

@@ -30,11 +30,14 @@ public class Crop : MonoBehaviour
         //GetComponent<SpriteRenderer>().enabled = false;
     }
 
-    State UpdateState()
+    public State UpdateState()
     {
         State state;
         if (MapManager.Instance.Data.CompelteLevel < Config.MinLevel) state = State.locked;
-        else if (MapManager.Instance.Data.CompelteLevel >= Config.Level) state = State.immature;
+        else if (MapManager.Instance.Data.CompelteLevel >= Config.Level)
+        {
+            state = CropManager.Instance.IsMature ? State.mature : State.immature;
+        }
         else
         {
             float fieldLength = Config.Level - Config.MinLevel + 1;
@@ -48,25 +51,73 @@ public class Crop : MonoBehaviour
 
     public void UpdateView()
     {
+        StopAllCoroutines();
         if (spineObject) Destroy(spineObject); // TEST
         UpdateState();
         if (HasState(CropState))
         {
+
+            //StopCoroutine("SetAnimatorState");
             spineObject = Instantiate(SpinePrefab, transform);
             spineObject.transform.localScale = new Vector3(Scale, Mathf.Abs(Scale), Mathf.Abs(Scale));
-            Animator animator = spineObject.GetComponent<Animator>();
-            if (Controllers.Count > 0) animator.runtimeAnimatorController = Controllers[Mathf.Clamp(Variant, 0, Controllers.Count - 1)];
-            float height = Mathf.Clamp(Mathf.Abs(0 - transform.localPosition.y), 0, 10);
-            float width = Mathf.Clamp(Mathf.Abs(-10 - transform.position.x), 0, 20);
-            float ratio = (1 - height / 10) * 1.5f + (1 - width / 20) * 0.5f - 0.2f;// + Random.Range(0, 0.3f);
-
-            animator.SetFloat("Pause", Mathf.Clamp(ratio, 0.2f, 1));//Random.Range(0.5f, 1f));
-            animator.SetInteger("State", (int)CropState + 1);
+            StartCoroutine(SetAnimatorState((int)CropState));
         }
+    }
+
+    public void PlayHarvestEffect(ParticleSystemForceField[] fields, Collider[] triggers)
+    {
+        GameObject particleObj = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + Name);
+        ParticleSystem particle = Instantiate(particleObj,transform).transform.GetChild(0).GetComponent<ParticleSystem>();
+        particle.transform.localScale = Vector3.one * Mathf.Abs(Scale);
+        particle.transform.SetParent(CropManager.Instance.transform);
+        var externalForcesModule = particle.externalForces;
+        foreach (var field in fields) externalForcesModule.AddInfluence(field);
+        var triggerModule = particle.trigger;
+        foreach (var trigger in triggers) triggerModule.AddCollider(trigger);
     }
 
     public bool HasState(State state)
     {
         return state >= MinState && state <= MaxState;
+    }
+
+    IEnumerator SetAnimatorState(int state)
+    {
+        Animator animator = spineObject.GetComponent<Animator>();
+        if (Controllers.Count > 0) animator.runtimeAnimatorController = Controllers[Mathf.Clamp(Variant, 0, Controllers.Count - 1)];
+        if (state >= 3)
+        {
+            //Vector3[] corners = new Vector3[4];
+            //Map.Instance.MapScrollView.GetComponent<RectTransform>().GetWorldCorners(corners);
+            Vector2 minPos = Camera.main.ScreenToWorldPoint(Vector2.zero);
+            Vector2 maxPos = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+
+
+            float viewWidth = maxPos.x - minPos.x;
+            float viewHeight = maxPos.y - minPos.y;
+
+            float cropWidth = transform.position.x - minPos.x;
+            float cropHeight = maxPos.y - transform.position.y;
+
+            if (cropWidth > viewWidth || cropWidth < 0)
+            {
+                animator.SetInteger("State", 3);
+                animator.SetTrigger("Force");
+            }
+            else
+            {
+                //float height = Mathf.Clamp(Mathf.Abs(0 - transform.localPosition.y), 0, 10);
+                //float width = Mathf.Clamp(Mathf.Abs(-10 - transform.position.x), 0, 20);
+                //float ratio = height / 10 * 1f + width / 20 * 0.5f - 0.5f;// + Random.Range(0, 0.3f);
+                float pause = cropWidth / viewWidth * 0.3f + cropHeight / viewHeight * 0.5f;
+                animator.SetInteger("State", 2);
+                yield return new WaitForSeconds(pause);
+                animator.SetInteger("State", 3);
+            }
+        }
+        else
+        {
+            animator.SetInteger("State", state);
+        }
     }
 }

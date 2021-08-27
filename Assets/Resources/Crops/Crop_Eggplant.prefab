@@ -48,7 +48,7 @@ MonoBehaviour:
   Scale: 0.5
   Variant: 0
   SpinePrefab: {fileID: 45491436836209311, guid: 0441e376077bb20498fdba6813018953, type: 3}
-  MinState: 1
+  MinState: 2
   MaxState: 3
   Controllers:
   - {fileID: 22100000, guid: ff5e9a0c0ae036843afb138dd50235ea, type: 2}

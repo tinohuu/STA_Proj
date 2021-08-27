@@ -6,10 +6,9 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MapPlayer : MonoBehaviour, IPointerClickHandler
+public class MapPlayer : MonoBehaviour
 {
     public GameObject MapLevelPanelPrefab;
-    public UnityEvent OnClick = null;
     public float EdgeOffset = 100;
     public ScrollRect MapScrollRect;
     Vector3 screenPoint = new Vector2();
@@ -22,8 +21,14 @@ public class MapPlayer : MonoBehaviour, IPointerClickHandler
     {
         Instance = this;
         MapScrollRect.onValueChanged.AddListener(UpdaterRemoteView);
-    }
+        RemoteImage.gameObject.SetActive(false);
 
+    }
+    private void Start()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(MapScrollRect.content);
+        OnClickRomote(0);
+    }
     void UpdaterRemoteView(Vector2 scrollRect = new Vector2())
     {
         screenPoint = Camera.main.WorldToScreenPoint(transform.position);
@@ -44,15 +49,8 @@ public class MapPlayer : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        //throw new System.NotImplementedException();
-        OnClick?.Invoke();
-    }
-
     public void MoveToLevel(MapLevel mapLevel, bool showPanel = true)
     {
-
         //if (isRunning) return;
 
         StopAllCoroutines();
@@ -84,14 +82,33 @@ public class MapPlayer : MonoBehaviour, IPointerClickHandler
 
         if  (mapLevel.Data.Order != MapManager.Instance.Data.SelectedLevel)
         {
+            SoundManager.Instance.PlaySFX("uiAvatarFly");
             MapManager.Instance.Data.SelectedLevel = mapLevel.Data.Order;
             Tween tween = transform.DOLocalJump(mapLevel.transform.localPosition, 1, 1, 1.5f);
             yield return tween.WaitForCompletion();
+            SoundManager.Instance.PlaySFX("uiAvatarLanding");
         }
 
         MapLevelWindow panel = Window.CreateWindowPrefab(MapLevelPanelPrefab).GetComponent<MapLevelWindow>();
         panel.UpdateView(mapLevel.Data);
         
         //isRunning = false;
+    }
+
+    [ContextMenu("Check")]
+    public void OnClickRomote(float duration = 1)
+    {
+       Vector3[] corners = new Vector3[4];
+       MapScrollRect.content.GetWorldCorners(corners);
+       float width = corners[3].x - corners[0].x - 20; // Full screen width is 20 in world space
+       float levelWidth = Map.Instance.GetMapLevelButton(MapManager.Instance.Data.SelectedLevel).transform.position.x - corners[0].x - 10;
+        if (duration == 0) MapScrollRect.normalizedPosition = new Vector3(levelWidth / width, MapScrollRect.normalizedPosition.y);
+       MapScrollRect.DOHorizontalNormalizedPos(levelWidth / width, duration);
+    }
+
+    IEnumerator IOnClickRomote()
+    {
+        yield return null;
+        OnClickRomote();
     }
 }

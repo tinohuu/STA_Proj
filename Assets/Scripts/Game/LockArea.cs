@@ -13,10 +13,18 @@ public class LockArea : MonoBehaviour
     public int unlockPokerCount = 0;
     public int[] unlockPokerIDs;
 
+    RectTransform rectTrans;
+
+    private void Awake()
+    {
+        Debug.Log("hjere we get the RectTransform of a lock area....");
+        rectTrans = GetComponent<RectTransform>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -32,8 +40,6 @@ public class LockArea : MonoBehaviour
         nGroupID = info.nAreaID;
 
         areaInfo = info;
-
-        RectTransform rectTrans = GetComponent<RectTransform>();
 
         rectTrans.sizeDelta = new Vector2(info.fWidth, info.fHeight);
 

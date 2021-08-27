@@ -54,8 +54,8 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         //SpriteRenderer sprRenderer = GetComponent<SpriteRenderer>();
         imgComponent = GetComponent<Image>();
-        selectSprite = Resources.Load<Sprite>("PokerBack_Select");
-        normalSprite = Resources.Load<Sprite>("PokerBack");
+        selectSprite = Resources.Load<Sprite>("LevelEditor/PokerBack_Select");
+        normalSprite = Resources.Load<Sprite>("LevelEditor/PokerBack");
         imgComponent.sprite = normalSprite;
 
         //this code is for test adjusting the layer.

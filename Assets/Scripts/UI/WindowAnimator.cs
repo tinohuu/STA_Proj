@@ -33,12 +33,19 @@ public class WindowAnimator : Window
         ResetWinodws();
     }
 
+    void OnDestroy()
+    {
+        if (WindowQueue.Contains(this)) WindowQueue.Remove(this);
+    }
+
+
     [ContextMenu("Fade In")] public void FadeIn() { StopAllCoroutines(); StartCoroutine(IFadeIn()); }
     [ContextMenu("Fade Out")] void FadeOut_Menu() { StopAllCoroutines(); StartCoroutine(IFadeOut(false)); }
     public void FadeOut(bool disable = false) { StopAllCoroutines(); StartCoroutine(IFadeOut(disable)); }
 
     IEnumerator IFadeIn()
     {
+        SoundManager.Instance.PlaySFX("uiPanelOpen");
         ResetWinodws();
         if (WindowQueue.Count > 0 && WindowQueue.Last() != this) WindowQueue.Last().FadeOut();
         if (!WindowQueue.Contains(this)) WindowQueue.Add(this);
@@ -58,6 +65,7 @@ public class WindowAnimator : Window
 
     IEnumerator IFadeOut(bool disable = false)
     {
+        SoundManager.Instance.PlaySFX("uiPanelClose");
         CompleteWinodws();
         Tween tween = null;
         for (int i = Elements.Count - 1; i >= 0; i--)
@@ -85,6 +93,8 @@ public class WindowAnimator : Window
             //gameObject.SetActive(false);
         }
     }
+
+    
 
     void RecordWinodws()
     {

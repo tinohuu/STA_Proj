@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.U2D;
 using System.IO;
@@ -419,6 +420,8 @@ public class GameplayMgr : MonoBehaviour
 
     public void RestartGame()
     {
+        EndGame();
+
         InitConfigInformation();
 
         Test_Shuffle();
@@ -443,6 +446,11 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.goldAndScoreUI.nScore = 0;
 
         gameplayUI.Reset();
+    }
+
+    public void ReturnToMap()
+    {
+        SceneManager.LoadScene("MapTest");
     }
 
     //used for post process some data used in game.
@@ -474,8 +482,26 @@ public class GameplayMgr : MonoBehaviour
         //todo: we should clear the lock's information and the lock area's information
         //...
         //...
+        foreach(LockGroup lockGroup in lockGroups)
+        {
+            foreach(GameObject go in lockGroup.locks)
+            {
+                Destroy(go);
+            }
+        }
+        lockGroups.Clear();
+
+
         lockGroupDict1.Clear();
         lockGroupDict2.Clear();
+
+        foreach(LockAreaInfo areaInfo in lockAreas)
+        {
+            Destroy(areaInfo.Area);
+        }
+        lockAreas.Clear();
+
+        unlockAreaPokerIDs.Clear();
 
         currentFlippingPoker = null;
         bAutoFlipHandPoker = false;
@@ -1005,11 +1031,12 @@ public class GameplayMgr : MonoBehaviour
 
     void ReadLevelData(int nChapter)
     {
-        string strLevel = string.Format("/Resources/Configs/LevelInfo/Chapter_{0:D4}/", nChapter);
+        //string strLevel = string.Format("/Resources/Configs/LevelInfo/Chapter_{0:D4}/", nChapter);
+        string strLevel = string.Format("Configs/LevelInfo/Chapter_{0:D4}/", nChapter);
 
         //todo: this level should come from a call from map ...
-        int nTempLevel = Random.Range(1, 5);
-        nTempLevel = 6;
+        int nTempLevel = Random.Range(1, 6);
+        nTempLevel = STAGameManager.Instance.nLevelID;
         nCurrentLevel = nTempLevel;
         JsonReadWriteTest.Test_ReadLevelData(strLevel, 1, nTempLevel, out levelData);
 
@@ -1130,11 +1157,11 @@ public class GameplayMgr : MonoBehaviour
     {
         if (foldPoker.Count <= 1)
         {
-            return Trans.position.z - 1.0f;
+            return Trans.position.z - 2.0f;
         }
 
         //float fZ = foldPoker.Peek().GetComponent<Transform>().position.z - 0.05f;
-        float fZ = Trans.position.z - 1.0f;// - foldPoker.Count * 0.05f;
+        float fZ = Trans.position.z - 2.0f;// - foldPoker.Count * 0.05f;
 
         return fZ;
     }

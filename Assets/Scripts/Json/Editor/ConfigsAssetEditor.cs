@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 
-[CustomEditor(typeof(ConfigsAsset))]
+/*[CustomEditor(typeof(ConfigsAsset))]
 public class ConfigsAssetEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -111,4 +111,4 @@ public class ConfigsAssetPostprocessor : AssetPostprocessor
             ConfigsAssetEditor.Import(configsAsset);
         }
     }
-}
+}*/

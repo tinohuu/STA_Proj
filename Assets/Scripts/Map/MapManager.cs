@@ -16,17 +16,13 @@ public class MapManager : MonoBehaviour
     GameObject obj;
     private void Awake()
     {
+        ParticleSystem particleSystem;
+
         // Singleton
         Instance = this;
 
         // Bind to save
         Data = SaveManager.Bind(InitializeData());
-
-        string filePath = Path.Combine(Application.dataPath, "jiahuitest");
-        AssetBundle bundle = AssetBundle.LoadFromFile(filePath);
-        var asset = bundle.LoadAsset<GameObject>("Assets/Prefabs/Canvas_Haha.prefab");
-        Instantiate(asset);
-
     }
     MapManagerData InitializeData()
     {

@@ -50,6 +50,9 @@ public class GameLock : MonoBehaviour
 
         nGroupID = info.nGroupID;
 
+        Vector3 posOffset = new Vector3(info.fPosX * 1920.0f / 1440.0f, info.fPosY, -1.0f) * 0.01f;// - Vector3.forward * 2.0f;
+        transform.position = pos + posOffset;
+
         pokerSuit = (GameplayMgr.PokerSuit)info.nSuit;
         pokerColor = (GameplayMgr.PokerColor)info.nColor;
 

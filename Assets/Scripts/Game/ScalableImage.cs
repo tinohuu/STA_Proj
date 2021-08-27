@@ -50,6 +50,7 @@ public class ScalableImage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         inputGroup.text = string.Format("{0}", nGroupID);
 
         rectTransform.sizeDelta = new Vector2(lockArea.fWidth, lockArea.fHeight);
+        rectTransform.localPosition = new Vector3(lockArea.fPosX, lockArea.fPosY, 0.0f);
     }
 
     public void InitUnlockArea(JsonReadWriteTest.UnlockArea unlockArea)

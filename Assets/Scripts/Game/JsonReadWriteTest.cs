@@ -31,15 +31,16 @@ public class JsonReadWriteTest : MonoBehaviour
 
     public void InitChapterData()
     {
-        string strChapterConfigName = "Resources/Configs/LevelInfo/ChapterData.json";
+        //string strChapterConfigName = "Resources/Configs/LevelInfo/ChapterData.json";
+        string strChapterConfigName = Resources.Load<TextAsset>("Configs/LevelInfo/ChapterData.json").text;
         Debug.Log(strChapterConfigName);
 
 #if UNITY_STANDALONE_WIN
-        string filePath = Application.dataPath + strChapterConfigName;
+        //string filePath = Application.dataPath + strChapterConfigName;
 
-        string[] fileContent = File.ReadAllLines(filePath);
+        //string[] fileContent = File.ReadAllLines(filePath);
 
-        chapterData = JsonUtility.FromJson<Chapters>(fileContent[0]);
+        chapterData = JsonUtility.FromJson<Chapters>(strChapterConfigName);
 #endif
 
 #if UNITY_ANDROID
@@ -65,7 +66,8 @@ public class JsonReadWriteTest : MonoBehaviour
         //Test_CreateLevelData();
 
         //string strLevel = "/LevelInfo/Chapter_001/";
-        string strLevel = string.Format("/Resources/Configs/LevelInfo/Chapter_{0:D4}/", nChapter);
+        string strLevel = string.Format("Configs/LevelInfo/Chapter_{0:D4}/", nChapter);
+        //string strChapterConfigName = Resources.Load<TextAsset>("Configs/LevelInfo/ChapterData.json").text;
         Debug.Log(strLevel);
 
         //这里应该读取一个章节配置文件，然后得出章节中关卡的数目
@@ -172,22 +174,25 @@ public class JsonReadWriteTest : MonoBehaviour
             //Debug.Log("Read file name is: " + strLevelName);
 
 #if UNITY_STANDALONE_WIN
-        string filePath = Application.dataPath + strLevelFolder + strLevelName;
-        string[] fileContent = File.ReadAllLines(filePath);
+        string filePath = strLevelFolder + strLevelName;
+        //string[] fileContent = File.ReadAllLines(filePath);
+        string strLevel = Resources.Load<TextAsset>(filePath).text;
 
-        foreach (string strLevel in fileContent)
+        levelData = JsonUtility.FromJson<LevelData>(strLevel);
+
+         /*   foreach (string strLevel in fileContent)
         {
             Debug.Log(strLevel);
-            levelData = JsonUtility.FromJson<LevelData>(strLevel);
+            
 
             //the folling code is for debug, so we can see whether our program read the data right.
-            /*Debug.Log("level name is: " + levelData.levelName);
+            Debug.Log("level name is: " + levelData.levelName);
             for (int j=0; j<levelData.pokerInfo.Count; ++j)
             {
                 Debug.Log("fPosX is: " + levelData.pokerInfo[j].fPosX + ",fPosY is: " + levelData.pokerInfo[j].fPosY + ",fRotation is: " + levelData.pokerInfo[j].fRotation);
-            }*/
-
             }
+
+        }*/
 #endif
 
 #if UNITY_ANDROID
@@ -210,19 +215,23 @@ public class JsonReadWriteTest : MonoBehaviour
     {
         //levelData.handPokerCount = 0;
         levelData = null;
-        string strLevelName = string.Format("Level_{0:D4}_{1:D3}.json", nChapterIndex, nLevelIndex);
+        string strLevelName = string.Format("Level_{0:D4}_{1:D3}", nChapterIndex, nLevelIndex);
 
 #if UNITY_STANDALONE_WIN
-        string filePath = Application.dataPath + strLevelFolder + strLevelName;
-        string[] fileContent = File.ReadAllLines(filePath);
+        //string filePath = Application.dataPath + strLevelFolder + strLevelName;
+        string filePath = strLevelFolder + strLevelName;
+        Debug.Log(filePath);
 
-        foreach (string strLevel in fileContent)
+        string strLevel = Resources.Load<TextAsset>(filePath).text;
+        //string[] fileContent = File.ReadAllLines(filePath);
+        levelData = JsonUtility.FromJson<LevelData>(strLevel);
+
+        /*foreach (string strLevel in fileContent)
         {
-            //Debug.Log(strLevel);
             levelData = JsonUtility.FromJson<LevelData>(strLevel);
 
             return;
-        }
+        }*/
 #endif
 
 #if UNITY_ANDROID
