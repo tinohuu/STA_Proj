@@ -56,12 +56,25 @@ public class Crop : MonoBehaviour
         UpdateState();
         if (HasState(CropState))
         {
-
-            //StopCoroutine("SetAnimatorState");
             spineObject = Instantiate(SpinePrefab, transform);
             spineObject.transform.localScale = new Vector3(Scale, Mathf.Abs(Scale), Mathf.Abs(Scale));
             StartCoroutine(SetAnimatorState((int)CropState));
         }
+    }
+    public bool UpdateAnimator(bool includeState = true)
+    {
+        bool inScreen = IsInScreen();
+        if (!inScreen) GetComponentInChildren<Animator>()?.SetTrigger("Force");
+        if (includeState) GetComponentInChildren<Animator>()?.SetInteger("State", (int)CropState);
+        return inScreen;
+    }
+
+    public bool IsInScreen()
+    {
+        Vector2 minPos = Camera.main.ScreenToWorldPoint(Vector2.zero);
+        Vector2 maxPos = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        Vector2 pos = transform.position;
+        return pos.x >= minPos.x && pos.x <= maxPos.x && pos.y >= minPos.y && pos.y <= maxPos.y;
     }
 
     public void PlayHarvestEffect(ParticleSystemForceField[] fields, Collider[] triggers)

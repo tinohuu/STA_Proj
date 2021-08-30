@@ -63,10 +63,10 @@ public class CropHarvest : MonoBehaviour
     public void Harvest()
     {
         MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.SystemNow;
-        CropList.rectTransform.anchoredPosition = Vector2.zero - Vector2.up * CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y;
-        //Debug.Log(CropList.rectTransform.anchoredPosition.y);
-        CropList.text = "Farm " + "Coin".ToIcon() + " " + 2000;
 
+        CropList.rectTransform.anchoredPosition = Vector2.zero - Vector2.up * CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y;
+        int coinCount = 2000;
+        CropList.text = "Farm " + "Coin".ToIcon() + " " + 2000;
         int firstLevelOfMap = MapManager.Instance.LevelToMapData(MapManager.Instance.Data.CompelteLevel).StartAt;
         CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
         int configIndex = CropManager.Instance.CropConfigs.IndexOf(cropConfig);
@@ -77,15 +77,17 @@ public class CropHarvest : MonoBehaviour
             if (cropConfig.Level <= MapManager.Instance.Data.CompelteLevel)
             {
                 CropList.text += "\n" + cropConfig.Name + " " + "Coin".ToIcon() + " 50";
+                coinCount += 50;
             }
             else break;
         }
-
         LayoutRebuilder.ForceRebuildLayoutImmediate(CropList.rectTransform);
-
         CropList.rectTransform.DOAnchorPosY(CropList.rectTransform.sizeDelta.y + CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y, 10);
 
         CropManager.Instance.PlayHarvestEffects();
+
+        Reward.Coin += coinCount;
+        FindObjectOfType<RewardNumber>().Animate(4, 2);
     }
 
     void RefreshTime(bool b)

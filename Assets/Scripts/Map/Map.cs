@@ -115,7 +115,7 @@ public class Map : MonoBehaviour
 
     public void SetProgress(float ratio)
     {
-        MapManager.Instance.Data.CompelteLevel = (int)(ratio * 200);
+        MapManager.Instance.Data.CompelteLevel = (int)(ratio * 186);
         CropManager.Instance.UpdateCropsView();
         UpdateLevelButtons();
         //foreach (MapLevel lvl in FindObjectsOfType<MapLevel>()) lvl.UpdateView();

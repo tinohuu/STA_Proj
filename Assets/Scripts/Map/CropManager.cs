@@ -8,10 +8,16 @@ public class CropManager : MonoBehaviour
     public List<CropConfig> CropConfigs = new List<CropConfig>();
     public Transform ForceFieldGroup;
     public Transform TriggerGroup;
+    public Transform LeftSide;
+    public Transform RightSide;
     public static CropManager Instance = null;
     public Dictionary<string, List<Crop>> CropsByName = new Dictionary<string, List<Crop>>();
     public Transform CropGrpup;
     public bool IsMature = true;
+
+    ParticleSystemForceField[] fields;
+    Collider[] triggers;
+    List<Transform> particles = new List<Transform>();
     private void Awake()
     {
         Instance = this;
@@ -102,63 +108,76 @@ public class CropManager : MonoBehaviour
         }
     }
 
+    public void UpdateCropsAnimator()
+    {
+        foreach (List<Crop> crops in CropsByName.Values)
+        {
+            foreach (Crop crop in crops)
+            {
+                //crop.UpdateState();
+                crop.UpdateAnimator(false);
+            }
+        }
+    }
+
     public void PlayHarvestEffects()
     {
+        StopAllCoroutines();
         StartCoroutine(IPlayHarvestEffects());
     }
 
     IEnumerator IPlayHarvestEffects()
     {
         IsMature = false;
-        ParticleSystemForceField[] fields = ForceFieldGroup.GetComponentsInChildren<ParticleSystemForceField>();
-        Collider[] triggers = TriggerGroup.GetComponentsInChildren<Collider>();
-        Vector2 minPos = Camera.main.ScreenToWorldPoint(Vector2.zero);
-        Vector2 maxPos = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
 
-        List<Transform> particles = new List<Transform>();
+        fields = ForceFieldGroup.GetComponentsInChildren<ParticleSystemForceField>();
+        triggers = TriggerGroup.GetComponentsInChildren<Collider>();
+
+        //Vector2 minPos = Camera.main.ScreenToWorldPoint(Vector2.zero);
+        //Vector2 maxPos = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+
+        List<string> shownCropNames = new List<string>();
         foreach (List<Crop> crops in CropsByName.Values)
         {
             foreach (Crop crop in crops)
             {
-                Vector2 pos = crop.transform.position;
+                //Vector2 pos = crop.transform.position;
                 crop.UpdateState();
-                if (pos.x >= minPos.x && pos.x <= maxPos.x && pos.y >= minPos.y && pos.y <= maxPos.y && crop.CropState >= Crop.State.immature)
+                if (crop.UpdateAnimator())
                 {
-                    GameObject particleObj = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + crop.Name);
-                    ParticleSystem particle = Instantiate(particleObj, crop.transform).transform.GetChild(0).GetComponent<ParticleSystem>();
-                    particle.transform.localScale = Vector3.one * Mathf.Abs(crop.Scale);
-                    particle.transform.parent.SetParent(Instance.transform);
-                    var externalForcesModule = particle.externalForces;
-                    foreach (var field in fields) externalForcesModule.AddInfluence(field);
-                    var triggerModule = particle.trigger;
-                    foreach (var trigger in triggers) triggerModule.AddCollider(trigger);
-                    particles.Add(particle.transform.parent);
-                    var rendererModule = particle.GetComponent<ParticleSystemRenderer>();
-                    rendererModule.sortingLayerName = "Environment";
-                    rendererModule.sortingOrder = 1;
-
+                    CreateParticle(crop.Name, crop.transform);
+                    shownCropNames.Add(crop.Name);
                 }
-                else
-                {
-                    crop.GetComponentInChildren<Animator>()?.SetTrigger("Force");
-                }
-                crop.GetComponentInChildren<Animator>()?.SetInteger("State", (int)crop.CropState);
-
-
-                //crop.UpdateView();
+                //if (pos.x >= minPos.x && pos.x <= maxPos.x && pos.y >= minPos.y && pos.y <= maxPos.y && crop.CropState >= Crop.State.immature)
+                //{
+                //    CreateParticle(crop.Name, crop.transform);
+                //    shownCropNames.Add(crop.Name);
+                //}
+                //else crop.GetComponentInChildren<Animator>()?.SetTrigger("Force");
+                //crop.GetComponentInChildren<Animator>()?.SetInteger("State", (int)crop.CropState);
             }
         }
-        yield return new WaitForSeconds(5);
-        foreach (List<Crop> crops in CropsByName.Values)
+
+        bool leftSide = true;
+        foreach (CropConfig config in CropConfigs)
         {
-            foreach (Crop crop in crops)
+            if (config.Level > MapManager.Instance.Data.CompelteLevel) break;
+
+            if (shownCropNames.Contains(config.Name))
             {
-                //crop.UpdateState();
-                //crop.GetComponentInChildren<Animator>()?.SetTrigger((int)crop.CropState);
-                //crop.GetComponentInChildren<Animator>()?.SetTrigger("Force");
+                leftSide = false;
+                continue;
+            }
+            else
+            {
+                CreateParticle(config.Name, leftSide ? LeftSide : RightSide);
+                CreateParticle(config.Name, leftSide ? LeftSide : RightSide);
             }
         }
+
+        yield return new WaitForSeconds(5);
         foreach (var paticle in particles) Destroy(paticle.gameObject);
+        particles.Clear();
     }
 
     void InitializeCrops()
@@ -179,13 +198,38 @@ public class CropManager : MonoBehaviour
         UpdateCropsView();
     }
 
+    void CreateParticle(string cropName, Transform parent)
+    {
+        GameObject particleObj = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + cropName);
+        ParticleSystem particle = Instantiate(particleObj, parent).transform.GetChild(0).GetComponent<ParticleSystem>();
+        //particle.transform.localScale = Vector3.one * Mathf.Abs(crop.Scale);
+        particle.transform.localPosition = Vector3.zero;
+        particle.transform.parent.SetParent(Instance.transform);
+
+        // Embed force fields and triggers
+        var externalForcesModule = particle.externalForces;
+        foreach (var field in fields) externalForcesModule.AddInfluence(field);
+        var triggerModule = particle.trigger;
+        foreach (var trigger in triggers) triggerModule.AddCollider(trigger);
+
+        // Set sorting order
+        var rendererModule = particle.GetComponent<ParticleSystemRenderer>();
+        rendererModule.sortingLayerName = "Environment";
+        rendererModule.sortingOrder = 1;
+
+        particles.Add(particle.transform.parent);
+    }
+
     public void UpdateCropType(Crop crop)
     {
+        // Record old data
         Vector2 locPos = crop.transform.localPosition;
         string name = crop.Name;
         float scale = crop.Scale;
         int variant = crop.Variant;
         Destroy(crop.gameObject);
+
+        // Create using old data
         Crop newCrop = Instantiate(Resources.Load<GameObject>("Crops/Crop_" + name), CropGrpup).GetComponent<Crop>();
         newCrop.transform.localPosition = locPos;
         newCrop.Name = name;

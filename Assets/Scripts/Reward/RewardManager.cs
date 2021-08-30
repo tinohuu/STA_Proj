@@ -7,9 +7,15 @@ public class RewardManager : MonoBehaviour
 {
     public static RewardManagerData Data = new RewardManagerData();
     public static RewardManager Instance = null;
-    private void Awake()
+    public delegate void RewardHandler(bool add);
+    public RewardHandler[] OnValueChanged = new RewardHandler[Data.Rewards.Count];
+    private void OnEnable()
     {
         Instance = this;
+    }
+    private void Awake()
+    {
+        for (int i = 0; i < OnValueChanged.Length; i++) OnValueChanged[i] = null;
     }
 }
 
@@ -48,7 +54,6 @@ public static class Reward
         for (int i = 0; i < rewardTypes.Count; i++)
             Data[rewardTypes[i]] -= counts[i];
     }
-
 }
 
 [System.Serializable]
@@ -60,6 +65,11 @@ public class RewardManagerData
     {
         int length = Enum.GetValues(typeof(RewardType)).Length;
         for (int i = 0; i < length; i++) Rewards.Add(0);
+    }
+    public RewardManagerData(List<int> rewards)
+    {
+        int length = Enum.GetValues(typeof(RewardType)).Length;
+        for (int i = 0; i < rewards.Count; i++) Rewards.Add(rewards[i]);
     }
 
     public void UpdateData()
@@ -77,7 +87,11 @@ public class RewardManagerData
     public int this[RewardType type]
     {
         get => Rewards[(int)type];
-        set => Rewards[(int)type] = Mathf.Clamp(value, 0, int.MaxValue);
+        set
+        {
+            Rewards[(int)type] = Mathf.Clamp(value, 0, int.MaxValue);
+            RewardManager.Instance.OnValueChanged[(int)type]?.Invoke(value >= Rewards[(int)type]);
+        }
     }
 }
 
