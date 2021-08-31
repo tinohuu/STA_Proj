@@ -16,17 +16,14 @@ public class MapManager : MonoBehaviour
     GameObject obj;
     private void Awake()
     {
-        ParticleSystem particleSystem;
+        if (!Instance) Instance = this; // Singleton
 
-        // Singleton
-        Instance = this;
-
-        // Bind to save
-        Data = SaveManager.Bind(InitializeData());
+        Data = SaveManager.Bind(InitializeData());  // Bind to save
     }
+
     MapManagerData InitializeData()
     {
-        MapManagerData n_data = Data;// new MapManagerData();
+        MapManagerData n_data = Data;
         for (int i = 0; i < 2; i++)
         {
             int startingNumber = n_data.MapDatas.Count == 0 ? 1 : n_data.MapDatas.Last().MapLevelDatas.Last().Order + 1;

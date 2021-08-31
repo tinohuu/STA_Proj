@@ -65,7 +65,10 @@ public class Crop : MonoBehaviour
     {
         bool inScreen = IsInScreen();
         if (!inScreen) GetComponentInChildren<Animator>()?.SetTrigger("Force");
-        if (includeState) GetComponentInChildren<Animator>()?.SetInteger("State", (int)CropState);
+        if (includeState) //GetComponentInChildren<Animator>()?.SetInteger("State", (int)CropState);
+        {
+            StartCoroutine(SetAnimatorState((int)CropState));
+        }
         return inScreen;
     }
 
@@ -96,12 +99,11 @@ public class Crop : MonoBehaviour
 
     IEnumerator SetAnimatorState(int state)
     {
+        if (!spineObject) yield break;
         Animator animator = spineObject.GetComponent<Animator>();
         if (Controllers.Count > 0) animator.runtimeAnimatorController = Controllers[Mathf.Clamp(Variant, 0, Controllers.Count - 1)];
         if (state >= 3)
         {
-            //Vector3[] corners = new Vector3[4];
-            //Map.Instance.MapScrollView.GetComponent<RectTransform>().GetWorldCorners(corners);
             Vector2 minPos = Camera.main.ScreenToWorldPoint(Vector2.zero);
             Vector2 maxPos = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
 

@@ -23,7 +23,7 @@ public class Map : MonoBehaviour
     public MapMakerConfig Config;
     private void Awake()
     {
-        Instance = this;
+        if (!Instance) Instance = this;
 
         // Test: get map data
         Data = MapManager.Instance.Data.MapDatas[0];
@@ -115,7 +115,7 @@ public class Map : MonoBehaviour
 
     public void SetProgress(float ratio)
     {
-        MapManager.Instance.Data.CompelteLevel = (int)(ratio * 186);
+        MapManager.Instance.Data.CompelteLevel = Mathf.Clamp((int)(ratio * 186), 1, int.MaxValue);
         CropManager.Instance.UpdateCropsView();
         UpdateLevelButtons();
         //foreach (MapLevel lvl in FindObjectsOfType<MapLevel>()) lvl.UpdateView();

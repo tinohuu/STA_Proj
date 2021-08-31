@@ -274,7 +274,7 @@ public class GameplayMgr : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (!Instance) Instance = this;
 
         Debug.Log("GameplayMgr::Awake()... ");
 

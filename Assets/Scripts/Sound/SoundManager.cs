@@ -10,9 +10,10 @@ public class SoundManager : MonoBehaviour
 
     public static SoundManager Instance;
     public List<AudioClip> Clips = new List<AudioClip>();
+    public SoundManager _Debug = null;
     private void Awake()
     {
-        Instance = this;
+        if (!Instance) Instance = this;
 
         audioSource = GetComponent<AudioSource>();
 
@@ -31,7 +32,7 @@ public class SoundManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        _Debug = Instance;
     }
 
     public void PlaySFX(string name, bool isSingle = false)
@@ -49,7 +50,7 @@ public class SoundManager : MonoBehaviour
 
         // Create game object
         GameObject audioObj = new GameObject(fileName);
-        audioObj.transform.SetParent(transform);
+        audioObj.transform.SetParent(Instance.transform);
 
         // Create audio source
         AudioSource audioSource = audioObj.AddComponent<AudioSource>();

@@ -5,49 +5,38 @@ using UnityEngine;
 
 public class CropManager : MonoBehaviour
 {
-    public List<CropConfig> CropConfigs = new List<CropConfig>();
+    [Header("Ref")]
     public Transform ForceFieldGroup;
     public Transform TriggerGroup;
     public Transform LeftSide;
     public Transform RightSide;
+    public Transform CropGrpup;
+
+    [Header("Debug")]
+    public bool IsMature = false;
+    public List<CropConfig> CropConfigs = new List<CropConfig>();
     public static CropManager Instance = null;
     public Dictionary<string, List<Crop>> CropsByName = new Dictionary<string, List<Crop>>();
-    public Transform CropGrpup;
-    public bool IsMature = true;
 
     ParticleSystemForceField[] fields;
     Collider[] triggers;
     List<Transform> particles = new List<Transform>();
     private void Awake()
     {
-        Instance = this;
-
-        // Import config
+        if (!Instance) Instance = this;
         CropConfigs = GetCropConfigs();
-
-        TimeManager.Instance.TimeRefresher += RefreshHarvestTime;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            PlayHarvestEffects();
-        }
+        fields = ForceFieldGroup.GetComponentsInChildren<ParticleSystemForceField>();
+        triggers = TriggerGroup.GetComponentsInChildren<Collider>();
+        //Map.Instance.MapScrollView.onValueChanged.AddListener((Vector2 v) => UpdateCropsAnimator(false));
     }
     private void Start()
     {
         InitializeCrops();
-
     }
-    void RefreshHarvestTime(bool isVerified)
+
+    private void Update()
     {
-        MapManagerData data = MapManager.Instance.Data;
-        if (isVerified)
-            data.LastHarvestTime = (data.LastHarvestTime - TimeManager.Instance.SystemNow).TotalHours < 1 ?
-                data.LastHarvestTime : TimeManager.Instance.SystemNow;
-        else
-            data.LastHarvestTime = TimeManager.Instance.SystemNow;
+
     }
 
     public CropConfig LevelToCropConfig(int level)
@@ -108,14 +97,14 @@ public class CropManager : MonoBehaviour
         }
     }
 
-    public void UpdateCropsAnimator()
+    public void UpdateCropsAnimator(bool includeState)
     {
         foreach (List<Crop> crops in CropsByName.Values)
         {
             foreach (Crop crop in crops)
             {
-                //crop.UpdateState();
-                crop.UpdateAnimator(false);
+                crop.UpdateState();
+                crop.UpdateAnimator(includeState);
             }
         }
     }
@@ -128,13 +117,6 @@ public class CropManager : MonoBehaviour
 
     IEnumerator IPlayHarvestEffects()
     {
-        IsMature = false;
-
-        fields = ForceFieldGroup.GetComponentsInChildren<ParticleSystemForceField>();
-        triggers = TriggerGroup.GetComponentsInChildren<Collider>();
-
-        //Vector2 minPos = Camera.main.ScreenToWorldPoint(Vector2.zero);
-        //Vector2 maxPos = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
 
         List<string> shownCropNames = new List<string>();
         foreach (List<Crop> crops in CropsByName.Values)
@@ -143,18 +125,11 @@ public class CropManager : MonoBehaviour
             {
                 //Vector2 pos = crop.transform.position;
                 crop.UpdateState();
-                if (crop.UpdateAnimator())
+                if (crop.UpdateAnimator() && crop.CropState == Crop.State.immature)
                 {
                     CreateParticle(crop.Name, crop.transform);
                     shownCropNames.Add(crop.Name);
                 }
-                //if (pos.x >= minPos.x && pos.x <= maxPos.x && pos.y >= minPos.y && pos.y <= maxPos.y && crop.CropState >= Crop.State.immature)
-                //{
-                //    CreateParticle(crop.Name, crop.transform);
-                //    shownCropNames.Add(crop.Name);
-                //}
-                //else crop.GetComponentInChildren<Animator>()?.SetTrigger("Force");
-                //crop.GetComponentInChildren<Animator>()?.SetInteger("State", (int)crop.CropState);
             }
         }
 

@@ -24,25 +24,20 @@ public class CropHarvest : MonoBehaviour
     public GameObject HarvestParticle;
     private void Awake()
     {
-        Instance = this;
-        TimeManager.Instance.TimeRefresher += new TimeManager.TimeHandler(RefreshTime);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        //Button.onClick.AddListener(() => Harvest());
+        if (!Instance) Instance = this;
+        TimeManager.Instance.TimeRefresher += RefreshHarvestTime;
     }
 
-    // Update is called once per frame
     void Update()
     {
         TimeSpan timeSpan;
         timeSpan = MapManager.Instance.Data.LastHarvestTime + TimeSpan.FromHours(1) - TimeManager.Instance.SystemNow;
 
         // Play mature animation in advance
-        if (timeSpan.TotalSeconds <= 3)
+        if (timeSpan.TotalSeconds <= 3 && !CropManager.Instance.IsMature)
         {
-
+            CropManager.Instance.IsMature = true;
+            CropManager.Instance.UpdateCropsAnimator(true);
         }
         MainText.text = timeSpan.TotalSeconds > 0 ? "Next Harvest" : "Harvest";
         SecondaryText.text = timeSpan.TotalSeconds > 0 ? timeSpan.ToString(@"mm\:ss") : "Now";
@@ -58,12 +53,40 @@ public class CropHarvest : MonoBehaviour
 
         //Debug_AchorPos = CropList.rectTransform.anchoredPosition;
         //Debug_SizeDelta = CropList.rectTransform.sizeDelta;
+
+
     }
 
     public void Harvest()
     {
-        MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.SystemNow;
+        CropManager.Instance.IsMature = false;
 
+        RefreshHarvestTime(false);
+
+        Reward.Coin += UpdateHarvestText();
+        FindObjectOfType<RewardNumber>().Animate(4, 2);
+
+        CropManager.Instance.PlayHarvestEffects();
+    }
+
+    public void RefreshHarvestTime(bool isVerified)
+    {
+        MapManagerData data = MapManager.Instance.Data;
+        if (isVerified)
+            data.LastHarvestTime = (data.LastHarvestTime - TimeManager.Instance.SystemNow).TotalHours < 1 ?
+                data.LastHarvestTime : TimeManager.Instance.SystemNow;
+        else
+            data.LastHarvestTime = TimeManager.Instance.SystemNow;
+    }
+
+    public void Cheat()
+    {
+        if (!Debug.isDebugBuild) return;
+        MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.SystemNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(50);
+    }
+
+    int UpdateHarvestText()
+    {
         CropList.rectTransform.anchoredPosition = Vector2.zero - Vector2.up * CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y;
         int coinCount = 2000;
         CropList.text = "Farm " + "Coin".ToIcon() + " " + 2000;
@@ -71,28 +94,23 @@ public class CropHarvest : MonoBehaviour
         CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
         int configIndex = CropManager.Instance.CropConfigs.IndexOf(cropConfig);
         if (configIndex > 0) CropList.text += "\nCrops 1 to " + (configIndex).ToString() + "Coin".ToIcon() + " " + ((configIndex) * 50).ToString();
+        int lastCropIndex = configIndex;
         for (int i = configIndex; i < CropManager.Instance.CropConfigs.Count; i++)
         {
             cropConfig = CropManager.Instance.CropConfigs[i];
             if (cropConfig.Level <= MapManager.Instance.Data.CompelteLevel)
             {
                 CropList.text += "\n" + cropConfig.Name + " " + "Coin".ToIcon() + " 50";
-                coinCount += 50;
+                lastCropIndex = i;
             }
-            else break;
+            else
+            {
+                break;
+            }
         }
+        coinCount += (lastCropIndex + 1) * 50;
         LayoutRebuilder.ForceRebuildLayoutImmediate(CropList.rectTransform);
         CropList.rectTransform.DOAnchorPosY(CropList.rectTransform.sizeDelta.y + CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y, 10);
-
-        CropManager.Instance.PlayHarvestEffects();
-
-        Reward.Coin += coinCount;
-        FindObjectOfType<RewardNumber>().Animate(4, 2);
-    }
-
-    void RefreshTime(bool b)
-    {
-        //Debug.LogWarning("RefreshTime");
-        MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.SystemNow;
+        return coinCount;
     }
 }

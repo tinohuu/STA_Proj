@@ -17,7 +17,7 @@ public class RewardNumber : MonoBehaviour
         RewardManager.Instance.OnValueChanged[(int)Type] += new RewardManager.RewardHandler(Animate);
         text = GetComponent<TMP_Text>();
         oriScale = transform.localScale;
-        Animate();
+        Animate(0, 0);
     }
     private void Update()
     {

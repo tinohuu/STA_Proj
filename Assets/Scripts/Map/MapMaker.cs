@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MapMaker : MonoBehaviour
@@ -25,6 +26,7 @@ public class MapMaker : MonoBehaviour
     private void Awake()
     {
         test = JsonUtility.FromJson<MapMakerConfig>(ConfigsAsset.GetConfig("MapMakerConfig"));
+        TimeManager.Instance.TimeRefresher += (bool authenic) => LogText.text = authenic ? "Time is authentic" : "Time is not authentic";
     }
     void Start()
     {
@@ -197,6 +199,17 @@ public class MapMaker : MonoBehaviour
         }
         UpdateMode();
     }
+
+    public void ClearSave()
+    {
+        SaveManager.Clear();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void CheatHarvest()
+    {
+        CropHarvest.Instance.Cheat();
+    }
+
 
     public static MapMakerConfig Config
     {

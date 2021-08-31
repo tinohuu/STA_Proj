@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class RewardManager : MonoBehaviour
 {
-    public static RewardManagerData Data = new RewardManagerData();
+    [SavedData] public static RewardManagerData Data = new RewardManagerData();
     public static RewardManager Instance = null;
     public delegate void RewardHandler(bool add);
     public RewardHandler[] OnValueChanged = new RewardHandler[Data.Rewards.Count];

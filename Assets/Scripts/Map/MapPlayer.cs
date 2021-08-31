@@ -19,7 +19,7 @@ public class MapPlayer : MonoBehaviour
     //bool isRunning = false;
     private void Awake()
     {
-        Instance = this;
+        if (!Instance) Instance = this;
         MapScrollRect.onValueChanged.AddListener(UpdaterRemoteView);
         RemoteImage.gameObject.SetActive(false);
 

@@ -170,12 +170,37 @@ public class Save
         Datas.Add(setObj);
     }
 
+    public void AttrSet(Type type, object setObj)
+    {
+        for (int i = 0; i < Datas.Count; i++)
+        {
+            if (Datas[i].GetType() == type)
+            {
+                Datas[i] = setObj;
+                return;
+            }
+        }
+        Datas.Add(Convert.ChangeType(setObj, type));
+    }
+
+
     public T Get<T>(T initial = default)
     {
         for (int i = 0; i < Datas.Count; i++)
             if (Datas[i] is T obj) return obj;
         return initial;
     }
+
+    public object AttrGet(Type type, object initial = default)
+    {
+        for (int i = 0; i < Datas.Count; i++)
+        {
+            if (Datas[i].GetType() == type) return Datas[i];
+        }
+        return null;
+
+    }
+
 
     public bool Has<T>()
     {

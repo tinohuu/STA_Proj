@@ -10,7 +10,7 @@ public class TimeManager : MonoBehaviour
 {
 	[Header("Config")]
 	public int ThresholdMinutes = 30;
-	public TimeData Data = new TimeData();
+	[SavedData] public TimeData Data = new TimeData();
 	[Header("Debug")]
 	public bool IsChecking = false;
 	[SerializeField] Vector2 _difference = new Vector2();
@@ -26,10 +26,7 @@ public class TimeManager : MonoBehaviour
 	
 	private void Awake()
     {
-		Instance = this;
-		
-		Data = SaveManager.Bind(new TimeData());
-
+		if (!Instance) Instance = this;
 	}
     private void Start()
     {
@@ -40,11 +37,11 @@ public class TimeManager : MonoBehaviour
     {
 		if (Data.CheckedSystemOffset == default)
         {
+			Debug.Log("Time is default");
 			Data.CheckedDateTime = RealNow;
 			Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
-			TimeRefresher.Invoke(true);
+			TimeRefresher.Invoke(false);
 			GetTime();
-
 		}
 		else
         {
@@ -109,7 +106,7 @@ public class TimeManager : MonoBehaviour
 		//IsAuthentic = _isAuthentic;
 		if (!_isAuthentic)
         {
-			Debug.LogWarning("Your time is not authentic!");
+			Debug.LogError("Your time is not authentic!");
 			//StartCoroutine(TST_IPunishColor());
 			StartCoroutine(IGetTime(false, true));
 		}

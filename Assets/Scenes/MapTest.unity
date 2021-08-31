@@ -3695,7 +3695,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1992139305}
         m_TargetAssemblyTypeName: CropManager, Assembly-CSharp
         m_MethodName: UpdateCropsAnimator
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5919,7 +5919,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1975833679
   m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &1322951875
@@ -9500,13 +9500,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a17a67863ff8e42b3a073e3b1992ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CropConfigs: []
   ForceFieldGroup: {fileID: 6409090548404165391}
   TriggerGroup: {fileID: 1999069656}
   LeftSide: {fileID: 6409090549117504382}
   RightSide: {fileID: 6409090547926771268}
   CropGrpup: {fileID: 985967770}
-  IsMature: 1
+  IsMature: 0
+  CropConfigs: []
 --- !u!114 &1992139306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9520,8 +9520,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data:
-    CompelteLevel: 160
-    SelectedLevel: 1
+    CompelteLevel: 150
+    SelectedLevel: 5
     MapDatas: []
   PublicConfigs: []
   Text: {fileID: 0}
@@ -10323,6 +10323,14 @@ PrefabInstance:
     - target: {fileID: 2839194961230771642, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2839194961365692647, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: ClearOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2839194961471910073, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
