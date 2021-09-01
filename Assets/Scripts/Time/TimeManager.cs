@@ -10,15 +10,15 @@ public class TimeManager : MonoBehaviour
 {
 	[Header("Config")]
 	public int ThresholdMinutes = 30;
+	public Text DebugText;
 	[SavedData] public TimeData Data = new TimeData();
 	[Header("Debug")]
 	public bool IsChecking = false;
 	[SerializeField] Vector2 _difference = new Vector2();
-	[SerializeField] string _source = "None";
 	[SerializeField] string _systemTime = "";
 	[SerializeField] string _realTime = "";
-	[SerializeField] bool _verificationResult = true;
-
+	[SerializeField] public bool Authenticity = true;
+	bool isGettingTime = false;
 	public delegate void TimeHandler(bool isAuthentic);
 	public event TimeHandler TimeRefresher = null; // Remove punishment
 	public event TimeHandler OnGetTime = null;
@@ -27,6 +27,7 @@ public class TimeManager : MonoBehaviour
 	private void Awake()
     {
 		if (!Instance) Instance = this;
+		OnGetTime += (bool on) => isGettingTime = on;
 	}
     private void Start()
     {
@@ -35,18 +36,13 @@ public class TimeManager : MonoBehaviour
 
     void InitialiseTimeData()
     {
+
 		if (Data.CheckedSystemOffset == default)
         {
-			Debug.Log("Time is default");
 			Data.CheckedDateTime = RealNow;
 			Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
 			TimeRefresher.Invoke(false);
-			GetTime();
-		}
-		else
-        {
-			VerifyTime();
-			//GetTime(false);
+			GetTime(true, false);
 		}
 	}
 
@@ -54,63 +50,37 @@ public class TimeManager : MonoBehaviour
     {
 		_systemTime = SystemNow.ToString();
 		_realTime = RealNow.ToString();
-		/*TST_CheckedText.text =
-			"Checked\n" +
-			Data.CheckedDateTime.ToString() +
-			"\nLocal: " + Data.CheckedDateTime.ToLocalTime().ToString() +
-			"\nSince Boot: " + Data.CheckedBootTime.ToTimeSpan().ToString(@"dd\:hh\:mm\:ss") +
-			"\nSystem Offset: " + Data.CheckedSystemOffset.ToTimeSpan().ToString(@"dd\:hh\:mm\:ss") +
-			"\nFrom " + SiteUrl;
-		TST_CheckedImage.color = SiteUrl == "System" ? new Color(1, 0.5f, 0) : new Color(0, 0.5f, 0);
-
-		TST_CurrentText.text =
-			"System\n" +
-			SystemNow +
-			"\nReal: " + RealNow +
-			"\nLocal: " + DateTime.Now +
-			"\nSince Boot: " + TimeSinceBoot.ToString(@"dd\:hh\:mm\:ss");
-
-		TimeSpan timeSpan;
-		timeSpan = Data.TST_LastHarvestTime + TimeSpan.FromHours(1) - SystemNow;
-		TST_HarvestText.text = timeSpan.TotalSeconds > 0 ? "Harvest...\n" + timeSpan.ToString(@"dd\:hh\:mm\:ss") : "Harvest!";
-		TST_HarvestImage.color = timeSpan.TotalSeconds > 0 ? Color.white : Color.green;
-		TST_HarvestButton.interactable = timeSpan.TotalSeconds <= 0;
-
-		timeSpan = Data.TST_LastQuestUpdateTime + TimeSpan.FromDays(1) - SystemNow;
-		if (timeSpan.TotalSeconds < 0) Data.TST_LastQuestUpdateTime = SystemNow.Date + TimeSpan.FromHours(10);
-		TST_QuestText.text = "Quest...\n" + timeSpan.ToString(@"dd\:hh\:mm\:ss");
-		
-		timeSpan = Data.TST_LastDailyRewardTime + TimeSpan.FromDays(1) - SystemNow;
-		if (timeSpan.TotalSeconds < 0) Data.TST_LastDailyRewardTime = SystemNow.Date + TimeSpan.FromHours(16);
-		TST_DailyText.text = "Daily...\n" + timeSpan.ToString(@"dd\:hh\:mm\:ss");
-		//TST_DailyImage.color = IsAuthentic ? Color.white : Color.red;*/
 	}
 
     private void OnApplicationPause(bool pause)
     {
-		if (Data.CheckedSystemOffset != default) // Skip if not initialized
-			VerifyTime();
+		if (pause || Data.CheckedSource == "None") return;
+		VerifyTime();
 	}
-	public void GetTime(bool saveSystemTime = true)
+	public void GetTime(bool saveSystemTime, bool enablePunish)
     {
-		StartCoroutine(IGetTime(saveSystemTime));
+		DebugText.text += "\nGetting Time...";
+		StartCoroutine(IGetTime(saveSystemTime, enablePunish));
 	}
 
 	public void VerifyTime()
     {
+		DebugText.text += "\nVerifying Time...";
 		bool _isAuthentic = true;
-		if (Data.CheckedDateTime.Year < 2000) _isAuthentic = false;
-		else _isAuthentic = VerifyTimeSpan(RealNow - Data.CheckedDateTime, TimeSinceBoot - Data.CheckedBootTime.ToTimeSpan(), ThresholdMinutes);
+		_isAuthentic = VerifyTimeSpan(RealNow - Data.CheckedDateTime, TimeSinceBoot - Data.CheckedBootTime.ToTimeSpan(), ThresholdMinutes);
 
 		_difference = new Vector2((float)(RealNow - Data.CheckedDateTime).TotalMinutes, (float)(TimeSinceBoot - Data.CheckedBootTime.ToTimeSpan()).TotalMinutes);
-		//IsAuthentic = _isAuthentic;
 		if (!_isAuthentic)
         {
-			Debug.LogError("Your time is not authentic!");
-			//StartCoroutine(TST_IPunishColor());
-			StartCoroutine(IGetTime(false, true));
+			DebugText.text += "\nYour time is not authentic during verificaion." + RealNow.ToString();
+			GetTime(true, true);
 		}
-		_verificationResult = _isAuthentic;
+		else
+        {
+			DebugText.text += "\nYour time is authentic during verificaion: " + RealNow.ToString();
+			TimeRefresher?.Invoke(true);
+		}
+		Authenticity = _isAuthentic;
 	}
 	public DateTime SystemNow => DateTime.Now.ToUniversalTime();
 	public DateTime RealNow => DateTime.Now.ToUniversalTime() - Data.CheckedSystemOffset.ToTimeSpan();
@@ -129,7 +99,7 @@ public class TimeManager : MonoBehaviour
 			return timeSpan;
 		}
 	}
-	IEnumerator IGetTime(bool saveSystemTime, bool enablePunish = false)
+	IEnumerator IGetTime(bool saveSystemTime, bool enablePunish)
 	{
 		OnGetTime?.Invoke(true);
 		string[] sites =
@@ -162,34 +132,51 @@ public class TimeManager : MonoBehaviour
 					continue;
 				}
 
-				_source = url;
+				Data.CheckedSource = url;
 				Data.CheckedDateTime = String2DateTime(value);
 				Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
+				DebugText.text += "\nRecorded time from " + Data.CheckedSource;
 				TimeSpan curOffset = SystemNow - Data.CheckedDateTime;
 				TimeSpan oldOffset = Data.CheckedSystemOffset.ToTimeSpan();
 				//IsAuthentic = true;
 				Data.CheckedSystemOffset = curOffset.TotalMilliseconds;
-				if (enablePunish && curOffset.Minutes > ThresholdMinutes && !VerifyTimeSpan(curOffset, oldOffset, ThresholdMinutes))
+				if (enablePunish)
                 {
-					TimeRefresher(false);
-                }
+					if (!VerifyTimeSpan(curOffset, oldOffset, ThresholdMinutes))
+                    {
+						TimeRefresher(false);
+						DebugText.text += "\nPunushed";
+					}
+					else
+                    {
+						TimeRefresher?.Invoke(true);
+						DebugText.text += "\nNot punished as passing the internet time.";
+					}
+					Authenticity = true;
+				}
 				OnGetTime?.Invoke(false);
 				yield break;
 			}
 		}
 		Debug.Log("Can't connect to any sites");
-		if (enablePunish) TimeRefresher(false);
+		if (enablePunish)
+        {
+			TimeRefresher(false);
+			DebugText.text += "\nPunushed";
+			Authenticity = true;
+		}
         if (saveSystemTime)
         {
-			_source = "System";
+			Data.CheckedSource = "System";
 			Data.CheckedDateTime = RealNow;
 			Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
 			Data.CheckedSystemOffset = (RealNow - Data.CheckedDateTime).TotalMilliseconds;
+			DebugText.text += "\nRecorded time from " + Data.CheckedSource;
 		}
 		OnGetTime?.Invoke(false);
 	}
 
-	public DateTime String2DateTime(string gmt)
+	static DateTime String2DateTime(string gmt)
 	{
 		DateTime dt = DateTime.MinValue;
 		try
@@ -220,77 +207,20 @@ public class TimeManager : MonoBehaviour
 		return dt;
 	}
 
-    bool VerifyTimeSpan(TimeSpan toBeVerified, TimeSpan verifier, int thresholdMinutes)
+	static bool VerifyTimeSpan(TimeSpan toBeVerified, TimeSpan verifier, int thresholdMinutes)
     {
 		return toBeVerified.TotalMinutes < verifier.TotalMinutes + thresholdMinutes;
 	}
-	/*
-	public void TST_Harvest()
-	{
-		Data.TST_LastHarvestTime = SystemNow;
-	}
-	public void TST_Save()
-	{
-		Save save = new Save();
-		save.Set(Data);
-		SaveSystem.Save(save);
-	}
-	public void TST_Reset()
-	{
-		SaveSystem.Clear();
-		SceneManager.LoadScene("TimeTest");
-	}
-	public void TST_Punish()
-	{
-		TimeRefresher?.Invoke(false);
-	}
-	void TST_UpdateNextTime(bool _isAuthentic = true)
-	{
-		Data.TST_LastQuestUpdateTime = SystemNow.Date + TimeSpan.FromDays(SystemNow.Hour >= 10 ? 0 : -1) + TimeSpan.FromHours(10);
-		//Data.TST_LastDailyRewardTime = Now.Date + TimeSpan.FromDays(Now.Hour >= 16 ? 0 : -1) + TimeSpan.FromHours(16) + TimeSpan.FromDays(_isAuthentic ? 0 : 1);
-
-		if (_isAuthentic)
-		{
-			Data.TST_LastHarvestTime = (Data.TST_LastHarvestTime - SystemNow).TotalHours < 1 ? Data.TST_LastHarvestTime : SystemNow;// Data.TST_LastHarvestTime > Now - TimeSpan.FromHours(1) ? Data.TST_LastHarvestTime : Now;
-			Data.TST_LastDailyRewardTime = SystemNow.Date + TimeSpan.FromDays(SystemNow.Hour >= 16 ? 0 : -1) + TimeSpan.FromHours(16);// Data.TST_LastDailyRewardTime > Now - TimeSpan.FromDays(1) ? Data.TST_LastDailyRewardTime : Now.Date + TimeSpan.FromDays(Now.Hour >= 16 ? 0 : -1) + TimeSpan.FromHours(16);
-		}
-		else
-		{
-			if ((SystemNow - Data.TST_LastDailyRewardTime).TotalHours < 1)
-			{
-				Data.TST_LastDailyRewardTime = SystemNow;
-			}
-			Data.TST_LastHarvestTime = SystemNow;
-			//Data.TST_LastDailyRewardTime = SystemNow.Date + TimeSpan.FromDays(SystemNow.Hour >= 16 ? 0 : -1) + TimeSpan.FromHours(16) + TimeSpan.FromDays(1);
-			if ((SystemNow - Data.TST_LastDailyRewardTime).TotalDays < 1)
-			{
-				//Data.TST_LastDailyRewardTime += TimeSpan.FromDays(SystemNow.Hour >= 16 ? 2 : 1);
-				Data.TST_LastDailyRewardTime = SystemNow.Date + TimeSpan.FromDays(SystemNow.Hour >= 16 ? 0 : -1) + TimeSpan.FromHours(16) + TimeSpan.FromDays(1);
-			}
-
-		}
-	}
-	IEnumerator TST_IPunishColor()
-    {
-		TST_PunishImage.color = Color.yellow;
-		yield return new WaitForSeconds(3);
-		TST_PunishImage.color = Color.white;
-	}*/
 }
 
 [System.Serializable]
 public class TimeData
 {
 	public DateTime CheckedDateTime = new DateTime();
-
+	public string CheckedSource = "None";
 	// Declear DateTime as TimeSpan is not serializable
 	public double CheckedBootTime = 0;
 	public double CheckedSystemOffset = 0;
-
-	/*
-	public DateTime TST_LastDailyRewardTime = new DateTime();
-	public DateTime TST_LastQuestUpdateTime = new DateTime();
-	public DateTime TST_LastHarvestTime = new DateTime();*/
 }
 
 public static class TimeExtension

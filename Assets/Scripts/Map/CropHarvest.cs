@@ -22,6 +22,8 @@ public class CropHarvest : MonoBehaviour
     public Vector2 Debug_SizeDelta;
     public string CoinString = "";
     public GameObject HarvestParticle;
+    [SerializeField] string _harvestTime;
+    [SerializeField] string _nowTime;
     private void Awake()
     {
         if (!Instance) Instance = this;
@@ -31,10 +33,10 @@ public class CropHarvest : MonoBehaviour
     void Update()
     {
         TimeSpan timeSpan;
-        timeSpan = MapManager.Instance.Data.LastHarvestTime + TimeSpan.FromHours(1) - TimeManager.Instance.SystemNow;
+        timeSpan = MapManager.Instance.Data.LastHarvestTime + TimeSpan.FromHours(1) - TimeManager.Instance.RealNow;
 
         // Play mature animation in advance
-        if (timeSpan.TotalSeconds <= 3 && !CropManager.Instance.IsMature)
+        if (timeSpan.TotalSeconds <= 3 && !CropManager.Instance.IsMature && TimeManager.Instance.Authenticity)
         {
             CropManager.Instance.IsMature = true;
             CropManager.Instance.UpdateCropsAnimator(true);
@@ -54,7 +56,8 @@ public class CropHarvest : MonoBehaviour
         //Debug_AchorPos = CropList.rectTransform.anchoredPosition;
         //Debug_SizeDelta = CropList.rectTransform.sizeDelta;
 
-
+        _harvestTime = MapManager.Instance.Data.LastHarvestTime.ToString();
+        _nowTime = TimeManager.Instance.RealNow.ToString();
     }
 
     public void Harvest()
@@ -73,16 +76,27 @@ public class CropHarvest : MonoBehaviour
     {
         MapManagerData data = MapManager.Instance.Data;
         if (isVerified)
-            data.LastHarvestTime = (data.LastHarvestTime - TimeManager.Instance.SystemNow).TotalHours < 1 ?
-                data.LastHarvestTime : TimeManager.Instance.SystemNow;
+        {
+            bool clamp = TimeManager.Instance.RealNow < MapManager.Instance.Data.LastHarvestTime;
+            TimeManager.Instance.DebugText.text += "\nChecking remaining harvest duration...";
+            if (clamp)
+            {
+                TimeManager.Instance.DebugText.text += "\nClamped the harvest time.";
+                //data.LastHarvestTime = TimeManager.Instance.RealNow;
+                TimeManager.Instance.GetTime(true, false);
+            }
+        }
         else
-            data.LastHarvestTime = TimeManager.Instance.SystemNow;
+        {
+            TimeManager.Instance.DebugText.text += "\nPunished the harvest time.";
+            data.LastHarvestTime = TimeManager.Instance.RealNow;
+        }
     }
 
     public void Cheat()
     {
         if (!Debug.isDebugBuild) return;
-        MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.SystemNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(50);
+        MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(50);
     }
 
     int UpdateHarvestText()

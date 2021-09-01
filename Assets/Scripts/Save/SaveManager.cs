@@ -3,19 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour
 {
     public static Save Save = null;
     public bool ClearOnAwake = false;
+    bool StopSave = false;
+    public static SaveManager Instance;
     private void Awake()
     {
+        if (!Instance) Instance = this;
         if (ClearOnAwake) Clear();
 
         Save = SaveSystem.Load();
         if (Save == null) Save = new Save();
 
         AttrBindAll();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            ClearAndRestart();
+        }
+    }
+
+   public void ClearAndRestart(string sceneName = "")
+    {
+        Clear();
+        StopSave = true;
+        if (sceneName == "")
+            Application.Quit();
+        else
+            SceneManager.LoadScene(sceneName);
     }
 
     public static T Bind<T>(T initial)
@@ -48,11 +70,13 @@ public class SaveManager : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
+        if (StopSave) return;
         if (pause) SaveSystem.Save(Save);
     }
 
     private void OnApplicationQuit()
     {
+        if (StopSave) return;
         SaveSystem.Save(Save);
     }
 

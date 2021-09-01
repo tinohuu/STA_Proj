@@ -37,7 +37,6 @@ public class MapTrack : MonoBehaviour
         MapMakerConfig config = MapMaker.Config;
         points = new List<Transform>(TrackPointsGroup.GetComponentsInChildren<Transform>());
 
-        Debug.Log(points.Count);
         points.RemoveAt(0);
         for (int i = 0; i < points.Count; i++)
         {

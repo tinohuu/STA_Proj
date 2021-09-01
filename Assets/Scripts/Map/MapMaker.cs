@@ -202,8 +202,7 @@ public class MapMaker : MonoBehaviour
 
     public void ClearSave()
     {
-        SaveManager.Clear();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SaveManager.Instance.ClearAndRestart();
     }
     public void CheatHarvest()
     {
