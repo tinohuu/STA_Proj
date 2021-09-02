@@ -25,6 +25,10 @@ public class GamePlayUI : MonoBehaviour
 
     public LoseGameUI loseGameUI;
 
+    public LockEndGameUI lockEndGameUI;
+
+    bool bIsHidingAdd5Btn = false;
+
     // Start is called before the first frame update
     void Start()    
     {
@@ -39,7 +43,8 @@ public class GamePlayUI : MonoBehaviour
         withdrawBtn.GetComponent<Transform>().position = newPos;
 
         withdrawBtn.onClick.AddListener(delegate { this.OnClickWithdrawBtn(); });
-        withdrawBtn.enabled = false;
+        //withdrawBtn.enabled = false;
+        withdrawBtn.gameObject.SetActive(false);
 
         add5Btn = transform.Find("Add5Btn").GetComponent<Button>();
         if (add5Btn == null)
@@ -47,8 +52,7 @@ public class GamePlayUI : MonoBehaviour
 
         newPos = add5Btn.GetComponent<Transform>().position;
         newPos.x = Screen.width * 0.4f;
-        //newPos.y = Screen.height * 0.15f;
-        newPos.y = 0.0f;
+        newPos.y = Screen.height * -0.05f;
         add5Btn.GetComponent<Transform>().position = newPos;
 
         add5Btn.onClick.AddListener(delegate { this.OnClickAdd5Btn(); });
@@ -59,7 +63,7 @@ public class GamePlayUI : MonoBehaviour
             Debug.Log("game ui init error! we can not find EndGameBtn Button! ");
 
         newPos.x = Screen.width * 0.2f;
-        newPos.y = Screen.height * 0.15f;
+        newPos.y = Screen.height * -0.1f;
         endGameBtn.GetComponent<Transform>().position = newPos;
         endGameBtn.onClick.AddListener(delegate { this.OnClickEndGameBtn(); });
         endGameBtn.gameObject.SetActive(false);
@@ -101,6 +105,11 @@ public class GamePlayUI : MonoBehaviour
         //loseGameUI.GetComponent<CanvasGroup>().alpha = 0;
         HideLoseGameUI();
 
+        lockEndGameUI = Object.FindObjectOfType<LockEndGameUI>();
+        if (lockEndGameUI == null)
+            Debug.Log("GamePlayUI::Start()... lockEndGameUI is null....");
+        DisableLockEndGameUI();
+
     }
 
     // Update is called once per frame
@@ -112,12 +121,17 @@ public class GamePlayUI : MonoBehaviour
     //used for reset the game ui, when we restart or replay a game.
     public void Reset()
     {
+        bIsHidingAdd5Btn = false;
+
         //EnableAllGameButton();
         ShowAllGameUI();
 
         DisableWithdrawBtn();
+        HideWithDrawBtn();
 
-        HideAdd5Btn();
+        //endGameBtn.gameObject.SetActive(false);
+
+        DisableAdd5Btn();
 
         HideStreakBonusTipsUI();
 
@@ -129,6 +143,7 @@ public class GamePlayUI : MonoBehaviour
     public void EnableWithdrawBtn()
     {
         withdrawBtn.enabled = true;
+        withdrawBtn.gameObject.SetActive(true);
     }
 
     public void DisableWithdrawBtn()
@@ -136,13 +151,24 @@ public class GamePlayUI : MonoBehaviour
         withdrawBtn.enabled = false;
     }
 
+    public void ShowWithDrawBtn()
+    {
+        withdrawBtn.gameObject.SetActive(true);
+    }
+
+    public void HideWithDrawBtn()
+    {
+        withdrawBtn.gameObject.SetActive(false);
+    }
+
     public void ShowAdd5Btn()
     {
         /*Vector3 destPos = new Vector3(add5Btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
         add5Btn.transform.DOMove(destPos, 0.7f);*/
-
+        add5Btn.enabled = true ;
+        Vector3 dest = new Vector3(add5Btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
         StopAllCoroutines();
-        StartCoroutine(ShowButton(add5Btn));
+        StartCoroutine(ShowButton(add5Btn, dest, 0.0f));
 
         //add5Btn.gameObject.SetActive(true);
     }
@@ -154,56 +180,84 @@ public class GamePlayUI : MonoBehaviour
 
         //add5Btn.gameObject.SetActive(false);
 
+        if(bIsHidingAdd5Btn)
+        {
+            return;
+        }
+
+        bIsHidingAdd5Btn = true;
+        add5Btn.enabled = false;
+        Vector3 dest = new Vector3(add5Btn.transform.position.x, Screen.height * -0.05f, add5Btn.transform.position.z);
         StopAllCoroutines();
-        StartCoroutine(HideButton(add5Btn));
+        StartCoroutine(HideButton(add5Btn, dest));
     }
 
-    IEnumerator  ShowButton(Button  btn)
+    public void DisableAdd5Btn()
+    {
+        add5Btn.gameObject.SetActive(false);
+    }
+
+    IEnumerator  ShowButton(Button  btn, Vector3 destPos, float fWaitTime)
     {
         btn.gameObject.SetActive(true);
 
-        float fBeginTime = 0.0f; ;
+        float fBeginTime = 0.0f;
 
-        Vector3 destPos = new Vector3(btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
-        float fSpeed = Screen.height * 0.15f / 0.7f;
-        while(fBeginTime < 0.7f)
+        Vector3 moveSpeed = (destPos - btn.transform.position) / 0.7f;
+
+        while(fBeginTime < fWaitTime)
         {
             fBeginTime += Time.deltaTime;
-            btn.transform.position += new Vector3(0.0f, fSpeed * Time.deltaTime, 0.0f);
             yield return null;
         }
 
-        //btn.transform.DOMove(destPos, 0.7f);
-    }
-
-    IEnumerator HideButton(Button btn)
-    {
-        //Vector3 destPos = new Vector3(btn.transform.position.x, 0.0f, add5Btn.transform.position.z);
-        //btn.transform.DOMove(destPos, 0.7f);
-        float fBeginTime = 0.0f; ;
-
-        Vector3 destPos = new Vector3(btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
-        float fSpeed = -Screen.height * 0.15f / 0.7f;
-        while (fBeginTime < 0.7f)
+        while(fBeginTime < (fWaitTime + 0.7f))
         {
             fBeginTime += Time.deltaTime;
-            btn.transform.position += new Vector3(0.0f, fSpeed * Time.deltaTime, 0.0f);
+            btn.transform.position += moveSpeed * Time.deltaTime;
+            yield return null;
+        }
+
+    }
+
+    IEnumerator HideButton(Button btn, Vector3 destPos)
+    {
+        float fBeginTime = 0.0f; ;
+
+        Vector3 moveSpeed = (destPos - btn.transform.position) / 0.5f; 
+        while (fBeginTime < 0.5f)
+        {
+            fBeginTime += Time.deltaTime;
+            btn.transform.position += moveSpeed * Time.deltaTime;
             yield return null;
         }
 
         btn.gameObject.SetActive(false);
+
+        if(btn.name == "Add5Btn" && bIsHidingAdd5Btn)
+        {
+            bIsHidingAdd5Btn = false;
+        }
     }
 
     
 
     public void ShowEndGameBtn()
     {
-        endGameBtn.gameObject.SetActive(true);
+        //endGameBtn.gameObject.SetActive(true);
+        Vector3 dest = new Vector3(endGameBtn.transform.position.x, Screen.height * 0.15f, endGameBtn.transform.position.z);
+
+        //StopAllCoroutines();
+        StartCoroutine(ShowButton(endGameBtn, dest, 0.7f));
     }
 
     public void HideEndGameBtn()
     {
-        endGameBtn.gameObject.SetActive(false);
+        //endGameBtn.gameObject.SetActive(false);
+
+        Vector3 dest = new Vector3(endGameBtn.transform.position.x, Screen.height * -0.1f, endGameBtn.transform.position.z);
+        //StopAllCoroutines();
+        StartCoroutine(HideButton(endGameBtn, dest));
     }
 
     public void EnableAllGameButton()
@@ -310,6 +364,15 @@ public class GamePlayUI : MonoBehaviour
     public void ShowLoseGameUI(int nCollect, int nClear)
     {
         Debug.Log("GamePlayUI... ShowLoseGameUI...");
+        /*float fTime = 0.0f;
+
+        while (fTime < 0.5f)
+        {
+            fTime += Time.deltaTime;
+
+            loseGameUI.transform.position +=
+        }*/
+
         loseGameUI.GetComponent<CanvasGroup>().alpha = 1;
         loseGameUI.GetComponent<CanvasGroup>().interactable = true;
         loseGameUI.GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -322,6 +385,27 @@ public class GamePlayUI : MonoBehaviour
         loseGameUI.GetComponent<CanvasGroup>().alpha = 0;
         loseGameUI.GetComponent<CanvasGroup>().interactable = false;
         loseGameUI.GetComponent<CanvasGroup>().blocksRaycasts = false;
+    }
+
+    public void ShowLockEndGameUI()
+    {
+        Debug.Log("GamePlayUI... ShowLockEndGameUI...");
+        
+        lockEndGameUI.GetComponent<CanvasGroup>().alpha = 1;
+        lockEndGameUI.GetComponent<CanvasGroup>().interactable = true;
+        lockEndGameUI.GetComponent<CanvasGroup>().blocksRaycasts = true;
+    }
+
+    public void HideLockEndGameUI()
+    {
+        lockEndGameUI.GetComponent<CanvasGroup>().alpha = 0;
+        lockEndGameUI.GetComponent<CanvasGroup>().interactable = false;
+        lockEndGameUI.GetComponent<CanvasGroup>().blocksRaycasts = false;
+    }
+
+    public void DisableLockEndGameUI()
+    {
+        lockEndGameUI.gameObject.SetActive(false);
     }
 
     public void EnableWildCardBtn()
@@ -377,10 +461,11 @@ public class GamePlayUI : MonoBehaviour
 
     void OnClickEndGameBtn()
     {
-        HideEndGameBtn();
+        Debug.Log("GamePlayUI... You clicked OnClickEndGameBtn Button!");
 
         HideAdd5Btn();
-
+        HideEndGameBtn();
+        
         //todo: here we shoud call the end game process method.
         //...
         GameplayMgr.Instance.LoseGame();

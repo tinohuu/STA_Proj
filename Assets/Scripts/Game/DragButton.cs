@@ -13,6 +13,8 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     bool bIsDragging = false;
     bool bIsRotating = false;
 
+    Vector2 lastDragPos;
+
     public float xSpeed = 250.0f;
     public float ySpeed = 120.0f;
     
@@ -35,6 +37,14 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     //2021.7.21 added, to update the display value
     RightMenuUI rightMenuUI;
+
+    //2021.8.30 added by pengyuan , to manage ascending card and descending card
+    public GameObject pokerItemEdit { get; set; } = null;
+    public GameDefines.PokerItemType pokerItemType = GameDefines.PokerItemType.None;
+
+    public string strItemInfo = "";
+
+    //AscDesEdit ascDesEdit = null;
 
     // Start is called before the first frame update
     void Start()
@@ -139,6 +149,8 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        lastDragPos = eventData.position;
+
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             bIsDragging = true;
@@ -167,7 +179,10 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
             else
             {
-                rectTransform.position = position;
+                //rectTransform.position = position;
+                Vector2 deltaPos = eventData.position - lastDragPos;
+                rectTransform.position = new Vector3(rectTransform.position.x + deltaPos.x, rectTransform.position.y + deltaPos.y, rectTransform.position.z);
+                lastDragPos = eventData.position;
 
                 Vector2 displayPos = PokerAreaMgr.Instance.ToRelativePos(position, PokerAreaMgr.Instance.rectTrans.rect);
                 string strDisplay = string.Format("X:{0:F1}, Y:{1:F1}", displayPos.x, displayPos.y);
@@ -224,6 +239,8 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             float fRotation = QuaternionToRotation(transform.rotation);
             info.nGroupID = nGroupID;
             info.fRotation = fRotation;
+            info.nItemType = (int)pokerItemType;
+            info.strItemInfo = strItemInfo;
             //Debug.Log("---DragButton::OnEndDrag the poker game object's rotation is: " + fRotation);
             PokerAreaMgr.Instance.UpdateOnePokerInfo(nIndex, info);
         }
@@ -234,6 +251,33 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //string strLayer = string.Format("{0}", nNewIndex);
         string strLayer = string.Format("{0}", rectTransform.GetSiblingIndex());
         layerIndex.text = strLayer;
+    }
+
+    public void SetPokerItemEditInfo(GameObject pokerItem, JsonReadWriteTest.PokerInfo pokerInfo)
+    {
+        pokerItemEdit = pokerItem;
+        pokerItemType = (GameDefines.PokerItemType)pokerInfo.nItemType;
+
+        switch (pokerItemType)
+        {
+            case GameDefines.PokerItemType.Ascending_Poker:
+                AscDesEdit ascendEdit = pokerItem.GetComponent<AscDesEdit>();
+                ascendEdit.Init(this, pokerInfo);
+                //ascendEdit.dragBtn = this;
+                    break;
+            case GameDefines.PokerItemType.Descending_Poker:
+                AscDesEdit descendEdit = pokerItem.GetComponent<AscDesEdit>();
+                descendEdit.Init(this, pokerInfo);
+                //descendEdit.dragBtn = this;
+                break;
+            case GameDefines.PokerItemType.Bomb:
+                BombEdit bombEdit = pokerItem.GetComponent<BombEdit>();
+                bombEdit.Init(this, pokerInfo);
+                break;
+            default:break;
+        }
+
+        //ascDesEdit = ascDesPokerEdit.GetComponent<AscDesEdit>();
     }
 
     /*void OnGUI()

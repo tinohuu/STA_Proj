@@ -18,8 +18,15 @@ public class TopMenuUI : MonoBehaviour
 
     private Toggle displayLockArea;
 
+    private Button addAscendingBtn;
+
+    private Button addDescendingBtn;
+
+    private Button addBombBtn;
+
     private Button saveLevelBtn;
 
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +41,16 @@ public class TopMenuUI : MonoBehaviour
 
         displayLockArea = transform.Find("LockToggle").GetComponent<Toggle>();
         displayLockArea.onValueChanged.AddListener(delegate (bool bValue) { this.onDisplayLockAreaChanged(bValue); });
+
+        addAscendingBtn = transform.Find("AddAscendingCard").GetComponent<Button>();
+        addAscendingBtn.onClick.AddListener(delegate () { this.OnClickAddAscendingCard(); });
+
+        addDescendingBtn = transform.Find("AddDescendingCard").GetComponent<Button>();
+        addDescendingBtn.onClick.AddListener(delegate () { this.OnClickAddDescendingCard(); });
+
+        addBombBtn = transform.Find("AddBombCard").GetComponent<Button>();
+        addBombBtn.onClick.AddListener(delegate () { this.OnClickAddBombCard(); });
+        
 
         saveLevelBtn = transform.Find("SaveLevel").GetComponent<Button>();
         saveLevelBtn.onClick.AddListener(delegate () { this.OnClickSaveLevel(); });
@@ -65,6 +82,27 @@ public class TopMenuUI : MonoBehaviour
         Debug.Log("here we clicked the toggle..." + bValue);
 
         PokerAreaMgr.Instance.onDisplayLockAreaChanged(bValue);
+    }
+
+    private void OnClickAddAscendingCard()
+    {
+        Debug.Log("here we clicked the add ascending poker button...");
+
+        PokerAreaMgr.Instance.AddAscendingCard();
+    }
+
+    private void OnClickAddDescendingCard()
+    {
+        Debug.Log("here we clicked the add descending poker button...");
+
+        PokerAreaMgr.Instance.AddDescendingCard();
+    }
+
+    private void OnClickAddBombCard()
+    {
+        Debug.Log("here we clicked the add bomb poker button...");
+
+        PokerAreaMgr.Instance.AddBombCard();
     }
 
     private void OnClickSaveLevel()

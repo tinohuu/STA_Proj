@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class MapPlayer : MonoBehaviour
 {
-    public GameObject MapLevelPanelPrefab;
+    public List<GameObject> LevelWindowPrefabs;
     public float EdgeOffset = 100;
     public ScrollRect MapScrollRect;
     Vector3 screenPoint = new Vector2();
@@ -89,7 +89,8 @@ public class MapPlayer : MonoBehaviour
             SoundManager.Instance.PlaySFX("uiAvatarLanding");
         }
 
-        MapLevelWindow panel = Window.CreateWindowPrefab(MapLevelPanelPrefab).GetComponent<MapLevelWindow>();
+        int windowIndex = Mathf.Clamp(mapLevel.Data.Order - 1, 0, 2);
+        MapLevelWindow panel = Window.CreateWindowPrefab(LevelWindowPrefabs[windowIndex]).GetComponent<MapLevelWindow>();
         panel.UpdateView(mapLevel.Data);
         
         //isRunning = false;

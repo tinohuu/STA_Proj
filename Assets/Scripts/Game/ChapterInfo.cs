@@ -153,6 +153,9 @@ public class ChapterInfo
             go.transform.rotation.ToAngleAxis(out fAngle, out vecDir);
             info.fRotation = fAngle * vecDir.z;
 
+            info.nItemType = (int)dragBtn.pokerItemType;
+            info.strItemInfo = dragBtn.strItemInfo;
+
             //Debug.Log("---ChapterInfo::UpdateLevelInfos the poker game object's rotation is: " + info.fRotation + " vecdir is: " + vecDir);
 
             pokers.Add(info);
@@ -167,6 +170,8 @@ public class ChapterInfo
         levelDataList[nLevel - 1].pokerInfo[nIndex].fPosY = pokerInfo.fPosY;
         levelDataList[nLevel - 1].pokerInfo[nIndex].fRotation = pokerInfo.fRotation;
         levelDataList[nLevel - 1].pokerInfo[nIndex].nGroupID = pokerInfo.nGroupID;
+        levelDataList[nLevel - 1].pokerInfo[nIndex].nItemType = (int)pokerInfo.nItemType;
+        levelDataList[nLevel - 1].pokerInfo[nIndex].strItemInfo = pokerInfo.strItemInfo;
 
         Debug.Log("ChapterInfo::UpdateOnePokerInfo fRotation set to: " + pokerInfo.fRotation);
     }

@@ -1,0 +1,342 @@
+[
+  {
+    "ID": 1,
+    "FunctionID": 1001,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 1,
+    "IsGuidance": false,
+    "FunctionReward": 0,
+    "Comment": "日常分享界面"
+  },
+  {
+    "ID": 2,
+    "FunctionID": 1002,
+    "FunctionType": 1,
+    "IsOpen": true,
+    "FunctionParams": 2,
+    "IsGuidance": false,
+    "FunctionReward": 0,
+    "Comment": "每日签到奖励"
+  },
+  {
+    "ID": 3,
+    "FunctionID": 1003,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 1,
+    "IsGuidance": false,
+    "FunctionReward": 0,
+    "Comment": "游戏设置功能"
+  },
+  {
+    "ID": 4,
+    "FunctionID": 1004,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 1,
+    "IsGuidance": false,
+    "FunctionReward": 0,
+    "Comment": "社交账户绑定"
+  },
+  {
+    "ID": 5,
+    "FunctionID": 1005,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 5,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "作物系统"
+  },
+  {
+    "ID": 6,
+    "FunctionID": 1006,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 18,
+    "IsGuidance": false,
+    "FunctionReward": 0,
+    "Comment": "转盘功能"
+  },
+  {
+    "ID": 7,
+    "FunctionID": 1007,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 46,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "关卡宝箱"
+  },
+  {
+    "ID": 8,
+    "FunctionID": 1008,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 46,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "日常任务"
+  },
+  {
+    "ID": 9,
+    "FunctionID": 1009,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 1,
+    "IsGuidance": false,
+    "FunctionReward": 0,
+    "Comment": "商城系统"
+  },
+  {
+    "ID": 10,
+    "FunctionID": 1010,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 11,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "黄金挑战关卡"
+  },
+  {
+    "ID": 11,
+    "FunctionID": 1011,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 13,
+    "IsGuidance": false,
+    "FunctionReward": 0,
+    "Comment": "加N手牌"
+  },
+  {
+    "ID": 12,
+    "FunctionID": 1012,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 21,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "移除3张明牌"
+  },
+  {
+    "ID": 13,
+    "FunctionID": 1013,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 31,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "移除场上所有明牌"
+  },
+  {
+    "ID": 14,
+    "FunctionID": 1014,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 41,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "增加3张狂野牌到牌堆"
+  },
+  {
+    "ID": 15,
+    "FunctionID": 1015,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 53,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "加减牌机制开启"
+  },
+  {
+    "ID": 16,
+    "FunctionID": 1016,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 54,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "移除所有加减牌"
+  },
+  {
+    "ID": 17,
+    "FunctionID": 1017,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 73,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "牌锁机制开启"
+  },
+  {
+    "ID": 18,
+    "FunctionID": 1018,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 74,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "移除所有牌锁"
+  },
+  {
+    "ID": 19,
+    "FunctionID": 1019,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 93,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "炸弹机制开启"
+  },
+  {
+    "ID": 20,
+    "FunctionID": 1020,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 94,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "移除所有炸弹"
+  },
+  {
+    "ID": 21,
+    "FunctionID": 1021,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 46,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "2倍功能开启"
+  },
+  {
+    "ID": 22,
+    "FunctionID": 1022,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 56,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "4倍功能开启"
+  },
+  {
+    "ID": 23,
+    "FunctionID": 1023,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 36,
+    "IsGuidance": false,
+    "FunctionReward": 0,
+    "Comment": "广告推送功能"
+  },
+  {
+    "ID": 24,
+    "FunctionID": 1024,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 25,
+    "IsGuidance": false,
+    "FunctionReward": 0,
+    "Comment": "关卡里程奖励"
+  },
+  {
+    "ID": 25,
+    "FunctionID": 1025,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 21,
+    "IsGuidance": true,
+    "FunctionReward": -1,
+    "Comment": "移除3张明牌道具开启奖励"
+  },
+  {
+    "ID": 26,
+    "FunctionID": 1026,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 31,
+    "IsGuidance": true,
+    "FunctionReward": -1,
+    "Comment": "移除场上所有明牌道具开启奖励"
+  },
+  {
+    "ID": 27,
+    "FunctionID": 1027,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 41,
+    "IsGuidance": true,
+    "FunctionReward": -1,
+    "Comment": "增加3张狂野牌到牌堆道具开启奖励"
+  },
+  {
+    "ID": 28,
+    "FunctionID": 1028,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 54,
+    "IsGuidance": true,
+    "FunctionReward": -1,
+    "Comment": "加减牌机制开启奖励"
+  },
+  {
+    "ID": 29,
+    "FunctionID": 1029,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 74,
+    "IsGuidance": true,
+    "FunctionReward": -1,
+    "Comment": "牌锁机制开启奖励"
+  },
+  {
+    "ID": 30,
+    "FunctionID": 1030,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 94,
+    "IsGuidance": true,
+    "FunctionReward": -1,
+    "Comment": "炸弹机制开启奖励"
+  },
+  {
+    "ID": 31,
+    "FunctionID": 1031,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 33,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "长龙机制开启"
+  },
+  {
+    "ID": 32,
+    "FunctionID": 1032,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 108,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "大牌机制开启"
+  },
+  {
+    "ID": 33,
+    "FunctionID": 1033,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 21,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "PowerUps类关卡入口"
+  },
+  {
+    "ID": 34,
+    "FunctionID": 1034,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 46,
+    "IsGuidance": true,
+    "FunctionReward": 0,
+    "Comment": "倍率系统类关卡入口"
+  }
+]

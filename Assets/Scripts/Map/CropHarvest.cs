@@ -1,3 +1,4 @@
+using Coffee.UISoftMask;
 using DG.Tweening;
 using System;
 using System.Collections;
@@ -125,6 +126,7 @@ public class CropHarvest : MonoBehaviour
         coinCount += (lastCropIndex + 1) * 50;
         LayoutRebuilder.ForceRebuildLayoutImmediate(CropList.rectTransform);
         CropList.rectTransform.DOAnchorPosY(CropList.rectTransform.sizeDelta.y + CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y, 10);
+        if (CropList.transform.childCount > 0) CropList.transform.GetChild(0).gameObject.AddComponent<SoftMaskable>();
         return coinCount;
     }
 }

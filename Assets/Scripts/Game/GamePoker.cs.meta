@@ -3,7 +3,9 @@ guid: 1185be1ba53c4f5409919f2bd7da05ad
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - scoreStarPrefab: {instanceID: 0}
+  - ascendingPrefab: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

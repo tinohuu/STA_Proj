@@ -292,6 +292,9 @@ public class JsonReadWriteTest : MonoBehaviour
         public float fRotation;
 
         public int nGroupID;
+
+        public int nItemType;
+        public string strItemInfo = "";
     }
 
     [Serializable]

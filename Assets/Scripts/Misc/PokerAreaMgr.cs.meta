@@ -3,7 +3,14 @@ guid: 1d1b7a15a07ea2848bd4f5b239b1f568
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - pokerPrefab: {instanceID: 0}
+  - trans: {instanceID: 0}
+  - rectTransform: {instanceID: 0}
+  - handCardPrefab: {instanceID: 0}
+  - lockPrefab: {instanceID: 0}
+  - scalableImagePrefab: {instanceID: 0}
+  - ascDesPrefab: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

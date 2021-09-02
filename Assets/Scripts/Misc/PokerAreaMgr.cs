@@ -54,6 +54,11 @@ public class PokerAreaMgr : MonoBehaviour
 
     List<GameObject> unlockAreas = new List<GameObject>();
 
+    //2021.8.30 added by pengyuan, to edit ascending card and descending card
+    public GameObject ascDesPrefab;
+
+    public GameObject bombPrefab;
+
     private void Awake()
     {
         Instance = this;
@@ -61,6 +66,10 @@ public class PokerAreaMgr : MonoBehaviour
         pokerPrefab = (GameObject)Resources.Load("LevelEditor/DragButton");
 
         handCardPrefab = (GameObject)Resources.Load("LevelEditor/Image");
+
+        ascDesPrefab = (GameObject)Resources.Load("LevelEditor/AscDes");
+
+        bombPrefab = (GameObject)Resources.Load("LevelEditor/BombEdit");
     }
 
     // Start is called before the first frame update
@@ -88,6 +97,8 @@ public class PokerAreaMgr : MonoBehaviour
         rightUpMenu = Object.FindObjectOfType<RightUpMenuUI>();
         if (rightUpMenu == null)
             Debug.Log("PokerAreaMgr::Start() can not init right-up menu. check your code.");
+
+        nCurrentLevel = 1;
 
         //TODO: 1. get poker info; 2. init images dynamically
         InitPokerInfo();
@@ -132,10 +143,14 @@ public class PokerAreaMgr : MonoBehaviour
             InputField rotationInput = pokerInstance.GetComponentInChildren<InputField>();
             rotationInput.text = strRotation;
 
+            //2021.8.31 added by pengyuan for poker items
+            if(data.pokerInfo[i].nItemType != (int)GameDefines.PokerItemType.None)
+            {
+                InitPokerItemInfo(pokerInstance, btnDrag, data.pokerInfo[i]);
+            }
+
             pokerInfos.Add(pokerInstance);
         }
-
-        nCurrentLevel = 1;
 
     }
 
@@ -225,6 +240,20 @@ public class PokerAreaMgr : MonoBehaviour
         }
     }
 
+    void InitPokerItemInfo(GameObject pokerInst, DragButton drag, JsonReadWriteTest.PokerInfo pokerInfo)
+    {
+        switch((GameDefines.PokerItemType)pokerInfo.nItemType)
+        {
+            case GameDefines.PokerItemType.Ascending_Poker:
+                InstantiateAscendPoker(pokerInst, pokerInfo);
+                break;
+            case GameDefines.PokerItemType.Descending_Poker:
+                InstantiateDescendPoker(pokerInst, pokerInfo);
+                break;
+            default:break;
+        }
+    }
+
     public void SetPokerInfo(int nLevel)
     {
         trans = GetComponent<Transform>();
@@ -260,6 +289,12 @@ public class PokerAreaMgr : MonoBehaviour
             //Debug.Log("the poker rotation is: " + data.pokerInfo[i].fRotation + " display string is: " + strRotation);
             InputField rotationInput = pokerInstance.GetComponentInChildren<InputField>();
             rotationInput.text = strRotation;
+
+            //2021.8.31 added by pengyuan for poker items
+            if (data.pokerInfo[i].nItemType != (int)GameDefines.PokerItemType.None)
+            {
+                InitPokerItemInfo(pokerInstance, btnDrag, data.pokerInfo[i]);
+            }
 
             pokerInfos.Add(pokerInstance);
         }
@@ -319,8 +354,75 @@ public class PokerAreaMgr : MonoBehaviour
 
     }
 
+    public void AddAscendingCard()
+    {
+        GameObject _obj = AddOnePoker();
+
+        JsonReadWriteTest.LevelData data = EditorScriptMgr.Instance.chapterInfo.levelDataList[nCurrentLevel - 1];
+        data.pokerInfo[data.pokerInfo.Count - 1].nItemType = (int)GameDefines.PokerItemType.Ascending_Poker;
+        data.pokerInfo[data.pokerInfo.Count - 1].strItemInfo = "";
+
+        InstantiateAscendPoker(_obj, data.pokerInfo[data.pokerInfo.Count - 1]);
+    }
+
+    public void AddDescendingCard()
+    {
+        GameObject _obj = AddOnePoker();
+
+        JsonReadWriteTest.LevelData data = EditorScriptMgr.Instance.chapterInfo.levelDataList[nCurrentLevel - 1];
+        data.pokerInfo[data.pokerInfo.Count - 1].nItemType = (int)GameDefines.PokerItemType.Descending_Poker;
+        data.pokerInfo[data.pokerInfo.Count - 1].strItemInfo = "";
+
+        InstantiateDescendPoker(_obj, data.pokerInfo[data.pokerInfo.Count - 1]);
+
+    }
+
+    void InstantiateAscendPoker(GameObject pokerObj, JsonReadWriteTest.PokerInfo pokerInfo)
+    {
+        Vector3 posOffset = new Vector3(-30.0f, -60.0f, 0.0f);
+        GameObject ascendEdit = (GameObject)Instantiate(ascDesPrefab, pokerObj.transform.position, Quaternion.identity);
+        ascendEdit.transform.SetParent(pokerObj.transform);
+        ascendEdit.transform.localRotation = Quaternion.identity ; ;// Quaternion.AngleAxis(pokerInfo.fRotation, transform.forward);
+
+        DragButton btnDrag = pokerObj.GetComponent<DragButton>();
+        btnDrag.SetPokerItemEditInfo(ascendEdit, pokerInfo);
+    }
+
+    void InstantiateDescendPoker(GameObject pokerObj, JsonReadWriteTest.PokerInfo pokerInfo)
+    {
+        Vector3 posOffset = new Vector3(-50.0f, -60.0f, 0.0f);
+        GameObject descendEdit = (GameObject)Instantiate(ascDesPrefab, pokerObj.transform.position , Quaternion.identity);
+        descendEdit.transform.SetParent(pokerObj.transform);
+        descendEdit.transform.localRotation = Quaternion.identity;// Quaternion.AngleAxis(pokerInfo.fRotation, transform.forward);
+
+        DragButton btnDrag = pokerObj.GetComponent<DragButton>();
+        btnDrag.SetPokerItemEditInfo(descendEdit, pokerInfo);
+    }
+
+    public void AddBombCard()
+    {
+        GameObject _obj = AddOnePoker();
+
+        JsonReadWriteTest.LevelData data = EditorScriptMgr.Instance.chapterInfo.levelDataList[nCurrentLevel - 1];
+        data.pokerInfo[data.pokerInfo.Count - 1].nItemType = (int)GameDefines.PokerItemType.Bomb;
+        data.pokerInfo[data.pokerInfo.Count - 1].strItemInfo = "";
+
+        InstantiateBombPoker(_obj, data.pokerInfo[data.pokerInfo.Count - 1]);
+    }
+
+    void InstantiateBombPoker(GameObject pokerObj, JsonReadWriteTest.PokerInfo pokerInfo)
+    {
+        //todo ...
+        GameObject bombEdit = (GameObject)Instantiate(bombPrefab, pokerObj.transform.position, Quaternion.identity);
+        bombEdit.transform.SetParent(pokerObj.transform);
+        bombEdit.transform.localRotation = Quaternion.identity;
+
+        DragButton btnDrag = pokerObj.GetComponent<DragButton>();
+        btnDrag.SetPokerItemEditInfo(bombEdit, pokerInfo);
+    }
+
     //this function is used for add a new card to current poker group
-    public void AddOnePoker()
+    public GameObject AddOnePoker()
     {
         Vector3 posOffset = new Vector3(-550.0f, 250.0f, 0.0f);
         GameObject pokerInstance = (GameObject)Instantiate(pokerPrefab, trans.position + posOffset, trans.rotation);
@@ -355,9 +457,13 @@ public class PokerAreaMgr : MonoBehaviour
         pokerInfo.fPosY = pokerInstance.transform.position.y - trans.position.y;
         pokerInfo.fRotation = 0.0f;
         pokerInfo.nGroupID = 1;
+        pokerInfo.nItemType = (int)GameDefines.PokerItemType.None;
+        pokerInfo.strItemInfo = "";
         data.pokerInfo.Add(pokerInfo);
 
         rightUpMenu.UpdateDeskCardCount(data.pokerInfo.Count);
+
+        return pokerInstance;
 
     }
 
@@ -748,6 +854,17 @@ public class PokerAreaMgr : MonoBehaviour
         btnB.nGroupID = btnA.nGroupID;
         btnA.nGroupID = nTempGoupID;
 
+        //2021.8.31 added by pengyuan for poker items...
+        GameObject temObj = btnB.pokerItemEdit;
+        GameDefines.PokerItemType tempItemType = btnB.pokerItemType;
+        string tempItemInfo = btnB.strItemInfo;
+        btnB.pokerItemEdit = btnA.pokerItemEdit;
+        btnB.pokerItemType = btnA.pokerItemType;
+        btnB.strItemInfo = btnA.strItemInfo;
+        btnA.pokerItemEdit = temObj;
+        btnA.pokerItemType = tempItemType;
+        btnA.strItemInfo = tempItemInfo;
+
         //交换levelData中A和B的数据
         JsonReadWriteTest.LevelData levelData = EditorScriptMgr.Instance.chapterInfo.levelDataList[nCurrentLevel - 1];
         JsonReadWriteTest.PokerInfo tempInfo = new JsonReadWriteTest.PokerInfo();
@@ -755,6 +872,8 @@ public class PokerAreaMgr : MonoBehaviour
         tempInfo.fPosY = levelData.pokerInfo[nIndexB].fPosY;
         tempInfo.fRotation = levelData.pokerInfo[nIndexB].fRotation;
         tempInfo.nGroupID = levelData.pokerInfo[nIndexB].nGroupID;
+        tempInfo.nItemType = levelData.pokerInfo[nIndexB].nItemType;
+        tempInfo.strItemInfo = levelData.pokerInfo[nIndexB].strItemInfo;
 
         levelData.pokerInfo[nIndexB] = levelData.pokerInfo[nIndexA];
         levelData.pokerInfo[nIndexA] = tempInfo;
@@ -763,7 +882,6 @@ public class PokerAreaMgr : MonoBehaviour
         rectTransB.SetSiblingIndex(rectTransA.GetSiblingIndex());
         rectTransA.SetSiblingIndex(nTemp);
 
-        
     }
 
     private void OnGUI()
@@ -883,6 +1001,8 @@ public class PokerAreaMgr : MonoBehaviour
             info.fPosY = rectTransform.position.y - PokerAreaMgr.Instance.trans.position.y;
             info.fRotation = fRotation;
             info.nGroupID = dragBtn.nGroupID;
+            info.nItemType = (int)dragBtn.pokerItemType;
+            info.strItemInfo = dragBtn.strItemInfo;
 
             PokerAreaMgr.Instance.UpdateOnePokerInfo(dragBtn.nIndex, info);
         }
@@ -999,6 +1119,20 @@ public class PokerAreaMgr : MonoBehaviour
             dragBtn.nGroupID = nGroupID;
             levelInfo.pokerInfo[selectedPoker.nIndex].nGroupID = nGroupID;
         }
+    }
+
+    public void updateSelectPokerItemInfo(DragButton dragBtn)
+    {
+        if (dragBtn.nIndex < 0 )
+        {
+            Debug.Log("PokerAreaMgr::updateSelectPokerItemInfo... DragButton is invalid!!! ");
+            return;
+        }
+
+        JsonReadWriteTest.LevelData levelInfo = EditorScriptMgr.Instance.chapterInfo.levelDataList[nCurrentLevel - 1];
+
+        levelInfo.pokerInfo[dragBtn.nIndex].nItemType = (int)dragBtn.pokerItemType;
+        levelInfo.pokerInfo[dragBtn.nIndex].strItemInfo = dragBtn.strItemInfo;
     }
 
     public void setCurrentSelectPoker(DragButton selectBtn)
@@ -1228,6 +1362,21 @@ public class PokerAreaMgr : MonoBehaviour
                 GameObject.Destroy(go);
             }
         }
+    }
+
+    public string FormatPokerItemInfo(JsonReadWriteTest.PokerInfo pokerInfo)
+    {
+        if(pokerInfo.nItemType == (int)GameDefines.PokerItemType.None)
+        {
+            return "";
+        }
+
+        /*if(pokerInfo.nItemType == (int)GameDefines.GameItemType.Ascending_Poker)
+        {
+            string strInfo = string.Format("{0}_{1}", pokerInfo.)
+        }*/
+
+        return "";
     }
 
 }

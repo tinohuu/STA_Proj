@@ -122,7 +122,7 @@ public class StreakBonusUI : MonoBehaviour
         string strDebug = "";
         for (int i = 0; i < 6; ++i)
             strDebug += ("  " + streakBonus[i]);
-        //Debug.Log("StreakBonusUI::SetStreakBonusStatus the nStreakBonus is: " + nStreakBonus + "  the array is: " + strDebug);
+        Debug.Log("StreakBonusUI::SetStreakBonusStatus the nStreakBonus is: " + nStreakBonus + "  the array is: " + strDebug);
 
         for(int i = 0; i < nCount; ++i)
         {

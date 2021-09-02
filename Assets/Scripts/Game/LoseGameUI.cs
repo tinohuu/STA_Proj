@@ -65,6 +65,7 @@ public class LoseGameUI : MonoBehaviour
     void OnClickRetryBtn()
     {
         Debug.Log("you clicked Retry Button!");
+        //GameplayMgr.Instance.gameplayUI.HideEndGameBtn();
 
         GameplayMgr.Instance.RestartGame();
     }

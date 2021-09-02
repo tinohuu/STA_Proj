@@ -103,6 +103,7 @@ public class CropManager : MonoBehaviour
         {
             foreach (Crop crop in crops)
             {
+                if (!crop) continue; 
                 crop.UpdateState();
                 crop.UpdateAnimator(includeState);
             }

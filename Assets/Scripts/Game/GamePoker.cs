@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class GamePoker : MonoBehaviour
@@ -10,9 +11,12 @@ public class GamePoker : MonoBehaviour
     public GameplayMgr.PokerType pokerType { get; set; }
 
     //when withdraw a poker, use this to see whether this poker is facing or backing
-    public GameplayMgr.PokerFacing pokerFacing { get; set; }
+    public GameplayMgr.PokerFacing pokerFacing;// { get; set; }
 
     //Vector3 originPos;
+    Vector3 _ascendPos;
+
+    GameObject ascendEffect = null;
 
     public Vector3 targetPos;
     int nFoldIndex = -1;
@@ -21,17 +25,22 @@ public class GamePoker : MonoBehaviour
     float fFlipTime = 0.0f;
 
     static float fRotateTime = 1.5f;
-    static float fFlipTotalTime = 0.3f;
-    static float fFoldTotalTime = 1.5f;
+    static float fFlipTotalTime = 0.8f;
+    static float fFoldTotalTime = 0.8f;
 
     public string strName { get; set; }//this is for test
     float screenX = 0.0f;
     TextMesh textName;
 
     public bool bHasWithdrawed { get; set; } = false;
+    bool bIsWithdrawing = false;
+    float fWithdrawTime = 0.0f;
+    static float fWithdrawTotalTime = 0.4f;
 
     bool bFlip { get; set; } = false;
     public bool bIsFlipping { get; set; } = false;
+
+    bool bUnFlip { get; set; } = false;
 
     float fFoldTime = 0.0f;
     bool bFold { get; set; } = false;
@@ -42,7 +51,10 @@ public class GamePoker : MonoBehaviour
 
     public GameplayMgr.PokerColor pokerColor;
 
-    public int nPokerNumber { get; set; }
+    public GameDefines.PokerItemType itemType = GameDefines.PokerItemType.None;
+
+    public int nPokerNumber { get; set; }//this is the original poker number
+    public int nOriginNumber { get; set; }
 
     //2021.8.11 added for foldinga game poker, translate and rotate in detail
     Vector3 foldPeekPoint;
@@ -80,6 +92,8 @@ public class GamePoker : MonoBehaviour
         Index = nIndex;
         nFoldIndex = nIndex;
 
+        _ascendPos = pos + new Vector3(0.0f, rendererSize.y * 0.5f, 0.0f);
+
         pokerType = GameplayMgr.PokerType.PublicPoker;
         pokerFacing = GameplayMgr.PokerFacing.Backing;
 
@@ -100,6 +114,30 @@ public class GamePoker : MonoBehaviour
 
         foldPeekPoint = Vector3.zero;
         foldSecondPoint = Vector3.zero;
+
+        //this canvas is used to display ui animation, ascending, descending poker.
+        gameObject.AddComponent<Canvas>();
+
+        itemType = (GameDefines.PokerItemType)info.nItemType;
+        //2021.8.31 for ascending and descending poker ...
+        if (itemType != GameDefines.PokerItemType.None)
+        {   
+            if (itemType == GameDefines.PokerItemType.Ascending_Poker)
+            {
+                ascendEffect = Instantiate(GameplayMgr.Instance.ascendingPrefab, _ascendPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
+            }
+            if (itemType == GameDefines.PokerItemType.Descending_Poker)
+            {
+                ascendEffect = Instantiate(GameplayMgr.Instance.descendingPrefab, _ascendPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
+            }
+            ascendEffect.transform.SetParent(GetComponent<Canvas>().transform);
+            ascendEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+            ascendEffect.SetActive(false);
+        }
+        else
+        {
+            ascendEffect = null;
+        }
     }
 
     // Update is called once per frame
@@ -107,7 +145,7 @@ public class GamePoker : MonoBehaviour
     {
         fTime += Time.deltaTime;
 
-        if (!bFlip && !bFold)
+        if (!bFlip && !bFold && !bUnFlip)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.08f);
 
@@ -127,10 +165,11 @@ public class GamePoker : MonoBehaviour
             {
                 //Debug.Log(strName + " is withdrawed, the target pos is: " + targetPos);
                 quatTo = Quaternion.Euler(0.0f, 180.0f, -pokerInfo.fRotation);
+                
                 transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fTime / fRotateTime);
             }
 
-            fFlipTime += Time.deltaTime;
+            //fFlipTime += Time.deltaTime;
 
             /*if (fFlipTime >= fFlipTotalTime)
             {
@@ -150,6 +189,8 @@ public class GamePoker : MonoBehaviour
             if(fFlipTime >= fFlipTotalTime)
             {
                 bIsFlipping = false;
+                pokerFacing = GameplayMgr.PokerFacing.Facing;
+                UpdatePokerItemDisplay(true);
 
                 //2021.8.26 added by pengyaun to adjust the rotation of the poker.
                 /*if(Mathf.Abs(pokerInfo.fRotation) > 0.1f)
@@ -157,6 +198,21 @@ public class GamePoker : MonoBehaviour
                     quatTo = Quaternion.Euler(0.0f, 180.0f, -pokerInfo.fRotation);
                     transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fFlipTime / fFlipTotalTime);
                 }*/
+            }
+        }
+
+        if(bUnFlip && bIsFlipping)
+        {
+            fFlipTime += Time.deltaTime;
+
+            Quaternion quatTo = Quaternion.Euler(0.0f, 0.0f, pokerInfo.fRotation);
+            transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fFlipTime / fFlipTotalTime);
+
+            if (fFlipTime >= fFlipTotalTime)
+            {
+                bIsFlipping = false;
+                pokerFacing = GameplayMgr.PokerFacing.Backing;
+                UpdatePokerItemDisplay(false);
             }
         }
 
@@ -173,6 +229,19 @@ public class GamePoker : MonoBehaviour
             {
                 bIsFolding = false;
                 transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+                //transform.position = pos;
+            }
+        }
+
+        if(bIsWithdrawing)
+        {
+            fWithdrawTime += Time.deltaTime;
+            if(fWithdrawTime >= fWithdrawTotalTime)
+            {
+                bIsWithdrawing = false;
+
+                //GameplayMgr.Instance.UnflipAllCoveredGamePoker(gameObject);
+                GameplayMgr.Instance.nWithdrawCount --;
             }
         }
     }
@@ -200,8 +269,7 @@ public class GamePoker : MonoBehaviour
         {
             nPokerNumber = nNumber;
         }
-        //nPokerNumber = nNumber;
-
+        nOriginNumber = nPokerNumber;
         //Debug.Log("GamePoker::Test_SetSuitNumber... the suit is: " + suit + "the name is: " + gameObject.name);
 
         textName.text = GameplayMgr.Instance.Test_GetSuitDisplayString(pokerSuit, nPokerNumber);
@@ -219,7 +287,54 @@ public class GamePoker : MonoBehaviour
         //GetComponent<Renderer>().material.SetTextureOffset("_MainTex2", new Vector2(textureIndex * 142, 0));
         //GetComponent<Renderer>().material.SetTextureOffset("_MainTex2", new Vector2(0.0625f, 0f));
         //GetComponent<Renderer>().material.SetTextureOffset("_MainTex2", new Vector2(GameplayMgr.Instance.pokerRects[textureIndex].xMin, GameplayMgr.Instance.pokerRects[textureIndex].yMin));
+    }
 
+    //pengyuan 2021.9.1 added for update ascend and descend poker status
+    public void UpdateAscendDescendStatus(string foldPokerName, bool bWithdraw = false)
+    {
+        if(pokerFacing != GameplayMgr.PokerFacing.Facing)
+        {
+            return;
+        }
+
+        if(foldPokerName == gameObject.name)
+        {
+            return;
+        }
+
+        if(itemType == GameDefines.PokerItemType.Ascending_Poker)
+        {
+            int nDeltaIndex = 1;
+            if (bWithdraw)
+            {
+                nDeltaIndex = 12;
+            }
+            nPokerNumber = (nPokerNumber + nDeltaIndex) % 13;
+            if(nPokerNumber == 0)
+            {
+                nPokerNumber = 13;
+            }
+
+            int textureIndex = ((int)pokerSuit - 1) * 13 + nPokerNumber - 1;
+            GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
+        }
+        if(itemType == GameDefines.PokerItemType.Descending_Poker)
+        {
+            int nDeltaIndex = 12;
+            if (bWithdraw)
+            {
+                nDeltaIndex = 1;
+            }
+
+            nPokerNumber = (nPokerNumber + nDeltaIndex) % 13;
+            if (nPokerNumber == 0)
+            {
+                nPokerNumber = 13;
+            }
+
+            int textureIndex = ((int)pokerSuit - 1) * 13 + nPokerNumber - 1;
+            GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
+        }
     }
 
     public void Test_DisableDisplayText()
@@ -241,27 +356,32 @@ public class GamePoker : MonoBehaviour
             return;
         }
 
-        //Debug.Log("here we flip the poker, name is: " + gameObject.name);
+        //Debug.Log("here we flip the poker, name is: " + gameObject.name + "  depth is: " + transform.position.z);
         
         bFlip = true;
+        bUnFlip = false;
         bIsFlipping = true;
         fFlipTime = 0.0f;
 
         //2021.8.10 added by pengyuan for testing the z value
-        transform.position -= Vector3.forward * 1.5f;
+        //transform.position -= Vector3.forward * 1.5f;
 
         pokerFacing = GameplayMgr.PokerFacing.Facing;
+        UpdatePokerItemDisplay(true);
     }
 
     public void UnflipPoker()
     {
-        Debug.Log("GamePoker::UnflipPoker... we UnflipPoker, the name is: " + name + "  number is: " + nPokerNumber);
+        //Debug.Log("GamePoker::UnflipPoker... we UnflipPoker, the name is: " + name + "  number is: " + nPokerNumber);
 
         bFlip = false;
+        bFold = false;
+        bUnFlip = true;
         bIsFlipping = true;
         fFlipTime = 0.0f;
 
         pokerFacing = GameplayMgr.PokerFacing.Backing;
+        UpdatePokerItemDisplay(false);
     }
 
     public void FoldPoker(int nIndex)
@@ -279,8 +399,15 @@ public class GamePoker : MonoBehaviour
 
         nFoldIndex = nIndex;
 
+        //2021.9.1 added by pengyuan to disable the ascend and descend display
+        if (itemType == GameDefines.PokerItemType.Ascending_Poker || itemType == GameDefines.PokerItemType.Descending_Poker)
+        {
+            ascendEffect.SetActive(false);
+        }
+
         //2021.8.11 added by pengyuan 
         Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
+        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
 
         /*foldPeekPoint.x = transform.position.x + (GameplayMgr.Instance.GetFoldPokerPosition().x - transform.position.x) * 0.5f;
         foldPeekPoint.y = transform.position.y + gameObject.GetComponent<Renderer>().bounds.size.x * 2;
@@ -319,6 +446,12 @@ public class GamePoker : MonoBehaviour
 
         nFoldIndex = nIndex;
 
+        //2021.9.1 added by pengyuan to disable the ascend and descend display
+        if (itemType == GameDefines.PokerItemType.Ascending_Poker || itemType == GameDefines.PokerItemType.Descending_Poker)
+        {
+            ascendEffect.SetActive(false);
+        }
+
         Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
 
         Debug.Log("game card jump second coroutine... the target1 is: " + lockPos);
@@ -336,9 +469,22 @@ public class GamePoker : MonoBehaviour
         bFlip = false;
         bFold = false;
 
+        bIsWithdrawing = true;
+        fWithdrawTime = 0.0f;
+
         bHasWithdrawed = true;
 
-        transform.DOMove(targetPos, 0.8f);
+        transform.DOMove(targetPos, 0.3f);
+
+        GameplayMgr.Instance.nWithdrawCount++;
+    }
+
+    void UpdatePokerItemDisplay(bool bDisplay)
+    {
+        if (ascendEffect != null)
+        {
+            ascendEffect.SetActive(bDisplay);
+        }
     }
 
     IEnumerator CardJump(Transform card, float cardWidth, Vector3 target)
@@ -393,6 +539,8 @@ public class GamePoker : MonoBehaviour
 
             yield return null;
         }
+
+        card.position = target; 
 
         Debug.Log("game card jump coroutine end time is: " + Time.time);
     }
@@ -474,5 +622,7 @@ public class GamePoker : MonoBehaviour
             card.position = Vector3.Lerp(oriPos, target2, (Time.time - _StartTime - 0.7f) / 0.1f);
             yield return null;
         }
+
+        card.position = target2;
     }
 }

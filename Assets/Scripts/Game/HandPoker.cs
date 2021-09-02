@@ -220,10 +220,22 @@ public class HandPoker : MonoBehaviour
         }
 
         Vector3 newPos = new Vector3();
-        
-        newPos.x = pos.x - (nTotalCount - index) * 0.2f;
-        newPos.y = pos.y + rendererSize.y * 0.3f;
-        newPos.z = pos.z - index * 0.05f;
+
+        //todo: in the if statement, we should adjust the first nTotalCount-20 poker to the leftmost position, but we can do it later.
+        if (nTotalCount > 20)
+        {
+            newPos.x = pos.x - (20 - index) * 0.2f;
+            newPos.y = pos.y + rendererSize.y * 0.3f;
+            newPos.z = pos.z - index * 0.05f;
+        }
+        else
+        {
+            newPos.x = pos.x - (nTotalCount - index) * 0.2f;
+            newPos.y = pos.y + rendererSize.y * 0.3f;
+            newPos.z = pos.z - index * 0.05f;
+        }
+
+        //Debug.Log("AdjustHandPokerPosition... the pos.x is: " + newPos.x + ", the total count is: " + nTotalCount + ", the idnex is : " + index);
 
         targetPos = newPos;
     }

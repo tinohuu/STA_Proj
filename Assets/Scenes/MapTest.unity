@@ -252,6 +252,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 56239223}
+  - component: {fileID: 56239226}
+  - component: {fileID: 56239225}
   - component: {fileID: 56239224}
   m_Layer: 5
   m_Name: CropList
@@ -289,11 +291,55 @@ MonoBehaviour:
   m_GameObject: {fileID: 56239222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Padding: {x: 0, y: 0, z: 0, w: 0}
-  m_Softness: {x: 0, y: 0}
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 74be1ba45ec08e045a72d4a5806a8583, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &56239225
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56239222}
+  m_CullTransparentMesh: 1
+--- !u!114 &56239226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56239222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 385b7d1277b6c4007a84c065696e0f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 0
+  m_DownSamplingRate: 1
+  m_Softness: 1
+  m_Alpha: 1
+  m_IgnoreParent: 0
+  m_PartOfParent: 0
+  m_IgnoreSelfGraphic: 0
+  m_IgnoreSelfStencil: 0
 --- !u!1 &63680499 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5847001935950742583, guid: 6ca5d66e8fa9f1441a60ad6b381e61be, type: 3}
@@ -4981,6 +5027,7 @@ GameObject:
   - component: {fileID: 1135818866}
   - component: {fileID: 1135818865}
   - component: {fileID: 1135818867}
+  - component: {fileID: 1135818868}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -5032,7 +5079,7 @@ MonoBehaviour:
 
 
 
-'
+    <sprite name="Coin">'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: -4732027964359432133, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
@@ -5123,6 +5170,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &1135818868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135818863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97bc2ebab6563400c95b036136d26ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Inverse: 0
+  m_MaskInteraction: 85
+  m_UseStencil: 1
+  m_RaycastFilter: 0
 --- !u!1 &1144802144
 GameObject:
   m_ObjectHideFlags: 0
@@ -6318,6 +6381,8 @@ MonoBehaviour:
   Debug_SizeDelta: {x: 0, y: 0}
   CoinString: 
   HarvestParticle: {fileID: 63680499}
+  _harvestTime: 
+  _nowTime: 
 --- !u!1 &1408934683
 GameObject:
   m_ObjectHideFlags: 0
@@ -10564,7 +10629,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbcd62c7dfba2d34984912e828f16df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapLevelPanelPrefab: {fileID: 2848093792817402440, guid: a70fa1cceecb19242b6464857e7be925, type: 3}
+  LevelWindowPrefabs:
+  - {fileID: 2848093792817402440, guid: d68ad1bddd5adb642a285b242f7b2cf6, type: 3}
+  - {fileID: 2848093792817402440, guid: dafe6b6fe92a77d42b0e7276ac8579cf, type: 3}
+  - {fileID: 2848093792817402440, guid: df66329fd67301f4696e2de2a863dfb8, type: 3}
   EdgeOffset: 50
   MapScrollRect: {fileID: 868452506}
   RemoteImage: {fileID: 1749460624}
