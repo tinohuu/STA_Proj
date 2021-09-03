@@ -1706,7 +1706,7 @@ GameObject:
   - component: {fileID: 5960961366168608762}
   - component: {fileID: 5960961366168608763}
   m_Layer: 5
-  m_Name: MapMaker
+  m_Name: Map_MapMaker_Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

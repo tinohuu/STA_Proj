@@ -390,7 +390,7 @@ GameObject:
   - component: {fileID: 214436393202113947}
   - component: {fileID: 8155250758019910228}
   m_Layer: 5
-  m_Name: Button_RemoveCards
+  m_Name: WindowElement_PowerupButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

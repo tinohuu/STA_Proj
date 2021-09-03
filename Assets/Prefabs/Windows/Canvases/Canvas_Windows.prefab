@@ -991,6 +991,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  targetTransform: {fileID: 0}
 --- !u!114 &1370499412538436072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1003,27 +1004,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d851d9e30caeb9c4d806520de2fcf9e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!223 &1370499412662459753
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3719221954771765039}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 1
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 1
-  m_TargetDisplay: 0
 --- !u!1 &1370499412807041214
 GameObject:
   m_ObjectHideFlags: 0
@@ -1111,7 +1091,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &1370499412807041213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1507,10 +1487,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 368653b7fc62ce242a6befe22f53a604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: {fileID: 1370499412242427315}
+  MainText: {fileID: 0}
+  SecondaryText: {fileID: 0}
+  GoldMat: {fileID: 0}
+  WhiteMat: {fileID: 0}
+  TextGroupAnimator: {fileID: 0}
+  CropList: {fileID: 0}
   Image: {fileID: 1370499413144084819}
   Button: {fileID: 1370499413144084844}
   IsReady: 0
+  Debug_AchorPos: {x: 0, y: 0}
+  Debug_SizeDelta: {x: 0, y: 0}
+  CoinString: 
+  HarvestParticle: {fileID: 0}
+  _harvestTime: 
+  _nowTime: 
 --- !u!1 &1370499413152905448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1547,6 +1538,27 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &1370499412662459753
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3719221954771765039}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 1
+  m_TargetDisplay: 0
 --- !u!1001 &1370499412662459748
 PrefabInstance:
   m_ObjectHideFlags: 0

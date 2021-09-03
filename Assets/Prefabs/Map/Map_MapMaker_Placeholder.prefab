@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8808035729179205188}
   - component: {fileID: 6573131125195777159}
   m_Layer: 6
-  m_Name: MapMaker_Placeholder
+  m_Name: Map_MapMaker_Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -10,7 +10,6 @@ public class TimeManager : MonoBehaviour
 {
 	[Header("Config")]
 	public int ThresholdMinutes = 30;
-	public Text DebugText;
 	[SavedData] public TimeData Data = new TimeData();
 	[Header("Debug")]
 	public bool IsChecking = false;
@@ -23,7 +22,7 @@ public class TimeManager : MonoBehaviour
 	public event TimeHandler TimeRefresher = null; // Remove punishment
 	public event TimeHandler OnGetTime = null;
 	public static TimeManager Instance = null;
-	
+
 	private void Awake()
     {
 		if (!Instance) Instance = this;
@@ -59,25 +58,25 @@ public class TimeManager : MonoBehaviour
 	}
 	public void GetTime(bool saveSystemTime, bool enablePunish)
     {
-		DebugText.text += "\nGetting Time...";
+		TimeDebugText.Text.text += "\nGetting Time...";
 		StartCoroutine(IGetTime(saveSystemTime, enablePunish));
 	}
 
 	public void VerifyTime()
     {
-		DebugText.text += "\nVerifying Time...";
+		TimeDebugText.Text.text += "\nVerifying Time...";
 		bool _isAuthentic = true;
 		_isAuthentic = VerifyTimeSpan(RealNow - Data.CheckedDateTime, TimeSinceBoot - Data.CheckedBootTime.ToTimeSpan(), ThresholdMinutes);
 
 		_difference = new Vector2((float)(RealNow - Data.CheckedDateTime).TotalMinutes, (float)(TimeSinceBoot - Data.CheckedBootTime.ToTimeSpan()).TotalMinutes);
 		if (!_isAuthentic)
         {
-			DebugText.text += "\nYour time is not authentic during verificaion." + RealNow.ToString();
+			TimeDebugText.Text.text += "\nYour time is not authentic during verificaion." + RealNow.ToString();
 			GetTime(true, true);
 		}
 		else
         {
-			DebugText.text += "\nYour time is authentic during verificaion: " + RealNow.ToString();
+			TimeDebugText.Text.text += "\nYour time is authentic during verificaion: " + RealNow.ToString();
 			TimeRefresher?.Invoke(true);
 		}
 		Authenticity = _isAuthentic;
@@ -135,7 +134,7 @@ public class TimeManager : MonoBehaviour
 				Data.CheckedSource = url;
 				Data.CheckedDateTime = String2DateTime(value);
 				Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
-				DebugText.text += "\nRecorded time from " + Data.CheckedSource;
+				TimeDebugText.Text.text += "\nRecorded time from " + Data.CheckedSource;
 				TimeSpan curOffset = SystemNow - Data.CheckedDateTime;
 				TimeSpan oldOffset = Data.CheckedSystemOffset.ToTimeSpan();
 				//IsAuthentic = true;
@@ -145,12 +144,12 @@ public class TimeManager : MonoBehaviour
 					if (!VerifyTimeSpan(curOffset, oldOffset, ThresholdMinutes))
                     {
 						TimeRefresher(false);
-						DebugText.text += "\nPunushed";
+						TimeDebugText.Text.text += "\nPunushed";
 					}
 					else
                     {
 						TimeRefresher?.Invoke(true);
-						DebugText.text += "\nNot punished as passing the internet time.";
+						TimeDebugText.Text.text += "\nNot punished as passing the internet time.";
 					}
 					Authenticity = true;
 				}
@@ -162,7 +161,7 @@ public class TimeManager : MonoBehaviour
 		if (enablePunish)
         {
 			TimeRefresher(false);
-			DebugText.text += "\nPunushed";
+			TimeDebugText.Text.text += "\nPunushed";
 			Authenticity = true;
 		}
         if (saveSystemTime)
@@ -171,7 +170,7 @@ public class TimeManager : MonoBehaviour
 			Data.CheckedDateTime = RealNow;
 			Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
 			Data.CheckedSystemOffset = (RealNow - Data.CheckedDateTime).TotalMilliseconds;
-			DebugText.text += "\nRecorded time from " + Data.CheckedSource;
+			TimeDebugText.Text.text += "\nRecorded time from " + Data.CheckedSource;
 		}
 		OnGetTime?.Invoke(false);
 	}

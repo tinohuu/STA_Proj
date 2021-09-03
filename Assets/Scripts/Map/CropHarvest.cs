@@ -79,17 +79,17 @@ public class CropHarvest : MonoBehaviour
         if (isVerified)
         {
             bool clamp = TimeManager.Instance.RealNow < MapManager.Instance.Data.LastHarvestTime;
-            TimeManager.Instance.DebugText.text += "\nChecking remaining harvest duration...";
+            TimeDebugText.Text.text += "\nChecking remaining harvest duration...";
             if (clamp)
             {
-                TimeManager.Instance.DebugText.text += "\nClamped the harvest time.";
+                TimeDebugText.Text.text += "\nClamped the harvest time.";
                 //data.LastHarvestTime = TimeManager.Instance.RealNow;
                 TimeManager.Instance.GetTime(true, false);
             }
         }
         else
         {
-            TimeManager.Instance.DebugText.text += "\nPunished the harvest time.";
+            TimeDebugText.Text.text += "\nPunished the harvest time.";
             data.LastHarvestTime = TimeManager.Instance.RealNow;
         }
     }
