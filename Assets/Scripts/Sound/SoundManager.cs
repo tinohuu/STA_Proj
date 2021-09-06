@@ -18,7 +18,7 @@ public class SoundManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
-        clipsByName = clips.ToDictionary(p => p.name);
+        clipsByName = clips.ToDictionary(p => p.name.ToUpper());
     }
     // Start is called before the first frame update
     void Start()
@@ -41,7 +41,7 @@ public class SoundManager : MonoBehaviour
         if (!MenuManager.Instance.Data.SoundEffects) return;
 
         // Get clip by name
-        string fileName = "SFX_" + name;
+        string fileName = "SFX_" + name.ToUpper();
         if (!clipsByName.ContainsKey(fileName)) return;
         AudioClip clip = clipsByName[fileName];
 
@@ -66,7 +66,7 @@ public class SoundManager : MonoBehaviour
         if (!MenuManager.Instance.Data.Music) return;
 
         // Get clip by name
-        string fileName = "BGM_" + name;
+        string fileName = "BGM_" + name.ToUpper();
         if (!clipsByName.ContainsKey(fileName)) return;
         AudioClip clip = clipsByName[fileName];
 

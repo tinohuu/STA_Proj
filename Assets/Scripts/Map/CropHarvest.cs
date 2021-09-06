@@ -105,7 +105,7 @@ public class CropHarvest : MonoBehaviour
         CropList.rectTransform.anchoredPosition = Vector2.zero - Vector2.up * CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y;
         int coinCount = 2000;
         CropList.text = "Farm " + "Coin".ToIcon() + " " + 2000;
-        int firstLevelOfMap = MapManager.Instance.LevelToMapData(MapManager.Instance.Data.CompelteLevel).StartAt;
+        int firstLevelOfMap = MapManager.Instance.LevelToMapData(MapManager.Instance.Data.CompleteLevel).StartAt;
         CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
         int configIndex = CropManager.Instance.CropConfigs.IndexOf(cropConfig);
         if (configIndex > 0) CropList.text += "\nCrops 1 to " + (configIndex).ToString() + "Coin".ToIcon() + " " + ((configIndex) * 50).ToString();
@@ -113,7 +113,7 @@ public class CropHarvest : MonoBehaviour
         for (int i = configIndex; i < CropManager.Instance.CropConfigs.Count; i++)
         {
             cropConfig = CropManager.Instance.CropConfigs[i];
-            if (cropConfig.Level <= MapManager.Instance.Data.CompelteLevel)
+            if (cropConfig.Level <= MapManager.Instance.Data.CompleteLevel)
             {
                 CropList.text += "\n" + cropConfig.Name + " " + "Coin".ToIcon() + " 50";
                 lastCropIndex = i;

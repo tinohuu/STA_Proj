@@ -250,6 +250,9 @@ public class PokerAreaMgr : MonoBehaviour
             case GameDefines.PokerItemType.Descending_Poker:
                 InstantiateDescendPoker(pokerInst, pokerInfo);
                 break;
+            case GameDefines.PokerItemType.Bomb:
+                InstantiateBombPoker(pokerInst, pokerInfo);
+                break;
             default:break;
         }
     }
@@ -377,6 +380,17 @@ public class PokerAreaMgr : MonoBehaviour
 
     }
 
+    public void AddBombCard()
+    {
+        GameObject _obj = AddOnePoker();
+
+        JsonReadWriteTest.LevelData data = EditorScriptMgr.Instance.chapterInfo.levelDataList[nCurrentLevel - 1];
+        data.pokerInfo[data.pokerInfo.Count - 1].nItemType = (int)GameDefines.PokerItemType.Bomb;
+        data.pokerInfo[data.pokerInfo.Count - 1].strItemInfo = "";
+
+        InstantiateBombPoker(_obj, data.pokerInfo[data.pokerInfo.Count - 1]);
+    }
+
     void InstantiateAscendPoker(GameObject pokerObj, JsonReadWriteTest.PokerInfo pokerInfo)
     {
         Vector3 posOffset = new Vector3(-30.0f, -60.0f, 0.0f);
@@ -399,16 +413,6 @@ public class PokerAreaMgr : MonoBehaviour
         btnDrag.SetPokerItemEditInfo(descendEdit, pokerInfo);
     }
 
-    public void AddBombCard()
-    {
-        GameObject _obj = AddOnePoker();
-
-        JsonReadWriteTest.LevelData data = EditorScriptMgr.Instance.chapterInfo.levelDataList[nCurrentLevel - 1];
-        data.pokerInfo[data.pokerInfo.Count - 1].nItemType = (int)GameDefines.PokerItemType.Bomb;
-        data.pokerInfo[data.pokerInfo.Count - 1].strItemInfo = "";
-
-        InstantiateBombPoker(_obj, data.pokerInfo[data.pokerInfo.Count - 1]);
-    }
 
     void InstantiateBombPoker(GameObject pokerObj, JsonReadWriteTest.PokerInfo pokerInfo)
     {
@@ -854,7 +858,7 @@ public class PokerAreaMgr : MonoBehaviour
         btnB.nGroupID = btnA.nGroupID;
         btnA.nGroupID = nTempGoupID;
 
-        //2021.8.31 added by pengyuan for poker items...
+        //2021.8.31 added by pengyuan for exchange poker items information...
         GameObject temObj = btnB.pokerItemEdit;
         GameDefines.PokerItemType tempItemType = btnB.pokerItemType;
         string tempItemInfo = btnB.strItemInfo;

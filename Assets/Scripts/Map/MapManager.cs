@@ -12,11 +12,14 @@ public class MapManager : MonoBehaviour
     public MapManagerData Data = new MapManagerData();
     public static MapManager Instance = null;
     public List<PublicConfig> PublicConfigs;
+    public Dictionary<int, FunctionConfig> FunctionConfigsByFuncID;
     public Text Text;
     GameObject obj;
     private void Awake()
     {
         if (!Instance) Instance = this; // Singleton
+
+        FunctionConfigsByFuncID = ConfigsAsset.GetConfigList<FunctionConfig>().ToDictionary(p => p.FunctionID);
 
         Data = SaveManager.Bind(InitializeData());  // Bind to save
     }
@@ -46,7 +49,6 @@ public class MapManager : MonoBehaviour
     }
 }
 
-
 [Serializable]
 public class PublicConfig
 {
@@ -56,7 +58,7 @@ public class PublicConfig
 [System.Serializable]
 public class MapManagerData
 {
-    public int CompelteLevel = 0;
+    public int CompleteLevel = 0;
     public int SelectedLevel = 0;
     public DateTime LastHarvestTime = new DateTime();
     public List<MapData> MapDatas = new List<MapData>();

@@ -23,7 +23,7 @@ public class WindowAnimator : Window
     }
     private void OnEnable()
     {
-        CompleteWinodws();
+        ResetWinodws();
         //ResetWinodws();
         FadeIn();
     }
@@ -46,6 +46,7 @@ public class WindowAnimator : Window
     IEnumerator IFadeIn()
     {
         SoundManager.Instance.PlaySFX("uiPanelOpen");
+        CompleteWinodws();
         ResetWinodws();
         if (WindowQueue.Count > 0 && WindowQueue.Last() != this) WindowQueue.Last().FadeOut();
         if (!WindowQueue.Contains(this)) WindowQueue.Add(this);
@@ -80,7 +81,6 @@ public class WindowAnimator : Window
                 tween = window.CanvasGroup.transform.DOScale(window.CanvasGroup.transform.localScale + window.FromOffset * (InverseOnFadeOut ? -1 : 1), window.Duration);//.PlayBackwards();
             yield return i == 0 ? new WaitForSeconds(0) : new WaitForSeconds(Elements[i - 1].Interval * IntervalMultiplerOnFadeOut);
         }
-
 
         if (disable)
         {

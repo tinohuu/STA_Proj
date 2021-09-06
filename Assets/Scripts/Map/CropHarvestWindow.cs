@@ -91,14 +91,14 @@ public class CropHarvestWindow : MonoBehaviour
 
     void ShowCrop()
     {
-        int firstLevelOfMap = MapManager.Instance.LevelToMapData(MapManager.Instance.Data.CompelteLevel).StartAt;
+        int firstLevelOfMap = MapManager.Instance.LevelToMapData(MapManager.Instance.Data.CompleteLevel).StartAt;
         CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
         int configIndex = CropManager.Instance.CropConfigs.IndexOf(cropConfig);
         cells.Clear();
         for (int i = configIndex; i < CropManager.Instance.CropConfigs.Count; i++)
         {
             cropConfig = CropManager.Instance.CropConfigs[i];
-            if (cropConfig.Level <= MapManager.Instance.Data.CompelteLevel)
+            if (cropConfig.Level <= MapManager.Instance.Data.CompleteLevel)
             {
                 GameObject cell = Instantiate(CellPrefab, i % 2 == 0 ? TopLayoutGroup : BottomLayoutGroup);
                 cell.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Sprites/Crops/Crop_Fruit_" + cropConfig.Name);

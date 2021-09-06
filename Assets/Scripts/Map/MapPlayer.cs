@@ -89,7 +89,12 @@ public class MapPlayer : MonoBehaviour
             SoundManager.Instance.PlaySFX("uiAvatarLanding");
         }
 
-        int windowIndex = Mathf.Clamp(mapLevel.Data.Order - 1, 0, 2);
+        int windowIndex = 0;
+        if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigsByFuncID[1021].FunctionParams)
+            windowIndex = 2;
+        else if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigsByFuncID[1012].FunctionParams)
+            windowIndex = 1;
+
         MapLevelWindow panel = Window.CreateWindowPrefab(LevelWindowPrefabs[windowIndex]).GetComponent<MapLevelWindow>();
         panel.UpdateView(mapLevel.Data);
         

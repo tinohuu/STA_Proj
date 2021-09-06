@@ -16,11 +16,25 @@ public class GamePoker : MonoBehaviour
     //Vector3 originPos;
     Vector3 _ascendPos;
 
+    Vector3 _bombPos;
+
+    //pengyuan 2021.8.31 the ascend poker and descend poker effect
     GameObject ascendEffect = null;
+
+    //pengyuan 2021.9.1 
+    GameObject bombEffect = null;
+    int nBombStep = 1;
+    Image digitImage;
+    Image unitImage;
+    Image singleImage;
+    Animator bombAnim;
 
     public Vector3 targetPos;
     int nFoldIndex = -1;
     float fTime;
+
+    //pengyuan 2021.9.3 added for dismiss the poker
+    public Vector3 dismissPos;
 
     float fFlipTime = 0.0f;
 
@@ -45,6 +59,10 @@ public class GamePoker : MonoBehaviour
     float fFoldTime = 0.0f;
     bool bFold { get; set; } = false;
     public bool bIsFolding { get; set; } = false;
+
+    bool bDismiss = false;
+    float fDismissTime = 0.0f;
+    static float fDismissTotalTime = 1.5f;
 
     //data
     public GameplayMgr.PokerSuit pokerSuit;
@@ -93,6 +111,7 @@ public class GamePoker : MonoBehaviour
         nFoldIndex = nIndex;
 
         _ascendPos = pos + new Vector3(0.0f, rendererSize.y * 0.5f, 0.0f);
+        _bombPos = pos + new Vector3(0.0f, rendererSize.y * 0.5f, 0.0f) + new Vector3(-0.3f, -0.5f, 0.0f);
 
         pokerType = GameplayMgr.PokerType.PublicPoker;
         pokerFacing = GameplayMgr.PokerFacing.Backing;
@@ -101,6 +120,8 @@ public class GamePoker : MonoBehaviour
         targetPos.x = pos.x + pokerInfo.fPosX * 0.01f;
         targetPos.y = pos.y + pokerInfo.fPosY * 0.01f;
         targetPos.z = pos.z - 1.0f - nIndex * 0.05f;
+
+        dismissPos = targetPos - Vector3.up * 8.0f - Vector3.right * 8.0f ;
 
         //Debug.Log("GamePoker:;Init... the target pos z is: " + targetPos.z);
 
@@ -120,24 +141,7 @@ public class GamePoker : MonoBehaviour
 
         itemType = (GameDefines.PokerItemType)info.nItemType;
         //2021.8.31 for ascending and descending poker ...
-        if (itemType != GameDefines.PokerItemType.None)
-        {   
-            if (itemType == GameDefines.PokerItemType.Ascending_Poker)
-            {
-                ascendEffect = Instantiate(GameplayMgr.Instance.ascendingPrefab, _ascendPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
-            }
-            if (itemType == GameDefines.PokerItemType.Descending_Poker)
-            {
-                ascendEffect = Instantiate(GameplayMgr.Instance.descendingPrefab, _ascendPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
-            }
-            ascendEffect.transform.SetParent(GetComponent<Canvas>().transform);
-            ascendEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-            ascendEffect.SetActive(false);
-        }
-        else
-        {
-            ascendEffect = null;
-        }
+        InitItemEffect(info);
     }
 
     // Update is called once per frame
@@ -145,7 +149,7 @@ public class GamePoker : MonoBehaviour
     {
         fTime += Time.deltaTime;
 
-        if (!bFlip && !bFold && !bUnFlip)
+        if (!bFlip && !bFold && !bUnFlip && !bDismiss)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.08f);
 
@@ -244,6 +248,16 @@ public class GamePoker : MonoBehaviour
                 GameplayMgr.Instance.nWithdrawCount --;
             }
         }
+
+        if(bDismiss)
+        {
+            fDismissTime += Time.deltaTime;
+            if(fDismissTime >= fDismissTotalTime)
+            {
+                bDismiss = false;
+                Destroy(gameObject);
+            }
+        }
     }
 
     public void SetFoldIndex(int nIndex)
@@ -337,6 +351,154 @@ public class GamePoker : MonoBehaviour
         }
     }
 
+    //pengyuan 2021.9.1 added for update bomb poker status
+    public void UpdateBombStatus(string foldPokerName, bool bWithdraw = false)
+    {
+        if(bWithdraw)
+            Debug.Log("here we update bomb status withdraw is true");
+
+        if (pokerFacing != GameplayMgr.PokerFacing.Facing)
+        {
+            return;
+        }
+
+        if (foldPokerName == gameObject.name)
+        {
+            if (bWithdraw)
+            {
+                //Debug.Log("UpdateBombStatus... bombAnim.SetBool(Die, false);");
+                bombAnim.SetBool("Die", false);
+                //Debug.Log("---------UpdateBombStatus--------------bombAnim.SetBool(Die, false);----------------------");
+            }
+
+            return;
+        }
+
+        if(bWithdraw)
+        {
+            nBombStep += 1;
+            bombAnim.SetTrigger("Swing");
+
+            if(nBombStep > 5)
+                bombAnim.SetBool("BlastIdle", false);
+        }
+        else
+        {
+            nBombStep = (nBombStep <= 1) ? 0 : (nBombStep - 1);
+
+            if (nBombStep >= 10)
+                bombAnim.SetTrigger("StepDecDigit");
+            else
+                bombAnim.SetTrigger("StepDecUnit");
+
+            if(nBombStep == 5)
+                bombAnim.SetBool("BlastIdle", true);
+
+            bombAnim.SetInteger("BombStep", nBombStep);
+            /*if (nBombStep == 0)
+                Debug.Log("-------------------nBombStep is 0-------------------------------------");*/
+        }
+
+        UpdateBombStepDisplay();
+
+    }
+
+    void InitItemEffect(JsonReadWriteTest.PokerInfo pokeInfo)
+    {
+        ascendEffect = null;
+        bombEffect = null;
+
+        switch (itemType)
+        {
+            case GameDefines.PokerItemType.Ascending_Poker:
+                ascendEffect = Instantiate(GameplayMgr.Instance.ascendingPrefab, _ascendPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
+                PostInitAscDesEffect();
+                break;
+            case GameDefines.PokerItemType.Descending_Poker:
+                ascendEffect = Instantiate(GameplayMgr.Instance.descendingPrefab, _ascendPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
+                PostInitAscDesEffect();
+                break;
+            case GameDefines.PokerItemType.Bomb:
+                bombEffect = Instantiate(GameplayMgr.Instance.bombPrefab, _bombPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
+                PostInitBombEffect(pokeInfo);
+                break;
+            default:break;
+        }
+    }
+
+    void PostInitAscDesEffect()
+    {
+        ascendEffect.transform.SetParent(GetComponent<Canvas>().transform);
+        ascendEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        ascendEffect.SetActive(false);
+    }
+
+    void PostInitBombEffect(JsonReadWriteTest.PokerInfo pokeInfo)
+    {
+        //todo:...
+        nBombStep = int.Parse(pokeInfo.strItemInfo);
+
+        CheckCorrectStepCount();
+
+        bombEffect.transform.SetParent(GetComponent<Canvas>().transform);
+        bombEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+
+        bombAnim = bombEffect.GetComponent<Animator>();
+        //AnimatorClipInfo[] clipInfo = anim.GetCurrentAnimatorClipInfo(0);
+        //Debug.Log("the anim is: " + anim + " the clip info count is: " + anim.GetCurrentAnimatorStateInfo(0));
+
+        
+        Transform numberTrans = bombEffect.transform.Find("FXBomb/FXBomb/Group/digitNum");
+        if (numberTrans == null)
+            Debug.Log("we cann't find number object transform...");
+
+        GameObject mountDigit = numberTrans.gameObject;
+        digitImage = mountDigit.GetComponent<Image>();
+
+        numberTrans = bombEffect.transform.Find("FXBomb/FXBomb/Group/unitNum");
+        GameObject mountUnit = numberTrans.gameObject;
+        unitImage = mountUnit.GetComponent<Image>();
+
+        numberTrans = bombEffect.transform.Find("FXBomb/FXBomb/singleNum");
+        GameObject mountSingle = numberTrans.gameObject;
+        singleImage = mountSingle.GetComponent<Image>();
+
+        bombEffect.SetActive(false);
+
+        UpdateBombStepDisplay();
+    }
+
+    void UpdateBombStepDisplay()
+    {
+        if(nBombStep >= 10)
+        {
+            int nDigitIndex = nBombStep / 10;
+            int nUnitIndex = nBombStep % 10;
+
+            digitImage.sprite = GameplayMgr.Instance.bombNumbers[nDigitIndex];
+            unitImage.sprite = GameplayMgr.Instance.bombNumbers[nUnitIndex];
+
+            digitImage.enabled = true;
+            unitImage.enabled = true;
+            singleImage.enabled = false;
+        }
+        else
+        {
+            singleImage.sprite = GameplayMgr.Instance.bombNumbers[nBombStep];
+
+            singleImage.enabled = true;
+            digitImage.enabled = false;
+            unitImage.enabled = false;
+        }
+        
+    }
+
+    void CheckCorrectStepCount()
+    {
+        nBombStep = nBombStep < 1 ? 1 : nBombStep;
+        nBombStep = nBombStep > 50 ? 50 : nBombStep;
+    }
+
     public void Test_DisableDisplayText()
     {
         textName.text = "";
@@ -400,11 +562,8 @@ public class GamePoker : MonoBehaviour
         nFoldIndex = nIndex;
 
         //2021.9.1 added by pengyuan to disable the ascend and descend display
-        if (itemType == GameDefines.PokerItemType.Ascending_Poker || itemType == GameDefines.PokerItemType.Descending_Poker)
-        {
-            ascendEffect.SetActive(false);
-        }
-
+        DisablePokerItemDisplay();
+        
         //2021.8.11 added by pengyuan 
         Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
         foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
@@ -447,10 +606,7 @@ public class GamePoker : MonoBehaviour
         nFoldIndex = nIndex;
 
         //2021.9.1 added by pengyuan to disable the ascend and descend display
-        if (itemType == GameDefines.PokerItemType.Ascending_Poker || itemType == GameDefines.PokerItemType.Descending_Poker)
-        {
-            ascendEffect.SetActive(false);
-        }
+        DisablePokerItemDisplay();
 
         Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
 
@@ -479,11 +635,67 @@ public class GamePoker : MonoBehaviour
         GameplayMgr.Instance.nWithdrawCount++;
     }
 
+    //when the game is end, and the player failed, we call this method to dismiss the poker.
+    public void Dismiss()
+    {
+        bFlip = false;
+        bFold = false;
+        bUnFlip = false;
+
+        bDismiss = true;
+        fDismissTime = 0.0f;
+
+        SetDismissPosition();
+
+        transform.DOMove(dismissPos, fDismissTotalTime);
+        transform.DORotate(new Vector3(90.0f, 180.0f, 90.0f), fDismissTotalTime, RotateMode.WorldAxisAdd);
+    }
+
+    void SetDismissPosition()
+    {
+        if (targetPos.x >= 0.0f && targetPos.y >= 0.0f)
+            dismissPos = targetPos + Vector3.right * 8.0f + Vector3.up * 5.0f;
+
+        if (targetPos.x >= 0.0f && targetPos.y < 0.0f)
+            dismissPos = targetPos + Vector3.right * 8.0f - Vector3.up * 5.0f;
+
+        if (targetPos.x < 0.0f && targetPos.y < 0.0f)
+            dismissPos = targetPos - Vector3.right * 8.0f - Vector3.up * 5.0f;
+
+        if (targetPos.x < 0.0f && targetPos.y >= 0.0f)
+            dismissPos = targetPos - Vector3.right * 8.0f + Vector3.up * 5.0f;
+    }
+
     void UpdatePokerItemDisplay(bool bDisplay)
     {
         if (ascendEffect != null)
         {
             ascendEffect.SetActive(bDisplay);
+        }
+
+        if(bombEffect != null)
+        {
+            bombEffect.SetActive(bDisplay);
+
+            if (bDisplay)
+            {
+                bombAnim.SetBool("Die", false);
+            }
+        }
+    }
+
+    void DisablePokerItemDisplay()
+    {
+        if (itemType == GameDefines.PokerItemType.Ascending_Poker || itemType == GameDefines.PokerItemType.Descending_Poker)
+        {
+            ascendEffect.SetActive(false);
+        }
+
+        if (itemType == GameDefines.PokerItemType.Bomb)
+        {
+            //bombEffect.SetActive(false);
+            bombAnim.SetBool("Die", true);
+            //Debug.Log("-----------------------bombAnim.SetBool(Die, true);----------------------");
         }
     }
 

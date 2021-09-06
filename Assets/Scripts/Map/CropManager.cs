@@ -137,7 +137,7 @@ public class CropManager : MonoBehaviour
         bool leftSide = true;
         foreach (CropConfig config in CropConfigs)
         {
-            if (config.Level > MapManager.Instance.Data.CompelteLevel) break;
+            if (config.Level > MapManager.Instance.Data.CompleteLevel) break;
 
             if (shownCropNames.Contains(config.Name))
             {

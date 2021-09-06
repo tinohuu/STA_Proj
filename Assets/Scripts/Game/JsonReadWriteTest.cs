@@ -219,6 +219,7 @@ public class JsonReadWriteTest : MonoBehaviour
 
 #if UNITY_STANDALONE_WIN
         //string filePath = Application.dataPath + strLevelFolder + strLevelName;
+        //strLevelName = string.Format("Level_{0:D4}_{1:D3}.json", nChapterIndex, nLevelIndex);//todo: 2021.9.3 this is temporarily modified...
         string filePath = strLevelFolder + strLevelName;
         Debug.Log(filePath);
 

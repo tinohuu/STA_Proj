@@ -38,7 +38,7 @@ public class MapLevel : MonoBehaviour, IPointerClickHandler
         LevelText.text = Data.Order.ToString();
         LevelText.color = IsOpen ? Color.white : new Color(1, 1, 1, 0.5f);
 
-        Data.Rating = IsOpen ? Random.Range(1, 4) : 0; // Test: temp rating
+        Data.Rating = IsOpen && Data.Order != MapManager.Instance.Data.CompleteLevel + 1 ? Random.Range(1, 4) : 0; // Test: temp rating
 
         foreach (SpriteRenderer star in StarSpriteRenderers) star.color = IsOpen ? new Color(1, 1, 1, 0.5f) : Color.clear;
         for (int i = 0; i < Data.Rating; i++) StarSpriteRenderers[i].color = Color.white;
@@ -51,5 +51,5 @@ public class MapLevel : MonoBehaviour, IPointerClickHandler
         MapPlayer.Instance.MoveToLevel(this);
     }
 
-    public bool IsOpen => MapManager.Instance.Data.CompelteLevel >= Data.Order - 1;
+    public bool IsOpen => MapManager.Instance.Data.CompleteLevel >= Data.Order - 1;
 }

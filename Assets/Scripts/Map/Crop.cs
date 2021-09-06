@@ -33,15 +33,15 @@ public class Crop : MonoBehaviour
     public State UpdateState()
     {
         State state;
-        if (MapManager.Instance.Data.CompelteLevel < Config.MinLevel) state = State.locked;
-        else if (MapManager.Instance.Data.CompelteLevel >= Config.Level)
+        if (MapManager.Instance.Data.CompleteLevel < Config.MinLevel) state = State.locked;
+        else if (MapManager.Instance.Data.CompleteLevel >= Config.Level)
         {
             state = CropManager.Instance.IsMature ? State.mature : State.immature;
         }
         else
         {
             float fieldLength = Config.Level - Config.MinLevel + 1;
-            float progressRatio = (float)(MapManager.Instance.Data.CompelteLevel - Config.MinLevel) / fieldLength;
+            float progressRatio = (float)(MapManager.Instance.Data.CompleteLevel - Config.MinLevel) / fieldLength;
             bool canShowUnlocking = progressRatio >= OrderRatio;
             state = canShowUnlocking ? State.unlocking : State.locked;
         }

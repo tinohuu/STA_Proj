@@ -14,9 +14,24 @@ public class MapLevelBoost : MonoBehaviour
     public List<string> BoostTitles;
     public TMP_Text TitleText;
     public Image CardsImage;
+    public Image MinusButton;
+    public Image PlusButton;
+    int maxIndex = 1;
+    public GameObject LockImage;
     // Start is called before the first frame update
     void Start()
     {
+        int unlockedLevel = MapManager.Instance.Data.CompleteLevel + 1;
+
+        if (unlockedLevel >= MapManager.Instance.FunctionConfigsByFuncID[1022].FunctionParams)
+        {
+            maxIndex = 2;
+        }
+        else if (unlockedLevel >= MapManager.Instance.FunctionConfigsByFuncID[1021].FunctionParams)
+        {
+            maxIndex = 1;
+        }
+
         UpdateView();
     }
 
@@ -36,13 +51,19 @@ public class MapLevelBoost : MonoBehaviour
         }
         TitleText.text = BoostTitles[BoostIndex];
         CardsImage.sprite = CardsSprites[BoostIndex];
+
+        PlusButton.color = BoostIndex < maxIndex ? Color.white : Color.gray;
+        MinusButton.color = BoostIndex > 0 ? Color.white : Color.gray;
+        PlusButton.GetComponent<ButtonAnimator>().Interactable = BoostIndex < maxIndex;
+        MinusButton.GetComponent<ButtonAnimator>().Interactable = BoostIndex > 0;
+        LockImage.SetActive(maxIndex < 2);
     }
 
     public void Adjust(bool add)
     {
         if (add)
         {
-            if (BoostIndex >= BarImages.Count - 1) BoostIndex = BarImages.Count - 1;
+            if (BoostIndex >= maxIndex) BoostIndex = maxIndex;
             else BoostIndex++;
         }
         else

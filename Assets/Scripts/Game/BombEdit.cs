@@ -46,8 +46,10 @@ public class BombEdit : MonoBehaviour
         if(pokerInfo.strItemInfo.Length > 0)
         {
             stepCount = int.Parse(pokerInfo.strItemInfo);
-
+            //Debug.Log("parse the bomb step is: " + stepCount);
             CheckCorrectStepCount();
+
+            stepInput.text = pokerInfo.strItemInfo;
         }
         
     }
@@ -62,6 +64,8 @@ public class BombEdit : MonoBehaviour
 
         string strInfo = string.Format("{0}", stepCount);
         dragBtn.strItemInfo = strInfo;
+
+        PokerAreaMgr.Instance.updateSelectPokerItemInfo(dragBtn);
     }
 
     void CheckCorrectStepCount()

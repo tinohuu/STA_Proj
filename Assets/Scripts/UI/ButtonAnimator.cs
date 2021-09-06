@@ -12,6 +12,7 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public float Scale = 1.2f;
     public float ScaleUpDuration = 0.3f;
     public float ScaleDownDuration = 0.2f;
+    public bool Interactable = true;
     public UnityEvent OnClick = null;
     Vector3 oriLocalScale = Vector3.one;
     [HideInInspector] public Transform targetTransform = null;
@@ -25,19 +26,23 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     }
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (!Interactable) return;
         Animate(true);
         SoundManager.Instance.PlaySFX("uiCommonClick");
     }
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (!Interactable) return;
         Animate(false);
     }
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (!Interactable) return;
         Animate(false);
     }
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (!Interactable) return;
         Animate(false);
         OnClick?.Invoke();
 
@@ -53,5 +58,10 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public void QuitApp()
     {
         Application.Quit();
+    }
+
+    public void CreateWindowPrefab(GameObject windowPrefab)
+    {
+        Window.CreateWindowPrefab(windowPrefab, null);
     }
 }

@@ -10,9 +10,9 @@ public class MapPlayerWindow : MonoBehaviour
     public TMP_Text RatingCountText;
     private void Start()
     {
-        CropConfig curCrop = CropManager.Instance.LevelToCropConfig(MapManager.Instance.Data.CompelteLevel);
+        CropConfig curCrop = CropManager.Instance.LevelToCropConfig(MapManager.Instance.Data.CompleteLevel);
         CropText.text = "Crop " + (CropManager.Instance.CropConfigs.IndexOf(curCrop) + 1).ToString() + " " + curCrop.Name;
-        CurLevelText.text = "Level " + MapManager.Instance.Data.CompelteLevel;
+        CurLevelText.text = "Level " + MapManager.Instance.Data.CompleteLevel;
         RatingCountText.text = GetRatingCount().ToString();
 
     }
@@ -25,7 +25,7 @@ public class MapPlayerWindow : MonoBehaviour
             foreach (MapLevelData levelData in mapData.MapLevelDatas)
             {
                 count += levelData.Rating;
-                if (levelData.Order == MapManager.Instance.Data.CompelteLevel) return count;
+                if (levelData.Order == MapManager.Instance.Data.CompleteLevel) return count;
             }
         }
         return count;

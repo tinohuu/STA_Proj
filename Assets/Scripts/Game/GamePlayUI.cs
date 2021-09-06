@@ -27,6 +27,8 @@ public class GamePlayUI : MonoBehaviour
 
     public LockEndGameUI lockEndGameUI;
 
+    public BombEndGameUI bombEndGameUI;
+
     bool bIsHidingAdd5Btn = false;
 
     // Start is called before the first frame update
@@ -109,6 +111,12 @@ public class GamePlayUI : MonoBehaviour
         if (lockEndGameUI == null)
             Debug.Log("GamePlayUI::Start()... lockEndGameUI is null....");
         DisableLockEndGameUI();
+
+        bombEndGameUI = Object.FindObjectOfType<BombEndGameUI>();
+        if(bombEndGameUI == null)
+            Debug.Log("GamePlayUI::Start()... bombEndGameUI is null....");
+        HideBombEndGameUI();
+        //DisableBombEndGameUI();
 
     }
 
@@ -408,6 +416,27 @@ public class GamePlayUI : MonoBehaviour
         lockEndGameUI.gameObject.SetActive(false);
     }
 
+    public void ShowBombEndGameUI()
+    {
+        Debug.Log("GamePlayUI... ShowBombEndGameUI...");
+
+        bombEndGameUI.GetComponent<CanvasGroup>().alpha = 1;
+        bombEndGameUI.GetComponent<CanvasGroup>().interactable = true;
+        bombEndGameUI.GetComponent<CanvasGroup>().blocksRaycasts = true;
+    }
+
+    public void HideBombEndGameUI()
+    {
+        bombEndGameUI.GetComponent<CanvasGroup>().alpha = 0;
+        bombEndGameUI.GetComponent<CanvasGroup>().interactable = false;
+        bombEndGameUI.GetComponent<CanvasGroup>().blocksRaycasts = false;
+    }
+
+    public void DisableBombEndGameUI()
+    {
+        bombEndGameUI.gameObject.SetActive(false);
+    }
+
     public void EnableWildCardBtn()
     {
         wildcardBtn.enabled = true;
@@ -459,7 +488,7 @@ public class GamePlayUI : MonoBehaviour
         GameplayMgr.Instance.Add5HandPoker();
     }
 
-    void OnClickEndGameBtn()
+    public void OnClickEndGameBtn()
     {
         Debug.Log("GamePlayUI... You clicked OnClickEndGameBtn Button!");
 

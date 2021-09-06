@@ -12,6 +12,7 @@ public class GameplayMgr : MonoBehaviour
     {
         GameStatus_Before = 1,
         GameStatus_Gaming,
+        GameStatus_WaitForSettle, //2021.9.2 added by pengyuan, bomb and lock fail, wait for end.
         GameStatus_Settle,
         GameStatus_After_Settle
     }
@@ -162,6 +163,8 @@ public class GameplayMgr : MonoBehaviour
     //pengyuan 2021.8.31 added for ascending and descending poker
     public GameObject ascendingPrefab;
     public GameObject descendingPrefab;
+    public GameObject bombPrefab;
+    public Sprite[] bombNumbers;
 
     //use this to store all the poker.
     JsonReadWriteTest.LevelData levelData = new JsonReadWriteTest.LevelData();
@@ -186,6 +189,7 @@ public class GameplayMgr : MonoBehaviour
 
     List<UnlockAreaPokerIDs> unlockAreaPokerIDs = new List<UnlockAreaPokerIDs>();
 
+    //store all the ascend and descend poker id and number, that has been assigned suit and number.
     AscDesPokerIDs ascDesPokerIDs = new AscDesPokerIDs();
 
     GameObject currentFlippingPoker = null;    //store the current flipping card
@@ -229,6 +233,7 @@ public class GameplayMgr : MonoBehaviour
     GameResult gameResult = GameResult.GameResult_Win;
 
     GameStatus gameStatus = GameStatus.GameStatus_Before;
+    bool bHasSetToGaming = false;
 
     int nCurrentChapter { get; set; } = 0;
     int nCurrentLevel { get; set; } = 0;
@@ -324,7 +329,6 @@ public class GameplayMgr : MonoBehaviour
         lockTopSprite = Resources.Load<Sprite>("Lock/LockTop");
         lockBottomSprite = Resources.Load<Sprite>("Lock/LockBottom");
 
-        //lockSprites = Resources.Load<SpriteAtlas>("Lock/LockSprites");
         lockSprites = Resources.LoadAll<Sprite>("Lock/LockMark");
         Debug.Log("the lock sprites length is: " + lockSprites.Length);
 
@@ -335,6 +339,13 @@ public class GameplayMgr : MonoBehaviour
         descendingPrefab = (GameObject)Resources.Load("Poker/ChangeDown");
         if (descendingPrefab == null)
             Debug.Log("GameplayMgr::Awake()... ChangeDown is null....");
+
+        bombPrefab = (GameObject)Resources.Load("Poker/FXPropBomb");
+        if (bombPrefab == null)
+            Debug.Log("GameplayMgr::Awake()... Bomb is null....");
+
+        bombNumbers = Resources.LoadAll<Sprite>("UI/BombNumber");
+        Debug.Log("the bomb number sprites length is: " + bombNumbers.Length);
 
         for (int i = 0; i < 52; ++i)
         {
@@ -357,9 +368,9 @@ public class GameplayMgr : MonoBehaviour
             
         }
 
-        ascendTexture = Resources.Load("Poker/ChangeArrow") as Texture2D;
+        /*ascendTexture = Resources.Load("Poker/ChangeArrow") as Texture2D;
         if (ascendTexture == null)
-            Debug.Log("---------------------- init ascend texture error!!! please check your code! -------------" + "Poker / ChangeArrow");
+            Debug.Log("---------------------- init ascend texture error!!! please check your code! -------------" + "Poker / ChangeArrow");*/
 
         //pokerAtlas = new Texture2D(8192, 256, TextureFormat.DXT5, false);
         pokerAtlas = new Texture2D(8192, 256);
@@ -471,6 +482,9 @@ public class GameplayMgr : MonoBehaviour
         InitHandPokerInfo();
 
         fGameTime = 0.0f;
+        gameStatus = GameStatus.GameStatus_Before;
+        bHasSetToGaming = false;
+        bAutoFlipHandPoker = false;
 
         streakType = GetCurrentStreakType();
         gameplayUI.InitStreakBonus(streakType, GetNextStreakType());
@@ -614,9 +628,7 @@ public class GameplayMgr : MonoBehaviour
                    || levelData.pokerInfo[i].nItemType == (int)GameDefines.PokerItemType.Descending_Poker)
                 {
                     bool bFind = false;
-                    //suit = PokerSuit.Suit_None;
-                    //nNumber = 0;
-
+                    
                     for (int j = 0; j < ascDesPokerIDs.IDs.Count; ++j)
                     {
                         if(ascDesPokerIDs.IDs[j] == i)
@@ -1199,7 +1211,6 @@ public class GameplayMgr : MonoBehaviour
 
             //2021.8.18 pengyuan , if click position overelapes with lock area, we do nothing
             //todo...
-            //LockOverlapLockArea
             Vector3 clickWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             //RaycastHit hit = Physics.Raycast(ray, hit);
@@ -1284,6 +1295,7 @@ public class GameplayMgr : MonoBehaviour
 
         //here we withdraw one poker to its original place 
         bool bNeedAscDesStatusChange = true;
+        bool bNeedBombStatusChange = true;
         GameObject poker = foldPoker.Peek();
         Debug.Log("Withdraw poker name is: " + poker.name + "  tag is: " + poker.tag);
 
@@ -1295,6 +1307,7 @@ public class GameplayMgr : MonoBehaviour
                 WithdrawGamePoker(poker);
                 gameplayUI.goldAndScoreUI.AddGold(-stepInfo.nGold);
                 gameplayUI.goldAndScoreUI.AddScore(-stepInfo.nScore);
+                //bNeedBombStatusChange = false;
                 break;
 
             case "handCard":
@@ -1303,7 +1316,7 @@ public class GameplayMgr : MonoBehaviour
                 break;
 
             case "wildCard":
-                WithdrawWildCard(poker, ref bNeedAscDesStatusChange);
+                WithdrawWildCard(poker, ref bNeedAscDesStatusChange, ref bNeedBombStatusChange);
                 AdjustAllHandPokerPosition();
                 break;
             default:break;
@@ -1312,6 +1325,10 @@ public class GameplayMgr : MonoBehaviour
         if(bNeedAscDesStatusChange)
         {
             UpdateAllAscDesPokerStatus(poker.name, true);
+        }
+        if(bNeedBombStatusChange)
+        {
+            UpdateAllBombStatus(poker.name, true);
         }
         
         streakType = (StreakType)stepInfo.nStreakType;
@@ -1539,7 +1556,7 @@ public class GameplayMgr : MonoBehaviour
         //Debug.Log("one hand poker withdrawed!!! name is: " + poker.name);
     }
 
-    void WithdrawWildCard(GameObject poker, ref bool needChangeAseDesStatus)
+    void WithdrawWildCard(GameObject poker, ref bool needChangeAseDesStatus, ref bool needChangeBombStatus)
     {
         Debug.Log("one WildCard withdrawed!!! name is: " + poker.name);
         WildCard wildCard = poker.GetComponent<WildCard>();
@@ -1553,6 +1570,7 @@ public class GameplayMgr : MonoBehaviour
         else
         {
             needChangeAseDesStatus = false;
+            needChangeBombStatus = false;
         }
         
         Test_EnableTopFoldPokerText();
@@ -1710,7 +1728,7 @@ public class GameplayMgr : MonoBehaviour
         {
             //HandPoker handPokerScript = handPoker.GetComponent<HandPoker>();
 
-            Debug.Log("OnTopGamePokerClicked... the game poker is: " + gamePokerScript.nPokerNumber + "  the hand poker is: " + handPoker.name);
+            Debug.Log("OnTopGamePokerClicked... the game poker is: " + gamePokerScript.nPokerNumber + "  the hand poker is: " + handPoker.name + "game status is: " + gameStatus);
 
             if(CanFoldGamePoker(gamePokerScript, handPoker))
             {
@@ -1740,6 +1758,7 @@ public class GameplayMgr : MonoBehaviour
                 }
 
                 UpdateAllAscDesPokerStatus(gamePokerScript.name);
+                UpdateAllBombStatus(gamePokerScript.name);
 
                 int nColors = GetStreakBonusEncode();
 
@@ -1821,6 +1840,7 @@ public class GameplayMgr : MonoBehaviour
         }
 
         UpdateAllAscDesPokerStatus(topHandPoker.name);
+        UpdateAllBombStatus(topHandPoker.name);
 
         int nColors = GetStreakBonusEncode();
         AddOpStepInfo(opStepInfos.Count, nStreakCount, nColors, 0, 0, 0, streakType, nTotalComboCount);
@@ -2244,43 +2264,48 @@ public class GameplayMgr : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (fGameTime > 3.0f && !bHasSetToGaming)
+        {
+            gameStatus = GameStatus.GameStatus_Gaming;
+            bHasSetToGaming = true;
+        }
+
+        if (gameStatus != GameStatus.GameStatus_Gaming)
+        {
+            return;
+        }
+
         //here we can update the poker's position and rotation to see if they stop translate and rotate, and set a bool value.
         //这个可以牌形变化的时候再检测
         List<GameObject> topPokers = new List<GameObject>();
-        if (fGameTime > 3.0f)
+
+        if (!IsPublicPokerFlipping())//when we have a flipping poker, we wait until the poker has finished flipping...
         {
-            /*if (nWithdrawCount > 0)
-                Debug.Log("!!!!!!!!!!!!!!!!!!!!the withdraw count is : " + nWithdrawCount);*/
-            if (!IsPublicPokerFlipping())//when we have a flipping poker, we wait until the poker has finished flipping...
+            if (GetTopPokerInfos(ref topPokers))
             {
-                if (GetTopPokerInfos(ref topPokers))
+                for (int i = 0; i < topPokers.Count; ++i)
                 {
-                    for (int i = 0; i < topPokers.Count; ++i)
-                    {
-                        //todo: flip the top pokers
-                        GamePoker gamePokerScript = topPokers[i].GetComponent<GamePoker>();
-                        gamePokerScript.FlipPoker();
+                    //todo: flip the top pokers
+                    GamePoker gamePokerScript = topPokers[i].GetComponent<GamePoker>();
+                    gamePokerScript.FlipPoker();
 
-                        gameStatus = GameStatus.GameStatus_Gaming;
-                    }
-                    /*Debug.Log("we found on top pokers count is: " + topPokers.Count);
-                    for(int i=0; i<topPokers.Count; ++i)
-                    {
-                        Debug.Log("thee poker's name is: " + topPokers[i].name);
-                    }*/
+                    //gameStatus = GameStatus.GameStatus_Gaming;
                 }
-
-                if(!bAutoFlipHandPoker)
+                /*Debug.Log("we found on top pokers count is: " + topPokers.Count);
+                for(int i=0; i<topPokers.Count; ++i)
                 {
-                    GameObject handPoker = GetTopHandPoker();
-                    if(handPoker != null)
-                    {
-                        OnTopHandPokerClicked(handPoker);
-                        bAutoFlipHandPoker = true;
-                    }
-                }
+                    Debug.Log("thee poker's name is: " + topPokers[i].name);
+                }*/
+            }
 
-                //UnflipAllCoveredGamePoker();
+            if (!bAutoFlipHandPoker)
+            {
+                GameObject handPoker = GetTopHandPoker();
+                if (handPoker != null)
+                {
+                    OnTopHandPokerClicked(handPoker);
+                    bAutoFlipHandPoker = true;
+                }
             }
         }
     }
@@ -2587,11 +2612,41 @@ public class GameplayMgr : MonoBehaviour
         {
             GamePoker gamePoker = go.GetComponent<GamePoker>();
 
-            if(gamePoker.itemType != GameDefines.PokerItemType.None)
+            //if(gamePoker.itemType != GameDefines.PokerItemType.None)
+            if (gamePoker.itemType == GameDefines.PokerItemType.Ascending_Poker
+                || gamePoker.itemType == GameDefines.PokerItemType.Descending_Poker)
             {
                 gamePoker.UpdateAscendDescendStatus(strFoldName, bWithdraw);
             }
         }
+    }
+
+    //todo: 
+    void UpdateAllBombStatus(string strFoldName, bool bWithdraw = false)
+    {
+        if(!bAutoFlipHandPoker)
+        {
+            return;
+        }
+
+        foreach (GameObject go in publicPokers)
+        {
+            GamePoker gamePoker = go.GetComponent<GamePoker>();
+
+            if(gamePoker.itemType == GameDefines.PokerItemType.Bomb)
+            {
+                gamePoker.UpdateBombStatus(strFoldName, bWithdraw);
+            }
+        }
+    }
+
+    public void OnBombEndGame()
+    {
+        Debug.Log("---------------------OnBombEndGame-----------------");
+
+        gameStatus = GameStatus.GameStatus_WaitForSettle;
+
+        gameplayUI.ShowBombEndGameUI();
     }
 
     void GeneratePokerForUnlockArea()
@@ -2777,7 +2832,8 @@ public class GameplayMgr : MonoBehaviour
             if (!cardsArray2nd.Exists(t => t == nRet))
             {
                 //nNumber = (nNumber + 1) % 13 + 1;
-                nNumber = (int)lockScript.pokerSuit * 13 - nNumber;
+                //nNumber = (int)lockScript.pokerSuit * 13 - nNumber;
+                nNumber = 13 - nNumber;
                 nRet = ((int)lockScript.pokerSuit - 1) * 13 + nNumber;
             }
 
@@ -3126,6 +3182,7 @@ public class GameplayMgr : MonoBehaviour
                 int nCount = GetUnlockAreaPokerCount(nSingleLockGroupID);
                 if(nCount == 0)
                 {
+                    gameStatus = GameStatus.GameStatus_WaitForSettle;
                     gameplayUI.ShowLockEndGameUI();
                     return;
                 }
@@ -3136,6 +3193,7 @@ public class GameplayMgr : MonoBehaviour
                 int nCount = GetUnlockAreaPokerCount(nCompoundLockGroupdID);
                 if(nCount == 0)
                 {
+                    gameStatus = GameStatus.GameStatus_WaitForSettle;
                     gameplayUI.ShowLockEndGameUI();
                     return;
                 }
@@ -3161,19 +3219,39 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.HideEndGameBtn();
         gameplayUI.DisableAllGameButton();
 
+        Reward.Coin += nCollectGold;
+
         StartCoroutine(SettleAllHandPokers());
 
     }
 
+    //this method is used to settle gold, score and other game result data.
     public void LoseGame()
     {
+        gameStatus = GameStatus.GameStatus_WaitForSettle;
+
+        //DismissAllGamePoker();
+        //return;
+
         gameResult = GameResult.GameResult_Loss;
 
         gameStatus = GameStatus.GameStatus_Settle;
 
         gameplayUI.LoseGame(nCollectGold, 0);
 
+        Reward.Coin += nCollectGold;
+        //Reward.Data[RewardType.FreeRound] += 1;
+
         EndGame();
+    }
+
+    public void DismissAllGamePoker()
+    {
+        foreach(GameObject go in publicPokers)
+        {
+            GamePoker pokerScript = go.GetComponent<GamePoker>();
+            pokerScript.Dismiss();
+        }
     }
 
     IEnumerator SettleAllHandPokers()

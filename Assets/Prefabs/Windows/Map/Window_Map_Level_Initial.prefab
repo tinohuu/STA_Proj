@@ -88,7 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56344cc4f8bcbc9439cfb964ebb16cb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 20
+  Speed: -20
 --- !u!1 &651089357508801384
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,6 +325,7 @@ MonoBehaviour:
   Scale: 1.2
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
+  Interactable: 1
   OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -1777,6 +1778,7 @@ MonoBehaviour:
   Scale: 1.1
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
+  Interactable: 1
   OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -1930,6 +1932,7 @@ MonoBehaviour:
   Scale: 1.2
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
+  Interactable: 1
   OnClick:
     m_PersistentCalls:
       m_Calls: []
