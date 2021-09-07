@@ -1,0 +1,162 @@
+[
+  {
+    "ID": 1,
+    "ItemID": 1001,
+    "Name": "coin",
+    "ItemType": "M",
+    "Effect": "coin",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 0.0
+  },
+  {
+    "ID": 2,
+    "ItemID": 1002,
+    "Name": "undo",
+    "ItemType": "M",
+    "Effect": "undo",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 0.0
+  },
+  {
+    "ID": 3,
+    "ItemID": 1003,
+    "Name": "moreCards",
+    "ItemType": "M",
+    "Effect": "moreCards",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 0.0
+  },
+  {
+    "ID": 4,
+    "ItemID": 1004,
+    "Name": "wildCards",
+    "ItemType": "M",
+    "Effect": "wildCards",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 0.0
+  },
+  {
+    "ID": 5,
+    "ItemID": 1005,
+    "Name": "freeRound",
+    "ItemType": "M",
+    "Effect": "freeround",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 0.0
+  },
+  {
+    "ID": 6,
+    "ItemID": 1006,
+    "Name": "silverFreeRound",
+    "ItemType": "M",
+    "Effect": "silverFreeRound",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 0.0
+  },
+  {
+    "ID": 7,
+    "ItemID": 1007,
+    "Name": "goldenFreeRound",
+    "ItemType": "M",
+    "Effect": "goldenFreeRound",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 0.0
+  },
+  {
+    "ID": 8,
+    "ItemID": 1008,
+    "Name": "removeCards",
+    "ItemType": "M",
+    "Effect": "removeCards",
+    "Icon": "",
+    "ItemTip": "Removes 3 cards at the start of a level",
+    "Time": 0.0
+  },
+  {
+    "ID": 9,
+    "ItemID": 1009,
+    "Name": "clearPlayables",
+    "ItemType": "M",
+    "Effect": "clearPlayables",
+    "Icon": "",
+    "ItemTip": "Clears all faceup cards on the playfield",
+    "Time": 0.0
+  },
+  {
+    "ID": 10,
+    "ItemID": 1010,
+    "Name": "wildDrop",
+    "ItemType": "M",
+    "Effect": "wildDrop",
+    "Icon": "",
+    "ItemTip": "Adds 3 Wild cards to the playfield",
+    "Time": 0.0
+  },
+  {
+    "ID": 11,
+    "ItemID": 1011,
+    "Name": "removeValueChangers",
+    "ItemType": "M",
+    "Effect": "removeValueChangers",
+    "Icon": "",
+    "ItemTip": "Removes all Value Changers from a level",
+    "Time": 0.0
+  },
+  {
+    "ID": 12,
+    "ItemID": 1012,
+    "Name": "removeCodeBreaker",
+    "ItemType": "M",
+    "Effect": "removeCodeBreaker",
+    "Icon": "",
+    "ItemTip": "Removes all code breakers from a level",
+    "Time": 0.0
+  },
+  {
+    "ID": 13,
+    "ItemID": 1013,
+    "Name": "removeBombs",
+    "ItemType": "M",
+    "Effect": "removeBombs",
+    "Icon": "",
+    "ItemTip": "Removes all bombs from a level",
+    "Time": 0.0
+  },
+  {
+    "ID": 14,
+    "ItemID": 1014,
+    "Name": "doubleCredits",
+    "ItemType": "M",
+    "Effect": "doubleCredits",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 0.0
+  },
+  {
+    "ID": 15,
+    "ItemID": 1015,
+    "Name": "rocket",
+    "ItemType": "A",
+    "Effect": "rocket",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 3600
+  },
+  {
+    "ID": 16,
+    "ItemID": 1016,
+    "Name": "clock",
+    "ItemType": "A",
+    "Effect": "clock",
+    "Icon": "",
+    "ItemTip": "",
+    "Time": 0.0
+  }
+]

@@ -54,6 +54,20 @@ public static class Reward
         for (int i = 0; i < rewardTypes.Count; i++)
             Data[rewardTypes[i]] -= counts[i];
     }
+
+    public static Dictionary<RewardType, int> StringToReward(string itemString)
+    {
+        string[] raws = itemString.Split('_');
+        Dictionary<RewardType, int> itemsByType = new Dictionary<RewardType, int>();
+        for (int i = 0; i < raws.Length; i += 2)
+        {
+            if (i + 1 >= raws.Length) break;
+            RewardType type = (RewardType)int.Parse(raws[i]);
+            int count = int.Parse(raws[i + 1]);
+            itemsByType.Add(type, count);
+        }
+        return itemsByType;
+    }
 }
 
 [System.Serializable]
