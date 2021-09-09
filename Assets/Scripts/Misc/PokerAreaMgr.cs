@@ -59,6 +59,9 @@ public class PokerAreaMgr : MonoBehaviour
 
     public GameObject bombPrefab;
 
+    //2021.9.6 added by pengyuan, to edit add n poker card
+    public GameObject addNPrefab;
+
     private void Awake()
     {
         Instance = this;
@@ -70,6 +73,8 @@ public class PokerAreaMgr : MonoBehaviour
         ascDesPrefab = (GameObject)Resources.Load("LevelEditor/AscDes");
 
         bombPrefab = (GameObject)Resources.Load("LevelEditor/BombEdit");
+
+        addNPrefab = (GameObject)Resources.Load("LevelEditor/AddNEdit");
     }
 
     // Start is called before the first frame update
@@ -253,6 +258,9 @@ public class PokerAreaMgr : MonoBehaviour
             case GameDefines.PokerItemType.Bomb:
                 InstantiateBombPoker(pokerInst, pokerInfo);
                 break;
+            case GameDefines.PokerItemType.Add_N_Poker:
+                InstantiateAddNPoker(pokerInst, pokerInfo);
+                break;
             default:break;
         }
     }
@@ -391,6 +399,17 @@ public class PokerAreaMgr : MonoBehaviour
         InstantiateBombPoker(_obj, data.pokerInfo[data.pokerInfo.Count - 1]);
     }
 
+    public void AddNPoker()
+    {
+        GameObject _obj = AddOnePoker();
+
+        JsonReadWriteTest.LevelData data = EditorScriptMgr.Instance.chapterInfo.levelDataList[nCurrentLevel - 1];
+        data.pokerInfo[data.pokerInfo.Count - 1].nItemType = (int)GameDefines.PokerItemType.Add_N_Poker;
+        data.pokerInfo[data.pokerInfo.Count - 1].strItemInfo = "";
+
+        InstantiateAddNPoker(_obj, data.pokerInfo[data.pokerInfo.Count - 1]);
+    }
+
     void InstantiateAscendPoker(GameObject pokerObj, JsonReadWriteTest.PokerInfo pokerInfo)
     {
         Vector3 posOffset = new Vector3(-30.0f, -60.0f, 0.0f);
@@ -416,13 +435,22 @@ public class PokerAreaMgr : MonoBehaviour
 
     void InstantiateBombPoker(GameObject pokerObj, JsonReadWriteTest.PokerInfo pokerInfo)
     {
-        //todo ...
         GameObject bombEdit = (GameObject)Instantiate(bombPrefab, pokerObj.transform.position, Quaternion.identity);
         bombEdit.transform.SetParent(pokerObj.transform);
         bombEdit.transform.localRotation = Quaternion.identity;
 
         DragButton btnDrag = pokerObj.GetComponent<DragButton>();
         btnDrag.SetPokerItemEditInfo(bombEdit, pokerInfo);
+    }
+
+    void InstantiateAddNPoker(GameObject pokerObj, JsonReadWriteTest.PokerInfo pokerInfo)
+    {
+        GameObject addNEdit = (GameObject)Instantiate(addNPrefab, pokerObj.transform.position, Quaternion.identity);
+        addNEdit.transform.SetParent(pokerObj.transform);
+        addNEdit.transform.localRotation = Quaternion.identity;
+
+        DragButton btnDrag = pokerObj.GetComponent<DragButton>();
+        btnDrag.SetPokerItemEditInfo(addNEdit, pokerInfo);
     }
 
     //this function is used for add a new card to current poker group

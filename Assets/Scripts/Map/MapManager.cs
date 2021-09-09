@@ -33,6 +33,8 @@ public class MapManager : MonoBehaviour
             MapData mapData = new MapData(i + 1, startingNumber, 200);
             n_data.MapDatas.Add(mapData);
         }
+        n_data.LastHarvestTime = TimeManager.Instance.RealNow;
+
         return n_data;
     }
 

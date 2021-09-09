@@ -16,17 +16,19 @@ public class TimeManager : MonoBehaviour
 	[SerializeField] Vector2 _difference = new Vector2();
 	[SerializeField] string _systemTime = "";
 	[SerializeField] string _realTime = "";
-	[SerializeField] public bool Authenticity = true;
-	bool isGettingTime = false;
-	public delegate void TimeHandler(bool isAuthentic);
-	public event TimeHandler TimeRefresher = null; // Remove punishment
-	public event TimeHandler OnGetTime = null;
+	//[SerializeField] public bool Authenticity = true;
+	public bool IsGettingTime = false;
+
+	public delegate void TimeHandler();
+	public event TimeHandler Refresher;
+	public event TimeHandler OnGetTime;
+
 	public static TimeManager Instance = null;
 
 	private void Awake()
     {
 		if (!Instance) Instance = this;
-		OnGetTime += (bool on) => isGettingTime = on;
+		//OnGetTime += (bool on) => isGettingTime = on;
 	}
     private void Start()
     {
@@ -40,8 +42,9 @@ public class TimeManager : MonoBehaviour
         {
 			Data.CheckedDateTime = RealNow;
 			Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
-			TimeRefresher.Invoke(false);
-			GetTime(true, false);
+			//TimeRefresherOld.Invoke(false);
+			GetTime(TimeAuthenticity.FirstTime);
+			Refresher?.Invoke();
 		}
 	}
 
@@ -53,14 +56,10 @@ public class TimeManager : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-		if (pause || Data.CheckedSource == "None") return;
+		if (pause || Data.CheckedSource == TimeSource.Unknown) return;
 		VerifyTime();
 	}
-	public void GetTime(bool saveSystemTime, bool enablePunish)
-    {
-		TimeDebugText.Text.text += "\nGetting Time...";
-		StartCoroutine(IGetTime(saveSystemTime, enablePunish));
-	}
+
 
 	public void VerifyTime()
     {
@@ -72,14 +71,14 @@ public class TimeManager : MonoBehaviour
 		if (!_isAuthentic)
         {
 			TimeDebugText.Text.text += "\nYour time is not authentic during verificaion." + RealNow.ToString();
-			GetTime(true, true);
+			GetTime(TimeAuthenticity.Unauthentic);
 		}
 		else
         {
 			TimeDebugText.Text.text += "\nYour time is authentic during verificaion: " + RealNow.ToString();
-			TimeRefresher?.Invoke(true);
+			Data.CheckedAuthenticity = TimeAuthenticity.Authentic;
+			Refresher?.Invoke();
 		}
-		Authenticity = _isAuthentic;
 	}
 	public DateTime SystemNow => DateTime.Now.ToUniversalTime();
 	public DateTime RealNow => DateTime.Now.ToUniversalTime() - Data.CheckedSystemOffset.ToTimeSpan();
@@ -98,9 +97,16 @@ public class TimeManager : MonoBehaviour
 			return timeSpan;
 		}
 	}
-	IEnumerator IGetTime(bool saveSystemTime, bool enablePunish)
+
+	public void GetTime(TimeAuthenticity timeAuthenticity) { StopCoroutine("IGetTime"); StartCoroutine(IGetTime(timeAuthenticity)); }
+
+	IEnumerator IGetTime(TimeAuthenticity timeAuthenticity)
 	{
-		OnGetTime?.Invoke(true);
+		IsGettingTime = true;
+		OnGetTime?.Invoke();
+
+		TimeAuthenticity timeAuth = timeAuthenticity;
+
 		string[] sites =
 		{
 			"https://www.baidu.com",
@@ -131,48 +137,69 @@ public class TimeManager : MonoBehaviour
 					continue;
 				}
 
-				Data.CheckedSource = url;
+				// Record new internet time
+				Data.CheckedSource = TimeSource.Internet;
 				Data.CheckedDateTime = String2DateTime(value);
 				Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
-				TimeDebugText.Text.text += "\nRecorded time from " + Data.CheckedSource;
-				TimeSpan curOffset = SystemNow - Data.CheckedDateTime;
+				Data.CheckedSource = TimeSource.Internet;
+				TimeDebugText.Text.text += "\nRecorded time from " + url;
+
+				TimeSpan newOffset = SystemNow - Data.CheckedDateTime;
 				TimeSpan oldOffset = Data.CheckedSystemOffset.ToTimeSpan();
-				//IsAuthentic = true;
-				Data.CheckedSystemOffset = curOffset.TotalMilliseconds;
-				if (enablePunish)
+				Data.CheckedSystemOffset = newOffset.TotalMilliseconds;
+
+				// 2nd verification: system-world time offset
+				if (timeAuth == TimeAuthenticity.Unauthentic)
                 {
-					if (!VerifyTimeSpan(curOffset, oldOffset, ThresholdMinutes))
+					if (VerifyTimeSpan(newOffset, oldOffset, ThresholdMinutes))
                     {
-						TimeRefresher(false);
-						TimeDebugText.Text.text += "\nPunushed";
+						Data.CheckedAuthenticity = TimeAuthenticity.Authentic;
+						Refresher?.Invoke();
+						TimeDebugText.Text.text += "\nNot punish as passing 2nd verification.";
 					}
 					else
                     {
-						TimeRefresher?.Invoke(true);
-						TimeDebugText.Text.text += "\nNot punished as passing the internet time.";
+						Data.CheckedAuthenticity = TimeAuthenticity.Unauthentic;
+						Refresher?.Invoke();
+						TimeDebugText.Text.text += "\nPunush!";
 					}
-					Authenticity = true;
 				}
-				OnGetTime?.Invoke(false);
+
+				if (timeAuth == TimeAuthenticity.FirstTime)
+				{
+					Debug.Log("FirstTime");
+					Refresher?.Invoke();
+				}
+
+				IsGettingTime = false;
+				OnGetTime?.Invoke();
 				yield break;
 			}
 		}
-		Debug.Log("Can't connect to any sites");
-		if (enablePunish)
-        {
-			TimeRefresher(false);
-			TimeDebugText.Text.text += "\nPunushed";
-			Authenticity = true;
+
+		if (timeAuth == TimeAuthenticity.Unauthentic)
+		{
+			Data.CheckedAuthenticity = TimeAuthenticity.Unauthentic;
+			Refresher?.Invoke();
+			TimeDebugText.Text.text += "\nPunush!";
 		}
-        if (saveSystemTime)
+
+		// Record system time
+
+		Data.CheckedSource = TimeSource.Unknown;
+		Data.CheckedDateTime = RealNow;
+		Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
+		Data.CheckedSystemOffset = (RealNow - Data.CheckedDateTime).TotalMilliseconds;
+		TimeDebugText.Text.text += "\nRecorded system time.";
+
+		if (timeAuth == TimeAuthenticity.FirstTime)
         {
-			Data.CheckedSource = "System";
-			Data.CheckedDateTime = RealNow;
-			Data.CheckedBootTime = TimeSinceBoot.TotalMilliseconds;
-			Data.CheckedSystemOffset = (RealNow - Data.CheckedDateTime).TotalMilliseconds;
-			TimeDebugText.Text.text += "\nRecorded time from " + Data.CheckedSource;
+			Debug.Log("FirstTime");
+			Refresher?.Invoke();
 		}
-		OnGetTime?.Invoke(false);
+
+		IsGettingTime = false;
+		OnGetTime?.Invoke();
 	}
 
 	static DateTime String2DateTime(string gmt)
@@ -216,7 +243,8 @@ public class TimeManager : MonoBehaviour
 public class TimeData
 {
 	public DateTime CheckedDateTime = new DateTime();
-	public string CheckedSource = "None";
+	public TimeSource CheckedSource = TimeSource.Unknown;
+	public TimeAuthenticity CheckedAuthenticity = TimeAuthenticity.FirstTime;
 	// Declear DateTime as TimeSpan is not serializable
 	public double CheckedBootTime = 0;
 	public double CheckedSystemOffset = 0;
@@ -228,4 +256,20 @@ public static class TimeExtension
 	{
 		return TimeSpan.FromMilliseconds(ms);
 	}
+}
+
+[Serializable]
+public enum TimeSource
+{
+	Unknown,
+	System,
+	Internet
+}
+
+[Serializable]
+public enum TimeAuthenticity
+{
+	FirstTime,
+	Authentic,
+	Unauthentic
 }

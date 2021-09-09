@@ -128,7 +128,7 @@ public class CropManager : MonoBehaviour
                 crop.UpdateState();
                 if (crop.UpdateAnimator() && crop.CropState == Crop.State.immature)
                 {
-                    CreateParticle(crop.Name, crop.transform);
+                    CreateParticle(crop.Name, crop.transform.position);
                     shownCropNames.Add(crop.Name);
                 }
             }
@@ -146,8 +146,8 @@ public class CropManager : MonoBehaviour
             }
             else
             {
-                CreateParticle(config.Name, leftSide ? LeftSide : RightSide);
-                CreateParticle(config.Name, leftSide ? LeftSide : RightSide);
+                CreateParticle(config.Name, leftSide ? LeftSide.position : RightSide.position);
+                CreateParticle(config.Name, leftSide ? LeftSide.position : RightSide.position);
             }
         }
 
@@ -174,26 +174,11 @@ public class CropManager : MonoBehaviour
         UpdateCropsView();
     }
 
-    void CreateParticle(string cropName, Transform parent)
+    void CreateParticle(string cropName, Vector3 pos)
     {
-        GameObject particleObj = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + cropName);
-        ParticleSystem particle = Instantiate(particleObj, parent).transform.GetChild(0).GetComponent<ParticleSystem>();
-        //particle.transform.localScale = Vector3.one * Mathf.Abs(crop.Scale);
-        particle.transform.localPosition = Vector3.zero;
-        particle.transform.parent.SetParent(Instance.transform);
-
-        // Embed force fields and triggers
-        var externalForcesModule = particle.externalForces;
-        foreach (var field in fields) externalForcesModule.AddInfluence(field);
-        var triggerModule = particle.trigger;
-        foreach (var trigger in triggers) triggerModule.AddCollider(trigger);
-
-        // Set sorting order
-        var rendererModule = particle.GetComponent<ParticleSystemRenderer>();
-        rendererModule.sortingLayerName = "Environment";
-        rendererModule.sortingOrder = 1;
-
-        particles.Add(particle.transform.parent);
+        GameObject prefab = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + cropName);
+        GameObject obj = ParticleManager.Instance.CreateParticle(prefab, pos);
+        particles.Add(obj.transform);
     }
 
     public void UpdateCropType(Crop crop)

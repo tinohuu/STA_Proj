@@ -26,7 +26,7 @@ public class MapMaker : MonoBehaviour
     private void Awake()
     {
         test = JsonUtility.FromJson<MapMakerConfig>(ConfigsAsset.GetConfig("MapMakerConfig"));
-        TimeManager.Instance.TimeRefresher += (bool authenic) => LogText.text = authenic ? "Time is authentic" : "Time is not authentic";
+        //TimeManager.Instance.TimeRefresherOld += (bool authenic) => LogText.text = authenic ? "Time is authentic" : "Time is not authentic";
     }
     void Start()
     {

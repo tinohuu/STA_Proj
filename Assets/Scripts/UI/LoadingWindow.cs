@@ -14,11 +14,12 @@ public class LoadingWindow : Window
         TimeManager.Instance.OnGetTime += new TimeManager.TimeHandler(Fade);
     }
 
-    void Fade(bool fadeIn = true)
+    void Fade()
     {
+        bool isIn = TimeManager.Instance.IsGettingTime;
         canvasGroup.DOKill();
-        Item.gameObject.SetActive(fadeIn);
-        canvasGroup.blocksRaycasts = fadeIn;
-        canvasGroup.DOFade(fadeIn? 1 : 0, 1);
+        Item.gameObject.SetActive(isIn);
+        canvasGroup.blocksRaycasts = isIn;
+        canvasGroup.DOFade(isIn ? 1 : 0, 1);
     }
 }

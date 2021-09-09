@@ -65,7 +65,8 @@ public class GameplayMgr : MonoBehaviour
     public enum HandPokerSource : int
     {
         Hand,
-        StreakBonus
+        StreakBonus,
+        AddNPoker
     }
 
     public enum WildCardSource : int
@@ -166,6 +167,9 @@ public class GameplayMgr : MonoBehaviour
     public GameObject bombPrefab;
     public Sprite[] bombNumbers;
 
+    public GameObject addNPrefab;
+    public Sprite[] addNNumbers;
+
     //use this to store all the poker.
     JsonReadWriteTest.LevelData levelData = new JsonReadWriteTest.LevelData();
 
@@ -244,6 +248,7 @@ public class GameplayMgr : MonoBehaviour
     public Texture2D pokerAtlas;// = new Texture2D(8192, 256);
     public Rect[] pokerRects = new Rect[52];
     public Texture2D ascendTexture;
+    public Texture2D addNTexture;
 
     //the following is about some ui
     public GamePlayUI gameplayUI;
@@ -346,6 +351,18 @@ public class GameplayMgr : MonoBehaviour
 
         bombNumbers = Resources.LoadAll<Sprite>("UI/BombNumber");
         Debug.Log("the bomb number sprites length is: " + bombNumbers.Length);
+
+        addNPrefab = (GameObject)Resources.Load("Poker/FXItemPlus");
+        if (addNPrefab == null)
+            Debug.Log("GameplayMgr::Awake()... FXItemPlus is null....");
+
+        addNNumbers = Resources.LoadAll<Sprite>("UI/ItemPlusNumber");
+        if (addNNumbers == null)
+            Debug.Log("GameplayMgr::Awake()... ItemPlusNumber is null....");
+
+        addNTexture = Resources.Load("Poker/ItemPlusFront") as Texture2D;
+        if (addNTexture == null)
+            Debug.Log("GameplayMgr::Awake()... addNTexture is null....");
 
         for (int i = 0; i < 52; ++i)
         {
@@ -581,7 +598,7 @@ public class GameplayMgr : MonoBehaviour
 
         GeneratePokerForAscendDescendPoker();
 
-        //2021.8.20 added by pengyuan,
+        //2021.8.20 added by pengyuan, to pre-generate the pokers in unlock area, so that we can unlock the locks.
         GeneratePokerForUnlockArea();
 
         Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * 0.5f, 0.0f);
@@ -612,7 +629,8 @@ public class GameplayMgr : MonoBehaviour
 
             if (IsInUnlockArea(i, out nGroupID, out nGroupIndex) 
                 && levelData.pokerInfo[i].nItemType != (int)GameDefines.PokerItemType.Ascending_Poker 
-                && levelData.pokerInfo[i].nItemType != (int)GameDefines.PokerItemType.Descending_Poker)
+                && levelData.pokerInfo[i].nItemType != (int)GameDefines.PokerItemType.Descending_Poker
+                && levelData.pokerInfo[i].nItemType != (int)GameDefines.PokerItemType.Add_N_Poker)
             {
                 int nResult = Test_GetPreAllocatedPoker(i, nGroupID, nGroupIndex, out suit, out nNumber);
 
@@ -649,13 +667,23 @@ public class GameplayMgr : MonoBehaviour
                 }
                 else
                 {
-                    //test code, set suit and number for display
-                    Test_GetNextPoker(ref suit, ref nNumber);
+                    if (levelData.pokerInfo[i].nItemType != (int)GameDefines.PokerItemType.Add_N_Poker)
+                    {
+                        //test code, set suit and number for display
+                        Test_GetNextPoker(ref suit, ref nNumber);
+                    }
                 }
             }
-            
-            pokerScript.Test_SetSuitNumber(suit, nNumber);
 
+            if(levelData.pokerInfo[i].nItemType == (int)GameDefines.PokerItemType.Add_N_Poker)
+            {
+                pokerScript.Test_SetSuitNumberAddNPoker();
+            }
+            else
+            {
+                pokerScript.Test_SetSuitNumber(suit, nNumber);
+            }
+            
             HandPoker handScript = go.GetComponent<HandPoker>();
             Destroy(handScript);
 
@@ -1153,7 +1181,7 @@ public class GameplayMgr : MonoBehaviour
 
         //todo: this level should come from a call from map ...
         int nTempLevel = Random.Range(1, 6);
-        nTempLevel =  STAGameManager.Instance.nLevelID;
+        nTempLevel = 1;// STAGameManager.Instance.nLevelID;
         nCurrentLevel = nTempLevel;
         JsonReadWriteTest.Test_ReadLevelData(strLevel, 1, nTempLevel, out levelData);
 
@@ -1884,7 +1912,7 @@ public class GameplayMgr : MonoBehaviour
         }
     }
 
-    void AdjustAllHandPokerPosition()
+    public void AdjustAllHandPokerPosition()
     {
         int nIndex = 0;
         Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, -1.0f);
@@ -2262,6 +2290,11 @@ public class GameplayMgr : MonoBehaviour
         return Random.Range(1, handPokers.Count);
     }
 
+    int GetTopPositionInHandPoker()
+    {
+        return handPokers.Count - 1;
+    }
+
     private void FixedUpdate()
     {
         if (fGameTime > 3.0f && !bHasSetToGaming)
@@ -2287,7 +2320,14 @@ public class GameplayMgr : MonoBehaviour
                 {
                     //todo: flip the top pokers
                     GamePoker gamePokerScript = topPokers[i].GetComponent<GamePoker>();
-                    gamePokerScript.FlipPoker();
+                    if (gamePokerScript.itemType != GameDefines.PokerItemType.Add_N_Poker)
+                    {
+                        gamePokerScript.FlipPoker();
+                    }
+                    else
+                    {
+                        gamePokerScript.AddNPoker();
+                    }
 
                     //gameStatus = GameStatus.GameStatus_Gaming;
                 }
@@ -2649,6 +2689,47 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.ShowBombEndGameUI();
     }
 
+
+    //2021.9.7 added by pengyaun add one poker
+    public void OnAddNPoker_One()
+    {
+        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * 0.0f, -1.0f);
+
+        GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
+        go.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+        go.tag = "handCard";
+
+        GamePoker pokerScript = go.GetComponent<GamePoker>();
+        Destroy(pokerScript);
+
+        HandPoker handPokerScript = go.GetComponent<HandPoker>();
+
+        //int insertIndex = GetInsertPositionInHandPoker();
+        int insertIndex = GetTopPositionInHandPoker();
+        Debug.Log("OnAddNPoker_One ... the insertIndex is: " + insertIndex);
+        GameObject insertGameObject = handPokers[insertIndex];
+        handPokerScript.InitAddNHandPoker(insertIndex, insertGameObject.transform.position, renderer.bounds.size, 0.0f);
+
+        PokerSuit suit = PokerSuit.Suit_None;
+        int nNumber = Invalid_Poker_Digit;
+        
+        Test_GetNextPoker(ref suit, ref nNumber);
+        handPokerScript.Test_SetSuitNumber(suit, nNumber);
+
+        string strName = string.Format("handpoker_add_n_{0}", insertIndex);
+        go.name = strName;
+
+        //OpStepInfo stepInfo = opStepInfos.Peek();
+        //stepInfo.strCardName = strName;
+
+        //bonusIDs[i] = insertIndex;
+
+        handPokers.Insert(insertIndex, go);
+
+        
+        //AdjustAllHandPokerPosition();
+    }
+
     void GeneratePokerForUnlockArea()
     {
         for(int i = 0; i < lockAreas.Count; ++i)
@@ -2657,8 +2738,8 @@ public class GameplayMgr : MonoBehaviour
             unlockAreaPokers.nGroupID = lockAreas[i].nGroupID;
             unlockAreaPokerIDs.Add(unlockAreaPokers);
         }
-        
-        //first we find all the poker indices that exist in an unlock area
+
+        //first we find all the poker indices that exist in an unlock area, and don't include GameDefines.PokerItemType.Add_N_Poker
         for (int i = 0; i < levelData.pokerInfo.Count; ++i)
         {
             for (int j = 0; j < lockAreas.Count; ++j)
@@ -2667,7 +2748,9 @@ public class GameplayMgr : MonoBehaviour
 
                 int groupID;
                 int groupIndex;
-                if (lockAreaScript.IsInUnlockArea(i, out groupID, out groupIndex))
+                if (lockAreaScript.IsInUnlockArea(i, out groupID, out groupIndex)
+                    && levelData.pokerInfo[i].nItemType != (int)GameDefines.PokerItemType.Add_N_Poker)
+                    //pengyuan 2021.9.6, if this poker is a Add_N_Poker, we should exclude it from the unlock area, this means that we shouldn't preallocate this poker.
                 {
                     InsertToUnlockPokerArray(i, groupID);
                 }
@@ -3239,7 +3322,7 @@ public class GameplayMgr : MonoBehaviour
 
         gameplayUI.LoseGame(nCollectGold, 0);
 
-        Reward.Coin += nCollectGold;
+        //Reward.Coin += nCollectGold;
         //Reward.Data[RewardType.FreeRound] += 1;
 
         EndGame();

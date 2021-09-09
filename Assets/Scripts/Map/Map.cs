@@ -34,7 +34,7 @@ public class Map : MonoBehaviour
     void Start()
     {
         MapPlayer.Instance.MoveToLevel(mapLevels[MapManager.Instance.Data.SelectedLevel - 1], false);
-        if (Debug.isDebugBuild) Instantiate(MapMakerPrefab);
+        //if (Debug.isDebugBuild) Instantiate(MapMakerPrefab);
 
     }
 

@@ -274,6 +274,14 @@ public class DragButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 BombEdit bombEdit = pokerItem.GetComponent<BombEdit>();
                 bombEdit.Init(this, pokerInfo);
                 break;
+            case GameDefines.PokerItemType.Ladder:
+                break;
+            case GameDefines.PokerItemType.Add_N_Poker:
+                AddNEdit addNEdit = pokerItem.GetComponent<AddNEdit>();
+                addNEdit.Init(this, pokerInfo);
+                break;
+            case GameDefines.PokerItemType.Double_Number_Poker:
+                break;
             default:break;
         }
 

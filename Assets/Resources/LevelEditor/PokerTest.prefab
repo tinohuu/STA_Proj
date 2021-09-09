@@ -57,6 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -81,6 +82,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &7462759167987598210
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -106,3 +108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1185be1ba53c4f5409919f2bd7da05ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pokerFacing: 0
+  targetPos: {x: 0, y: 0, z: 0}
+  pokerSuit: 0
+  pokerColor: 0
+  scoreStarPrefab: {fileID: 0}
+  ascendingPrefab: {fileID: 281948606669722831, guid: 009c24b611872bc478629197ec77654f, type: 3}

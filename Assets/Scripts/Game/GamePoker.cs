@@ -18,16 +18,25 @@ public class GamePoker : MonoBehaviour
 
     Vector3 _bombPos;
 
+    Vector3 _addNPos;
+
     //pengyuan 2021.8.31 the ascend poker and descend poker effect
     GameObject ascendEffect = null;
 
     //pengyuan 2021.9.1 
     GameObject bombEffect = null;
     int nBombStep = 1;
-    Image digitImage;
-    Image unitImage;
-    Image singleImage;
+    Image bombDigitImage;
+    Image bombUnitImage;
+    Image bombSingleImage;
     Animator bombAnim;
+
+    //pengyuan 2021.9.6
+    GameObject addNEffect = null;
+    public int nAddNCount = 1;
+    Image addNPlusImage;    //+
+    Image addNUnitImage;    //number
+    Animator addNAnim;
 
     public Vector3 targetPos;
     int nFoldIndex = -1;
@@ -59,6 +68,9 @@ public class GamePoker : MonoBehaviour
     float fFoldTime = 0.0f;
     bool bFold { get; set; } = false;
     public bool bIsFolding { get; set; } = false;
+
+    //2021.9.7 added by pengyuan
+    bool bAddNPoker { get; set; } = false;
 
     bool bDismiss = false;
     float fDismissTime = 0.0f;
@@ -112,6 +124,7 @@ public class GamePoker : MonoBehaviour
 
         _ascendPos = pos + new Vector3(0.0f, rendererSize.y * 0.5f, 0.0f);
         _bombPos = pos + new Vector3(0.0f, rendererSize.y * 0.5f, 0.0f) + new Vector3(-0.3f, -0.5f, 0.0f);
+        _addNPos = pos + new Vector3(0.0f, rendererSize.y * 0.5f, 0.0f);
 
         pokerType = GameplayMgr.PokerType.PublicPoker;
         pokerFacing = GameplayMgr.PokerFacing.Backing;
@@ -137,11 +150,16 @@ public class GamePoker : MonoBehaviour
         foldSecondPoint = Vector3.zero;
 
         //this canvas is used to display ui animation, ascending, descending poker.
-        gameObject.AddComponent<Canvas>();
-
+        if(pokerInfo.nItemType != (int)GameDefines.PokerItemType.None)
+        {
+            gameObject.AddComponent<Canvas>();
+        }
+        
         itemType = (GameDefines.PokerItemType)info.nItemType;
+
         //2021.8.31 for ascending and descending poker ...
         InitItemEffect(info);
+
     }
 
     // Update is called once per frame
@@ -149,7 +167,7 @@ public class GamePoker : MonoBehaviour
     {
         fTime += Time.deltaTime;
 
-        if (!bFlip && !bFold && !bUnFlip && !bDismiss)
+        if (!bFlip && !bFold && !bUnFlip && !bDismiss && !bAddNPoker)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.08f);
 
@@ -158,6 +176,11 @@ public class GamePoker : MonoBehaviour
 
             if (!bHasWithdrawed)
             {
+                if(itemType == GameDefines.PokerItemType.Add_N_Poker)
+                {
+                    quatFrom = Quaternion.Euler(0.0f, 180.0f, 90.0f);
+                    quatTo = Quaternion.Euler(0.0f, 180.0f, pokerInfo.fRotation);
+                }
                 transform.rotation = Quaternion.Lerp(quatFrom, quatTo, fTime / fRotateTime);
 
                 if (fTime > fRotateTime && !bFlip && Mathf.Abs(pokerInfo.fRotation) > 0.1f)
@@ -173,6 +196,14 @@ public class GamePoker : MonoBehaviour
                 transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fTime / fRotateTime);
             }
 
+            if(fTime > fRotateTime)
+            {
+                if(itemType == GameDefines.PokerItemType.Add_N_Poker && addNEffect != null)
+                {
+                    addNEffect.SetActive(true);
+                }
+            }
+
             //fFlipTime += Time.deltaTime;
 
             /*if (fFlipTime >= fFlipTotalTime)
@@ -181,7 +212,7 @@ public class GamePoker : MonoBehaviour
             }*/
         }
 
-        if(bFlip && bIsFlipping)
+        if(bFlip && bIsFlipping && !bAddNPoker)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.08f);
 
@@ -295,12 +326,27 @@ public class GamePoker : MonoBehaviour
         //string strPokerName = string.Format("Poker/Poker_{0:3D}", nNumber + 1);
 
         int textureIndex = ((int)suit - 1) * 13 + nPokerNumber - 1;
-        //int offsetX = textureIndex * 142;
         GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
+        //int offsetX = textureIndex * 142;
         //GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerAtlas);
         //GetComponent<Renderer>().material.SetTextureOffset("_MainTex2", new Vector2(textureIndex * 142, 0));
         //GetComponent<Renderer>().material.SetTextureOffset("_MainTex2", new Vector2(0.0625f, 0f));
         //GetComponent<Renderer>().material.SetTextureOffset("_MainTex2", new Vector2(GameplayMgr.Instance.pokerRects[textureIndex].xMin, GameplayMgr.Instance.pokerRects[textureIndex].yMin));
+    }
+
+
+    //pengyuan 2021.9.6 for init add n poker
+    public void Test_SetSuitNumberAddNPoker()
+    {
+        pokerSuit = GameplayMgr.PokerSuit.Suit_Club;
+        pokerColor = GameplayMgr.PokerColor.Black;
+
+        nPokerNumber = 1;
+        nOriginNumber = nPokerNumber;
+
+        textName.text = "";
+
+        GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.addNTexture);
     }
 
     //pengyuan 2021.9.1 added for update ascend and descend poker status
@@ -406,7 +452,8 @@ public class GamePoker : MonoBehaviour
     void InitItemEffect(JsonReadWriteTest.PokerInfo pokeInfo)
     {
         ascendEffect = null;
-        bombEffect = null;
+        bombEffect   = null;
+        addNEffect   = null;
 
         switch (itemType)
         {
@@ -422,6 +469,10 @@ public class GamePoker : MonoBehaviour
                 bombEffect = Instantiate(GameplayMgr.Instance.bombPrefab, _bombPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
                 PostInitBombEffect(pokeInfo);
                 break;
+            case GameDefines.PokerItemType.Add_N_Poker:
+                addNEffect = Instantiate(GameplayMgr.Instance.addNPrefab, _addNPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
+                PostInitAddNEffect(pokeInfo);
+                break;
             default:break;
         }
     }
@@ -433,12 +484,57 @@ public class GamePoker : MonoBehaviour
         ascendEffect.SetActive(false);
     }
 
+    void PostInitAddNEffect(JsonReadWriteTest.PokerInfo pokeInfo)
+    {
+        nAddNCount = int.Parse(pokerInfo.strItemInfo);
+
+        addNEffect.transform.SetParent(GetComponent<Canvas>().transform);
+        addNEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+
+        Transform numberTrans = addNEffect.transform.Find("FXPlus/FXCard/Group/Plus");
+        if (numberTrans == null)
+            Debug.Log("addNEffect... we cann't find number object transform...");
+
+        GameObject mountPlus = numberTrans.gameObject;
+        addNPlusImage = mountPlus.GetComponent<Image>();
+
+        numberTrans = addNEffect.transform.Find("FXPlus/FXCard/Group/unitNum");
+        GameObject mountUnit = numberTrans.gameObject;
+        addNUnitImage = mountUnit.GetComponent<Image>();
+
+        addNEffect.SetActive(false);
+
+        InitAddNEffectDisplay();
+    }
+
+    void InitAddNEffectDisplay()
+    {
+        addNPlusImage.sprite = GameplayMgr.Instance.addNNumbers[0];
+        addNUnitImage.sprite = GameplayMgr.Instance.addNNumbers[nAddNCount+1];
+
+        pokerFacing = GameplayMgr.PokerFacing.Facing;
+        transform.rotation = Quaternion.Euler(0.0f, 0.0f, -pokerInfo.fRotation);
+
+        addNAnim = addNEffect.GetComponent<Animator>();
+    }
+
+    public void UpdateAddNEffectDisplay()
+    {
+        addNPlusImage.sprite = GameplayMgr.Instance.addNNumbers[0];
+        addNUnitImage.sprite = GameplayMgr.Instance.addNNumbers[nAddNCount + 1];
+
+        pokerFacing = GameplayMgr.PokerFacing.Facing;
+        transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+
+        addNAnim = addNEffect.GetComponent<Animator>();
+    }
+
     void PostInitBombEffect(JsonReadWriteTest.PokerInfo pokeInfo)
     {
         //todo:...
         nBombStep = int.Parse(pokeInfo.strItemInfo);
 
-        CheckCorrectStepCount();
+        CheckCorrectBombStepCount();
 
         bombEffect.transform.SetParent(GetComponent<Canvas>().transform);
         bombEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
@@ -453,15 +549,15 @@ public class GamePoker : MonoBehaviour
             Debug.Log("we cann't find number object transform...");
 
         GameObject mountDigit = numberTrans.gameObject;
-        digitImage = mountDigit.GetComponent<Image>();
+        bombDigitImage = mountDigit.GetComponent<Image>();
 
         numberTrans = bombEffect.transform.Find("FXBomb/FXBomb/Group/unitNum");
         GameObject mountUnit = numberTrans.gameObject;
-        unitImage = mountUnit.GetComponent<Image>();
+        bombDigitImage = mountUnit.GetComponent<Image>();
 
         numberTrans = bombEffect.transform.Find("FXBomb/FXBomb/singleNum");
         GameObject mountSingle = numberTrans.gameObject;
-        singleImage = mountSingle.GetComponent<Image>();
+        bombSingleImage = mountSingle.GetComponent<Image>();
 
         bombEffect.SetActive(false);
 
@@ -475,25 +571,25 @@ public class GamePoker : MonoBehaviour
             int nDigitIndex = nBombStep / 10;
             int nUnitIndex = nBombStep % 10;
 
-            digitImage.sprite = GameplayMgr.Instance.bombNumbers[nDigitIndex];
-            unitImage.sprite = GameplayMgr.Instance.bombNumbers[nUnitIndex];
+            bombDigitImage.sprite = GameplayMgr.Instance.bombNumbers[nDigitIndex];
+            bombDigitImage.sprite = GameplayMgr.Instance.bombNumbers[nUnitIndex];
 
-            digitImage.enabled = true;
-            unitImage.enabled = true;
-            singleImage.enabled = false;
+            bombDigitImage.enabled = true;
+            bombDigitImage.enabled = true;
+            bombSingleImage.enabled = false;
         }
         else
         {
-            singleImage.sprite = GameplayMgr.Instance.bombNumbers[nBombStep];
+            bombSingleImage.sprite = GameplayMgr.Instance.bombNumbers[nBombStep];
 
-            singleImage.enabled = true;
-            digitImage.enabled = false;
-            unitImage.enabled = false;
+            bombSingleImage.enabled = true;
+            bombDigitImage.enabled = false;
+            bombDigitImage.enabled = false;
         }
         
     }
 
-    void CheckCorrectStepCount()
+    void CheckCorrectBombStepCount()
     {
         nBombStep = nBombStep < 1 ? 1 : nBombStep;
         nBombStep = nBombStep > 50 ? 50 : nBombStep;
@@ -509,6 +605,21 @@ public class GamePoker : MonoBehaviour
         textName.text = GameplayMgr.Instance.Test_GetSuitDisplayString(pokerSuit, nPokerNumber);
     }
 
+    //pengyuan 2021.9.7 this method is used to process the add n poker game logic, 
+    public void AddNPoker()
+    {
+        bFlip = false;
+        bFold = false;
+        bUnFlip = false;
+
+        bAddNPoker = true;
+
+        transform.DOMove(GameplayMgr.Instance.Trans.position - Vector3.forward * 2.0f, 0.5f);
+        addNAnim.SetTrigger("PlusMove");
+
+        gameObject.GetComponent<MeshRenderer>().enabled = false;
+    }
+
     //we call this method to flip one poker
     //public void FlipPoker() => gameObject.transform.RotateAround(Vector3.up, 180.0f);
     public void FlipPoker()
@@ -518,7 +629,7 @@ public class GamePoker : MonoBehaviour
             return;
         }
 
-        //Debug.Log("here we flip the poker, name is: " + gameObject.name + "  depth is: " + transform.position.z);
+        Debug.Log("here we flip the poker, name is: " + gameObject.name + "  depth is: " + transform.position.z);
         
         bFlip = true;
         bUnFlip = false;
@@ -534,7 +645,7 @@ public class GamePoker : MonoBehaviour
 
     public void UnflipPoker()
     {
-        //Debug.Log("GamePoker::UnflipPoker... we UnflipPoker, the name is: " + name + "  number is: " + nPokerNumber);
+        Debug.Log("GamePoker::UnflipPoker... we UnflipPoker, the name is: " + name + "  number is: " + nPokerNumber);
 
         bFlip = false;
         bFold = false;

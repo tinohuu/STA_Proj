@@ -28,7 +28,7 @@ public class CropHarvest : MonoBehaviour
     private void Awake()
     {
         if (!Instance) Instance = this;
-        TimeManager.Instance.TimeRefresher += RefreshHarvestTime;
+        TimeManager.Instance.Refresher += RefreshHarvestTime;
     }
 
     void Update()
@@ -37,7 +37,7 @@ public class CropHarvest : MonoBehaviour
         timeSpan = MapManager.Instance.Data.LastHarvestTime + TimeSpan.FromHours(1) - TimeManager.Instance.RealNow;
 
         // Play mature animation in advance
-        if (timeSpan.TotalSeconds <= 3 && !CropManager.Instance.IsMature && TimeManager.Instance.Authenticity)
+        if (timeSpan.TotalSeconds <= 3 && !CropManager.Instance.IsMature && TimeManager.Instance.Data.CheckedAuthenticity == TimeAuthenticity.Authentic)
         {
             CropManager.Instance.IsMature = true;
             CropManager.Instance.UpdateCropsAnimator(true);
@@ -65,7 +65,7 @@ public class CropHarvest : MonoBehaviour
     {
         CropManager.Instance.IsMature = false;
 
-        RefreshHarvestTime(false);
+        ResetHarvestTime();
 
         Reward.Coin += UpdateHarvestText();
         FindObjectOfType<RewardNumber>().Animate(4, 2);
@@ -73,25 +73,27 @@ public class CropHarvest : MonoBehaviour
         CropManager.Instance.PlayHarvestEffects();
     }
 
-    public void RefreshHarvestTime(bool isVerified)
+    public void RefreshHarvestTime()
     {
         MapManagerData data = MapManager.Instance.Data;
-        if (isVerified)
+        if (TimeManager.Instance.Data.CheckedAuthenticity != TimeAuthenticity.Unauthentic)
         {
             bool clamp = TimeManager.Instance.RealNow < MapManager.Instance.Data.LastHarvestTime;
-            TimeDebugText.Text.text += "\nChecking remaining harvest duration...";
             if (clamp)
             {
                 TimeDebugText.Text.text += "\nClamped the harvest time.";
-                //data.LastHarvestTime = TimeManager.Instance.RealNow;
-                TimeManager.Instance.GetTime(true, false);
+                data.LastHarvestTime = TimeManager.Instance.RealNow;
+                //TimeManager.Instance.GetTime(true, false);
             }
         }
-        else
-        {
-            TimeDebugText.Text.text += "\nPunished the harvest time.";
-            data.LastHarvestTime = TimeManager.Instance.RealNow;
-        }
+        else ResetHarvestTime();
+    }
+
+    void ResetHarvestTime()
+    {
+        TimeDebugText.Text.text += "\nReset the harvest time.";
+        MapManagerData data = MapManager.Instance.Data;
+        data.LastHarvestTime = TimeManager.Instance.RealNow;
     }
 
     public void Cheat()

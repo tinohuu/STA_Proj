@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class HandPoker : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class HandPoker : MonoBehaviour
     bool bCancel { get; set; } = false;
     float fCancelTime = 0.0f;
 
+    bool bIsAddN { get; set; } = false;
+    float fAddNTime = 0.0f;
+
     string strName;//this is for test
     float screenX = 0.0f;
     TextMesh textName;
@@ -40,7 +44,7 @@ public class HandPoker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     public void Init(GameObject goPrefab, JsonReadWriteTest.LevelData leveInfo, int index, Vector3 pos, Vector3 rendererSize, float fBeginTime)
@@ -85,10 +89,45 @@ public class HandPoker : MonoBehaviour
 
     }
 
+    public void InitAddNHandPoker(int index, Vector3 pos, Vector3 rendererSize, float fBeginTime)
+    {
+        pokerType = GameplayMgr.PokerType.HandPoker;
+        handPokerSource = GameplayMgr.HandPokerSource.AddNPoker;
+
+        nIndex = index;
+        originPos = transform.position;
+        targetPos = pos;
+
+        screenX = rendererSize.x;
+
+        fTime = fBeginTime;
+
+        Transform textTrans = gameObject.transform.Find("Text");
+        textName = textTrans.GetComponent<TextMesh>();
+        textName.text = "加N牌";
+
+        bIsAddN = true;
+        fAddNTime = 0.0f;
+
+        Debug.Log("InitAddNHandPoker...inde x is:  " + index + "  the target pos is: " + targetPos);
+
+        StartCoroutine(CardJump(GetComponent<MeshFilter>().transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
+        //CardJumpIEnumerator();
+
+        //StartCoroutine(adjustPosition());
+
+    }
+
+    IEnumerator CardJumpIEnumerator()
+    {
+        yield return StartCoroutine(CardJump(GetComponent<MeshFilter>().transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
+    }
+
+
     // Update is called once per frame
     void Update()
     {
-        if(!bFlip && !bCancel)
+        if (!bFlip && !bCancel && !bIsAddN)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.1f);
 
@@ -125,7 +164,7 @@ public class HandPoker : MonoBehaviour
             }
         }
 
-        if(bCancel)
+        if (bCancel)
         {
             fCancelTime += Time.deltaTime;
 
@@ -139,6 +178,12 @@ public class HandPoker : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+
+        if (bIsAddN)
+        {
+            fAddNTime += Time.deltaTime;
+            //transform.position = targetPos;
+        }
     }
 
     public void Test_SetName(string name)
@@ -149,7 +194,7 @@ public class HandPoker : MonoBehaviour
     public void Test_SetSuitNumber(GameplayMgr.PokerSuit suit, int nNumber)
     {
         pokerSuit = suit;
-        if(nNumber == 0)
+        if (nNumber == 0)
         {
             nPokerNumber = 13;
         }
@@ -157,7 +202,7 @@ public class HandPoker : MonoBehaviour
         {
             nPokerNumber = nNumber;
         }
-        
+
         textName.text = GameplayMgr.Instance.Test_GetSuitDisplayString(pokerSuit, nPokerNumber);
 
         int textureIndex = ((int)suit - 1) * 13 + nPokerNumber - 1;
@@ -187,7 +232,7 @@ public class HandPoker : MonoBehaviour
         }
 
         Debug.Log("here we flip the poker, name is: " + gameObject.name + "  number is: " + nPokerNumber);
-        
+
         bFlip = true;
         bIsFlipping = true;
         fFlipTime = 0.0f;
@@ -214,7 +259,7 @@ public class HandPoker : MonoBehaviour
 
     public void AdjustHandPokerPosition(JsonReadWriteTest.LevelData leveInfo, int nTotalCount, int index, Vector3 pos, Vector3 rendererSize)
     {
-        if(index > 20)
+        if (index > 20)
         {
             index = 20;
         }
@@ -235,9 +280,86 @@ public class HandPoker : MonoBehaviour
             newPos.z = pos.z - index * 0.05f;
         }
 
-        //Debug.Log("AdjustHandPokerPosition... the pos.x is: " + newPos.x + ", the total count is: " + nTotalCount + ", the idnex is : " + index);
+        Debug.Log("AdjustHandPokerPosition... the pos.x is: " + newPos.x + ", the total count is: " + nTotalCount + ", the idnex is : " + index + "  name is: " + gameObject.name);
 
         targetPos = newPos;
+        //transform.position = targetPos;
+    }
+
+    IEnumerator CardJump(Transform card, float cardWidth, Vector3 target)
+    {
+        float _Width = target.x - card.position.x;
+        float _Height = card.transform.position.y - target.y;
+        float _xSpeed = 5f / 3 * _Width;
+        float _ySpeed = 10 * cardWidth;
+        float _StartTime = Time.time;
+
+        // Rotate card by Dotween
+        transform.DORotate(new Vector3(0, 0, _Width < 0 ? 360 : -360), 0.8f, RotateMode.WorldAxisAdd).SetEase(Ease.OutSine);
+
+        // Stage 1
+        while (Time.time - _StartTime < 0.4f)
+        {
+            _ySpeed -= (25f * cardWidth) * Time.deltaTime;
+            card.position += new Vector3(_xSpeed, _ySpeed, 0) * Time.deltaTime;
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            card.position = newPosZ;
+
+            yield return null;
+        }
+        _ySpeed = 0;
+
+        // Stage 2
+        while (Time.time - _StartTime < 0.7f)
+        {
+            _xSpeed -= (25f / 6 * _Width) * Time.deltaTime;
+            _ySpeed += (50f / 3 * (2 * cardWidth + Mathf.Abs(_Height))) * Time.deltaTime;
+            card.position += new Vector3(_xSpeed, -_ySpeed, 0) * Time.deltaTime;
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            card.position = newPosZ;
+
+            yield return null;
+        }
+        _ySpeed = 10f / 3 * (2 * cardWidth + Mathf.Abs(_Height));
+
+        // Stage 3
+        Vector3 oriPos = card.position;
+        float dis = (oriPos - target).magnitude;
+        while (Time.time - _StartTime < 0.8f)
+        {
+            card.position = Vector3.Lerp(oriPos, target, (Time.time - _StartTime - 0.7f) / 0.1f);
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            card.position = newPosZ;
+
+            yield return null;
+        }
+
+        card.position = target;
+
+        Debug.Log("hand card jump coroutine end time is: " + Time.time + "the target Pos is: " + targetPos + "the index is: " + nIndex);
+
+        //yield return StartCoroutine(adjustPosition());
+        yield return new WaitForSeconds(0.2f);
+        GameplayMgr.Instance.AdjustAllHandPokerPosition();
+        transform.position = targetPos;
+        //GameplayMgr.Instance.AdjustAllHandPokerPosition();
+
+        //transform.DOMove(targetPos, 0.1f);
+    }
+
+    IEnumerator adjustPosition()
+    {
+        Debug.Log("here we enter coroutine adjustPosition, the index is: " + nIndex);
+
+        yield return new WaitForEndOfFrame();
+
+        GameplayMgr.Instance.AdjustAllHandPokerPosition();
+
+        //transform.DOMove(targetPos, 0.1f);
+        //transform.position = targetPos;
     }
 
 }

@@ -24,6 +24,8 @@ public class TopMenuUI : MonoBehaviour
 
     private Button addBombBtn;
 
+    private Button addNPokerBtn;
+
     private Button saveLevelBtn;
 
     
@@ -50,7 +52,9 @@ public class TopMenuUI : MonoBehaviour
 
         addBombBtn = transform.Find("AddBombCard").GetComponent<Button>();
         addBombBtn.onClick.AddListener(delegate () { this.OnClickAddBombCard(); });
-        
+
+        addNPokerBtn = transform.Find("AddNCard").GetComponent<Button>();
+        addNPokerBtn.onClick.AddListener(delegate () { this.OnClickAddNPoker(); });
 
         saveLevelBtn = transform.Find("SaveLevel").GetComponent<Button>();
         saveLevelBtn.onClick.AddListener(delegate () { this.OnClickSaveLevel(); });
@@ -103,6 +107,13 @@ public class TopMenuUI : MonoBehaviour
         Debug.Log("here we clicked the add bomb poker button...");
 
         PokerAreaMgr.Instance.AddBombCard();
+    }
+
+    private void OnClickAddNPoker()
+    {
+        Debug.Log("here we clicked add n poker button...");
+
+        PokerAreaMgr.Instance.AddNPoker();
     }
 
     private void OnClickSaveLevel()
