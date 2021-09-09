@@ -13,7 +13,6 @@ public class GamePoker : MonoBehaviour
     //when withdraw a poker, use this to see whether this poker is facing or backing
     public GameplayMgr.PokerFacing pokerFacing;// { get; set; }
 
-    //Vector3 originPos;
     Vector3 _ascendPos;
 
     Vector3 _bombPos;
@@ -23,7 +22,7 @@ public class GamePoker : MonoBehaviour
     //pengyuan 2021.8.31 the ascend poker and descend poker effect
     GameObject ascendEffect = null;
 
-    //pengyuan 2021.9.1 
+    //pengyuan 2021.9.1, the following are used for bomb process
     GameObject bombEffect = null;
     int nBombStep = 1;
     Image bombDigitImage;
@@ -31,13 +30,16 @@ public class GamePoker : MonoBehaviour
     Image bombSingleImage;
     Animator bombAnim;
 
-    //pengyuan 2021.9.6
+    //pengyuan 2021.9.6, the following are used for add n poker process
     GameObject addNEffect = null;
     public int nAddNCount = 1;
+    int nAddNOriginCount = 1;
     Image addNPlusImage;    //+
     Image addNUnitImage;    //number
     Animator addNAnim;
+    public string strHandPokerIDs = "";
 
+    public Vector3 originPos;
     public Vector3 targetPos;
     int nFoldIndex = -1;
     float fTime;
@@ -70,7 +72,8 @@ public class GamePoker : MonoBehaviour
     public bool bIsFolding { get; set; } = false;
 
     //2021.9.7 added by pengyuan
-    bool bAddNPoker { get; set; } = false;
+    public bool bAddNPoker { get; set; } = false;
+    public bool bIsAddingNPoker = false;
 
     bool bDismiss = false;
     float fDismissTime = 0.0f;
@@ -121,6 +124,7 @@ public class GamePoker : MonoBehaviour
     {
         Index = nIndex;
         nFoldIndex = nIndex;
+        originPos = transform.position;
 
         _ascendPos = pos + new Vector3(0.0f, rendererSize.y * 0.5f, 0.0f);
         _bombPos = pos + new Vector3(0.0f, rendererSize.y * 0.5f, 0.0f) + new Vector3(-0.3f, -0.5f, 0.0f);
@@ -143,8 +147,6 @@ public class GamePoker : MonoBehaviour
         Transform textTrans = gameObject.transform.Find("Text");
         textName = textTrans.GetComponent<TextMesh>();
         textName.text = "测试代码";
-
-        //originPos = transform.position;
 
         foldPeekPoint = Vector3.zero;
         foldSecondPoint = Vector3.zero;
@@ -276,7 +278,7 @@ public class GamePoker : MonoBehaviour
                 bIsWithdrawing = false;
 
                 //GameplayMgr.Instance.UnflipAllCoveredGamePoker(gameObject);
-                GameplayMgr.Instance.nWithdrawCount --;
+                //GameplayMgr.Instance.nWithdrawCount --;
             }
         }
 
@@ -487,6 +489,7 @@ public class GamePoker : MonoBehaviour
     void PostInitAddNEffect(JsonReadWriteTest.PokerInfo pokeInfo)
     {
         nAddNCount = int.Parse(pokerInfo.strItemInfo);
+        nAddNOriginCount = nAddNCount;
 
         addNEffect.transform.SetParent(GetComponent<Canvas>().transform);
         addNEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
@@ -613,11 +616,32 @@ public class GamePoker : MonoBehaviour
         bUnFlip = false;
 
         bAddNPoker = true;
+        strHandPokerIDs = "";
 
         transform.DOMove(GameplayMgr.Instance.Trans.position - Vector3.forward * 2.0f, 0.5f);
         addNAnim.SetTrigger("PlusMove");
 
+        bIsAddingNPoker = true;
         gameObject.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    public void OnAddNPokerExit()
+    {
+        bIsAddingNPoker = false;
+    }
+
+    //public void Withdraw
+
+    public void AddNPokerOneID(int nID)
+    {
+        if(strHandPokerIDs.Length == 0)
+        {
+            strHandPokerIDs = string.Format("{0}_{1}", Index, nID);
+        }
+        else
+        {
+            strHandPokerIDs += string.Format("_{0}", nID);
+        }
     }
 
     //we call this method to flip one poker
@@ -741,9 +765,19 @@ public class GamePoker : MonoBehaviour
 
         bHasWithdrawed = true;
 
-        transform.DOMove(targetPos, 0.3f);
+        if(itemType == GameDefines.PokerItemType.Add_N_Poker)
+        {
+            gameObject.GetComponent<MeshRenderer>().enabled = true;
+            bAddNPoker = false;
+            transform.position = originPos;
+            nAddNCount = nAddNOriginCount;
+            addNAnim.Play("FXPlusIdle", 0, 0.0f);
+            UpdateAddNEffectDisplay();
+        }
 
-        GameplayMgr.Instance.nWithdrawCount++;
+        transform.DOMove(targetPos, 0.5f);
+
+        //GameplayMgr.Instance.nWithdrawCount++;
     }
 
     //when the game is end, and the player failed, we call this method to dismiss the poker.

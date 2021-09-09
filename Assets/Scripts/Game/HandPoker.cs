@@ -33,6 +33,8 @@ public class HandPoker : MonoBehaviour
     bool bIsAddN { get; set; } = false;
     float fAddNTime = 0.0f;
 
+    bool bIsJumping { get; set; } = false;
+
     string strName;//this is for test
     float screenX = 0.0f;
     TextMesh textName;
@@ -96,7 +98,10 @@ public class HandPoker : MonoBehaviour
 
         nIndex = index;
         originPos = transform.position;
-        targetPos = pos;
+        //targetPos = pos;
+        targetPos.x = pos.x - 0.2f;
+        targetPos.y = pos.y;
+        targetPos.z = pos.z - index * 0.05f;
 
         screenX = rendererSize.x;
 
@@ -109,10 +114,10 @@ public class HandPoker : MonoBehaviour
         bIsAddN = true;
         fAddNTime = 0.0f;
 
-        Debug.Log("InitAddNHandPoker...inde x is:  " + index + "  the target pos is: " + targetPos);
+        //Debug.Log("InitAddNHandPoker...inde x is:  " + index + "  the target pos is: " + targetPos + " init pos is: " + transform.position);
 
-        StartCoroutine(CardJump(GetComponent<MeshFilter>().transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
-        //CardJumpIEnumerator();
+        //StartCoroutine(CardJump(gameObject.GetComponent<MeshFilter>().transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
+        StartCoroutine(CardJump(gameObject.transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
 
         //StartCoroutine(adjustPosition());
 
@@ -249,6 +254,29 @@ public class HandPoker : MonoBehaviour
         bFlip = false;
     }
 
+    public void WithdrawAddNPoker(GamePoker gamePoker)
+    {
+        StartCoroutine(WithdrawAndDestroy(gamePoker));
+    }
+
+    IEnumerator WithdrawAndDestroy(GamePoker gamePoker)
+    {
+        transform.DOMove(gamePoker.targetPos, 0.5f);
+
+        float fTime = 0.0f;
+
+        while(fTime < 0.5f)
+        {
+            fTime += Time.deltaTime;
+            yield return null;
+        }
+
+        GameplayMgr.Instance.RemoveOneHandPoker(gameObject);
+        Destroy(gameObject);
+
+        GameplayMgr.Instance.AdjustAllHandPokerPosition();
+    }
+
     //this is a streak bonus, and when we withdraw the operation step, the bonus should be canceled
     public void Cancel()
     {
@@ -280,14 +308,20 @@ public class HandPoker : MonoBehaviour
             newPos.z = pos.z - index * 0.05f;
         }
 
-        Debug.Log("AdjustHandPokerPosition... the pos.x is: " + newPos.x + ", the total count is: " + nTotalCount + ", the idnex is : " + index + "  name is: " + gameObject.name);
+        //Debug.Log("AdjustHandPokerPosition... the newPos is: " + newPos + ", the total count is: " + nTotalCount + ", the idnex is : " + index + "  name is: " + gameObject.name);
 
         targetPos = newPos;
-        //transform.position = targetPos;
+
+        if(handPokerSource == GameplayMgr.HandPokerSource.AddNPoker && !bIsJumping)
+        {
+            transform.position = targetPos;
+        }
     }
 
     IEnumerator CardJump(Transform card, float cardWidth, Vector3 target)
     {
+        bIsJumping = true;
+
         float _Width = target.x - card.position.x;
         float _Height = card.transform.position.y - target.y;
         float _xSpeed = 5f / 3 * _Width;
@@ -333,21 +367,20 @@ public class HandPoker : MonoBehaviour
 
             Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
             card.position = newPosZ;
-
+            //Debug.Log("hand card jump coroutine  "  + " the index is: " + nIndex);
             yield return null;
         }
 
         card.position = target;
 
-        Debug.Log("hand card jump coroutine end time is: " + Time.time + "the target Pos is: " + targetPos + "the index is: " + nIndex);
+        bIsJumping = false;
 
-        //yield return StartCoroutine(adjustPosition());
-        yield return new WaitForSeconds(0.2f);
         GameplayMgr.Instance.AdjustAllHandPokerPosition();
-        transform.position = targetPos;
-        //GameplayMgr.Instance.AdjustAllHandPokerPosition();
 
-        //transform.DOMove(targetPos, 0.1f);
+        /*Debug.Log("hand card jump coroutine end time is: " + Time.time + "the target Pos is: " + targetPos + " the index is: " + nIndex);
+        Debug.Log("hand card jump coroutine end we set the target pos is: " + targetPos + " the index is: " + nIndex);
+        GameplayMgr.Instance.AdjustAllHandPokerPosition2nd(nIndex);
+        transform.DOMove(targetPos, 0.1f);*/
     }
 
     IEnumerator adjustPosition()

@@ -301,7 +301,7 @@ public class GameplayMgr : MonoBehaviour
     List<PublicConfig> publicConfigs;
 
     //pengyuan 2021.8.27 added for test
-    public int nWithdrawCount { get; set; } = 0;
+    //public int nWithdrawCount { get; set; } = 0;
 
     private void Awake()
     {
@@ -1310,6 +1310,28 @@ public class GameplayMgr : MonoBehaviour
         return fZ;
     }
 
+    public void WithDrawClicked()
+    {
+        if(opStepInfos.Count == 0)
+        {
+            return;
+        }
+
+        while(opStepInfos.Peek().strCardName == "handpoker_add_n")
+        {
+            OpStepInfo stepInfo = opStepInfos.Peek();
+
+            WithdrawAddNPoker();
+
+            opStepInfos.Pop();
+        }
+
+        if(opStepInfos.Count > 0)
+        {
+            WithdrawOnePoker();
+        }
+    }
+
     //withdraw one poker from the foldPokers
     public void WithdrawOnePoker()
     {
@@ -1413,6 +1435,7 @@ public class GameplayMgr : MonoBehaviour
                 }
 
             }
+            Debug.Log("-----------------------------\n here we output the strIDs is: " + stepInfo.strIDs + "the strName is: " + stepInfo.strCardName);
         }
 
         //2021.8.20 added by pengyuan to withdraw a lock
@@ -1457,6 +1480,27 @@ public class GameplayMgr : MonoBehaviour
             gameplayUI.HideAdd5Btn();
             gameplayUI.HideEndGameBtn();
         }
+
+        //todo: here we check opStepInfos's peek info, to see whether we should withdraw the add n poker from the handpokers
+        while(CheckCanWithdrawAddNPoker())
+        {
+            Debug.Log("-----------------------------\n here we should withdraw a handpoker that is add_n, the ids are: " + opStepInfos.Peek().strIDs);
+            WithdrawAddNPoker();
+
+            opStepInfos.Pop();
+        }
+    }
+
+    bool CheckCanWithdrawAddNPoker()
+    {
+        OpStepInfo stepInfo = opStepInfos.Peek();
+
+        if(stepInfo.strCardName == "handpoker_add_n")
+        {
+            return true;
+        }
+
+        return false;
     }
 
     //when click "Add5Btn", add 5 pokers to the hand poker
@@ -1560,6 +1604,58 @@ public class GameplayMgr : MonoBehaviour
         Test_EnableTopFoldPokerText();
 
         //Debug.Log("one game poker withdrawed!!! name is: " + poker.name);
+    }
+
+    //2021.9.8 added by pengyuan, to withdraw the add n pokers from handpoker
+    void WithdrawAddNPoker()
+    {
+        OpStepInfo stepInfo = opStepInfos.Peek();
+
+        string[] strIDs = stepInfo.strIDs.Split('_');
+        int nGamePokerIndex = int.Parse(strIDs[0]);
+
+        GameObject gamePoker = GetPublicPokerByIndex(nGamePokerIndex);
+
+        if(gamePoker != null)
+        {
+            GamePoker gamePokerScript = gamePoker.GetComponent<GamePoker>();
+            gamePokerScript.Withdraw();
+
+            for (int i = 1; i < strIDs.Length; ++i)
+            {
+                int nAddNPokerID = int.Parse(strIDs[i]);
+
+                string strPokerName = string.Format("handpoker_add_n_{0}_{1}", nGamePokerIndex, nAddNPokerID);
+
+                GameObject addNPoker = GetHandPokerByName(strPokerName);
+                if(addNPoker != null)
+                {
+                    HandPoker handPokerScript = addNPoker.GetComponent<HandPoker>();
+                    handPokerScript.WithdrawAddNPoker(gamePokerScript);
+                }
+            }
+
+            UnflipAllCoveredGamePoker(gamePoker);
+        }
+    }
+
+    GameObject GetPublicPokerByIndex(int nIndex)
+    {
+        for(int i = 0; i < publicPokers.Count; ++i)
+        {
+            GamePoker pokerScript = publicPokers[i].GetComponent<GamePoker>();
+            if (pokerScript.Index == nIndex)
+            {
+                return publicPokers[i];
+            }
+        }
+
+        return null;
+    }
+
+    GameObject GetHandPokerByName(string strName)
+    {
+        return handPokers.Find(target => target.name.Equals(strName));
     }
 
     void WithdrawHandPoker(GameObject poker)
@@ -1941,6 +2037,15 @@ public class GameplayMgr : MonoBehaviour
         }
     }
 
+    public void AdjustAllHandPokerPosition2nd(int nIndex)
+    {
+        for(int i = 0; i < nIndex; ++i)
+        {
+            GameObject go = handPokers[i];
+            go.transform.position -= Vector3.right * 0.2f;
+        }
+    }
+
     bool IsTopPublicPokerClicked(ref int nIndex, ref List<GameObject> topPokers, ref RaycastHit2D[] hitResults)
     {
         nIndex = 0;
@@ -2290,9 +2395,9 @@ public class GameplayMgr : MonoBehaviour
         return Random.Range(1, handPokers.Count);
     }
 
-    int GetTopPositionInHandPoker()
+    int GetTopInsertPositionInHandPoker()
     {
-        return handPokers.Count - 1;
+        return handPokers.Count;
     }
 
     private void FixedUpdate()
@@ -2327,6 +2432,7 @@ public class GameplayMgr : MonoBehaviour
                     else
                     {
                         gamePokerScript.AddNPoker();
+                        Add_AddNPokerStep(gamePokerScript);
                     }
 
                     //gameStatus = GameStatus.GameStatus_Gaming;
@@ -2383,7 +2489,7 @@ public class GameplayMgr : MonoBehaviour
 
                 int nMinIndex = GetMinDepthIndexWithoutLockArea(ref hitResults);
 
-                if (hitResults[nMinIndex].collider.name == collider.name)// && !pokerData.bHasWithdrawed)
+                if (hitResults[nMinIndex].collider.name == collider.name && !pokerData.bAddNPoker)// && !pokerData.bHasWithdrawed)
                 {
                     topPokers.Add(go);
                 }
@@ -2444,12 +2550,15 @@ public class GameplayMgr : MonoBehaviour
     {
         if(handPokers.Count == 0)
         {
-            //Debug.Log("GetTopHandPoker... the handPokers.Count is 0.");
             return null;
         }
 
-        //Debug.Log("GetTopHandPoker... the handPokers.Count is: " + handPokers.Count);
         return handPokers[handPokers.Count - 1];
+    }
+
+    public void RemoveOneHandPoker(GameObject handPoker)
+    {
+        handPokers.Remove(handPoker);
     }
 
     private bool IsPublicPokerFlipping()
@@ -2691,11 +2800,11 @@ public class GameplayMgr : MonoBehaviour
 
 
     //2021.9.7 added by pengyaun add one poker
-    public void OnAddNPoker_One()
+    public void OnAddNPoker_One(GamePoker gamePokerScript)
     {
-        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * 0.0f, -1.0f);
+        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.4f, -1.0f);
 
-        GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
+        GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position, Quaternion.identity);
         go.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         go.tag = "handCard";
 
@@ -2705,10 +2814,8 @@ public class GameplayMgr : MonoBehaviour
         HandPoker handPokerScript = go.GetComponent<HandPoker>();
 
         //int insertIndex = GetInsertPositionInHandPoker();
-        int insertIndex = GetTopPositionInHandPoker();
-        Debug.Log("OnAddNPoker_One ... the insertIndex is: " + insertIndex);
-        GameObject insertGameObject = handPokers[insertIndex];
-        handPokerScript.InitAddNHandPoker(insertIndex, insertGameObject.transform.position, renderer.bounds.size, 0.0f);
+        int insertIndex = GetTopInsertPositionInHandPoker();
+        handPokerScript.InitAddNHandPoker(insertIndex, Trans.position + posOffset, renderer.bounds.size, 0.0f);
 
         PokerSuit suit = PokerSuit.Suit_None;
         int nNumber = Invalid_Poker_Digit;
@@ -2716,18 +2823,33 @@ public class GameplayMgr : MonoBehaviour
         Test_GetNextPoker(ref suit, ref nNumber);
         handPokerScript.Test_SetSuitNumber(suit, nNumber);
 
-        string strName = string.Format("handpoker_add_n_{0}", insertIndex);
+        gamePokerScript.AddNPokerOneID(insertIndex);
+        string strName = string.Format("handpoker_add_n_{0}_{1}", gamePokerScript.Index, insertIndex);
         go.name = strName;
 
-        //OpStepInfo stepInfo = opStepInfos.Peek();
-        //stepInfo.strCardName = strName;
-
-        //bonusIDs[i] = insertIndex;
-
         handPokers.Insert(insertIndex, go);
+    }
 
-        
-        //AdjustAllHandPokerPosition();
+    public void Add_AddNPokerStep(GamePoker pokerScript)
+    {
+        int nColors = GetStreakBonusEncode();
+        int nHasStreak = nStreakCount > 0 ? 1 : 0;
+
+        AddOpStepInfo(opStepInfos.Count, nStreakCount, nColors, 0, 0, nHasStreak, streakType, nTotalComboCount);
+
+        OpStepInfo stepInfo = opStepInfos.Peek();
+
+        Debug.Log("---------\n Add_AddNPokerStep the stack count is: " + opStepInfos.Count);
+        stepInfo.strCardName = "handpoker_add_n";
+        stepInfo.strIDs = pokerScript.strHandPokerIDs;
+    }
+
+    public void OnAddNPokerExit(GamePoker gamePoker)
+    {
+        OpStepInfo stepInfo = opStepInfos.Peek();
+        stepInfo.strIDs = gamePoker.strHandPokerIDs;
+
+        gamePoker.OnAddNPokerExit();
     }
 
     void GeneratePokerForUnlockArea()

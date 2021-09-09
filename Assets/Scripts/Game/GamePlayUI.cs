@@ -475,7 +475,8 @@ public class GamePlayUI : MonoBehaviour
         HideAdd5Btn();
         HideEndGameBtn();
 
-        GameplayMgr.Instance.WithdrawOnePoker();
+        //GameplayMgr.Instance.WithdrawOnePoker();
+        GameplayMgr.Instance.WithDrawClicked();
     }
 
     void OnClickAdd5Btn()

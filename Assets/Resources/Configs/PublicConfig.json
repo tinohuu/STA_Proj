@@ -4,7 +4,7 @@
     "AdCondition": "36_",
     "StageMultiplierCoin": "",
     "StageEnterTips": "Excellent_Great_Good Luck",
-    "StageClearBonus": "8000_11000",
+    "StageClearBonus": "500_8000_11000",
     "StreakBonus": "1_5_2_6_3_4",
     "SuperWheelRate": "1_100;2_200;3_300",
     "LuckyWheelPeriod": "20_300_25",
@@ -12,6 +12,10 @@
     "FarmReward": 2000,
     "HarvestTime": 3600,
     "CardCoinFunctionParm": "1.667_0.85_0.95",
-    "StartCoin": 20000
+    "StartCoin": 20000,
+    "Prefix": "timber_0_bronze_75_sliver_240_gold_300_diamond_420",
+    "Suffix": "apprentice_0_master_50_champion_100_emperor_150",
+    "DailyCoins": "2500_50_500_-500_1000",
+    "DailyCoinsCoefficient": "1.4_2"
   }
 ]

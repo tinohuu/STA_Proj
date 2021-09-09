@@ -67,8 +67,10 @@ public class MapMaker : MonoBehaviour
         }
     }
 
-    public void UpdateMode()
+    public void UpdateMode(int mode = -1)
     {
+        if (mode != -1) ModeDropdown.value = mode;
+
         MapMakerPlaceholder[] placeholders = FindObjectsOfType<MapMakerPlaceholder>();
         for (int i = 0; i < placeholders.Length; i++) Destroy(placeholders[i].gameObject);
 

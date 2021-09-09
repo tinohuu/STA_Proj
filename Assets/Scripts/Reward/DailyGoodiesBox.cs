@@ -32,8 +32,6 @@ public class DailyGoodiesBox : MonoBehaviour
 
     public void UpdateView(int collectedDays)
     {
-
-
         transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutSine);
         text.text = "Day " + Day;
 
@@ -41,6 +39,7 @@ public class DailyGoodiesBox : MonoBehaviour
         tick.transform.DOScale(isCollected ? Vector3.one : Vector3.zero, 0.5f);
         Box.transform.DOScale(!isCollected ? Vector3.one : Vector3.zero, 0.5f);
 
+        rewardGroup.DestroyChildren();
         if (isCollected)
         {
             var config = DailyGoodiesManager.Instance.GetGoodyConfig(Day);
@@ -59,7 +58,7 @@ public class DailyGoodiesBox : MonoBehaviour
                 image.sprite = sprite;
                 image.transform.SetAsFirstSibling();
                 i++;
-                image.rectTransform.anchoredPosition = Vector2.left * i * 30 + Vector2.up * i * 30;
+                image.rectTransform.anchoredPosition = Vector2.left * i * 50 + Vector2.up * i * 50;
             }
 
         }

@@ -9910,7 +9910,7 @@ MonoBehaviour:
     SelectedLevel: 5
     MapDatas: []
   PublicConfigs: []
-  Text: {fileID: 0}
+  mapMakerPrefab: {fileID: 5960961366168608764, guid: c8d851afe7be1974984fe50e6d3d96be, type: 3}
 --- !u!4 &1992139307
 Transform:
   m_ObjectHideFlags: 0

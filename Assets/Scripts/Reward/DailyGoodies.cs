@@ -61,8 +61,8 @@ public class DailyGoodies : MonoBehaviour
         sequence.AppendInterval(1);
 
         // Then scroll boxes by week
-
-        for (int i = 21; i > oldStkDays - 7; i -= 7)
+        int curStkDays = DailyGoodiesManager.Instance.CheckDate(false);
+        for (int i = 21; i > curStkDays - 7; i -= 7)
         {
             Debug.Log(boxGroup.childCount + ":" + i);
             rt = boxGroup.GetChild(i).GetComponent<RectTransform>();
@@ -72,13 +72,12 @@ public class DailyGoodies : MonoBehaviour
         }
 
         // Then restore boxes if streak broken
-        int curStkDays = DailyGoodiesManager.Instance.CheckDate(false);
         sequence.AppendCallback(() => UpdateBoxeseView(curStkDays - 1));
-        sequence.AppendInterval(1);
+        sequence.AppendInterval(0.25f);
 
         // Then box jump
         var box = boxGroup.GetChild(curStkDays - 1).GetComponent<DailyGoodiesBox>();
-        sequence.Append(box.Box.DOJump(Vector3.back * 2 + Vector3.down * 2, 3, 1, 1.5f));
+        sequence.Append(box.Box.DOJump(Vector3.back * 2 + Vector3.down * 2, 3, 1, 1.5f).SetEase(Ease.OutSine));
         sequence.Join(box.Box.DOScale(Vector3.one * 1.5f, 2));
         sequence.AppendCallback(() => OpenBoxButton.gameObject.SetActive(true));
         OpenBoxButton.onClick.AddListener(() => ShowBox(box));
@@ -129,7 +128,7 @@ public class DailyGoodies : MonoBehaviour
         {
             var goodyText = Instantiate(GoodyTextPrefab, TextGroup).GetComponent<DailyGoodiesRewardText>();
             goodyText.RewardType = RewardType.Coin;
-            goodyText.Count = config.CoinReward;
+            goodyText.Count = DailyGoodiesManager.Instance.GetCoin(box.Day);
             goodyTexts.Add(goodyText);
         }
         foreach (var type in items.Keys)

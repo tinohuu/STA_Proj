@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CropHarvest : MonoBehaviour
+public class CropHarvest : MonoBehaviour, ITimeRefreshable
 {
     public TMP_Text MainText;
     public TMP_Text SecondaryText;
@@ -28,7 +28,7 @@ public class CropHarvest : MonoBehaviour
     private void Awake()
     {
         if (!Instance) Instance = this;
-        TimeManager.Instance.Refresher += RefreshHarvestTime;
+        //TimeManager.Instance.Refresher += RefreshHarvestTime;
     }
 
     void Update()
@@ -37,7 +37,7 @@ public class CropHarvest : MonoBehaviour
         timeSpan = MapManager.Instance.Data.LastHarvestTime + TimeSpan.FromHours(1) - TimeManager.Instance.RealNow;
 
         // Play mature animation in advance
-        if (timeSpan.TotalSeconds <= 3 && !CropManager.Instance.IsMature && TimeManager.Instance.Data.CheckedAuthenticity == TimeAuthenticity.Authentic)
+        if (timeSpan.TotalSeconds <= 3 && !CropManager.Instance.IsMature && TimeManager.Instance.Data.CheckedAuthenticity == TimeAuthenticity.Authentic && !TimeManager.Instance.IsGettingTime)
         {
             CropManager.Instance.IsMature = true;
             CropManager.Instance.UpdateCropsAnimator(true);
@@ -65,35 +65,12 @@ public class CropHarvest : MonoBehaviour
     {
         CropManager.Instance.IsMature = false;
 
-        ResetHarvestTime();
+        ResetTime(TimeManager.Instance.RealNow);
 
         Reward.Coin += UpdateHarvestText();
         FindObjectOfType<RewardNumber>().Animate(4, 2);
 
         CropManager.Instance.PlayHarvestEffects();
-    }
-
-    public void RefreshHarvestTime()
-    {
-        MapManagerData data = MapManager.Instance.Data;
-        if (TimeManager.Instance.Data.CheckedAuthenticity != TimeAuthenticity.Unauthentic)
-        {
-            bool clamp = TimeManager.Instance.RealNow < MapManager.Instance.Data.LastHarvestTime;
-            if (clamp)
-            {
-                TimeDebugText.Text.text += "\nClamped the harvest time.";
-                data.LastHarvestTime = TimeManager.Instance.RealNow;
-                //TimeManager.Instance.GetTime(true, false);
-            }
-        }
-        else ResetHarvestTime();
-    }
-
-    void ResetHarvestTime()
-    {
-        TimeDebugText.Text.text += "\nReset the harvest time.";
-        MapManagerData data = MapManager.Instance.Data;
-        data.LastHarvestTime = TimeManager.Instance.RealNow;
     }
 
     public void Cheat()
@@ -130,5 +107,28 @@ public class CropHarvest : MonoBehaviour
         CropList.rectTransform.DOAnchorPosY(CropList.rectTransform.sizeDelta.y + CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y, 10);
         if (CropList.transform.childCount > 0) CropList.transform.GetChild(0).gameObject.AddComponent<SoftMaskable>();
         return coinCount;
+    }
+
+
+    public void RefreshTime(DateTime now, TimeSource source, TimeAuthenticity timeAuthenticity)
+    {
+        MapManagerData data = MapManager.Instance.Data;
+
+        if (timeAuthenticity != TimeAuthenticity.Unauthentic)
+        {
+            bool clamp = now < data.LastHarvestTime;
+            if (clamp)
+            {
+                TimeDebugText.Text.text += "\nClamped the harvest time.";
+                data.LastHarvestTime = now;
+            }
+            CropManager.Instance.UpdateCropsAnimator(true);
+        }
+        else ResetTime(now);
+    }
+    public void ResetTime(DateTime now)
+    {
+        MapManagerData data = MapManager.Instance.Data;
+        data.LastHarvestTime = now;
     }
 }

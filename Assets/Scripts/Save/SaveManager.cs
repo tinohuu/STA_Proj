@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,6 +21,12 @@ public class SaveManager : MonoBehaviour
         if (Save == null) Save = new Save();
 
         AttrBindAll();
+
+        var savables = FindObjectsOfType<MonoBehaviour>().OfType<IDataSavable>();
+        foreach (var savable in savables)
+        {
+            savable.BindSavedData();
+        }
     }
 
     private void Update()
@@ -117,4 +124,9 @@ public class SavedData : Attribute
     {
         InitialData = initial;
     }
+}
+
+public interface IDataSavable
+{
+    void BindSavedData();
 }

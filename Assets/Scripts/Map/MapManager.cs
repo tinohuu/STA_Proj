@@ -10,11 +10,13 @@ public class MapManager : MonoBehaviour
 {
     [Header("Debug")]
     public MapManagerData Data = new MapManagerData();
-    public static MapManager Instance = null;
     public List<PublicConfig> PublicConfigs;
     public Dictionary<int, FunctionConfig> FunctionConfigsByFuncID;
-    public Text Text;
-    GameObject obj;
+
+    [SerializeField] GameObject mapMakerPrefab;
+    GameObject mapMaker;
+
+    public static MapManager Instance = null;
     private void Awake()
     {
         if (!Instance) Instance = this; // Singleton
@@ -22,6 +24,19 @@ public class MapManager : MonoBehaviour
         FunctionConfigsByFuncID = ConfigsAsset.GetConfigList<FunctionConfig>().ToDictionary(p => p.FunctionID);
 
         Data = SaveManager.Bind(InitializeData());  // Bind to save
+    }
+
+    private void Update()
+    {
+        if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.M))
+        {
+            if (mapMaker)
+            {
+                MapMaker.Instance.UpdateMode(0);
+                Destroy(mapMaker.gameObject);
+            }
+            else mapMaker = Instantiate(mapMakerPrefab, transform);
+        }
     }
 
     MapManagerData InitializeData()
@@ -49,12 +64,6 @@ public class MapManager : MonoBehaviour
         }
         return Data.MapDatas.Last();
     }
-}
-
-[Serializable]
-public class PublicConfig
-{
-    public int HarvestTime = 123;
 }
 
 [System.Serializable]

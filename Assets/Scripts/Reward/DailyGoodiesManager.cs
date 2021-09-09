@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class DailyGoodiesManager : MonoBehaviour
+public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
 {
     [SerializeField] int MaxWeeks = 4;
     [SerializeField] int MaxVersions = 2;
@@ -20,10 +20,6 @@ public class DailyGoodiesManager : MonoBehaviour
     {
         if (!Instance) Instance = this;
         UpdateConfig();
-
-        Data = SaveManager.Bind(InitializeData());
-
-        TimeManager.Instance.Refresher += RefreshGoodyTime;
     }
 
     DailyGoodyData InitializeData()
@@ -33,56 +29,13 @@ public class DailyGoodiesManager : MonoBehaviour
         return data;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if (TimeManager.Instance.RealNow.Date != Data.LastGoodyTime.Date && !view && !IsSuspended) // for local time specific + Data.CheckedSystemOffset.ToTimeSpan();
+        if (TimeManager.Instance.RealNow.Date != Data.LastGoodyTime.Date && !view && !IsSuspended && !TimeManager.Instance.IsGettingTime) // for local time specific + Data.CheckedSystemOffset.ToTimeSpan();
         {
             view = Instantiate(viewPrefab, transform);
         }
-    }
-
-    void RefreshGoodyTime()
-    {
-        TimeSource source = TimeManager.Instance.Data.CheckedSource;
-        TimeAuthenticity auth = TimeManager.Instance.Data.CheckedAuthenticity;
-        if (auth == TimeAuthenticity.Authentic)
-        {
-            if (TimeManager.Instance.RealNow.Date < Data.LastGoodyTime)
-            {
-                // Clamp
-                Data.LastGoodyTime = TimeManager.Instance.RealNow.Date;
-            }
-            if (source == TimeSource.Internet) IsSuspended = false;
-        }
-        else if (auth == TimeAuthenticity.Unauthentic)
-        {
-            if (source == TimeSource.Internet)
-            {
-                // Must be cheating
-                ResetGoodyTime();
-            }
-            else if (source == TimeSource.System)
-            {
-                IsSuspended = true;
-            }
-        }
-        else
-        {
-            //ResetGoodyTime();
-        }
-    }
-
-    void ResetGoodyTime()
-    {
-        TimeDebugText.Text.text += "\nReset daily goodies time";
-        Data.LastGoodyTime = TimeManager.Instance.RealNow;
     }
 
     public RewardConfig GetGoodyConfig(int day)
@@ -96,13 +49,33 @@ public class DailyGoodiesManager : MonoBehaviour
 
     public void CollectGoodyReward(RewardConfig config)
     {
-        Reward.Coin += config.CoinReward;
+        Reward.Coin += GetCoin(Data.StreakDays);
         var rewards = Reward.StringToReward(config.ItemReward);
         foreach (RewardType type in rewards.Keys)
         {
             Reward.Data[type] += rewards[type];
         }
-        ResetGoodyTime();
+        ResetTime(TimeManager.Instance.RealNow);
+    }
+
+    public int GetCoin(int streakDays)
+    {
+        var publicConfigList = ConfigsAsset.GetConfigList<PublicConfig>();
+        PublicConfig publicConfig = publicConfigList[0];
+        var rawNumbers = publicConfig.DailyCoins.Split('_');
+        int[] baseNumbers = new int[rawNumbers.Length]; // "DailyCoins": "2500_50_500_-500_1000",
+        for (int i = 0; i < rawNumbers.Length; i++) baseNumbers[i] = int.Parse(rawNumbers[i]);
+
+        rawNumbers = publicConfig.DailyCoinsCoefficient.Split('_');
+        float[] mulNumbers = new float[rawNumbers.Length]; // "DailyCoinsCoefficient": "1.4_2"
+        for (int i = 0; i < rawNumbers.Length; i++) mulNumbers[i] = float.Parse(rawNumbers[i]);
+
+        float coin = baseNumbers[0];
+        coin += MapManager.Instance.Data.CompleteLevel / baseNumbers[1] * baseNumbers[2];
+        coin += UnityEngine.Random.Range(baseNumbers[3], baseNumbers[4] + 1);
+        coin *= streakDays == 28 ? mulNumbers[1] : (streakDays / 7 == 0 ? mulNumbers[0] : 1);
+        coin = (int)(coin / 500) * 500;
+        return (int)coin;
     }
 
     public bool HasGoody => TimeManager.Instance.RealNow.Date > Data.LastGoodyTime.Date;
@@ -117,7 +90,7 @@ public class DailyGoodiesManager : MonoBehaviour
         }
         else
         {
-            curDay = (curDay / 7) * 7 + 1;
+            curDay = (Data.StreakDays / 7) * 7 + 1;
         }
 
         if (record)
@@ -138,6 +111,48 @@ public class DailyGoodiesManager : MonoBehaviour
         DailyGoodiesConfig[] configs = ConfigsAsset.GetConfigArray<DailyGoodiesConfig>();
         DailyGoodiesConfig[] curVerConfigs = configs.Where(x => x.Version == Data.Version).ToArray();
         ConfigsByDay = curVerConfigs.ToDictionary(p => p.Day);
+    }
+
+    public void RefreshTime(DateTime now, TimeSource source, TimeAuthenticity timeAuthenticity)
+    {
+        if (timeAuthenticity == TimeAuthenticity.Authentic)
+        {
+            if (now.Date < Data.LastGoodyTime)
+            {
+                // Clamp
+                Debug.Log("Clamp goodies");
+                Data.LastGoodyTime = now.Date;
+            }
+            if (source == TimeSource.Internet) IsSuspended = false;
+        }
+        else if (timeAuthenticity == TimeAuthenticity.Unauthentic)
+        {
+            Debug.Log("Punish goodies");
+            if (source == TimeSource.Internet)
+            {
+                // Must be cheating
+                ResetTime(now);
+            }
+            else if (source == TimeSource.System)
+            {
+                IsSuspended = true;
+            }
+        }
+        else
+        {
+            //ResetTime(now);
+        }
+    }
+
+    public void ResetTime(DateTime now)
+    {
+        TimeDebugText.Text.text += "\nReset goodies time";
+        Data.LastGoodyTime = now;
+    }
+
+    public void BindSavedData()
+    {
+        Data = SaveManager.Bind(InitializeData());
     }
 }
 

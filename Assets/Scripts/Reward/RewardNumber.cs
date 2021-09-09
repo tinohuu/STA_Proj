@@ -21,10 +21,7 @@ public class RewardNumber : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            Reward.Data[Type] += 9999;
-        }
+
     }
     void Animate(bool add)
     {
