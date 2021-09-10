@@ -12,7 +12,7 @@ public class Window : MonoBehaviour
 
     public static GameObject CreateWindowPrefab(GameObject windowPrefab, Transform transform = null)
     {
-        if (WindowCanvas == null) WindowCanvas = FindObjectOfType<WindowCanvas>().transform;
+        if (WindowCanvas == null) WindowCanvas = FindObjectOfType<WindowManager>().transform;
         /*
         if (WindowCanvas == null)
         {

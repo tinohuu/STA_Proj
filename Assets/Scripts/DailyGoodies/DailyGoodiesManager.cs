@@ -25,7 +25,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
     DailyGoodyData InitializeData()
     {
         var data = Data;
-        data.LastGoodyTime = TimeManager.Instance.RealNow.Date - TimeSpan.FromDays(1);
+        data.LastGoodyTime = TimeManager.Instance.RealNow.Date - TimeSpan.FromDays(2);
         return data;
     }
 
@@ -47,10 +47,8 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
         return rewardCfg;
     }
 
-    public void CollectGoodyReward(RewardConfig config)
+    public void CollectGoodyReward(Dictionary<RewardType, int> rewards)
     {
-        Reward.Coin += GetCoin(Data.StreakDays);
-        var rewards = Reward.StringToReward(config.ItemReward);
         foreach (RewardType type in rewards.Keys)
         {
             Reward.Data[type] += rewards[type];
@@ -72,9 +70,9 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
 
         float coin = baseNumbers[0];
         coin += MapManager.Instance.Data.CompleteLevel / baseNumbers[1] * baseNumbers[2];
-        coin += UnityEngine.Random.Range(baseNumbers[3], baseNumbers[4] + 1);
+        coin += UnityEngine.Random.Range(baseNumbers[3], baseNumbers[4]);
         coin *= streakDays == 28 ? mulNumbers[1] : (streakDays / 7 == 0 ? mulNumbers[0] : 1);
-        coin = (int)(coin / 500) * 500;
+        coin = Mathf.FloorToInt(coin / 500) * 500;
         return (int)coin;
     }
 

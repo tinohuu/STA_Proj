@@ -73,7 +73,10 @@ public class GamePoker : MonoBehaviour
 
     //2021.9.7 added by pengyuan
     public bool bAddNPoker { get; set; } = false;
+
     public bool bIsAddingNPoker = false;
+
+    public bool bAccelAddingNPoker = false;
 
     bool bDismiss = false;
     float fDismissTime = 0.0f;
@@ -205,6 +208,15 @@ public class GamePoker : MonoBehaviour
                     addNEffect.SetActive(true);
                 }
             }
+
+            //the following code are for test alpha fade
+            /*MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
+            Color meshColor = meshRenderer.material.color;
+            int nTime = (int)Time.time;
+            float alphaValue = Time.time - nTime;
+            meshColor.a = alphaValue;
+            if(gameObject.name == "poker_9")
+            Debug.Log("the alpha value is: " + alphaValue);*/
 
             //fFlipTime += Time.deltaTime;
 
@@ -512,8 +524,7 @@ public class GamePoker : MonoBehaviour
 
     void InitAddNEffectDisplay()
     {
-        addNPlusImage.sprite = GameplayMgr.Instance.addNNumbers[0];
-        addNUnitImage.sprite = GameplayMgr.Instance.addNNumbers[nAddNCount+1];
+        SetAddNDigitDisplay();
 
         pokerFacing = GameplayMgr.PokerFacing.Facing;
         transform.rotation = Quaternion.Euler(0.0f, 0.0f, -pokerInfo.fRotation);
@@ -523,13 +534,28 @@ public class GamePoker : MonoBehaviour
 
     public void UpdateAddNEffectDisplay()
     {
-        addNPlusImage.sprite = GameplayMgr.Instance.addNNumbers[0];
-        addNUnitImage.sprite = GameplayMgr.Instance.addNNumbers[nAddNCount + 1];
+        SetAddNDigitDisplay();
 
         pokerFacing = GameplayMgr.PokerFacing.Facing;
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
 
         addNAnim = addNEffect.GetComponent<Animator>();
+    }
+
+    void SetAddNDigitDisplay()
+    {
+        if (nAddNCount > 0)
+        {
+            addNPlusImage.sprite = GameplayMgr.Instance.addNNumbers[10];
+            addNUnitImage.sprite = GameplayMgr.Instance.addNNumbers[nAddNCount];
+        }
+        else
+        {
+            //Color colorEmpty = addNPlusImage.color;
+            //colorEmpty.a = 0.0f;
+            addNPlusImage.enabled = false;
+            addNUnitImage.enabled = false;
+        }
     }
 
     void PostInitBombEffect(JsonReadWriteTest.PokerInfo pokeInfo)
@@ -609,8 +635,11 @@ public class GamePoker : MonoBehaviour
     }
 
     //pengyuan 2021.9.7 this method is used to process the add n poker game logic, 
-    public void AddNPoker()
+    public bool AddNPoker()
     {
+        if (bIsWithdrawing)
+            return false;
+
         bFlip = false;
         bFold = false;
         bUnFlip = false;
@@ -619,16 +648,47 @@ public class GamePoker : MonoBehaviour
         strHandPokerIDs = "";
 
         transform.DOMove(GameplayMgr.Instance.Trans.position - Vector3.forward * 2.0f, 0.5f);
+
+        ResetAllTriggers(addNAnim);
         addNAnim.SetTrigger("PlusMove");
+
+        Debug.Log("----------------------here we add n poker , set the plusmove trigger...------------------the name is: " + gameObject.name + " the nAddNCount is: " + nAddNCount);
 
         bIsAddingNPoker = true;
         gameObject.GetComponent<MeshRenderer>().enabled = false;
+
+        return true;
     }
 
     public void OnAddNPokerExit()
     {
         bIsAddingNPoker = false;
+        bAccelAddingNPoker = false;
+
+        //gameObject.transform.position = originPos;
     }
+
+    /// <summary>
+    /// 清除所有的激活中的trigger缓存
+    /// </summary>
+    public void ResetAllTriggers(Animator animator)
+    {
+        AnimatorControllerParameter[] aps = animator.parameters;
+        for (int i = 0; i < aps.Length; i++)
+        {
+            AnimatorControllerParameter paramItem = aps[i];
+            if (paramItem.type == AnimatorControllerParameterType.Trigger)
+            {
+                string triggerName = paramItem.name;
+                bool isActive = animator.GetBool(triggerName);
+                if (isActive)
+                {
+                    animator.ResetTrigger(triggerName);
+                }
+            }
+        }
+    }
+
 
     //public void Withdraw
 
@@ -771,9 +831,15 @@ public class GamePoker : MonoBehaviour
             bAddNPoker = false;
             transform.position = originPos;
             nAddNCount = nAddNOriginCount;
+
+            addNPlusImage.enabled = true;
+            addNUnitImage.enabled = true;
+
             addNAnim.Play("FXPlusIdle", 0, 0.0f);
+
             UpdateAddNEffectDisplay();
         }
+        Debug.Log("----------the name is : " + gameObject.name + "   origin pos is: " + originPos + "the target pos is: " + targetPos);
 
         transform.DOMove(targetPos, 0.5f);
 

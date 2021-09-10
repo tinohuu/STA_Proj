@@ -1181,7 +1181,7 @@ public class GameplayMgr : MonoBehaviour
 
         //todo: this level should come from a call from map ...
         int nTempLevel = Random.Range(1, 6);
-        nTempLevel = 1;// STAGameManager.Instance.nLevelID;
+        nTempLevel = 3;// STAGameManager.Instance.nLevelID;
         nCurrentLevel = nTempLevel;
         JsonReadWriteTest.Test_ReadLevelData(strLevel, 1, nTempLevel, out levelData);
 
@@ -1240,25 +1240,20 @@ public class GameplayMgr : MonoBehaviour
             //2021.8.18 pengyuan , if click position overelapes with lock area, we do nothing
             //todo...
             Vector3 clickWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //RaycastHit hit = Physics.Raycast(ray, hit);
-            /*if(PointOverlapLockArea(Input.mousePosition))
-            {
-                return;
-            }*/
-
-
+           
             //Debug.Log("GameplayMgr::Update... we have to compute the hit results " + Input.mousePosition);
 
             RaycastHit2D[] hitResults = Physics2D.RaycastAll(clickWorldPos, Vector2.zero);
 
             GameObject topHandPoker = GetTopHandPoker();
 
-            if (hitResults.Length > 0 && !IsClickingLockArea(hitResults))
+            int nAddingNPokerIndex = HasPokerIsAddN();
+
+            if (hitResults.Length > 0 && !IsClickingLockArea(hitResults) && nAddingNPokerIndex < 0)
             {
                 //Debug.Log("@@@@@@@@@@@@@@@ here we get a ray, the hitResult length is: " + hitResults.Length);
 
-                if (topHandPoker != null && IsClickHandPoker(hitResults))
+                if (topHandPoker != null && IsClickHandPoker(hitResults) )
                 {
                     if (IsTopHandPokerClicked(topHandPoker, hitResults))
                     {
@@ -1281,6 +1276,11 @@ public class GameplayMgr : MonoBehaviour
                     }
                 }
 
+            }
+
+            if(nAddingNPokerIndex > 0)
+            {
+                SetAddingNAccelerating(nAddingNPokerIndex);
             }
             //Debug.DrawLine(ray.origin, ray.origin + ray.direction * 50, Color.red);
         }
@@ -1317,10 +1317,28 @@ public class GameplayMgr : MonoBehaviour
             return;
         }
 
-        while(opStepInfos.Peek().strCardName == "handpoker_add_n")
+        if (foldPoker.Count < 2)
+        {
+            Debug.Log("WithDrawClicked, but nothing to do!");
+            return;
+        }
+
+        if(HasPokerIsAddN() > 0)
+        {
+            return;
+        }
+
+        GameObject topHandPoker = foldPoker.Peek();
+        HandPoker handPokerScript = topHandPoker.GetComponent<HandPoker>();
+
+        //Debug.Log("-------------  here the top hand poker source is: " + handPokerScript.handPokerSource);
+
+        while(opStepInfos.Peek().strCardName == "handpoker_add_n" 
+            && (( handPokerScript != null && handPokerScript.handPokerSource != HandPokerSource.AddNPoker) 
+               || handPokerScript == null) )
         {
             OpStepInfo stepInfo = opStepInfos.Peek();
-
+            Debug.Log("-------------  here we withdraw a handpoker to the public poker 1111111 the name is: " + topHandPoker.name);
             WithdrawAddNPoker();
 
             opStepInfos.Pop();
@@ -1328,6 +1346,7 @@ public class GameplayMgr : MonoBehaviour
 
         if(opStepInfos.Count > 0)
         {
+            Debug.Log("-------------  here we withdraw a handpoker to the hand poker " + topHandPoker.name);
             WithdrawOnePoker();
         }
     }
@@ -1493,9 +1512,20 @@ public class GameplayMgr : MonoBehaviour
 
     bool CheckCanWithdrawAddNPoker()
     {
+        if (foldPoker.Count < 2)
+        {
+            Debug.Log("CheckCanWithdrawAddNPoker, but nothing to do!");
+            return false;
+        }
+
+        GameObject topHandPoker = foldPoker.Peek();
+        HandPoker handPokerScript = topHandPoker.GetComponent<HandPoker>();
+
         OpStepInfo stepInfo = opStepInfos.Peek();
 
-        if(stepInfo.strCardName == "handpoker_add_n")
+        if (stepInfo.strCardName == "handpoker_add_n"
+            && handPokerScript != null
+            && handPokerScript.handPokerSource != HandPokerSource.AddNPoker)
         {
             return true;
         }
@@ -1637,6 +1667,10 @@ public class GameplayMgr : MonoBehaviour
 
             UnflipAllCoveredGamePoker(gamePoker);
         }
+        else
+        {
+            Debug.Log("_____________________________we can not find a game poker--------------------------------");
+        }
     }
 
     GameObject GetPublicPokerByIndex(int nIndex)
@@ -1677,7 +1711,9 @@ public class GameplayMgr : MonoBehaviour
 
         Test_EnableTopFoldPokerText();
 
-        //Debug.Log("one hand poker withdrawed!!! name is: " + poker.name);
+        AdjustAllHandPokerPosition();
+
+        Debug.Log("one hand poker withdrawed!!! name is: " + poker.name);
     }
 
     void WithdrawWildCard(GameObject poker, ref bool needChangeAseDesStatus, ref bool needChangeBombStatus)
@@ -1737,7 +1773,8 @@ public class GameplayMgr : MonoBehaviour
         foreach(GameObject go in publicPokers)
         {
             GamePoker gamePokerScript = go.GetComponent<GamePoker>();
-            if(gamePokerScript.pokerFacing == PokerFacing.Facing && withdrawedPoker.name != go.name)
+            if(gamePokerScript.pokerFacing == PokerFacing.Facing && withdrawedPoker.name != go.name
+                && gamePokerScript.itemType != GameDefines.PokerItemType.Add_N_Poker)
             {
                 facingPokers.Add(go);
             }
@@ -2170,7 +2207,7 @@ public class GameplayMgr : MonoBehaviour
     void UpdateStreakStatus(int nCount, int nStreakBonus)
     {
         gameplayUI.SetStreakBonusStatus(nCount, nStreakBonus);
-        Debug.Log("UpdateStreakStatus... nCount is: " + nCount + "  type is: " + streakType);
+        //Debug.Log("UpdateStreakStatus... nCount is: " + nCount + "  type is: " + streakType);
         
         if (nCount >= GetStreakFinishCount(streakType))
         {
@@ -2187,7 +2224,7 @@ public class GameplayMgr : MonoBehaviour
             gameplayUI.InitStreakBonus(streakType, GetNextStreakType());
             gameplayUI.SetStreakBonusStatus(nStreakCount, 0);
 
-            Debug.Log("UpdateStreakStatus.. here we switch to next streak is: " + streakType);
+            //Debug.Log("UpdateStreakStatus.. here we switch to next streak is: " + streakType);
         }
     }
 
@@ -2431,8 +2468,13 @@ public class GameplayMgr : MonoBehaviour
                     }
                     else
                     {
-                        gamePokerScript.AddNPoker();
-                        Add_AddNPokerStep(gamePokerScript);
+                        if(HasPokerIsAddN() < 0)
+                        {
+                            if (gamePokerScript.AddNPoker())
+                            {
+                                Add_AddNPokerStep(gamePokerScript);
+                            }
+                        }
                     }
 
                     //gameStatus = GameStatus.GameStatus_Gaming;
@@ -2489,7 +2531,7 @@ public class GameplayMgr : MonoBehaviour
 
                 int nMinIndex = GetMinDepthIndexWithoutLockArea(ref hitResults);
 
-                if (hitResults[nMinIndex].collider.name == collider.name && !pokerData.bAddNPoker)// && !pokerData.bHasWithdrawed)
+                if (nMinIndex >= 0 && hitResults[nMinIndex].collider.name == collider.name && !pokerData.bAddNPoker)// && !pokerData.bHasWithdrawed)
                 {
                     topPokers.Add(go);
                 }
@@ -2536,7 +2578,8 @@ public class GameplayMgr : MonoBehaviour
                 continue;
             }
 
-            if (hitResults[i].collider.transform.position.z < fMinDepth)
+            if( (hitResults[i].collider.transform.position.z < fMinDepth) 
+                && (hitResults[i].collider.GetComponent<MeshRenderer>().enabled) )
             {
                 fMinDepth = hitResults[i].collider.transform.position.z;
                 nMinIndex = i;
@@ -2546,7 +2589,7 @@ public class GameplayMgr : MonoBehaviour
         return nMinIndex;
     }
 
-    GameObject GetTopHandPoker()
+    public GameObject GetTopHandPoker()
     {
         if(handPokers.Count == 0)
         {
@@ -2798,6 +2841,40 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.ShowBombEndGameUI();
     }
 
+    int HasPokerIsAddN()
+    {
+        for(int i = 0; i < publicPokers.Count; ++i)
+        {
+            GamePoker gamePoker = publicPokers[i].GetComponent<GamePoker>();
+            if(gamePoker.itemType == GameDefines.PokerItemType.Add_N_Poker 
+                && gamePoker.bIsAddingNPoker)
+            {
+                return gamePoker.Index;
+            }
+        }
+
+        return -1;
+    }
+
+    void SetAddingNAccelerating(int nIndex)
+    {
+        
+        foreach (GameObject go in publicPokers)
+        {
+            GamePoker gamePoker = go.GetComponent<GamePoker>();
+
+            if (gamePoker.Index == nIndex && gamePoker.bIsAddingNPoker)
+            {
+                if (!gamePoker.bAccelAddingNPoker)
+                {
+                    gamePoker.bAccelAddingNPoker = true;
+                }
+
+                return;
+            }
+        }
+    }
+
 
     //2021.9.7 added by pengyaun add one poker
     public void OnAddNPoker_One(GamePoker gamePokerScript)
@@ -2839,7 +2916,7 @@ public class GameplayMgr : MonoBehaviour
 
         OpStepInfo stepInfo = opStepInfos.Peek();
 
-        Debug.Log("---------\n Add_AddNPokerStep the stack count is: " + opStepInfos.Count);
+        //Debug.Log("----------------------------Add_AddNPokerStep the stack count is: " + opStepInfos.Count);
         stepInfo.strCardName = "handpoker_add_n";
         stepInfo.strIDs = pokerScript.strHandPokerIDs;
     }
@@ -2848,6 +2925,8 @@ public class GameplayMgr : MonoBehaviour
     {
         OpStepInfo stepInfo = opStepInfos.Peek();
         stepInfo.strIDs = gamePoker.strHandPokerIDs;
+
+        //Debug.Log("---------------OnAddNPokerExit-------------the strIDs is: " + gamePoker.strHandPokerIDs);
 
         gamePoker.OnAddNPokerExit();
     }
@@ -3153,6 +3232,7 @@ public class GameplayMgr : MonoBehaviour
 
     void Test_EnableTopFoldPokerText()
     {
+        return;
         GameObject go = foldPoker.Peek();
 
         GamePoker gamePoker = go.GetComponent<GamePoker>();

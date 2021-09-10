@@ -8,6 +8,7 @@ public class STAGameManager : MonoBehaviour
 
     public int nChapterID = 1;
     public int nLevelID = 1;
+    public List<RewardType> InUseItems = new List<RewardType>();
 
     private void Awake()
     {

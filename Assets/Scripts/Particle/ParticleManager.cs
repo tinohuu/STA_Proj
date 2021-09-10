@@ -6,7 +6,7 @@ public class ParticleManager : MonoBehaviour
 {
     [SerializeField] Transform particleGroup;
     [SerializeField] Transform triggerGroup;
-    [SerializeField] Transform forceFiledGroup;
+    [SerializeField] Transform forceFieldGroup;
     [SerializeField] GameObject coinPrefab;
 
     ParticleSystemForceField[] fields;
@@ -21,7 +21,7 @@ public class ParticleManager : MonoBehaviour
 
     void Start()
     {
-        fields = forceFiledGroup.GetComponentsInChildren<ParticleSystemForceField>();
+        fields = forceFieldGroup.GetComponentsInChildren<ParticleSystemForceField>();
         triggers = triggerGroup.GetComponentsInChildren<Collider>();
     }
 

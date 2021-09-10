@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
-    public SettingsData Data = new SettingsData();
+    [SavedData] public SettingsData Data = new SettingsData();
     public static MenuManager Instance;
     private void Awake()
     {
-        Instance = this;
-        Data = SaveManager.Bind(Data);
+        if (!Instance) Instance = this;
     }
     public bool Sync { get => Data.Sync; set => Data.Sync = value; }
     public bool SoundEffects { get => Data.SoundEffects; set => Data.SoundEffects = value; }

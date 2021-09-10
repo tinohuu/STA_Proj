@@ -20,7 +20,7 @@ public class MapMaker : MonoBehaviour
     //public Transform CropGroup;
     //public Transform LevelGroup;
     public GameObject PlaceholderPrefab;
-
+    public Slider ProgressSlider;
     public static MapMaker Instance = null;
     public MapMakerConfig test;
     private void Awake()
@@ -30,7 +30,9 @@ public class MapMaker : MonoBehaviour
     }
     void Start()
     {
-        Instance = this;
+        if (!Instance) Instance = this;
+        ProgressSlider.onValueChanged.AddListener((float f) => Map.Instance.SetProgress(f));
+        ProgressSlider.value = MapManager.Instance.Data.CompleteLevel / 186f;
     }
 
     // Update is called once per frame

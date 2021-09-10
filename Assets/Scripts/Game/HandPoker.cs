@@ -187,7 +187,11 @@ public class HandPoker : MonoBehaviour
         if (bIsAddN)
         {
             fAddNTime += Time.deltaTime;
-            //transform.position = targetPos;
+            
+            if(!bFlip)
+            {
+                ;
+            }
         }
     }
 
@@ -252,6 +256,14 @@ public class HandPoker : MonoBehaviour
     public void Withdraw()
     {
         bFlip = false;
+
+        if(handPokerSource == GameplayMgr.HandPokerSource.AddNPoker)
+        {
+            transform.DORotate(new Vector3(0.0f, 180.0f, 0.0f), 0.2f, RotateMode.WorldAxisAdd);
+            Vector3 newPos = GameplayMgr.Instance.GetTopHandPoker().transform.position;
+            newPos.z = newPos.z - 0.05f;
+            transform.DOMove(newPos, 0.25f);
+        }
     }
 
     public void WithdrawAddNPoker(GamePoker gamePoker)

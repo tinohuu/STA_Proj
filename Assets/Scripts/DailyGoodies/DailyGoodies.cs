@@ -26,6 +26,7 @@ public class DailyGoodies : MonoBehaviour
     DailyGoodiesCalendar calendar;
     public static DailyGoodies Instance;
     Sequence sequence;
+    Dictionary<RewardType, int> curRewards = new Dictionary<RewardType, int>();
     private void Awake()
     {
         if (!Instance) Instance = this;
@@ -53,7 +54,7 @@ public class DailyGoodies : MonoBehaviour
         int oldStkDays = DailyGoodiesManager.Instance.Data.StreakDays;
         RectTransform rt = boxGroup.GetChild(27).GetComponent<RectTransform>();
         boxGroup.anchoredPosition = new Vector2(-rt.anchoredPosition.x + boxGroup.parent.GetComponent<RectTransform>().sizeDelta.x / 2, boxGroup.anchoredPosition.y);
-        Tween tween = rt.DOScale(Vector3.zero, 1.5f).From().SetEase(Ease.OutBack)
+        Tween tween = rt.DOScale(Vector3.zero, 0.1f).From().SetEase(Ease.OutBack)
             .OnComplete(() => UpdateBoxeseView(oldStkDays));
         sequence = DOTween.Sequence();
         OpenBoxButton.onClick.AddListener(() => ForceCompleteBoxSequence());
@@ -67,18 +68,17 @@ public class DailyGoodies : MonoBehaviour
             Debug.Log(boxGroup.childCount + ":" + i);
             rt = boxGroup.GetChild(i).GetComponent<RectTransform>();
             int week = i / 7 + 1;
-            tween = boxGroup.DOAnchorPosX(-rt.anchoredPosition.x + rt.sizeDelta.x / 2, 1.5f).SetEase(Ease.InOutBack).OnStart(() => calendar.UpdateWeekView(week));
+            tween = boxGroup.DOAnchorPosX(-rt.anchoredPosition.x + rt.sizeDelta.x / 2, i == 21 ? 0.75f : 1.5f ).SetEase(Ease.OutFlash).OnStart(() => calendar.UpdateWeekView(week));
             sequence.Append(tween);
         }
-
         // Then restore boxes if streak broken
         sequence.AppendCallback(() => UpdateBoxeseView(curStkDays - 1));
-        sequence.AppendInterval(0.25f);
+        sequence.AppendInterval(1f);
 
         // Then box jump
         var box = boxGroup.GetChild(curStkDays - 1).GetComponent<DailyGoodiesBox>();
-        sequence.Append(box.Box.DOJump(Vector3.back * 2 + Vector3.down * 2, 3, 1, 1.5f).SetEase(Ease.OutSine));
-        sequence.Join(box.Box.DOScale(Vector3.one * 1.5f, 2));
+        sequence.Append(box.Box.DOScale(Vector3.one * 1.5f, 2)).SetEase(Ease.InSine);
+        sequence.Join(box.Box.DOJump(Vector3.back * 2 + Vector3.down * 2, 3, 1, 2));
         sequence.AppendCallback(() => OpenBoxButton.gameObject.SetActive(true));
         OpenBoxButton.onClick.AddListener(() => ShowBox(box));
 
@@ -120,22 +120,24 @@ public class DailyGoodies : MonoBehaviour
 
         boxGroup.transform.DestroyChildren();
         RewardConfig config = DailyGoodiesManager.Instance.GetGoodyConfig(box.Day);
-        var items = Reward.StringToReward(config.ItemReward);
-        Debug.Log(JsonUtility.ToJson(config));
+        var rewards = Reward.StringToReward(config.ItemReward);
+        rewards.Add(RewardType.Coin, DailyGoodiesManager.Instance.GetCoin(box.Day));
+        curRewards = rewards;
+        //Debug.Log(JsonUtility.ToJson(config));
 
         List<DailyGoodiesRewardText> goodyTexts = new List<DailyGoodiesRewardText>();
-        if (config.CoinReward > 0)
+        /*if (config.CoinReward > 0)
         {
             var goodyText = Instantiate(GoodyTextPrefab, TextGroup).GetComponent<DailyGoodiesRewardText>();
             goodyText.RewardType = RewardType.Coin;
             goodyText.Count = DailyGoodiesManager.Instance.GetCoin(box.Day);
             goodyTexts.Add(goodyText);
-        }
-        foreach (var type in items.Keys)
+        }*/
+        foreach (var type in rewards.Keys)
         {
             var goodyText = Instantiate(GoodyTextPrefab, TextGroup).GetComponent<DailyGoodiesRewardText>();
             goodyText.RewardType = type;
-            goodyText.Count = items[type];
+            goodyText.Count = rewards[type];
             goodyTexts.Add(goodyText);
         }
 
@@ -150,8 +152,8 @@ public class DailyGoodies : MonoBehaviour
     public void Collect()
     {
         int day = DailyGoodiesManager.Instance.CheckDate(true);
-        var config = DailyGoodiesManager.Instance.GetGoodyConfig(day);
-        DailyGoodiesManager.Instance.CollectGoodyReward(config);
+        //var config = DailyGoodiesManager.Instance.GetGoodyConfig(day);
+        DailyGoodiesManager.Instance.CollectGoodyReward(curRewards);
 
         var texts = TextGroup.GetComponentsInChildren<DailyGoodiesRewardText>();
         foreach (var text in texts)
