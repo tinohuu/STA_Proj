@@ -1,3 +1,4 @@
+using STA.MapMaker;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -159,10 +160,10 @@ public class CropManager : MonoBehaviour
     void InitializeCrops()
     {
         MapMakerConfig config = MapMaker.Config;
-        if (config.CropDatas.Count > 0)
+        if (config.GetCurMapData().CropDatas.Count > 0)
         {
             foreach (Crop crop in FindObjectsOfType<Crop>()) Destroy(crop.gameObject);
-            foreach (MapMakerCropData data in config.CropDatas)
+            foreach (CropData data in config.GetCurMapData().CropDatas)
             {
                 Crop crop = Instantiate(Resources.Load<GameObject>("Crops/Crop_" + data.Name), CropGrpup).GetComponent<Crop>();
                 crop.transform.localPosition = new Vector2(data.PosX, data.PosY);

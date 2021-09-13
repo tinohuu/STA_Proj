@@ -20,13 +20,10 @@ public class MapPlayerWindow : MonoBehaviour
     int GetRatingCount()
     {
         int count = 0;
-        foreach (MapData mapData in MapManager.Instance.Data.MapDatas)
+        foreach (MapLevelData levelData in MapManager.Instance.Data.MapLevelDatas)
         {
-            foreach (MapLevelData levelData in mapData.MapLevelDatas)
-            {
-                count += levelData.Rating;
-                if (levelData.Order == MapManager.Instance.Data.CompleteLevel) return count;
-            }
+            count += levelData.Rating;
+            if (levelData.Order == MapManager.Instance.Data.CompleteLevel) return count;
         }
         return count;
     }

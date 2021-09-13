@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using STA.MapMaker;
 
 public class Map : MonoBehaviour
 {
@@ -17,16 +18,16 @@ public class Map : MonoBehaviour
     [Header("Config")]
     public bool ShowPath = true;
     [Header("Debug")]
-    public MapData Data = null;
+    //public MapData Data = null;
     public List<MapLevel> mapLevels = new List<MapLevel>();
     public static Map Instance = null;
-    public MapMakerConfig Config;
+    public MapMakerConfig Config => MapManager.Instance.Config;
     private void Awake()
     {
         if (!Instance) Instance = this;
 
         // Test: get map data
-        Data = MapManager.Instance.Data.MapDatas[0];
+        //Data = MapManager.Instance.Data.MapDatas[0];
         CreateLevelButtons();
 
     }
@@ -55,9 +56,8 @@ public class Map : MonoBehaviour
 
     void CreateLevelButtons()
     {
-        Config = MapMaker.Config;
         List<Vector2> locPoints = new List<Vector2>();
-        foreach (MapMakerLevelData data in MapMaker.Config.LevelDatas)
+        foreach (LevelData data in MapMaker.Config.GetCurMapData().LevelDatas)
         {
             locPoints.Add(new Vector2(data.PosX, data.PosY));
         }
@@ -84,12 +84,15 @@ public class Map : MonoBehaviour
 
         LevelsGroup.DestroyChildren();
         mapLevels.Clear();
+
+        int startingIndex = Config.GetLevelCount(MapManager.Instance.CurMapNumber - 1);
         for (int i = 0; i < locPoints.Count; i++)
         {
             MapLevel mapLevel = Instantiate(LevelButtonPrefab, LevelsGroup).GetComponent<MapLevel>();
             mapLevel.transform.localPosition = locPoints[i];
-            mapLevel.Data = Data.MapLevelDatas[i];
+            mapLevel.Data = MapManager.Instance.Data.MapLevelDatas[i + startingIndex];
             mapLevels.Add(mapLevel);
+
         }
     }
 
@@ -123,7 +126,7 @@ public class Map : MonoBehaviour
 
     public MapLevel GetMapLevelButton(int level)
     {
-        int firstLevelNumber = Data.MapLevelDatas[0].Order;
+        int firstLevelNumber = Config.LevelToStarting(level);
         int index = level - firstLevelNumber;
         if (index < 0 || index >= mapLevels.Count) return null;
         else return mapLevels[index];

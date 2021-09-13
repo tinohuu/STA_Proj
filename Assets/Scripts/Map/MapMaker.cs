@@ -1,3 +1,4 @@
+using STA.MapMaker;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -119,11 +120,11 @@ public class MapMaker : MonoBehaviour
         }
         else if (ModeDropdown.value == 1)
         {
-            if (int.Parse(LevelNumberInput.text) >= Map.Instance.Data.MapLevelDatas.Count)
+            /*if (int.Parse(LevelNumberInput.text) >= Map.Instance.Data.MapLevelDatas.Count)
             {
                 LogText.text = "Level cannot be greater than " + Map.Instance.Data.MapLevelDatas.Count;
                 return;
-            }
+            }*/
             MapLevel level = MapMakerPlaceholder.Target.parent.GetComponent<MapLevel>();
             Map.Instance.ChangeLevelOrder(level, int.Parse(LevelNumberInput.text));
         }
@@ -133,32 +134,33 @@ public class MapMaker : MonoBehaviour
     public void SaveAll()
     {
         //if (Application.isEditor) return;
-        MapMakerConfig mapMakerData = new MapMakerConfig();
+        MapMakerConfig config = Config;
+        var mapData = config.GetCurMapData();
         foreach (MapLevel mapLevel in Map.Instance.mapLevels)
         {
-            MapMakerLevelData data = new MapMakerLevelData();
+            LevelData data = new LevelData();
             data.PosX = mapLevel.transform.localPosition.x;
             data.PosY = mapLevel.transform.localPosition.y;
-            mapMakerData.LevelDatas.Add(data);
+            mapData.LevelDatas.Add(data);
         }
         foreach (Crop crop in FindObjectsOfType<Crop>())
         {
-            MapMakerCropData data = new MapMakerCropData();
+            CropData data = new CropData();
             data.PosX = crop.transform.localPosition.x;
             data.PosY = crop.transform.localPosition.y;
             data.Name = crop.Name;
             data.Scale = crop.Scale;
             data.Variant = crop.Variant;
-            mapMakerData.CropDatas.Add(data);
+            mapData.CropDatas.Add(data);
         }
         for (int i = 0; i < MapTrack.Instance.TrackPointsGroup.childCount; i++)
         {
-            MapMakerTrackData data = new MapMakerTrackData();
+            TrackData data = new TrackData();
             data.PosX = MapTrack.Instance.TrackPointsGroup.GetChild(i).localPosition.x;
             data.PosY = MapTrack.Instance.TrackPointsGroup.GetChild(i).localPosition.y;
-            mapMakerData.TrackDatas.Add(data);
+            mapData.TrackDatas.Add(data);
         }
-        string json = JsonUtility.ToJson(mapMakerData);
+        string json = JsonUtility.ToJson(config);
 
         string file = Application.dataPath + "/MapMakerConfig.json";
         if (!File.Exists(file)) File.Create(file);
@@ -234,33 +236,98 @@ public class MapMaker : MonoBehaviour
 }
 
 [System.Serializable]
+public class MapMakerConfigOld
+{
+    public List<LevelData> LevelDatas = new List<LevelData>();
+    public List<CropData> CropDatas = new List<CropData>();
+    public List<TrackData> TrackDatas = new List<TrackData>();
+}
+
+[System.Serializable]
 public class MapMakerConfig
 {
-    public List<MapMakerLevelData> LevelDatas = new List<MapMakerLevelData>();
-    public List<MapMakerCropData> CropDatas = new List<MapMakerCropData>();
-    public List<MapMakerTrackData> TrackDatas = new List<MapMakerTrackData>();
+    public List<STA.MapMaker.MapData> MapDatas = new List<STA.MapMaker.MapData>();
+    public STA.MapMaker.MapData GetCurMapData()
+    {
+        return MapDatas[MapManager.Instance.CurMapNumber - 1];
+    }
+
+    public int LevelToStarting(int levelNumber)
+    {
+        int levelCount = 0;
+        for (int i = 0; i < MapDatas.Count; i++)
+        {
+            if (levelNumber <= levelCount + MapDatas[i].LevelDatas.Count)
+                return levelCount + 1;
+            levelCount += MapDatas[i].LevelDatas.Count;
+        }
+        return levelCount + 1;
+    }
+
+    public int GetLevelCount(int mapNumber)
+    {
+        int levelCount = 0;
+        for (int i = 0; i < mapNumber; i++)
+        {
+            levelCount += MapDatas[i].LevelDatas.Count;
+        }
+        return levelCount;
+    }
+
+    public int LevelToMap(int levelNumber)
+    {
+        int levelCount = 0;
+        for (int i = 0; i < MapDatas.Count; i++)
+        {
+            if (levelNumber <= levelCount + MapDatas[i].LevelDatas.Count)
+                return i + 1;
+            levelCount += MapDatas[i].LevelDatas.Count;
+        }
+        return MapDatas.Count;
+    }
 }
 
-[System.Serializable]
-public class MapMakerLevelData
-{
-    public float PosX = 0;
-    public float PosY = 0;
-}
 
-[System.Serializable]
-public class MapMakerCropData
+namespace STA.MapMaker
 {
-    public float PosX = 0;
-    public float PosY = 0;
-    public string Name = "Crop";
-    public float Scale = 0.5f;
-    public int Variant = 0; 
-}
+    [System.Serializable]
+    public class MapData
+    {
+        public List<LevelData> LevelDatas = new List<LevelData>();
+        public List<CropData> CropDatas = new List<CropData>();
+        public List<TrackData> TrackDatas = new List<TrackData>();
+        public List<LuckyWheelData> WheelDatas = new List<LuckyWheelData>();
+    }
 
-[System.Serializable]
-public class MapMakerTrackData
-{
-    public float PosX = 0;
-    public float PosY = 0;
+    [System.Serializable]
+    public class LevelData
+    {
+        public float PosX = 0;
+        public float PosY = 0;
+    }
+
+    [System.Serializable]
+    public class CropData
+    {
+        public float PosX = 0;
+        public float PosY = 0;
+        public string Name = "Crop";
+        public float Scale = 0.5f;
+        public int Variant = 0;
+    }
+
+    [System.Serializable]
+    public class TrackData
+    {
+        public float PosX = 0;
+        public float PosY = 0;
+    }
+
+    [System.Serializable]
+    public class LuckyWheelData
+    {
+        public float PosX = 0;
+        public float PosY = 0;
+        public int LevelNumber = 0;
+    }
 }

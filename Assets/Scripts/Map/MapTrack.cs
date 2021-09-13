@@ -40,7 +40,7 @@ public class MapTrack : MonoBehaviour
         points.RemoveAt(0);
         for (int i = 0; i < points.Count; i++)
         {
-            points[i].transform.localPosition = new Vector2(config.TrackDatas[i].PosX, config.TrackDatas[i].PosY);
+            points[i].transform.localPosition = new Vector2(config.GetCurMapData().TrackDatas[i].PosX, config.GetCurMapData().TrackDatas[i].PosY);
         }
 
         // Get moveable range data

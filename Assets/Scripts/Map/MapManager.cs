@@ -15,15 +15,26 @@ public class MapManager : MonoBehaviour
 
     [SerializeField] GameObject mapMakerPrefab;
     GameObject mapMaker;
-
+    public int CurMapNumber = 1;
     public static MapManager Instance = null;
+
+    public MapMakerConfig Config;
     private void Awake()
     {
         if (!Instance) Instance = this; // Singleton
 
         FunctionConfigsByFuncID = ConfigsAsset.GetConfigList<FunctionConfig>().ToDictionary(p => p.FunctionID);
+        Config = MapMaker.Config;
+        //Data = SaveManager.Bind(InitializeData());  // Bind to save
 
-        Data = SaveManager.Bind(InitializeData());  // Bind to save
+        int maxLevelCount = Config.GetLevelCount(Config.MapDatas.Count);
+        if (Data.MapLevelDatas.Count < maxLevelCount)
+        {
+            for (int i = Data.MapLevelDatas.Count; i < maxLevelCount; i++)
+            {
+                Data.MapLevelDatas.Add(new MapLevelData(i + 1));
+            }
+        }
     }
 
     private void Update()
@@ -39,7 +50,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    MapManagerData InitializeData()
+    /*MapManagerData InitializeData()
     {
         MapManagerData n_data = Data;
         for (int i = 0; i < 2; i++)
@@ -51,9 +62,9 @@ public class MapManager : MonoBehaviour
         n_data.LastHarvestTime = TimeManager.Instance.RealNow;
 
         return n_data;
-    }
+    }*/
 
-    public MapData LevelToMapData(int level)
+    /*public MapData LevelToMapData(int level)
     {
         for (int i = 0; i < Data.MapDatas.Count - 1; i++)
         {
@@ -63,7 +74,7 @@ public class MapManager : MonoBehaviour
             }
         }
         return Data.MapDatas.Last();
-    }
+    }*/
 }
 
 [System.Serializable]
@@ -72,7 +83,8 @@ public class MapManagerData
     public int CompleteLevel = 0;
     public int SelectedLevel = 0;
     public DateTime LastHarvestTime = new DateTime();
-    public List<MapData> MapDatas = new List<MapData>();
+    public List<MapLevelData> MapLevelDatas = new List<MapLevelData>();
+    //public List<MapData> MapDatas = new List<MapData>();
 }
 
 [System.Serializable]
