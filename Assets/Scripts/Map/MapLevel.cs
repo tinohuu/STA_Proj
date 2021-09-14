@@ -26,19 +26,19 @@ public class MapLevel : MonoBehaviour, IPointerClickHandler
 
     public void UpdateView()
     {
-        if (Data == null || CropManager.Instance.LevelToCropConfig(Data.Order) == null)
+        if (Data == null || CropManager.Instance.LevelToCropConfig(Data.Number) == null)
         {
             Destroy(gameObject);
             return;
         }
 
-        ButtonSpriteRenderer.sprite = CropManager.Instance.LevelToCropConfig(Data.Order).ID % 2 == 1 ? LevelSprites[0] : LevelSprites[1];
+        ButtonSpriteRenderer.sprite = CropManager.Instance.LevelToCropConfig(Data.Number).ID % 2 == 1 ? LevelSprites[0] : LevelSprites[1];
         ButtonSpriteRenderer.color = IsOpen ? Color.white : new Color(1, 1, 1, 0.5f);
 
-        LevelText.text = Data.Order.ToString();
+        LevelText.text = Data.Number.ToString();
         LevelText.color = IsOpen ? Color.white : new Color(1, 1, 1, 0.5f);
 
-        Data.Rating = IsOpen && Data.Order != MapManager.Instance.Data.CompleteLevel + 1 ? Random.Range(1, 4) : 0; // Test: temp rating
+        Data.Rating = IsOpen && Data.Number != MapManager.Instance.Data.CompleteLevel + 1 ? Random.Range(1, 4) : 0; // Test: temp rating
 
         foreach (SpriteRenderer star in StarSpriteRenderers) star.color = IsOpen ? new Color(1, 1, 1, 0.5f) : Color.clear;
         for (int i = 0; i < Data.Rating; i++) StarSpriteRenderers[i].color = Color.white;
@@ -51,5 +51,5 @@ public class MapLevel : MonoBehaviour, IPointerClickHandler
         MapPlayer.Instance.MoveToLevel(this);
     }
 
-    public bool IsOpen => MapManager.Instance.Data.CompleteLevel >= Data.Order - 1;
+    public bool IsOpen => MapManager.Instance.Data.CompleteLevel >= Data.Number - 1;
 }

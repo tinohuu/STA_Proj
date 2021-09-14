@@ -91,7 +91,7 @@ public class CropHarvestWindow : MonoBehaviour
 
     void ShowCrop()
     {
-        int firstLevelOfMap = Map.Instance.Config.LevelToStarting(MapManager.Instance.Data.CompleteLevel);
+        int firstLevelOfMap = MapManager.MapMakerConfig.LevelToStarting(MapManager.Instance.Data.CompleteLevel);
         CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
         int configIndex = CropManager.Instance.CropConfigs.IndexOf(cropConfig);
         cells.Clear();

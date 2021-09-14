@@ -1318,19 +1318,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3ecbf18d50e8af408e9b22060d9e4fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InputGroup: {fileID: 0}
   ModeDropdown: {fileID: 5960961365822303381}
   CropNameInput: {fileID: 5960961366812110162}
   CropScaleInput: {fileID: 5960961367277670143}
   CropVariantInput: {fileID: 5960961365900577157}
   LevelNumberInput: {fileID: 5960961366796426806}
-  SaveCropButton: {fileID: 0}
+  ApplyButton: {fileID: 5960961366475573599}
+  AddButton: {fileID: 0}
   LogText: {fileID: 5960961365645154680}
   PlaceholderPrefab: {fileID: 5485553418444904725, guid: e313eee47ae7f9e48be38c1425f9b7bc, type: 3}
   ProgressSlider: {fileID: 3138993131703222880}
-  test:
-    LevelDatas: []
-    CropDatas: []
-    TrackDatas: []
 --- !u!1 &5960961365649869826
 GameObject:
   m_ObjectHideFlags: 0
@@ -1454,7 +1452,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5960961365647893290}
         m_TargetAssemblyTypeName: MapMaker, Assembly-CSharp
-        m_MethodName: SaveAll
+        m_MethodName: Save
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2299,7 +2297,7 @@ GameObject:
   - component: {fileID: 5960961366475573598}
   - component: {fileID: 5960961366475573599}
   m_Layer: 5
-  m_Name: Button_Save
+  m_Name: Button_Apply
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2406,19 +2404,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5960961366475573598}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5960961365647893290}
-        m_TargetAssemblyTypeName: MapMaker, Assembly-CSharp
-        m_MethodName: Save
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &5960961366488679541
 GameObject:
   m_ObjectHideFlags: 0
@@ -4024,7 +4010,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Save Config
+  m_Text: Save
 --- !u!1 &5960961367342701216
 GameObject:
   m_ObjectHideFlags: 0

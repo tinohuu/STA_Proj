@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using STA.MapMaker;
 
 public class MapManager : MonoBehaviour
 {
@@ -18,16 +19,21 @@ public class MapManager : MonoBehaviour
     public int CurMapNumber = 1;
     public static MapManager Instance = null;
 
-    public MapMakerConfig Config;
+    public static MapMaker_Config MapMakerConfig;
     private void Awake()
     {
         if (!Instance) Instance = this; // Singleton
 
         FunctionConfigsByFuncID = ConfigsAsset.GetConfigList<FunctionConfig>().ToDictionary(p => p.FunctionID);
-        Config = MapMaker.Config;
+        MapMakerConfig = GetMapMakerConfig();
         //Data = SaveManager.Bind(InitializeData());  // Bind to save
 
-        int maxLevelCount = Config.GetLevelCount(Config.MapDatas.Count);
+        UpdateLevelData();
+    }
+
+    public void UpdateLevelData()
+    {
+        int maxLevelCount = MapMakerConfig.GetLevelCount(MapMakerConfig.MapDatas.Count);
         if (Data.MapLevelDatas.Count < maxLevelCount)
         {
             for (int i = Data.MapLevelDatas.Count; i < maxLevelCount; i++)
@@ -43,7 +49,7 @@ public class MapManager : MonoBehaviour
         {
             if (mapMaker)
             {
-                MapMaker.Instance.UpdateMode(0);
+                MapMaker.Instance.UpdateMode();
                 Destroy(mapMaker.gameObject);
             }
             else mapMaker = Instantiate(mapMakerPrefab, transform);
@@ -75,6 +81,20 @@ public class MapManager : MonoBehaviour
         }
         return Data.MapDatas.Last();
     }*/
+    public MapMaker_Config GetMapMakerConfig()
+    {
+        string json;
+        if (Debug.isDebugBuild && File.Exists(Application.dataPath + "/MapMakerConfig.json"))
+        {
+            json = File.ReadAllText(Application.dataPath + "/MapMakerConfig.json");
+        }
+        else
+        {
+            json = ConfigsAsset.GetConfig("MapMakerConfig");
+        }
+        MapMaker_Config config = JsonUtility.FromJson<MapMaker_Config>(json);
+        return config;
+    }
 }
 
 [System.Serializable]
@@ -112,13 +132,13 @@ public class MapData
 [System.Serializable]
 public class MapLevelData
 {
-    public int Order = 1;
+    public int Number = 1;
     public int Rating = 0;
     public bool IsComplete => Rating != 0;
 
     public MapLevelData(int order)
     {
-        Order = order;
+        Number = order;
     }
 }
 

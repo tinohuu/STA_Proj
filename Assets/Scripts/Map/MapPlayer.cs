@@ -80,10 +80,10 @@ public class MapPlayer : MonoBehaviour
     {
         //isRunning = true;
 
-        if  (mapLevel.Data.Order != MapManager.Instance.Data.SelectedLevel)
+        if  (mapLevel.Data.Number != MapManager.Instance.Data.SelectedLevel)
         {
             SoundManager.Instance.PlaySFX("uiAvatarFly");
-            MapManager.Instance.Data.SelectedLevel = mapLevel.Data.Order;
+            MapManager.Instance.Data.SelectedLevel = mapLevel.Data.Number;
             Tween tween = transform.DOLocalJump(mapLevel.transform.localPosition, 1, 1, 1.5f);
             yield return tween.WaitForCompletion();
             SoundManager.Instance.PlaySFX("uiAvatarLanding");

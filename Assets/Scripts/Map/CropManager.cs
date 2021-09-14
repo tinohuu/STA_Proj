@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CropManager : MonoBehaviour
+public class CropManager : MonoBehaviour, IMapMakerModule
 {
     [Header("Ref")]
     public Transform ForceFieldGroup;
     public Transform TriggerGroup;
     public Transform LeftSide;
     public Transform RightSide;
-    public Transform CropGrpup;
+    public Transform CropGroup;
 
     [Header("Debug")]
     public bool IsMature = false;
     public List<CropConfig> CropConfigs = new List<CropConfig>();
     public static CropManager Instance = null;
-    public Dictionary<string, List<Crop>> CropsByName = new Dictionary<string, List<Crop>>();
+    //public Dictionary<string, List<Crop>> CropsByName = new Dictionary<string, List<Crop>>();
 
     ParticleSystemForceField[] fields;
     Collider[] triggers;
@@ -32,12 +32,7 @@ public class CropManager : MonoBehaviour
     }
     private void Start()
     {
-        InitializeCrops();
-    }
-
-    private void Update()
-    {
-
+        CreateItems();
     }
 
     public CropConfig LevelToCropConfig(int level)
@@ -79,7 +74,7 @@ public class CropManager : MonoBehaviour
 
             crop.Config = configsByName[crop.Name];
         }
-        CropsByName = _cropsByName;
+        //CropsByName = _cropsByName;
 
         // Sort crops list
         foreach (List<Crop> crops in _cropsByName.Values)
@@ -92,7 +87,7 @@ public class CropManager : MonoBehaviour
                 crops[i].OrderRatio = (i + 1f) / crops.Count;
             }
         }
-        foreach (List<Crop> crops in CropsByName.Values)
+        foreach (List<Crop> crops in _cropsByName.Values)
         {
             foreach (Crop crop in crops) crop.UpdateView();
         }
@@ -100,14 +95,12 @@ public class CropManager : MonoBehaviour
 
     public void UpdateCropsAnimator(bool includeState)
     {
-        foreach (List<Crop> crops in CropsByName.Values)
+        var crops = CropGroup.GetComponentsInChildren<Crop>();
+        foreach (Crop crop in crops)
         {
-            foreach (Crop crop in crops)
-            {
-                if (!crop) continue; 
-                crop.UpdateState();
-                crop.UpdateAnimator(includeState);
-            }
+            if (!crop) continue;
+            crop.UpdateState();
+            crop.UpdateAnimator(includeState);
         }
     }
 
@@ -119,19 +112,16 @@ public class CropManager : MonoBehaviour
 
     IEnumerator IPlayHarvestEffects()
     {
+        var crops = CropGroup.GetComponentsInChildren<Crop>();
 
         List<string> shownCropNames = new List<string>();
-        foreach (List<Crop> crops in CropsByName.Values)
+        foreach (Crop crop in crops)
         {
-            foreach (Crop crop in crops)
+            crop.UpdateState();
+            if (crop.UpdateAnimator() && crop.CropState == Crop.State.immature)
             {
-                //Vector2 pos = crop.transform.position;
-                crop.UpdateState();
-                if (crop.UpdateAnimator() && crop.CropState == Crop.State.immature)
-                {
-                    CreateParticle(crop.Name, crop.transform.position);
-                    shownCropNames.Add(crop.Name);
-                }
+                CreateParticle(crop.Name, crop.transform.position);
+                shownCropNames.Add(crop.Name);
             }
         }
 
@@ -157,21 +147,22 @@ public class CropManager : MonoBehaviour
         particles.Clear();
     }
 
-    void InitializeCrops()
+    public void CreateItems()
     {
-        MapMakerConfig config = MapMaker.Config;
-        if (config.GetCurMapData().CropDatas.Count > 0)
+        RecordItemMakerData();
+
+        CropGroup.DestroyChildren();
+
+        var datas = MapManager.MapMakerConfig.GetCurMapData().CropDatas;
+        foreach (var data in datas)
         {
-            foreach (Crop crop in FindObjectsOfType<Crop>()) Destroy(crop.gameObject);
-            foreach (CropData data in config.GetCurMapData().CropDatas)
-            {
-                Crop crop = Instantiate(Resources.Load<GameObject>("Crops/Crop_" + data.Name), CropGrpup).GetComponent<Crop>();
-                crop.transform.localPosition = new Vector2(data.PosX, data.PosY);
-                crop.Name = data.Name;
-                crop.Scale = data.Scale;
-                crop.Variant = data.Variant;
-            }
+            Crop crop = Instantiate(Resources.Load<GameObject>("Crops/Crop_" + data.Name), CropGroup).GetComponent<Crop>();
+            crop.transform.localPosition = new Vector2(data.PosX, data.PosY);
+            crop.Name = data.Name;
+            crop.Scale = data.Scale;
+            crop.Variant = data.Variant;
         }
+
         UpdateCropsView();
     }
 
@@ -182,21 +173,54 @@ public class CropManager : MonoBehaviour
         particles.Add(obj.transform);
     }
 
-    public void UpdateCropType(Crop crop)
+    public void RecordItemMakerData()
     {
-        // Record old data
-        Vector2 locPos = crop.transform.localPosition;
-        string name = crop.Name;
-        float scale = crop.Scale;
-        int variant = crop.Variant;
-        Destroy(crop.gameObject);
+        if (CropGroup.childCount == 0) return;
+        var datas = new List<MapMaker_CropData>();
+        var crops = CropGroup.GetComponentsInChildren<Crop>().ToList();
 
-        // Create using old data
-        Crop newCrop = Instantiate(Resources.Load<GameObject>("Crops/Crop_" + name), CropGrpup).GetComponent<Crop>();
-        newCrop.transform.localPosition = locPos;
-        newCrop.Name = name;
-        newCrop.Scale = scale;
-        newCrop.Variant = variant;
-        newCrop.UpdateView();
+        var overlapped = new List<Crop>();
+        for (int i = 0; i < crops.Count; i++)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                if ((crops[i].transform.localPosition - crops[j].transform.localPosition).magnitude <= 0.001f)
+                    overlapped.Add(crops[j]);
+            }
+        }
+
+        foreach (Crop crop in crops)
+        {
+            if (overlapped.Contains(crop)) continue;
+            MapMaker_CropData data = new MapMaker_CropData();
+            data.PosX = crop.transform.localPosition.x;
+            data.PosY = crop.transform.localPosition.y;
+            data.Name = crop.Name;
+            data.Scale = crop.Scale;
+            data.Variant = crop.Variant;
+            datas.Add(data);
+        }
+
+        MapManager.MapMakerConfig.GetCurMapData().CropDatas = datas;
+    }
+
+    public void AddNewItem()
+    {
+        GameObject obj = Instantiate(Resources.Load<GameObject>("Crops/Crop_Cabbage"), CropManager.Instance.CropGroup);
+        obj.transform.localPosition = CropGroup.InverseTransformPoint(Vector3.zero);
+        UpdateCropsView();
+    }
+}
+
+namespace STA.MapMaker
+{
+    [System.Serializable]
+    public class MapMaker_CropData
+    {
+        public float PosX = 0;
+        public float PosY = 0;
+        public string Name = "Crop";
+        public float Scale = 0.5f;
+        public int Variant = 0;
     }
 }

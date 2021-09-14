@@ -23,7 +23,7 @@ public class MapPlayerWindow : MonoBehaviour
         foreach (MapLevelData levelData in MapManager.Instance.Data.MapLevelDatas)
         {
             count += levelData.Rating;
-            if (levelData.Order == MapManager.Instance.Data.CompleteLevel) return count;
+            if (levelData.Number == MapManager.Instance.Data.CompleteLevel) return count;
         }
         return count;
     }
