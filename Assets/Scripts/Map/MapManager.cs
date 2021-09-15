@@ -20,12 +20,14 @@ public class MapManager : MonoBehaviour
     public static MapManager Instance = null;
 
     public static MapMaker_Config MapMakerConfig;
+    [SerializeField] MapMaker_Config m_mapMakerConfig;
     private void Awake()
     {
         if (!Instance) Instance = this; // Singleton
 
         FunctionConfigsByFuncID = ConfigsAsset.GetConfigList<FunctionConfig>().ToDictionary(p => p.FunctionID);
         MapMakerConfig = GetMapMakerConfig();
+        m_mapMakerConfig = MapMakerConfig;
         //Data = SaveManager.Bind(InitializeData());  // Bind to save
 
         UpdateLevelData();

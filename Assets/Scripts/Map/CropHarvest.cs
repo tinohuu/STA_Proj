@@ -16,7 +16,8 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     public Animator TextGroupAnimator;
     public TMP_Text CropList;
     public Image Image;
-    public Button Button;
+    Button button;
+    ButtonAnimator buttonAnimator;
     public bool IsReady = false;
     public static CropHarvest Instance = null;
     public Vector2 Debug_AchorPos;
@@ -28,6 +29,8 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     private void Awake()
     {
         if (!Instance) Instance = this;
+        button = GetComponent<Button>();
+        buttonAnimator = GetComponent<ButtonAnimator>();
         //TimeManager.Instance.Refresher += RefreshHarvestTime;
     }
 
@@ -50,7 +53,8 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
         HarvestParticle.SetActive(timeSpan.TotalSeconds <= 0);
 
         //Image.color = timeSpan.TotalSeconds > 0 ? Color.white : Color.white;
-        Button.interactable = timeSpan.TotalSeconds <= 0;
+        button.interactable = timeSpan.TotalSeconds <= 0;
+        buttonAnimator.Interactable = timeSpan.TotalSeconds <= 0;
 
         IsReady = timeSpan.TotalSeconds <= 0; // TEST
 
@@ -76,7 +80,30 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     public void Cheat()
     {
         if (!Debug.isDebugBuild) return;
-        MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(50);
+        MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(55);
+    }
+
+    public int GetHarvestCoin()
+    {
+        int coinCount = 2000;
+        int firstLevelOfMap = MapManager.MapMakerConfig.LevelToStarting(MapManager.Instance.Data.CompleteLevel);
+        CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
+        int configIndex = CropManager.Instance.CropConfigs.IndexOf(cropConfig);
+        int lastCropIndex = configIndex;
+        for (int i = configIndex; i < CropManager.Instance.CropConfigs.Count; i++)
+        {
+            cropConfig = CropManager.Instance.CropConfigs[i];
+            if (cropConfig.Level <= MapManager.Instance.Data.CompleteLevel)
+            {
+                lastCropIndex = i;
+            }
+            else
+            {
+                break;
+            }
+        }
+        coinCount += (lastCropIndex + 1) * 50;
+        return coinCount;
     }
 
     int UpdateHarvestText()

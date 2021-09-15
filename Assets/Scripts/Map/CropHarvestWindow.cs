@@ -13,11 +13,13 @@ public class CropHarvestWindow : MonoBehaviour
     [SerializeField] TMP_Text CropsText;
     [SerializeField] TMP_Text CoinText;
     [SerializeField] TMP_Text PlusText;
+    [SerializeField] TMP_Text AdText;
     [SerializeField] List<GameObject> cells = new List<GameObject>();
     static Vector2 oriGravity = new Vector2();
     [SerializeField] bool enableAnimationTest = true;
     [SerializeField] bool hasCropEffect = false;
     [SerializeField] bool isJointEffect = true;
+
     float lastGyroTime = 0;
     private void OnEnable()
     {
@@ -38,7 +40,9 @@ public class CropHarvestWindow : MonoBehaviour
     {
         //ShowCrop();
         StartCoroutine(AnimateCrops());
-        CoinText.rectTransform.DOScale(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+        CoinText.text = string.Format(CoinText.text, CropHarvest.Instance.GetHarvestCoin().ToString("N0"));
+        AdText.text = string.Format(AdText.text, (CropHarvest.Instance.GetHarvestCoin() * 2).ToString("N0"));
+        //CoinText.rectTransform.DOScale(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo);
     }
 
     private void FixedUpdate()
@@ -95,19 +99,40 @@ public class CropHarvestWindow : MonoBehaviour
         CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
         int configIndex = CropManager.Instance.CropConfigs.IndexOf(cropConfig);
         cells.Clear();
+
+        List<string> cropNames = new List<string>();
         for (int i = configIndex; i < CropManager.Instance.CropConfigs.Count; i++)
         {
             cropConfig = CropManager.Instance.CropConfigs[i];
             if (cropConfig.Level <= MapManager.Instance.Data.CompleteLevel)
             {
-                GameObject cell = Instantiate(CellPrefab, i % 2 == 0 ? TopLayoutGroup : BottomLayoutGroup);
-                cell.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Sprites/Crops/Crop_Fruit_" + cropConfig.Name);
-                //cell.GetComponentInChildren<Image>().SetNativeSize();
-                //cell.GetComponentInChildren<Image>().rectTransform.sizeDelta /= 2;
-                cells.Add(cell);
+                cropNames.Add(cropConfig.Name);
             }
             else break;
         }
+
+        string cropNamesText = "";
+        for (int i = 0; i < cropNames.Count; i++)
+        {
+            GameObject cell = Instantiate(CellPrefab, i % 2 == 0 && cropNames.Count > 3 ? TopLayoutGroup : BottomLayoutGroup);
+
+            if (cropNames.Count <= 3) cell.transform.Rotate(- Vector3.forward * 45);
+
+            cell.GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Sprites/Crops/Crop_Fruit_" + cropNames[i]);
+            //cell.GetComponentInChildren<Image>().SetNativeSize();
+            //cell.GetComponentInChildren<Image>().rectTransform.sizeDelta /= 2;
+            cells.Add(cell);
+
+            cropNamesText += i == 0 ? "" : " & ";
+            cropNamesText += cropNames[i];
+        }
+
+
+        CropsText.text = cropNames.Count > 3 ? "" : cropNamesText;
+
+        TopLayoutGroup.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = cropNames.Count <= 3;
+        BottomLayoutGroup.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = cropNames.Count <= 3;
+
         LayoutRebuilder.ForceRebuildLayoutImmediate(TopLayoutGroup);
         LayoutRebuilder.ForceRebuildLayoutImmediate(BottomLayoutGroup);
     }
@@ -121,6 +146,7 @@ public class CropHarvestWindow : MonoBehaviour
             ShowCrop();
             topGroup.DOFade(1, 0.5f);
             btmGroup.DOFade(1, 0.5f);
+            CropsText.DOFade(1, 0.5f);
             yield return new WaitForSeconds(1.5f);
 
             do yield return null;
@@ -128,6 +154,7 @@ public class CropHarvestWindow : MonoBehaviour
 
             topGroup.DOFade(0, 0.5f);
             btmGroup.DOFade(0, 0.5f);
+            CropsText.DOFade(0, 0.5f);
             PlusText.DOFade(1, 0.5f);
             yield return new WaitForSeconds(1);
             hasCropEffect = false;

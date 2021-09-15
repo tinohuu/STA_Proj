@@ -33,6 +33,6 @@ public class MapMakerPlaceholder : MonoBehaviour, IDragHandler, IPointerDownHand
     public void OnPointerDown(PointerEventData eventData)
     {
         Target = transform;
-        MapMaker.Instance.UpdateInputView();
+        MapMaker.Instance.ShowInputs();
     }
 }

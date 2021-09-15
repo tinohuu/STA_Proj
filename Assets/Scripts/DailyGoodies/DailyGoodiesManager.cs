@@ -25,7 +25,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
     DailyGoodyData InitializeData()
     {
         var data = Data;
-        data.LastGoodyTime = TimeManager.Instance.RealNow.Date - TimeSpan.FromDays(2);
+        data.LastGoodyTime = TimeManager.Instance.RealNow.Date;
         return data;
     }
 

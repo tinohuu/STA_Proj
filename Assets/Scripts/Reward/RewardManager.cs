@@ -9,12 +9,10 @@ public class RewardManager : MonoBehaviour
     public static RewardManager Instance = null;
     public delegate void RewardHandler(bool add);
     public RewardHandler[] OnValueChanged = new RewardHandler[Data.Rewards.Count];
-    private void OnEnable()
-    {
-        Instance = this;
-    }
+
     private void Awake()
     {
+        if (!Instance) Instance = this;
         for (int i = 0; i < OnValueChanged.Length; i++) OnValueChanged[i] = null;
     }
 }

@@ -23,8 +23,12 @@ public class MapMaker : MonoBehaviour
     [SerializeField] GameObject PlaceholderPrefab;
     [SerializeField] Slider ProgressSlider;
 
+    static (int, int) tu;
+
     public static MapMaker Instance = null;
-    public Mode CurMode => (Mode)ModeDropdown.value;
+    public Mode CurMode { get => (Mode)ModeDropdown.value; set => ModeDropdown.value = (int)value; }
+
+    T GetTargetObj<T>() => MapMakerPlaceholder.Target.parent.GetComponent<T>();
 
     private void Awake()
     {
@@ -56,47 +60,8 @@ public class MapMaker : MonoBehaviour
         var modules = FindObjectsOfType<MonoBehaviour>().OfType<IMapMakerModule>();
         foreach (var module in modules)
         {
-            if (record) module.RecordItemMakerData();
-            if (recreate) module.CreateItems();
-        }
-    }
-
-    public void UpdateInputView()
-    {
-        // Reset input texts
-        var inputs = GetComponentsInChildren<InputField>();
-        foreach (InputField input in inputs) input.text = "";
-
-        // Activate corresponding inputs
-        LevelNumberInput.gameObject.SetActive(CurMode == Mode.Level || CurMode == Mode.Wheel);
-        CropNameInput.gameObject.SetActive(ModeDropdown.value == 2);
-        CropScaleInput.gameObject.SetActive(ModeDropdown.value == 2);
-        CropVariantInput.gameObject.SetActive(ModeDropdown.value == 2);
-
-        // Show selection details
-        if (!MapMakerPlaceholder.Target) return;
-        switch (CurMode)
-        {
-            case Mode.Level:
-                LevelNumberInput.text = MapMakerPlaceholder.Target.parent.GetComponent<MapLevel>().Data.Number.ToString();
-                break;
-
-            case Mode.Crop:
-                CropNameInput.text = MapMakerPlaceholder.Target.parent.GetComponent<Crop>().Name;
-                CropScaleInput.text = MapMakerPlaceholder.Target.parent.GetComponent<Crop>().Scale.ToString();
-                CropVariantInput.text = MapMakerPlaceholder.Target.parent.GetComponent<Crop>().Variant.ToString();
-                break;
-
-            case Mode.Track:
-
-                break;
-
-            case Mode.Wheel:
-                LevelNumberInput.text = MapMakerPlaceholder.Target.parent.GetComponent<LuckyWheel>().LevelNumber.ToString();
-                break;
-
-            case Mode.Crate:
-                break;
+            if (record) module.MapMaker_RecordData();
+            if (recreate) module.MapMaker_CreateItems();
         }
     }
 
@@ -129,13 +94,55 @@ public class MapMaker : MonoBehaviour
                 break;
 
             case Mode.Crate:
+                var crates = FindObjectsOfType<Crate>();
+                foreach (var crate in crates) Instantiate(PlaceholderPrefab, crate.transform);
                 break;
         }
 
         MapMakerPlaceholder.Target = null;
-        UpdateInputView();
+        ShowInputs();
     }
 
+    public void ShowInputs()
+
+    {
+        // Reset input texts
+        var inputs = GetComponentsInChildren<InputField>();
+        foreach (InputField input in inputs) input.text = "";
+
+        // Activate corresponding inputs
+        LevelNumberInput.gameObject.SetActive(CurMode == Mode.Level || CurMode == Mode.Wheel || CurMode == Mode.Crate);
+        CropNameInput.gameObject.SetActive(ModeDropdown.value == 2);
+        CropScaleInput.gameObject.SetActive(ModeDropdown.value == 2);
+        CropVariantInput.gameObject.SetActive(ModeDropdown.value == 2);
+
+        // Show selection details
+        if (!MapMakerPlaceholder.Target) return;
+        switch (CurMode)
+        {
+            case Mode.Level:
+                LevelNumberInput.text = GetTargetObj<MapLevel>().Data.Number.ToString();
+                break;
+
+            case Mode.Crop:
+                CropNameInput.text = GetTargetObj<Crop>().Name;
+                CropScaleInput.text = GetTargetObj<Crop>().Scale.ToString();
+                CropVariantInput.text = GetTargetObj<Crop>().Variant.ToString();
+                break;
+
+            case Mode.Track:
+
+                break;
+
+            case Mode.Wheel:
+                LevelNumberInput.text = GetTargetObj<LuckyWheel>().LevelNumber.ToString();
+                break;
+
+            case Mode.Crate:
+                LevelNumberInput.text = GetTargetObj<Crate>().LevelNumber.ToString();
+                break;
+        }
+    }
     public void Apply()
     {
         if (!MapMakerPlaceholder.Target) return;
@@ -143,7 +150,7 @@ public class MapMaker : MonoBehaviour
         switch (CurMode)
         {
             case Mode.Level:
-                MapLevel level = MapMakerPlaceholder.Target.parent.GetComponent<MapLevel>();
+                MapLevel level = GetTargetObj<MapLevel>();
                 Map.Instance.ChangeLevelNumber(level, int.Parse(LevelNumberInput.text));
                 break;
 
@@ -154,20 +161,23 @@ public class MapMaker : MonoBehaviour
                     LogText.text = "Please check crop name.";
                     return;
                 }
-                Crop crop = MapMakerPlaceholder.Target.parent.GetComponent<Crop>();
+
+                Crop crop = GetTargetObj<Crop>();
                 crop.Name = CropNameInput.text;
                 crop.Scale = float.Parse(CropScaleInput.text);
                 crop.Variant = int.Parse(CropVariantInput.text);
                 break;
 
             case Mode.Track:
-                LuckyWheel wheel = MapMakerPlaceholder.Target.parent.GetComponent<LuckyWheel>();
-                wheel.LevelNumber = int.Parse(LevelNumberInput.text);
-                break;
+
 
             case Mode.Wheel:
+                LuckyWheel wheel = GetTargetObj<LuckyWheel>();
+                wheel.LevelNumber = int.Parse(LevelNumberInput.text);
                 break;
             case Mode.Crate:
+                Crate crate = GetTargetObj<Crate>();
+                crate.LevelNumber = int.Parse(LevelNumberInput.text);
                 break;
         }
 
@@ -180,11 +190,11 @@ public class MapMaker : MonoBehaviour
         switch (CurMode)
         {
             case Mode.Level:
-                Map.Instance.AddNewItem();
+                Map.Instance.MapMaker_AddItem();
                 break;
 
             case Mode.Crop:
-                CropManager.Instance.AddNewItem();
+                CropManager.Instance.MapMaker_AddItem();
                 break;
 
             case Mode.Track:
@@ -192,10 +202,11 @@ public class MapMaker : MonoBehaviour
                 break;
 
             case Mode.Wheel:
-                LuckyWheelManager.Instance.AddNewItem();
+                LuckyWheelManager.Instance.MapMaker_AddItem();
                 break;
 
             case Mode.Crate:
+                CrateManager.Instance.MapMaker_AddItem();
                 break;
         }
         UpdateMode();
@@ -221,6 +232,8 @@ public class MapMaker : MonoBehaviour
                 DestroyImmediate(wheel.gameObject);
                 break;
             case Mode.Crate:
+                Crate crate = MapMakerPlaceholder.Target.parent.GetComponent<Crate>();
+                DestroyImmediate(crate.gameObject);
                 break;
         }
         Refresh(true, true);
@@ -228,8 +241,8 @@ public class MapMaker : MonoBehaviour
 
     public void Save()
     {
-        var modules = FindObjectsOfType<MonoBehaviour>().OfType<IMapMakerModule>();
-        foreach (var module in modules) module.CreateItems();
+        Refresh(true, true);
+
         string json = JsonUtility.ToJson(MapManager.MapMakerConfig);
         string file = Application.dataPath + "/MapMakerConfig.json";
         if (!File.Exists(file))
@@ -238,7 +251,11 @@ public class MapMaker : MonoBehaviour
             fs.Close();
         }
         File.WriteAllText(file, json);
-        LogText.text = "Successfully saved.";
+
+        if (File.Exists(file)) LogText.text = "Successfully saved.";
+
+        CurMode = Mode.None;
+        UpdateMode();
     }
 
     public void CheatHarvest()
@@ -260,9 +277,9 @@ namespace STA.MapMaker
     public class MapMaker_Config
     {
         public List<MapMaker_MapData> MapDatas = new List<STA.MapMaker.MapMaker_MapData>();
-        public MapMaker_MapData GetCurMapData()
+        public MapMaker_MapData CurMapData
         {
-            return MapDatas[MapManager.Instance.CurMapNumber - 1];
+            get => MapDatas[MapManager.Instance.CurMapNumber - 1];
         }
 
         public int LevelToStarting(int levelNumber)
@@ -308,6 +325,7 @@ namespace STA.MapMaker
         public List<MapMaker_CropData> CropDatas = new List<MapMaker_CropData>();
         public List<MapMaker_TrackData> TrackDatas = new List<MapMaker_TrackData>();
         public List<MapMaker_WheelData> WheelDatas = new List<MapMaker_WheelData>();
+        public List<MapMaker_CrateData> CrateDatas = new List<MapMaker_CrateData>();
     }
 
     [System.Serializable]
@@ -327,8 +345,8 @@ namespace STA.MapMaker
 
     public interface IMapMakerModule
     {
-        public void RecordItemMakerData();
-        public void CreateItems();
-        public void AddNewItem();
+        public void MapMaker_RecordData();
+        public void MapMaker_CreateItems();
+        public void MapMaker_AddItem();
     }
 }

@@ -147,6 +147,18 @@ MonoBehaviour:
     m_Scale: 1.4
     m_Name: RemoveBombs
     m_HashCode: 1937057847
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 18
+    m_Scale: 1.4
+    m_Name: Ad
+    m_HashCode: 2053
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 19
+    m_Scale: 1.4
+    m_Name: Star
+    m_HashCode: 3005684
   m_SpriteGlyphTable:
   - m_Index: 0
     m_Metrics:
@@ -262,7 +274,7 @@ MonoBehaviour:
       m_HorizontalAdvance: 100
     m_GlyphRect:
       m_X: 200
-      m_Y: 800
+      m_Y: 799
       m_Width: 200
       m_Height: 200
     m_Scale: 1
@@ -418,6 +430,36 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -1943507328537871512, guid: 0e68e94b380751d42817f2bee4a907d0, type: 3}
+  - m_Index: 18
+    m_Metrics:
+      m_Width: 200
+      m_Height: 200
+      m_HorizontalBearingX: -75
+      m_HorizontalBearingY: 150
+      m_HorizontalAdvance: 100
+    m_GlyphRect:
+      m_X: 0
+      m_Y: 400
+      m_Width: 200
+      m_Height: 200
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: -5815559458100759616, guid: 0e68e94b380751d42817f2bee4a907d0, type: 3}
+  - m_Index: 19
+    m_Metrics:
+      m_Width: 200
+      m_Height: 200
+      m_HorizontalBearingX: -75
+      m_HorizontalBearingY: 150
+      m_HorizontalAdvance: 100
+    m_GlyphRect:
+      m_X: 200
+      m_Y: 400
+      m_Width: 200
+      m_Height: 200
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: 6120908473732132678, guid: 0e68e94b380751d42817f2bee4a907d0, type: 3}
   spriteInfoList: []
   fallbackSpriteAssets: []
 --- !u!21 &9114294826249784613

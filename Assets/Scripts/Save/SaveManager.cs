@@ -31,10 +31,7 @@ public class SaveManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            ClearAndRestart();
-        }
+
     }
 
    public void ClearAndRestart(string sceneName = "")

@@ -11,16 +11,13 @@ public class LuckyWheelManager : MonoBehaviour, IMapMakerModule
     private void Awake()
     {
         if (!Instance) Instance = this;
-    }
-    private void Start()
-    {
-        
+        MapMaker_CreateItems();
     }
 
-    public void CreateItems()
+    public void MapMaker_CreateItems()
     {
         // Get config data
-        var datas = MapManager.MapMakerConfig.GetCurMapData().WheelDatas;
+        var datas = MapManager.MapMakerConfig.CurMapData.WheelDatas;
 
         // Recreate new lucky wheels
         wheelGroup.DestroyChildren();
@@ -33,7 +30,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapMakerModule
         UpdateAllViews();
     }
 
-    public void RecordItemMakerData()
+    public void MapMaker_RecordData()
     {
         var wheels = wheelGroup.GetComponentsInChildren<LuckyWheel>();
         var datas = new List<MapMaker_WheelData>();
@@ -45,7 +42,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapMakerModule
             data.PosY = wheel.transform.localPosition.y;
             datas.Add(data);
         }
-        MapManager.MapMakerConfig.GetCurMapData().WheelDatas = datas;
+        MapManager.MapMakerConfig.CurMapData.WheelDatas = datas;
     }
 
     public void UpdateAllViews()
@@ -54,7 +51,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapMakerModule
         foreach (var wheel in wheels) wheel.UpdateView();
     }
 
-    public void AddNewItem()
+    public void MapMaker_AddItem()
     {
         GameObject obj = Instantiate(wheelPrefab, wheelGroup);
         obj.transform.localPosition = wheelGroup.InverseTransformPoint(Vector3.zero);

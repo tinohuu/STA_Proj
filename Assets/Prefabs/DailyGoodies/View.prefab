@@ -778,7 +778,7 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 5668969311195668710}
         m_TargetAssemblyTypeName: 
         m_MethodName: 
         m_Mode: 1
@@ -790,6 +790,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnceOnly: 1
   targetTransform: {fileID: 0}
 --- !u!1 &5668969311295032642
 GameObject:

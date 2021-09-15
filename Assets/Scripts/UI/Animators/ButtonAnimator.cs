@@ -13,8 +13,10 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public float ScaleUpDuration = 0.3f;
     public float ScaleDownDuration = 0.2f;
     public bool Interactable = true;
+    public bool OnceOnly = false;
     public UnityEvent OnClick = null;
     Vector3 oriLocalScale = Vector3.one;
+
     [HideInInspector] public Transform targetTransform = null;
     private void Awake()
     {
@@ -45,7 +47,7 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         if (!Interactable) return;
         Animate(false);
         OnClick?.Invoke();
-
+        if (OnceOnly) Interactable = false;
     }
 
     void Animate(bool isUp)

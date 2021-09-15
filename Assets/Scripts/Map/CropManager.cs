@@ -32,7 +32,7 @@ public class CropManager : MonoBehaviour, IMapMakerModule
     }
     private void Start()
     {
-        CreateItems();
+        MapMaker_CreateItems();
     }
 
     public CropConfig LevelToCropConfig(int level)
@@ -147,13 +147,13 @@ public class CropManager : MonoBehaviour, IMapMakerModule
         particles.Clear();
     }
 
-    public void CreateItems()
+    public void MapMaker_CreateItems()
     {
-        RecordItemMakerData();
+        MapMaker_RecordData();
 
         CropGroup.DestroyChildren();
 
-        var datas = MapManager.MapMakerConfig.GetCurMapData().CropDatas;
+        var datas = MapManager.MapMakerConfig.CurMapData.CropDatas;
         foreach (var data in datas)
         {
             Crop crop = Instantiate(Resources.Load<GameObject>("Crops/Crop_" + data.Name), CropGroup).GetComponent<Crop>();
@@ -173,13 +173,13 @@ public class CropManager : MonoBehaviour, IMapMakerModule
         particles.Add(obj.transform);
     }
 
-    public void RecordItemMakerData()
+    public void MapMaker_RecordData()
     {
         if (CropGroup.childCount == 0) return;
         var datas = new List<MapMaker_CropData>();
         var crops = CropGroup.GetComponentsInChildren<Crop>().ToList();
 
-        var overlapped = new List<Crop>();
+        /*var overlapped = new List<Crop>();
         for (int i = 0; i < crops.Count; i++)
         {
             for (int j = 0; j < i; j++)
@@ -187,11 +187,11 @@ public class CropManager : MonoBehaviour, IMapMakerModule
                 if ((crops[i].transform.localPosition - crops[j].transform.localPosition).magnitude <= 0.001f)
                     overlapped.Add(crops[j]);
             }
-        }
+        }*/
 
         foreach (Crop crop in crops)
         {
-            if (overlapped.Contains(crop)) continue;
+            //if (overlapped.Contains(crop)) continue;
             MapMaker_CropData data = new MapMaker_CropData();
             data.PosX = crop.transform.localPosition.x;
             data.PosY = crop.transform.localPosition.y;
@@ -201,10 +201,10 @@ public class CropManager : MonoBehaviour, IMapMakerModule
             datas.Add(data);
         }
 
-        MapManager.MapMakerConfig.GetCurMapData().CropDatas = datas;
+        MapManager.MapMakerConfig.CurMapData.CropDatas = datas;
     }
 
-    public void AddNewItem()
+    public void MapMaker_AddItem()
     {
         GameObject obj = Instantiate(Resources.Load<GameObject>("Crops/Crop_Cabbage"), CropManager.Instance.CropGroup);
         obj.transform.localPosition = CropGroup.InverseTransformPoint(Vector3.zero);

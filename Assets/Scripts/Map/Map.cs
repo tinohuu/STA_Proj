@@ -25,7 +25,7 @@ public class Map : MonoBehaviour, IMapMakerModule
     {
         if (!Instance) Instance = this;
 
-        CreateItems();
+        MapMaker_CreateItems();
     }
 
     void Start()
@@ -47,11 +47,11 @@ public class Map : MonoBehaviour, IMapMakerModule
         }
     }
 
-    public void CreateItems()
+    public void MapMaker_CreateItems()
     {
        MapManager.Instance.UpdateLevelData();
 
-        var datas = MapManager.MapMakerConfig.GetCurMapData().LevelDatas;
+        var datas = MapManager.MapMakerConfig.CurMapData.LevelDatas;
 
         LevelsGroup.DestroyChildren();
         mapLevels.Clear();
@@ -67,12 +67,12 @@ public class Map : MonoBehaviour, IMapMakerModule
         }
     }
 
-    public void AddNewItem()
+    public void MapMaker_AddItem()
     {
         Vector2 locPos = Map.Instance.LevelsGroup.InverseTransformPoint(Vector3.zero);
-        var levelDatas = MapManager.MapMakerConfig.GetCurMapData().LevelDatas;
+        var levelDatas = MapManager.MapMakerConfig.CurMapData.LevelDatas;
         levelDatas.Add(new MapMaker_LevelData(locPos.x, locPos.y));
-        CreateItems();
+        MapMaker_CreateItems();
     }
 
     public void ChangeLevelNumber(MapLevel mapLevel, int level)
@@ -88,7 +88,7 @@ public class Map : MonoBehaviour, IMapMakerModule
     {
         MapManager.Instance.Data.CompleteLevel = Mathf.Clamp((int)(ratio * 186), 1, int.MaxValue);
         CropManager.Instance.UpdateCropsView();
-        CreateItems();
+        MapMaker_CreateItems();
         //foreach (MapLevel lvl in FindObjectsOfType<MapLevel>()) lvl.UpdateView();
     }
 
@@ -100,7 +100,7 @@ public class Map : MonoBehaviour, IMapMakerModule
         else return mapLevels[index];
     }
 
-    public void RecordItemMakerData()
+    public void MapMaker_RecordData()
     {
         if (LevelsGroup.childCount == 0) return;
 
@@ -111,7 +111,7 @@ public class Map : MonoBehaviour, IMapMakerModule
             MapMaker_LevelData data = new MapMaker_LevelData(level.transform.localPosition.x, level.transform.localPosition.y);
             datas.Add(data);
         }
-        MapManager.MapMakerConfig.GetCurMapData().LevelDatas = datas;
+        MapManager.MapMakerConfig.CurMapData.LevelDatas = datas;
     }
 }
 

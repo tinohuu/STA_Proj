@@ -38,7 +38,7 @@ public class MapTrack : MonoBehaviour
         points.RemoveAt(0);
         for (int i = 0; i < points.Count; i++)
         {
-            points[i].transform.localPosition = new Vector2(MapManager.MapMakerConfig.GetCurMapData().TrackDatas[i].PosX, MapManager.MapMakerConfig.GetCurMapData().TrackDatas[i].PosY);
+            points[i].transform.localPosition = new Vector2(MapManager.MapMakerConfig.CurMapData.TrackDatas[i].PosX, MapManager.MapMakerConfig.CurMapData.TrackDatas[i].PosY);
         }
 
         // Get moveable range data

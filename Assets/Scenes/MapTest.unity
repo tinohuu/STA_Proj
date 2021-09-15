@@ -800,18 +800,6 @@ Transform:
   m_Father: {fileID: 2045247542}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &174657115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400060573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d851d9e30caeb9c4d806520de2fcf9e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &174657116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -828,9 +816,22 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1451562805639286462, guid: 4f0c0496135e98d4d8fc216b7563550d, type: 3}
+        m_TargetAssemblyTypeName: Window, Assembly-CSharp
+        m_MethodName: CreateWindow
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1451562805639286401, guid: 4f0c0496135e98d4d8fc216b7563550d, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   targetTransform: {fileID: 0}
 --- !u!1 &196564867
 GameObject:
@@ -1511,6 +1512,7 @@ Transform:
   - {fileID: 845649195}
   - {fileID: 985967770}
   - {fileID: 651820891}
+  - {fileID: 1436389699}
   m_Father: {fileID: 1693233166}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5600,6 +5602,7 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -5849,7 +5852,6 @@ GameObject:
   - component: {fileID: 1400060576}
   - component: {fileID: 1400060575}
   - component: {fileID: 1400060578}
-  - component: {fileID: 174657115}
   - component: {fileID: 174657116}
   m_Layer: 5
   m_Name: Button_Harvest
@@ -5926,19 +5928,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1400060576}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 174657115}
-        m_TargetAssemblyTypeName: Window, Assembly-CSharp
-        m_MethodName: CreateWindow
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1451562805639286401, guid: 2d7be40155e5bcd4ab0f784e4184bb1a, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1400060576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5996,7 +5986,6 @@ MonoBehaviour:
   TextGroupAnimator: {fileID: 685867974}
   CropList: {fileID: 1135818865}
   Image: {fileID: 1400060576}
-  Button: {fileID: 1400060575}
   IsReady: 0
   Debug_AchorPos: {x: 0, y: 0}
   Debug_SizeDelta: {x: 0, y: 0}
@@ -6033,6 +6022,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1622421899}
   m_RootOrder: 84
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1436389698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1436389699}
+  m_Layer: 0
+  m_Name: CrateGroup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1436389699
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436389698}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 366273933}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1439402331
 GameObject:
@@ -8268,6 +8287,7 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -9283,6 +9303,7 @@ GameObject:
   - component: {fileID: 1992139306}
   - component: {fileID: 1992139305}
   - component: {fileID: 1992139308}
+  - component: {fileID: 1992139309}
   m_Layer: 0
   m_Name: MapManager
   m_TagString: Untagged
@@ -9327,6 +9348,8 @@ MonoBehaviour:
     MapLevelDatas: []
   mapMakerPrefab: {fileID: 5960961366168608764, guid: c8d851afe7be1974984fe50e6d3d96be, type: 3}
   CurMapNumber: 1
+  m_mapMakerConfig:
+    MapDatas: []
 --- !u!4 &1992139307
 Transform:
   m_ObjectHideFlags: 0
@@ -9356,6 +9379,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wheelPrefab: {fileID: 1124687218495626963, guid: 4b446f58b37517b42be7cb244af13029, type: 3}
   wheelGroup: {fileID: 651820891}
+--- !u!114 &1992139309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992139304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04c8b58a1d225184ca72886f49620b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cratePrefab: {fileID: 7274402190528635073, guid: 8cb1269cfe99a7744b4b3d2eb79ab32a, type: 3}
+  crateGroup: {fileID: 1436389699}
 --- !u!1 &1995690056
 GameObject:
   m_ObjectHideFlags: 0
@@ -9452,6 +9489,7 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.3
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -9941,6 +9979,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4958890202680649137, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: checkPaddingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958890202680649137, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_enableExtraPadding
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4958890202680649138, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -10056,6 +10102,7 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls:
