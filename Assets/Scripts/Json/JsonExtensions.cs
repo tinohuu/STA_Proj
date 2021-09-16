@@ -27,6 +27,19 @@ namespace UnityEngine
             return objs;
         }
 
+        public static string ListToJson<T>(List<T> objs)
+        {
+            string json = "[";
+            for (int i = 0; i < objs.Count; i++)
+            {
+                //json += "{";
+                json += JsonUtility.ToJson(objs[i]);
+                json += i == objs.Count - 1 ? "" : ",";
+            }
+            json += "]";
+            return json;
+        }
+
         public static List<T> JsonToList<T>(string json)
         {
             return JsonToArray<T>(json).ToList();

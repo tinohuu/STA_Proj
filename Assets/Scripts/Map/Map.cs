@@ -6,36 +6,46 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using STA.MapMaker;
+using System;
 
 public class Map : MonoBehaviour, IMapMakerModule
 {
     [Header("Ref")]
-    public GameObject LevelButtonPrefab;
-    public Transform LevelPointsGroup;
-    public Transform LevelsGroup;
+    public Transform LevelGroup;
+    public GameObject LevelPrefab;
+
+
     public GameObject MapMakerPrefab;
     public ScrollRect MapScrollView;
+
     [Header("Config")]
     public bool ShowPath = true;
+
     [Header("Debug")]
-    [SerializeField] List<MapLevel> mapLevels = new List<MapLevel>();
+    public List<StageConfig> CurMapStageConfigs;
+    public int MapId = 1;
+    //[SerializeField] List<MapLevel> mapLevels = new List<MapLevel>();
     public static Map Instance = null;
+
+    public Type MapMaker_ItemType => typeof(MapLevel);
+    public string[] MapMaker_InputInfos => new string[] { "Level ID" };
 
     private void Awake()
     {
         if (!Instance) Instance = this;
 
+        CurMapStageConfigs = MapManager.Instance.StageConfigs.Where(e => e.ChapterNum == MapId).ToList();
         MapMaker_CreateItems();
     }
 
     void Start()
     {
-        MapPlayer.Instance.MoveToLevel(mapLevels[MapManager.Instance.Data.SelectedLevel - 1], false);
+        //MapPlayer.Instance.MoveToLevel(LevelGroup.GetChild(MapManager.Instance.Data.SelectedLevel - 1).GetComponent<MapLevel>(), false);
     }
 
     private void OnDrawGizmos()
     {
-        if (ShowPath && LevelPointsGroup && LevelPointsGroup.childCount > 0)
+        /*if (ShowPath && LevelPointsGroup && LevelPointsGroup.childCount > 0)
         {
             for (int i = 0; i < LevelPointsGroup.childCount; i++)
             {
@@ -44,89 +54,109 @@ public class Map : MonoBehaviour, IMapMakerModule
                 //Gizmos.DrawSphere(child.position, 0.2f);
                 if (i > 0) Gizmos.DrawLine(child.position, LevelPointsGroup.GetChild(i - 1).position);
             }
-        }
+        }*/
     }
 
     public void MapMaker_CreateItems()
     {
-       MapManager.Instance.UpdateLevelData();
+        string json = MapMaker.GetConfigData(this, MapId);
 
-        var datas = MapManager.MapMakerConfig.CurMapData.LevelDatas;
+        if (json == null) return;
 
-        LevelsGroup.DestroyChildren();
-        mapLevels.Clear();
+        LevelGroup.DestroyChildren();
 
-        int startingIndex = MapManager.MapMakerConfig.GetLevelCount(MapManager.Instance.CurMapNumber - 1);
-        Debug.Log(datas.Count);
-        for (int i = 0; i < datas.Count; i++)
+        var configs = JsonExtensions.JsonToList<MapMaker_BaseConfig>(json);
+        foreach (var config in configs)
         {
-            MapLevel mapLevel = Instantiate(LevelButtonPrefab, LevelsGroup).GetComponent<MapLevel>();
-            mapLevel.transform.localPosition = new Vector2(datas[i].PosX, datas[i].PosY);
-            mapLevel.Data = MapManager.Instance.Data.MapLevelDatas[i + startingIndex];
-            mapLevels.Add(mapLevel);
+            var level = Instantiate(LevelPrefab, LevelGroup).GetComponent<MapLevel>();
+            level.transform.localPosition = config.LocPos;
+            level.Data.ID = level.transform.GetSiblingIndex() + CurMapStageConfigs[0].LevelID;
         }
     }
 
     public void MapMaker_AddItem()
     {
-        Vector2 locPos = Map.Instance.LevelsGroup.InverseTransformPoint(Vector3.zero);
-        var levelDatas = MapManager.MapMakerConfig.CurMapData.LevelDatas;
-        levelDatas.Add(new MapMaker_LevelData(locPos.x, locPos.y));
-        MapMaker_CreateItems();
-    }
-
-    public void ChangeLevelNumber(MapLevel mapLevel, int level)
-    {
-        mapLevels.Remove(mapLevel);
-        int starting = MapManager.MapMakerConfig.LevelToStarting(level);
-        mapLevels.Insert(level - starting, mapLevel);
-        //RecordMapMakerData();
-        //CreateItems();
-    }
-
-    public void SetProgress(float ratio)
-    {
-        MapManager.Instance.Data.CompleteLevel = Mathf.Clamp((int)(ratio * 186), 1, int.MaxValue);
-        CropManager.Instance.UpdateCropsView();
-        MapMaker_CreateItems();
-        //foreach (MapLevel lvl in FindObjectsOfType<MapLevel>()) lvl.UpdateView();
-    }
-
-    public MapLevel GetMapLevelButton(int level)
-    {
-        int firstLevelNumber = MapManager.MapMakerConfig.LevelToStarting(level);
-        int index = level - firstLevelNumber;
-        if (index < 0 || index >= mapLevels.Count) return null;
-        else return mapLevels[index];
-    }
-
-    public void MapMaker_RecordData()
-    {
-        if (LevelsGroup.childCount == 0) return;
-
-        List<MapMaker_LevelData> datas = new List<MapMaker_LevelData>();
-        foreach (MapLevel level in mapLevels)
+        if (LevelGroup.childCount >= CurMapStageConfigs.Count)
         {
-            if (!level) continue;
-            MapMaker_LevelData data = new MapMaker_LevelData(level.transform.localPosition.x, level.transform.localPosition.y);
-            datas.Add(data);
+            MapMaker.Log("Level count can't be great than " + CurMapStageConfigs.Count);
+            return;
         }
-        MapManager.MapMakerConfig.CurMapData.LevelDatas = datas;
+
+        var level = Instantiate(LevelPrefab, LevelGroup).GetComponent<MapLevel>();
+        level.transform.localPosition = LevelGroup.InverseTransformPoint(Vector3.zero);
+        level.Data.ID = level.transform.GetSiblingIndex() + CurMapStageConfigs[0].LevelID;
     }
+
+    public string[] MapMaker_UpdateInputs(Transform target)
+    {
+        var level = target.GetComponent<MapLevel>();
+        string[] inputs = new string[] { level.Data.ID.ToString() };
+        return inputs;
+    }
+
+    public void MapMaker_ApplyInputs(Transform target, string[] inputDatas)
+    {
+        var level = target.GetComponent<MapLevel>();
+        level.transform.SetSiblingIndex(int.Parse(inputDatas[0]) - CurMapStageConfigs[0].LevelID);
+    }
+
+    public string MapMaker_ToConfig()
+    {
+        var levels = LevelGroup.GetComponentsInChildren<MapLevel>();
+        var configs = new List<MapMaker_BaseConfig>();
+        foreach (var level in levels)
+        {
+            var config = new MapMaker_BaseConfig();
+            config.LocPos = level.transform.localPosition;
+            configs.Add(config);
+        }
+        return JsonExtensions.ListToJson(configs);
+    }
+    /*
+public void MapMaker_AddItem()
+{
+Vector2 locPos = Map.Instance.LevelsGroup.InverseTransformPoint(Vector3.zero);
+var levelDatas = MapManager.MapMakerConfig.CurMapData.LevelDatas;
+levelDatas.Add(new MapMaker_LevelData(locPos.x, locPos.y));
+MapMaker_CreateItems();
 }
 
-namespace STA.MapMaker
+public void ChangeLevelNumber(MapLevel mapLevel, int level)
 {
-    [System.Serializable]
-    public class MapMaker_LevelData
-    {
-        public float PosX = 0;
-        public float PosY = 0;
+mapLevels.Remove(mapLevel);
+int starting = MapManager.MapMakerConfig.LevelToStarting(level);
+mapLevels.Insert(level - starting, mapLevel);
+//RecordMapMakerData();
+//CreateItems();
+}
 
-        public MapMaker_LevelData(float posX, float posY)
-        {
-            PosX = posX;
-            PosY = posY;
-        }
-    }
+public void SetProgress(float ratio)
+{
+MapManager.Instance.Data.CompleteLevel = Mathf.Clamp((int)(ratio * 186), 1, int.MaxValue);
+CropManager.Instance.UpdateCropsView();
+MapMaker_CreateItems();
+//foreach (MapLevel lvl in FindObjectsOfType<MapLevel>()) lvl.UpdateView();
+}
+
+public MapLevel GetMapLevelButton(int level)
+{
+int firstLevelNumber = MapManager.MapMakerConfig.LevelToStarting(level);
+int index = level - firstLevelNumber;
+if (index < 0 || index >= mapLevels.Count) return null;
+else return mapLevels[index];
+}
+
+public void MapMaker_RecordData()
+{
+if (LevelsGroup.childCount == 0) return;
+
+List<MapMaker_LevelData> datas = new List<MapMaker_LevelData>();
+foreach (MapLevel level in mapLevels)
+{
+  if (!level) continue;
+  MapMaker_LevelData data = new MapMaker_LevelData(level.transform.localPosition.x, level.transform.localPosition.y);
+  datas.Add(data);
+}
+MapManager.MapMakerConfig.CurMapData.LevelDatas = datas;
+}*/
 }

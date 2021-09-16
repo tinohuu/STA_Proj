@@ -9,33 +9,35 @@ using STA.MapMaker;
 
 public class MapManager : MonoBehaviour
 {
+    [Header("Ref")]
+    [SerializeField] GameObject mapMakerPrefab;
+
     [Header("Debug")]
     public MapManagerData Data = new MapManagerData();
-    public List<PublicConfig> PublicConfigs;
+
+    public List<StageConfig> StageConfigs;
     public Dictionary<int, FunctionConfig> FunctionConfigsByFuncID;
 
-    [SerializeField] GameObject mapMakerPrefab;
-    GameObject mapMaker;
-    public int CurMapNumber = 1;
     public static MapManager Instance = null;
 
-    public static MapMaker_Config MapMakerConfig;
-    [SerializeField] MapMaker_Config m_mapMakerConfig;
+    GameObject mapMaker;
+
     private void Awake()
     {
         if (!Instance) Instance = this; // Singleton
 
+        StageConfigs = ConfigsAsset.GetConfigList<StageConfig>();
+
+
         FunctionConfigsByFuncID = ConfigsAsset.GetConfigList<FunctionConfig>().ToDictionary(p => p.FunctionID);
-        MapMakerConfig = GetMapMakerConfig();
-        m_mapMakerConfig = MapMakerConfig;
-        //Data = SaveManager.Bind(InitializeData());  // Bind to save
 
         UpdateLevelData();
     }
 
     public void UpdateLevelData()
     {
-        int maxLevelCount = MapMakerConfig.GetLevelCount(MapMakerConfig.MapDatas.Count);
+        var configs = ConfigsAsset.GetConfigList<StageConfig>();
+        int maxLevelCount = configs.Count;
         if (Data.MapLevelDatas.Count < maxLevelCount)
         {
             for (int i = Data.MapLevelDatas.Count; i < maxLevelCount; i++)
@@ -51,13 +53,14 @@ public class MapManager : MonoBehaviour
         {
             if (mapMaker)
             {
-                MapMaker.Instance.UpdateMode();
+                //MapMaker.Instance.UpdateMode();
                 Destroy(mapMaker.gameObject);
             }
             else mapMaker = Instantiate(mapMakerPrefab, transform);
         }
     }
 
+    
     /*MapManagerData InitializeData()
     {
         MapManagerData n_data = Data;
@@ -83,20 +86,6 @@ public class MapManager : MonoBehaviour
         }
         return Data.MapDatas.Last();
     }*/
-    public MapMaker_Config GetMapMakerConfig()
-    {
-        string json;
-        if (Debug.isDebugBuild && File.Exists(Application.dataPath + "/MapMakerConfig.json"))
-        {
-            json = File.ReadAllText(Application.dataPath + "/MapMakerConfig.json");
-        }
-        else
-        {
-            json = ConfigsAsset.GetConfig("MapMakerConfig");
-        }
-        MapMaker_Config config = JsonUtility.FromJson<MapMaker_Config>(json);
-        return config;
-    }
 }
 
 [System.Serializable]
@@ -134,13 +123,13 @@ public class MapData
 [System.Serializable]
 public class MapLevelData
 {
-    public int Number = 1;
+    public int ID = 1;
     public int Rating = 0;
     public bool IsComplete => Rating != 0;
 
     public MapLevelData(int order)
     {
-        Number = order;
+        ID = order;
     }
 }
 

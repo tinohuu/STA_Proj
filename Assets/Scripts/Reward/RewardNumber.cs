@@ -9,15 +9,32 @@ public class RewardNumber : MonoBehaviour
     public int current = 0;
     public RewardType Type = RewardType.None;
 
+    static bool[] m_switches;
+
+    public static RewardNumberSwitches Switches = new RewardNumberSwitches();
+    public Transform ParticleGroup;
+    Coroutine animCoroutine;
+
     TMP_Text text;
     Vector3 oriScale;
     Tween textTween = null;
+
+    private void Awake()
+    {
+        if (m_switches == null)
+        {
+            m_switches = new bool[System.Enum.GetValues(typeof(RewardType)).Length];
+            for (int i = 0; i < m_switches.Length; i++) m_switches[i] = true;
+        }
+        ParticleGroup = ParticleManager.Instance.ParticleGroup;
+    }
+
     private void Start()
     {
         RewardManager.Instance.OnValueChanged[(int)Type] += new RewardManager.RewardHandler(Animate);
         text = GetComponent<TMP_Text>();
         oriScale = transform.localScale;
-        Animate(0, 0);
+        Animate();
     }
     private void Update()
     {
@@ -25,20 +42,36 @@ public class RewardNumber : MonoBehaviour
     }
     void Animate(bool add)
     {
-        Animate(0.5f);
+        Animate();
     }
 
-    public void Animate( float duration = 0.5f, float delay = 1)
+    public void Animate()
     {
-        textTween.Kill(false);
+        if (!Switches[Type]) return;
+        if (animCoroutine == null) animCoroutine = StartCoroutine(IAnimate());
+        /*textTween.Kill(false);
         if (textTween.IsActive()) duration = duration >= textTween.Duration() - textTween.Elapsed() ? duration : textTween.Duration() - textTween.Elapsed();
         textTween = DOTween.To(() => current, x => current = x, Reward.Data[Type], duration)
             .SetDelay(delay)
             .OnStart(() => AnimateScale(true))
             .OnUpdate(() => text.text = current.ToString("N0"))
-            .OnComplete(() => AnimateScale(false));
+            .OnComplete(() => AnimateScale(false));*/
     }
 
+    IEnumerator IAnimate()
+    {
+        AnimateScale(true);
+        while (current < Reward.Data[Type])
+        {
+            int diff = Reward.Data[Type] - current;
+            int target = current + (ParticleGroup.childCount > 0 ? (int)(diff * 0.5f) : diff);
+            DOTween.To(() => current, x => current = x, target, 1)
+                .OnUpdate(() => text.text = current.ToString("N0"));
+            yield return new WaitForSeconds(1);
+        }
+        AnimateScale(false);
+        animCoroutine = null;
+    }
 
     void AnimateScale(bool on = true)
     {
@@ -58,5 +91,14 @@ public class RewardNumber : MonoBehaviour
     private void OnDestroy()
     {
         RewardManager.Instance.OnValueChanged[(int)Type] -= new RewardManager.RewardHandler(Animate);
+    }
+
+    public class RewardNumberSwitches
+    {
+        public bool this[RewardType type]
+        {
+            get => m_switches[(int)type];
+            set => m_switches[(int)type] = value;
+        }
     }
 }

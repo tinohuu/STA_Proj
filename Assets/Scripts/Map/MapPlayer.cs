@@ -80,10 +80,10 @@ public class MapPlayer : MonoBehaviour
     {
         //isRunning = true;
 
-        if  (mapLevel.Data.Number != MapManager.Instance.Data.SelectedLevel)
+        if  (mapLevel.Data.ID != MapManager.Instance.Data.SelectedLevel)
         {
             SoundManager.Instance.PlaySFX("uiAvatarFly");
-            MapManager.Instance.Data.SelectedLevel = mapLevel.Data.Number;
+            MapManager.Instance.Data.SelectedLevel = mapLevel.Data.ID;
             Tween tween = transform.DOLocalJump(mapLevel.transform.localPosition, 1, 1, 1.5f);
             yield return tween.WaitForCompletion();
             SoundManager.Instance.PlaySFX("uiAvatarLanding");
@@ -107,7 +107,7 @@ public class MapPlayer : MonoBehaviour
        Vector3[] corners = new Vector3[4];
        MapScrollRect.content.GetWorldCorners(corners);
        float width = corners[3].x - corners[0].x - 20; // Full screen width is 20 in world space
-       float levelWidth = Map.Instance.GetMapLevelButton(MapManager.Instance.Data.SelectedLevel).transform.position.x - corners[0].x - 10;
+        float levelWidth = 0;// Map.Instance.GetMapLevelButton(MapManager.Instance.Data.SelectedLevel).transform.position.x - corners[0].x - 10;
         if (duration == 0) MapScrollRect.normalizedPosition = new Vector3(levelWidth / width, MapScrollRect.normalizedPosition.y);
        MapScrollRect.DOHorizontalNormalizedPos(levelWidth / width, duration);
     }

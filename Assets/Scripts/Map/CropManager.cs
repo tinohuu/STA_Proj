@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CropManager : MonoBehaviour, IMapMakerModule
+public class CropManager : MonoBehaviour//, IMapMakerModule
 {
     [Header("Ref")]
     public Transform ForceFieldGroup;
@@ -22,6 +22,8 @@ public class CropManager : MonoBehaviour, IMapMakerModule
     ParticleSystemForceField[] fields;
     Collider[] triggers;
     List<Transform> particles = new List<Transform>();
+
+    //public MapMaker_BaseData MapMakerData => throw new System.NotImplementedException();
     private void Awake()
     {
         if (!Instance) Instance = this;
@@ -149,21 +151,7 @@ public class CropManager : MonoBehaviour, IMapMakerModule
 
     public void MapMaker_CreateItems()
     {
-        MapMaker_RecordData();
 
-        CropGroup.DestroyChildren();
-
-        var datas = MapManager.MapMakerConfig.CurMapData.CropDatas;
-        foreach (var data in datas)
-        {
-            Crop crop = Instantiate(Resources.Load<GameObject>("Crops/Crop_" + data.Name), CropGroup).GetComponent<Crop>();
-            crop.transform.localPosition = new Vector2(data.PosX, data.PosY);
-            crop.Name = data.Name;
-            crop.Scale = data.Scale;
-            crop.Variant = data.Variant;
-        }
-
-        UpdateCropsView();
     }
 
     void CreateParticle(string cropName, Vector3 pos)
@@ -201,7 +189,7 @@ public class CropManager : MonoBehaviour, IMapMakerModule
             datas.Add(data);
         }
 
-        MapManager.MapMakerConfig.CurMapData.CropDatas = datas;
+        //MapManager.MapMakerConfig.CurMapData.CropDatas = datas;
     }
 
     public void MapMaker_AddItem()

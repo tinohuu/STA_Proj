@@ -29,7 +29,7 @@ public class ConfigsAsset// : ScriptableObject
             }
         }
 
-        return Resources.Load<TextAsset>("Configs/" + name).text;
+        return Resources.Load<TextAsset>("Configs/" + name)?.text;
         /*ConfigsAsset asset = Resources.Load<ConfigsAsset>("Configs");
         if (!asset) asset = Resources.Load<ConfigsAsset>("Configs/Configs");
 

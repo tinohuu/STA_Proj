@@ -1,4 +1,5 @@
 using STA.MapMaker;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,10 @@ public class LuckyWheelManager : MonoBehaviour, IMapMakerModule
     [SerializeField] GameObject wheelPrefab;
     [SerializeField] Transform wheelGroup;
     public static LuckyWheelManager Instance = null;
+
+    public string[] MapMaker_InputInfos => new string[] { "Level ID", "Wheel ID" };
+    public Type MapMaker_ItemType => typeof(LuckyWheel);
+
     private void Awake()
     {
         if (!Instance) Instance = this;
@@ -16,45 +21,58 @@ public class LuckyWheelManager : MonoBehaviour, IMapMakerModule
 
     public void MapMaker_CreateItems()
     {
-        // Get config data
-        var datas = MapManager.MapMakerConfig.CurMapData.WheelDatas;
+        string json = MapMaker.GetConfigData(this, 1);
 
-        // Recreate new lucky wheels
+        if (json == null) return;
+
         wheelGroup.DestroyChildren();
-        foreach (var data in datas)
+
+        var configs = JsonExtensions.JsonToList<MapMaker_WheelConfig>(json);
+        foreach (var config in configs)
         {
-            LuckyWheel luckyWheel = Instantiate(wheelPrefab, wheelGroup).GetComponent<LuckyWheel>();
-            luckyWheel.transform.localPosition = new Vector2(data.PosX, data.PosY);
-            luckyWheel.LevelNumber = data.LevelNumber;
+            var luckyWheel = Instantiate(wheelPrefab, wheelGroup).GetComponent<LuckyWheel>();
+            luckyWheel.transform.localPosition = config.LocPos;
         }
-        UpdateAllViews();
     }
-
-    public void MapMaker_RecordData()
-    {
-        var wheels = wheelGroup.GetComponentsInChildren<LuckyWheel>();
-        var datas = new List<MapMaker_WheelData>();
-        foreach (var wheel in wheels)
-        {
-            MapMaker_WheelData data = new MapMaker_WheelData();
-            data.LevelNumber = wheel.LevelNumber;
-            data.PosX = wheel.transform.localPosition.x;
-            data.PosY = wheel.transform.localPosition.y;
-            datas.Add(data);
-        }
-        MapManager.MapMakerConfig.CurMapData.WheelDatas = datas;
-    }
-
-    public void UpdateAllViews()
-    {
-        var wheels = wheelGroup.GetComponentsInChildren<LuckyWheel>();
-        foreach (var wheel in wheels) wheel.UpdateView();
-    }
-
     public void MapMaker_AddItem()
     {
         GameObject obj = Instantiate(wheelPrefab, wheelGroup);
         obj.transform.localPosition = wheelGroup.InverseTransformPoint(Vector3.zero);
-        UpdateAllViews();
+    }
+
+    public void MapMaker_ApplyInputs(Transform target, string[] inputs)
+    {
+        var wheel = target.GetComponent<LuckyWheel>();
+        wheel.LevelId = int.Parse(inputs[0]);
+        wheel.WheelId = int.Parse(inputs[1]);
+    }
+
+    public string MapMaker_ToConfig()
+    {
+        var wheels = wheelGroup.GetComponentsInChildren<LuckyWheel>();
+        var configs = new List<MapMaker_WheelConfig>();
+        foreach (var wheel in wheels)
+        {
+            var config = new MapMaker_WheelConfig();
+            config.LevelID = wheel.LevelId;
+            config.WheelID = wheel.WheelId;
+            config.LocPos = wheel.transform.localPosition;
+            configs.Add(config);
+        }
+        return JsonExtensions.ListToJson(configs);
+    }
+
+    public string[] MapMaker_UpdateInputs(Transform target)
+    {
+        var wheel = target.GetComponent<LuckyWheel>();
+        var inputDatas = new string[] { wheel.LevelId.ToString(), wheel.WheelId.ToString()};
+        return inputDatas;
+    }
+
+    [Serializable]
+    public class MapMaker_WheelConfig : MapMaker_BaseConfig
+    {
+        public int LevelID = 0;
+        public int WheelID = 0;
     }
 }

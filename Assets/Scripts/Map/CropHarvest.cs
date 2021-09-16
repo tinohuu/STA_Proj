@@ -71,10 +71,11 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
 
         ResetTime(TimeManager.Instance.RealNow);
 
-        Reward.Coin += UpdateHarvestText();
-        FindObjectOfType<RewardNumber>().Animate(4, 2);
+
+        //FindObjectOfType<RewardNumber>().Animate(4, 2);
 
         CropManager.Instance.PlayHarvestEffects();
+        Reward.Coin += UpdateHarvestText();
     }
 
     public void Cheat()
@@ -86,7 +87,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     public int GetHarvestCoin()
     {
         int coinCount = 2000;
-        int firstLevelOfMap = MapManager.MapMakerConfig.LevelToStarting(MapManager.Instance.Data.CompleteLevel);
+        int firstLevelOfMap = 0;// MapManager.MapMakerConfig.LevelToStarting(MapManager.Instance.Data.CompleteLevel);
         CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
         int configIndex = CropManager.Instance.CropConfigs.IndexOf(cropConfig);
         int lastCropIndex = configIndex;
@@ -111,7 +112,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
         CropList.rectTransform.anchoredPosition = Vector2.zero - Vector2.up * CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y;
         int coinCount = 2000;
         CropList.text = "Farm " + "Coin".ToIcon() + " " + 2000;
-        int firstLevelOfMap = MapManager.MapMakerConfig.LevelToStarting(MapManager.Instance.Data.CompleteLevel);
+        int firstLevelOfMap = 0;// MapManager.MapMakerConfig.LevelToStarting(MapManager.Instance.Data.CompleteLevel);
 
         CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
         int configIndex = CropManager.Instance.CropConfigs.IndexOf(cropConfig);

@@ -77,11 +77,7 @@ public class RewardManagerData
     {
         int length = Enum.GetValues(typeof(RewardType)).Length;
         for (int i = 0; i < length; i++) Rewards.Add(0);
-    }
-    public RewardManagerData(List<int> rewards)
-    {
-        int length = Enum.GetValues(typeof(RewardType)).Length;
-        for (int i = 0; i < rewards.Count; i++) Rewards.Add(rewards[i]);
+        Rewards[1] = 20000;
     }
 
     public void UpdateData()

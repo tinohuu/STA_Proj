@@ -30,7 +30,7 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (!Interactable) return;
         Animate(true);
-        SoundManager.Instance.PlaySFX("uiCommonClick");
+        //SoundManager.Instance.PlaySFX("uiCommonClick");
     }
     public void OnPointerUp(PointerEventData eventData)
     {

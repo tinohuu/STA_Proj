@@ -24,15 +24,14 @@ public class MapMakerPlaceholder : MonoBehaviour, IDragHandler, IPointerDownHand
 
     public void OnDrag(PointerEventData eventData)
     {
-        Vector2 camPos = Camera.main.ScreenToWorldPoint(eventData.position);
+        Vector2 camPos = Camera.main.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 10));
         transform.parent.position = camPos;
         Target = transform;
-
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
         Target = transform;
-        MapMaker.Instance.ShowInputs();
+        MapMaker.Instance.Updatenputs();
     }
 }

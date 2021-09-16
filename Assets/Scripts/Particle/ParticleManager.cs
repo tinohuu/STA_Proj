@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ParticleManager : MonoBehaviour
 {
-    [SerializeField] Transform particleGroup;
+    public Transform ParticleGroup;
     [SerializeField] Transform triggerGroup;
     [SerializeField] Transform forceFieldGroup;
     [SerializeField] GameObject coinPrefab;
@@ -34,7 +34,7 @@ public class ParticleManager : MonoBehaviour
     {
         //List<Transform> particles = new List<Transform>();
         //GameObject particleObj = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + cropName);
-        GameObject obj = Instantiate(prefab, particleGroup);
+        GameObject obj = Instantiate(prefab, ParticleGroup);
 
         ParticleSystem particle;
         if (obj.transform.childCount > 0)
@@ -43,7 +43,7 @@ public class ParticleManager : MonoBehaviour
             particle = obj.transform.GetComponentInChildren<ParticleSystem>();
         //particle.transform.localScale = Vector3.one * Mathf.Abs(crop.Scale);
         particle.transform.position = pos;
-        particle.transform.parent.SetParent(particleGroup);
+        particle.transform.parent.SetParent(ParticleGroup);
 
         // Embed force fields and triggers
         var externalForcesModule = particle.externalForces;

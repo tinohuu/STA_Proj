@@ -22,7 +22,7 @@ public class MapLevelWindow : Window
     }
     public void UpdateView(MapLevelData data)
     {
-        OrderText.text = data.Number.ToString();
+        OrderText.text = data.ID.ToString();
         for (int i = 0; i < StarGroup.childCount; i++)
         {
             Image image = StarGroup.GetChild(i).GetComponent<Image>();
