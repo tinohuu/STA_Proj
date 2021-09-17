@@ -4,13 +4,13 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Map))]
+[CustomEditor(typeof(MapLevelManager))]
 public class MapEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        Map map = (Map)target;
+        MapLevelManager map = (MapLevelManager)target;
         if (GUILayout.Button("Create AOC"))
         {
             AnimatorOverrideController animatorOverrideController = new AnimatorOverrideController();

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class CropHarvest : MonoBehaviour, ITimeRefreshable
 {
-    public TMP_Text MainText;
+    [SerializeField] TMP_Text MainText;
     public TMP_Text SecondaryText;
     public Material GoldMat;
     public Material WhiteMat;

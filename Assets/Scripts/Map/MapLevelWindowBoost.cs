@@ -5,40 +5,39 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MapLevelBoost : MonoBehaviour
+public class MapLevelWindowBoost : MonoBehaviour
 {
-    public List<Image> BarImages;
-    public List<Sprite> BarSprites;
-    public List<Sprite> CardsSprites;
+    [Header("Asset Ref")]
+    [SerializeField] List<Sprite> BarSprites;
+    [SerializeField] List<Sprite> CardsSprites;
+
+    [Header("Self Ref")]
+    [SerializeField] List<Image> BarImages;
+    [SerializeField] TMP_Text TitleText;
+    [SerializeField] Image CardsImage;
+    [SerializeField] GameObject LockImage;
+    [SerializeField] Image MinusButton;
+    [SerializeField] Image PlusButton;
+
+    [Header("Config & Data")]
+    [SerializeField] List<string> BoostTitles;
     public int BoostIndex = 0;
-    public List<string> BoostTitles;
-    public TMP_Text TitleText;
-    public Image CardsImage;
-    public Image MinusButton;
-    public Image PlusButton;
+
     int maxIndex = 1;
-    public GameObject LockImage;
-    // Start is called before the first frame update
+
     void Start()
     {
-        int unlockedLevel = MapManager.Instance.Data.CompleteLevel + 1;
-
-        if (unlockedLevel >= MapManager.Instance.FunctionConfigsByFuncID[1022].FunctionParams)
-        {
-            maxIndex = 2;
-        }
-        else if (unlockedLevel >= MapManager.Instance.FunctionConfigsByFuncID[1021].FunctionParams)
-        {
-            maxIndex = 1;
-        }
-
+        UpdateMaxIndex();
         UpdateView();
     }
 
-    // Update is called once per frame
-    void Update()
+    void UpdateMaxIndex()
     {
-        
+        int unlockedLevel = MapManager.Instance.Data.CompleteLevel + 1;
+        if (unlockedLevel >= MapManager.Instance.FunctionConfigsByFuncID[1022].FunctionParams)
+            maxIndex = 2;
+        else if (unlockedLevel >= MapManager.Instance.FunctionConfigsByFuncID[1021].FunctionParams)
+            maxIndex = 1;
     }
 
     void UpdateView()

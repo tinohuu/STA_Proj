@@ -40,45 +40,45 @@ public class MapCropEditor : Editor
 
                 if (crop.HasState(Crop.State.locked))
                 {
-                    string assetName = crop.Name + "_" + variantIndex + "_Locked_Idle";
+                    string assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Locked_Idle";
                     if (!UpdateConrtoller(controller, "Crop_Locked_Idle", assetName)) break;
                 }
 
                 if (crop.HasState(Crop.State.unlocking))
                 {
-                    string assetName = crop.Name + "_" + variantIndex + "_Unlocking_Idle";
+                    string assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Unlocking_Idle";
                     if (!UpdateConrtoller(controller, "Crop_Unlocking_Idle", assetName)) break;
                 }
 
                 if (crop.HasState(Crop.State.immature))
                 {
-                    string assetName = crop.Name + "_" + variantIndex + "_Immature_Idle";
+                    string assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Immature_Idle";
                     if (!UpdateConrtoller(controller, "Crop_Immature_Idle", assetName)) break;
                 }
 
                 if (crop.HasState(Crop.State.mature))
                 {
-                    string assetName = crop.Name + "_" + variantIndex + "_Mature_Idle";
+                    string assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Mature_Idle";
                     if (!UpdateConrtoller(controller, "Crop_Mature_Idle", assetName)) break;
 
-                    assetName = crop.Name + "_" + variantIndex + "_Mature_ToMature";
+                    assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Mature_ToMature";
                     if (!UpdateConrtoller(controller, "Crop_Mature_ToMature", assetName)) break;
 
-                    assetName = crop.Name + "_" + variantIndex + "_Mature_Harvest";
+                    assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Mature_Harvest";
                     if (!UpdateConrtoller(controller, "Crop_Mature_Harvest", assetName)) break;
 
-                    assetName = crop.Name + "_" + variantIndex + "_Mature_ToImmature";
+                    assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Mature_ToImmature";
                     if (!UpdateConrtoller(controller, "Crop_Mature_ToImmature", assetName)) break;
                 }
 
-                AssetDatabase.CreateAsset(controller, "Assets/Animations/Crops/Controller_" + crop.Name + "_" + variantIndex + ".overrideController");
+                AssetDatabase.CreateAsset(controller, "Assets/Animations/Crops/Controller_" + crop.MapmakerConfig.Name + "_" + variantIndex + ".overrideController");
                 crop.Controllers.Add(controller);
                 variantIndex++;
             }
             while (variantIndex < 5);
-            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(crop), "Crop_" + crop.Name);
-            crop.gameObject.name = "Crop_" + crop.Name;
-            crop.SpinePrefab = GetAssetByName<GameObject>("Crop_" + crop.Name + "_Spine");
+            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(crop), "Crop_" + crop.MapmakerConfig.Name);
+            crop.gameObject.name = "Crop_" + crop.MapmakerConfig.Name;
+            crop.SpinePrefab = GetAssetByName<GameObject>("Crop_" + crop.MapmakerConfig.Name + "_Spine");
             EditorUtility.SetDirty(crop);
         }
 
@@ -89,7 +89,7 @@ public class MapCropEditor : Editor
                 foreach (Object t in targets)
                 {
                     Crop targetCrop = t as Crop;
-                    if (targetCrop) targetCrop.Variant = Random.Range(0, crop.Controllers.Count);
+                    if (targetCrop) targetCrop.MapmakerConfig.Variant = Random.Range(0, crop.Controllers.Count);
                     EditorUtility.SetDirty(targetCrop);
                 }
             }

@@ -1,75 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using STA.Mapmaker;
 
 public class Crop : MonoBehaviour
 {
     public enum State { locked, unlocking, immature, mature }
 
-    [Header("Config")]
-    public string Name = "Crop";
-    public float Scale = 0.5f;
-    public int Variant = 0;
-
-    [Header("Spine Config")]
+    [Header("Ref")]
     public GameObject SpinePrefab;
+    public List<AnimatorOverrideController> Controllers = new List<AnimatorOverrideController>();
+
+    [Header("Config")]
+    public Mapmaker_CropConfig MapmakerConfig;
+
+    [Header("Data")]
+    public int UnlockedLevel = 1;
+    public int UnlockingLevel = 1;
     public State MinState = State.locked;
     public State MaxState = State.mature;
-
-    [Header("Debug")]
-    public List<AnimatorOverrideController> Controllers = new List<AnimatorOverrideController>();
-    public CropConfig Config = new CropConfig();
-    public float OrderRatio = 0;
     public State CropState = State.locked;
-    public float YDis = 0;
+
     GameObject spineObject = null;
 
-    private void Awake()
+    public void UpdateView(bool updateLocPos = false)
     {
-        // Turn off placeholder
-        //GetComponent<SpriteRenderer>().enabled = false;
-    }
+        if (updateLocPos) transform.localPosition = MapmakerConfig.LocPos;
 
-    public State UpdateState()
-    {
-        State state;
-        if (MapManager.Instance.Data.CompleteLevel < Config.MinLevel) state = State.locked;
-        else if (MapManager.Instance.Data.CompleteLevel >= Config.Level)
-        {
-            state = CropManager.Instance.IsMature ? State.mature : State.immature;
-        }
-        else
-        {
-            float fieldLength = Config.Level - Config.MinLevel + 1;
-            float progressRatio = (float)(MapManager.Instance.Data.CompleteLevel - Config.MinLevel) / fieldLength;
-            bool canShowUnlocking = progressRatio >= OrderRatio;
-            state = canShowUnlocking ? State.unlocking : State.locked;
-        }
-        CropState = state;
-        return state;
-    }
+        StopAllCoroutines(); // Stop delay animation
+        if (spineObject) Destroy(spineObject); // test: rebuild prefab, e.g. set progress backward
 
-    public void UpdateView()
-    {
-        StopAllCoroutines();
-        if (spineObject) Destroy(spineObject); // TEST
         UpdateState();
         if (HasState(CropState))
         {
             spineObject = Instantiate(SpinePrefab, transform);
-            spineObject.transform.localScale = new Vector3(Scale, Mathf.Abs(Scale), Mathf.Abs(Scale));
+            spineObject.transform.localScale = new Vector3(MapmakerConfig.Scale, Mathf.Abs(MapmakerConfig.Scale), Mathf.Abs(MapmakerConfig.Scale));
             StartCoroutine(SetAnimatorState((int)CropState));
         }
     }
-    public bool UpdateAnimator(bool includeState = true)
+
+    public State UpdateState()
     {
-        bool inScreen = IsInScreen();
-        if (!inScreen) GetComponentInChildren<Animator>()?.SetTrigger("Force");
-        if (includeState) //GetComponentInChildren<Animator>()?.SetInteger("State", (int)CropState);
-        {
-            StartCoroutine(SetAnimatorState((int)CropState));
-        }
-        return inScreen;
+        int curLevel = MapManager.Instance.Data.CompleteLevel;
+
+        if (curLevel < UnlockingLevel)
+            CropState = State.locked;
+        else if (curLevel < UnlockingLevel)
+            CropState = State.unlocking;
+        else
+            CropState = CropManager.Instance.IsMature ? State.mature : State.immature;
+
+        return CropState;
+    }
+
+    public bool HasState(State state)
+    {
+        return state >= MinState && state <= MaxState;
     }
 
     public bool IsInScreen()
@@ -80,33 +66,23 @@ public class Crop : MonoBehaviour
         return pos.x >= minPos.x && pos.x <= maxPos.x && pos.y >= minPos.y && pos.y <= maxPos.y;
     }
 
-    public void PlayHarvestEffect(ParticleSystemForceField[] fields, Collider[] triggers)
+    public bool UpdateAnimator(bool updateState = true)
     {
-        GameObject particleObj = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + Name);
-        ParticleSystem particle = Instantiate(particleObj,transform).transform.GetChild(0).GetComponent<ParticleSystem>();
-        particle.transform.localScale = Vector3.one * Mathf.Abs(Scale);
-        particle.transform.SetParent(CropManager.Instance.transform);
-        var externalForcesModule = particle.externalForces;
-        foreach (var field in fields) externalForcesModule.AddInfluence(field);
-        var triggerModule = particle.trigger;
-        foreach (var trigger in triggers) triggerModule.AddCollider(trigger);
-    }
-
-    public bool HasState(State state)
-    {
-        return state >= MinState && state <= MaxState;
+        bool inScreen = IsInScreen();
+        if (!inScreen) GetComponentInChildren<Animator>()?.SetTrigger("Force");
+        if (updateState) StartCoroutine(SetAnimatorState((int)CropState));
+        return inScreen;
     }
 
     IEnumerator SetAnimatorState(int state)
     {
         if (!spineObject) yield break;
         Animator animator = spineObject.GetComponent<Animator>();
-        if (Controllers.Count > 0) animator.runtimeAnimatorController = Controllers[Mathf.Clamp(Variant, 0, Controllers.Count - 1)];
+        if (Controllers.Count > 0) animator.runtimeAnimatorController = Controllers[Mathf.Clamp(MapmakerConfig.Variant, 0, Controllers.Count - 1)];
         if (state >= 3)
         {
             Vector2 minPos = Camera.main.ScreenToWorldPoint(Vector2.zero);
             Vector2 maxPos = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
-
 
             float viewWidth = maxPos.x - minPos.x;
             float viewHeight = maxPos.y - minPos.y;
@@ -121,9 +97,6 @@ public class Crop : MonoBehaviour
             }
             else
             {
-                //float height = Mathf.Clamp(Mathf.Abs(0 - transform.localPosition.y), 0, 10);
-                //float width = Mathf.Clamp(Mathf.Abs(-10 - transform.position.x), 0, 20);
-                //float ratio = height / 10 * 1f + width / 20 * 0.5f - 0.5f;// + Random.Range(0, 0.3f);
                 float pause = cropWidth / viewWidth * 0.3f + cropHeight / viewHeight * 0.5f;
                 animator.SetInteger("State", 2);
                 yield return new WaitForSeconds(pause);
@@ -134,5 +107,17 @@ public class Crop : MonoBehaviour
         {
             animator.SetInteger("State", state);
         }
+    }
+
+    public void PlayHarvestEffect(ParticleSystemForceField[] fields, Collider[] triggers)
+    {
+        GameObject particleObj = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + MapmakerConfig.Name);
+        ParticleSystem particle = Instantiate(particleObj, transform).transform.GetChild(0).GetComponent<ParticleSystem>();
+        particle.transform.localScale = Vector3.one * Mathf.Abs(MapmakerConfig.Scale);
+        particle.transform.SetParent(CropManager.Instance.transform);
+        var externalForcesModule = particle.externalForces;
+        foreach (var field in fields) externalForcesModule.AddInfluence(field);
+        var triggerModule = particle.trigger;
+        foreach (var trigger in triggers) triggerModule.AddCollider(trigger);
     }
 }

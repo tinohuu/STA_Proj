@@ -5,16 +5,15 @@ using UnityEngine;
 
 public class MapPlayerWindow : MonoBehaviour
 {
-    public TMP_Text CropText;
-    public TMP_Text CurLevelText;
-    public TMP_Text RatingCountText;
+    [SerializeField] TMP_Text CropText;
+    [SerializeField] TMP_Text CurLevelText;
+    [SerializeField] TMP_Text RatingCountText;
     private void Start()
     {
         CropConfig curCrop = CropManager.Instance.LevelToCropConfig(MapManager.Instance.Data.CompleteLevel);
         CropText.text = "Crop " + (CropManager.Instance.CropConfigs.IndexOf(curCrop) + 1).ToString() + " " + curCrop.Name;
         CurLevelText.text = "Level " + MapManager.Instance.Data.CompleteLevel;
         RatingCountText.text = GetRatingCount().ToString();
-
     }
 
     int GetRatingCount()

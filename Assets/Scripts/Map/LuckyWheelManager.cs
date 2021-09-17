@@ -1,59 +1,66 @@
-using STA.MapMaker;
+using STA.Mapmaker;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LuckyWheelManager : MonoBehaviour, IMapMakerModule
+public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
 {
+    [Header("Ref")]
     [SerializeField] GameObject wheelPrefab;
     [SerializeField] Transform wheelGroup;
-    public static LuckyWheelManager Instance = null;
 
-    public string[] MapMaker_InputInfos => new string[] { "Level ID", "Wheel ID" };
-    public Type MapMaker_ItemType => typeof(LuckyWheel);
+    public static LuckyWheelManager Instance = null;
 
     private void Awake()
     {
         if (!Instance) Instance = this;
-        MapMaker_CreateItems();
     }
 
-    public void MapMaker_CreateItems()
+    private void Start()
     {
-        string json = MapMaker.GetConfigData(this, 1);
+        Mapmaker_CreateItems(Mapmaker.GetConfig(this));
+    }
 
+    #region Mapmaker
+    public string[] Mapmaker_InputInfos => new string[] { "Level ID", "Wheel ID" };
+
+    public Type Mapmaker_ItemType => typeof(LuckyWheel);
+
+    public void Mapmaker_CreateItems(string json)
+    {
         if (json == null) return;
 
         wheelGroup.DestroyChildren();
 
-        var configs = JsonExtensions.JsonToList<MapMaker_WheelConfig>(json);
+        var configs = JsonExtensions.JsonToList<Mapmaker_WheelConfig>(json);
         foreach (var config in configs)
         {
             var luckyWheel = Instantiate(wheelPrefab, wheelGroup).GetComponent<LuckyWheel>();
             luckyWheel.transform.localPosition = config.LocPos;
         }
     }
-    public void MapMaker_AddItem()
+    public Transform Mapmaker_AddItem()
     {
         GameObject obj = Instantiate(wheelPrefab, wheelGroup);
         obj.transform.localPosition = wheelGroup.InverseTransformPoint(Vector3.zero);
+        return obj.transform;
     }
 
-    public void MapMaker_ApplyInputs(Transform target, string[] inputs)
+    public void Mapmaker_ApplyInputs(Transform target, string[] inputs)
     {
         var wheel = target.GetComponent<LuckyWheel>();
         wheel.LevelId = int.Parse(inputs[0]);
         wheel.WheelId = int.Parse(inputs[1]);
     }
 
-    public string MapMaker_ToConfig()
+    public string Mapmaker_ToConfig()
     {
         var wheels = wheelGroup.GetComponentsInChildren<LuckyWheel>();
-        var configs = new List<MapMaker_WheelConfig>();
+        var configs = new List<Mapmaker_WheelConfig>();
         foreach (var wheel in wheels)
         {
-            var config = new MapMaker_WheelConfig();
+            var config = new Mapmaker_WheelConfig();
             config.LevelID = wheel.LevelId;
             config.WheelID = wheel.WheelId;
             config.LocPos = wheel.transform.localPosition;
@@ -62,15 +69,19 @@ public class LuckyWheelManager : MonoBehaviour, IMapMakerModule
         return JsonExtensions.ListToJson(configs);
     }
 
-    public string[] MapMaker_UpdateInputs(Transform target)
+    public string[] Mapmaker_UpdateInputs(Transform target)
     {
         var wheel = target.GetComponent<LuckyWheel>();
         var inputDatas = new string[] { wheel.LevelId.ToString(), wheel.WheelId.ToString()};
         return inputDatas;
     }
+    #endregion
+}
 
+namespace STA.Mapmaker
+{
     [Serializable]
-    public class MapMaker_WheelConfig : MapMaker_BaseConfig
+    public class Mapmaker_WheelConfig : Mapmaker_BaseConfig
     {
         public int LevelID = 0;
         public int WheelID = 0;

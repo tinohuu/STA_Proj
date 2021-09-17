@@ -17,14 +17,14 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public UnityEvent OnClick = null;
     Vector3 oriLocalScale = Vector3.one;
 
-    [HideInInspector] public Transform targetTransform = null;
+    [HideInInspector] public Transform TargetTransform = null;
     private void Awake()
     {
         oriLocalScale = transform.localScale;
     }
     private void Start()
     {
-        if (!targetTransform) targetTransform = transform;
+        if (!TargetTransform) TargetTransform = transform;
     }
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -52,9 +52,9 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     void Animate(bool isUp)
     {
-        if (targetTransform.transform.DOPlay() > 0) return;
+        if (TargetTransform.transform.DOPlay() > 0) return;
         //transform.DOPause();
-        targetTransform.transform.DOScale(oriLocalScale * (isUp ? Scale : 1), ScaleUpDuration).SetEase(Ease.OutSine);
+        TargetTransform.transform.DOScale(oriLocalScale * (isUp ? Scale : 1), ScaleUpDuration).SetEase(Ease.OutSine);
     }
 
     public void QuitApp()

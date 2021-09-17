@@ -12,12 +12,12 @@ public class MapLevelWindow : Window
     public Transform StarGroup = null;
     public TMP_Text CostText = null;
 
-    List<MapLevelPowerup> powerups = new List<MapLevelPowerup>();
-    MapLevelBoost boost = null;
+    List<MapLevelWindowPowerup> powerups = new List<MapLevelWindowPowerup>();
+    MapLevelWindowBoost boost = null;
     private void Start()
     {
-        boost = GetComponentInChildren<MapLevelBoost>();
-        powerups = GetComponentsInChildren<MapLevelPowerup>().ToList();
+        boost = GetComponentInChildren<MapLevelWindowBoost>();
+        powerups = GetComponentsInChildren<MapLevelWindowPowerup>().ToList();
 
     }
     public void UpdateView(MapLevelData data)
@@ -50,6 +50,8 @@ public class MapLevelWindow : Window
         {
             // todo: tell gm what boost to be used
         }
+
+        return;
 
         STAGameManager.Instance.nLevelID = MapManager.Instance.Data.SelectedLevel;
         SceneManager.LoadScene("GameScene");

@@ -1,24 +1,16 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class MapLevel : MonoBehaviour, IPointerClickHandler
 {
-    public Sprite[] LevelSprites = new Sprite[2];
-    public SpriteRenderer ButtonSpriteRenderer;
-    public SpriteRenderer[] StarSpriteRenderers = new SpriteRenderer[3];
-    public GameObject Frame;
-    public TMP_Text LevelText;
+    [SerializeField] Sprite[] LevelSprites = new Sprite[2];
+    [SerializeField] SpriteRenderer ButtonSpriteRenderer;
+    [SerializeField] SpriteRenderer[] StarSpriteRenderers = new SpriteRenderer[3];
+    [SerializeField] GameObject Frame;
+    [SerializeField] TMP_Text LevelText;
     public MapLevelData Data;
-    private void Awake()
-    {
 
-    }
     private void Start()
     {
         UpdateView();

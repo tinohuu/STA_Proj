@@ -8,18 +8,7 @@ public class MapMakerPlaceholder : MonoBehaviour, IDragHandler, IPointerDownHand
     public static Transform Target = null;
     private void Awake()
     {
-        GetComponent<ButtonAnimator>().targetTransform = transform;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GetComponent<ButtonAnimator>().TargetTransform = transform;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -32,6 +21,6 @@ public class MapMakerPlaceholder : MonoBehaviour, IDragHandler, IPointerDownHand
     public void OnPointerDown(PointerEventData eventData)
     {
         Target = transform;
-        MapMaker.Instance.Updatenputs();
+        Mapmaker.Instance.Updatenputs();
     }
 }

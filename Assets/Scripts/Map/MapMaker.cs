@@ -1,4 +1,4 @@
-using STA.MapMaker;
+using STA.Mapmaker;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MapMaker : MonoBehaviour
+public class Mapmaker : MonoBehaviour
 {
     public enum Mode { None, Level, Crop, Track, Wheel, Crate }
 
@@ -17,31 +17,88 @@ public class MapMaker : MonoBehaviour
     [SerializeField] GameObject InputPrefab;
     [SerializeField] GameObject PlaceholderPrefab;
 
-    [Header("Hierarchy Ref")]
+    [Header("Self Ref")]
     [SerializeField] Dropdown ModeDropdown;
     [SerializeField] Transform InputGroup;
     [SerializeField] Button ApplyButton;
     [SerializeField] Button AddButton;
     [SerializeField] Button DeleteButton;
     [SerializeField] Button SaveButton;
+    [SerializeField] Button CheatButton;
     [SerializeField] Slider ProgressSlider;
     [SerializeField] Text LogText;
 
-    public static MapMaker Instance = null;
+    public static Mapmaker Instance = null;
 
-    List<IMapMakerModule> modules = new List<IMapMakerModule>();
-    public IMapMakerModule CurModule { get => modules[ModeDropdown.value]; }
+    public static List<IMapmakerModule> Modules;
+    public IMapmakerModule CurModule { get => Modules[ModeDropdown.value]; }
 
     private void Awake()
     {
         if (!Instance) Instance = this;
 
-        ModeDropdown.onValueChanged.AddListener((int i) => CreatePlaceholders());
+        ModeDropdown.onValueChanged.AddListener((int i) => ApplyMode());
         AddButton.onClick.AddListener(() => AddItem());
         ApplyButton.onClick.AddListener(() => ApplyInputs());
         DeleteButton.onClick.AddListener(() => DeleteItem());
         SaveButton.onClick.AddListener(() => SaveConfig());
-        //ProgressSlider.onValueChanged.AddListener(() => Map.Instance.pro)
+        CheatButton.onClick.AddListener(() => CropHarvest.Instance.Cheat());
+        ProgressSlider.onValueChanged.AddListener((float ratio) => MapManager.Instance.SetProgress(ratio));
+        ProgressSlider.onValueChanged.AddListener((float ratio) => CropManager.Instance.UpdateCropsView());
+
+        InitializeModules();
+    }
+
+    void Start()
+    {
+        InitializeDropdown();
+        ApplyMode();
+    }
+
+    public void InitializeModules()
+    {
+        var modules = FindObjectsOfType<MonoBehaviour>().OfType<IMapmakerModule>();
+
+        if (Modules == null)
+            foreach (var module in modules)
+            {
+                string json = GetConfig(module);
+                if (json == "[]") continue;
+            }
+        Modules = modules.ToList();
+    }
+
+    void InitializeDropdown()
+    {
+        List<Dropdown.OptionData> optionDatas = new List<Dropdown.OptionData>();
+        int optionCount = Modules.Count;
+
+        for (int i = 0; i < optionCount; i++)
+        {
+            string modeName = Modules[i].Mapmaker_ItemType.ToString();
+            modeName = modeName.Replace("Map", "");
+            modeName = Regex.Replace(modeName, "([a-z])([A-Z])", "$1 $2");
+            Dropdown.OptionData optionData = new Dropdown.OptionData(modeName);
+            optionDatas.Add(optionData);
+        }
+        ModeDropdown.options = optionDatas;
+        ModeDropdown.onValueChanged.AddListener((int i) => ApplyMode());
+    }
+
+    public static string GetConfig(IMapmakerModule module, int mapId)
+    {
+        string fileName = ModuleFilename(module, mapId);
+        string json;
+        if (Debug.isDebugBuild && File.Exists(Application.dataPath + fileName))
+            json = File.ReadAllText(Application.dataPath + fileName);
+        else json = ConfigsAsset.GetConfig(fileName);
+        return json;
+    }
+    public static string GetConfig(IMapmakerModule module) => GetConfig(module, MapManager.Instance.MapID);
+
+    public static string ModuleFilename(IMapmakerModule module, int mapId)
+    {
+        return "/MapMakerConfig_" + mapId + "_" + module.Mapmaker_ItemType.ToString() + ".json";
     }
 
     public static void Log(string log)
@@ -50,48 +107,26 @@ public class MapMaker : MonoBehaviour
         Debug.LogWarning(log);
     }
 
-    void Start()
-    {
-        var modules = FindObjectsOfType<MonoBehaviour>().OfType<IMapMakerModule>();
-        this.modules = modules.ToList();
-        SetModeDropdown();
-        CreatePlaceholders();
-        CreateInputs();
-    }
-
-    void SetModeDropdown()
-    {
-        List<Dropdown.OptionData> optionDatas = new List<Dropdown.OptionData>();
-        int optionCount = modules.Count;
-
-        for (int i = 0; i < optionCount; i++)
-        {
-            string modeName = modules[i].MapMaker_ItemType.ToString();
-            modeName = Regex.Replace(modeName, "([a-z])([A-Z])", "$1 $2");
-            Dropdown.OptionData optionData = new Dropdown.OptionData(modeName);
-            optionDatas.Add(optionData);
-        }
-        ModeDropdown.options = optionDatas;
-        ModeDropdown.onValueChanged.AddListener((int i) => CreatePlaceholders());
-    }
-
-    void CreatePlaceholders()
+    #region UI
+    void ApplyMode(bool recreateInputs = true)
     {
         MapMakerPlaceholder.Target = null;
 
         MapMakerPlaceholder[] placeholders = FindObjectsOfType<MapMakerPlaceholder>();
         for (int i = 0; i < placeholders.Length; i++) Destroy(placeholders[i].gameObject);
 
-        Type type = CurModule.MapMaker_ItemType;
+        Type type = CurModule.Mapmaker_ItemType;
         var items = FindObjectsOfType(type) as MonoBehaviour[];
         for (int i = 0; i < items.Length; i++) Instantiate(PlaceholderPrefab, items[i].transform);
+
+        if (recreateInputs) CreateInputs();
     }
 
     public void CreateInputs()
     {
         InputGroup.DestroyChildrenImmediate();
 
-        string[] infos = CurModule.MapMaker_InputInfos;
+        string[] infos = CurModule.Mapmaker_InputInfos;
         foreach (string info in infos)
         {
             InputField input = Instantiate(InputPrefab, InputGroup).GetComponent<InputField>();
@@ -102,9 +137,10 @@ public class MapMaker : MonoBehaviour
 
     public void Updatenputs()
     {
-        if (InputGroup.childCount == 0) CreateInputs();
+        CreateInputs();
 
-        string[] dataText = CurModule.MapMaker_UpdateInputs(MapMakerPlaceholder.Target.parent);
+        string[] dataText = CurModule.Mapmaker_UpdateInputs(MapMakerPlaceholder.Target.parent);
+        if (dataText == null) return;
         var inputs = InputGroup.GetComponentsInChildren<InputField>();
         for (int i = 0; i < inputs.Length; i++)
         {
@@ -117,67 +153,65 @@ public class MapMaker : MonoBehaviour
     {
         var inputs = InputGroup.GetComponentsInChildren<InputField>();
         string[] inputDatas = new string[inputs.Length];
-        for (int i = 0; i < inputs.Length; i++) inputDatas[i] = inputs[i].text;
-        CurModule.MapMaker_ApplyInputs(MapMakerPlaceholder.Target.parent, inputDatas);
+        for (int i = 0; i < inputs.Length; i++)
+        {
+            if (inputs[i].text == "") return;
+            inputDatas[i] = inputs[i].text;
+        }
+        CurModule.Mapmaker_ApplyInputs(MapMakerPlaceholder.Target?.parent, inputDatas);
+        ApplyMode();
     }
 
     void AddItem()
     {
-        CurModule.MapMaker_AddItem();
-        CreatePlaceholders();
+        var item = CurModule.Mapmaker_AddItem();
+        ApplyMode(false);
     }
 
     void DeleteItem()
     {
-        DestroyImmediate(MapMakerPlaceholder.Target.parent.gameObject);
+        if (MapMakerPlaceholder.Target)
+            DestroyImmediate(MapMakerPlaceholder.Target.parent.gameObject);
     }
 
     public void SaveConfig()
     {
-        foreach (var module in modules)
+        string logText = "Successfully saved: ";
+        foreach (var module in Modules)
         {
-            string file = Application.dataPath + ModuleFilename(module, 1);
+            string json = module.Mapmaker_ToConfig();
+            if (json == "" || json == "[]" || json == null) continue;
+
+            string file = Application.dataPath + ModuleFilename(module, MapManager.Instance.MapID);
             if (!File.Exists(file))
             {
                 var fs = File.Create(file);
                 fs.Close();
             }
-            File.WriteAllText(file, module.MapMaker_ToConfig());
-            if (File.Exists(file)) LogText.text = "Successfully saved " + module.MapMaker_ItemType.ToString();
+
+            File.WriteAllText(file, module.Mapmaker_ToConfig());
+            if (File.Exists(file)) logText += module.Mapmaker_ItemType.ToString() + ", ";
         }
+        Log(logText);
     }
-
-    public static string GetConfigData(IMapMakerModule module, int mapId)
-    {
-        string fileName = ModuleFilename(module, mapId);
-        string json;
-        if (Debug.isDebugBuild && File.Exists(Application.dataPath + fileName))
-            json = File.ReadAllText(Application.dataPath + fileName);
-        else json = ConfigsAsset.GetConfig(fileName);
-        return json;
-    }
-
-    public static string ModuleFilename(IMapMakerModule module, int mapId)
-    {
-        return "/MapMakerConfig_" + mapId + "_" + module.MapMaker_ItemType.ToString() + ".json";
-    }
+    #endregion
 }
 
-namespace STA.MapMaker
+namespace STA.Mapmaker
 {
-    public interface IMapMakerModule
+    public interface IMapmakerModule
     {
-        public Type MapMaker_ItemType { get; }
-        public string[] MapMaker_InputInfos { get; }
-        public void MapMaker_CreateItems();
-        public void MapMaker_AddItem();
-        public string[] MapMaker_UpdateInputs(Transform target);
-        public void MapMaker_ApplyInputs(Transform target, string[] inputDatas);
-        public string MapMaker_ToConfig();
+        public Type Mapmaker_ItemType { get; }
+        public string[] Mapmaker_InputInfos { get; }
+        public void Mapmaker_CreateItems(string config);
+        public Transform Mapmaker_AddItem();
+        public string[] Mapmaker_UpdateInputs(Transform target);
+        public void Mapmaker_ApplyInputs(Transform target, string[] inputDatas);
+        public string Mapmaker_ToConfig();
     }
 
     [System.Serializable]
-    public class MapMaker_BaseConfig
+    public class Mapmaker_BaseConfig
     {
         public float PosX = 0;
         public float PosY = 0;

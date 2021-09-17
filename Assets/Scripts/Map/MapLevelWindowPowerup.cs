@@ -5,38 +5,51 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MapLevelPowerup : MonoBehaviour
+public class MapLevelWindowPowerup : MonoBehaviour
 {
+    [Header("Ref")]
     public GameObject PromptWindowPrefab;
-    public RewardType RewardType;
     public GameObject PurchaseImage;
     public GameObject InUseImage;
     public GameObject TextImage;
+
+    [Header("Settings")]
+    public RewardType RewardType;
+
+    [Header("Data")]
     public bool InUse = false;
     public bool Interactable = false;
+
     ButtonAnimator button;
     CanvasGroup canvasGroup;
     private void Start()
     {
         Interactable = MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigsByFuncID[(int)RewardType + 1012 - 8].FunctionParams;
+
         button = GetComponent<ButtonAnimator>();
         canvasGroup = GetComponent<CanvasGroup>();
         canvasGroup.alpha = Interactable ? 1 : 0.5f;
-        //button.Interactable = Interactable;
 
-        Reward.Data[RewardType] = UnityEngine.Random.Range(1, 10);
-    }
-    // Start is called before the first frame update
-    void Update()
-    {
-        InUseImage.SetActive(Interactable && InUse);
-        PurchaseImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] == 0);
-        TextImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] != 0);
+        Reward.Data[RewardType] = UnityEngine.Random.Range(1, 10); // test only
+        UpdateIconImage();
     }
 
     public void OnClick()
     {
-        if (!Interactable)
+        if (Interactable)
+        {
+            if (Reward.Data[RewardType] == 0)
+            {
+                // todo: go to store
+            }
+            else
+            {
+                InUse = !InUse;
+                UpdateIconImage();
+            }
+        }
+        // Show the window waiting to be locked
+        else
         {
             TMP_Text text = Window.CreateWindowPrefab(PromptWindowPrefab).GetComponentInChildren<TMP_Text>();
             string rawString = text.text;
@@ -45,16 +58,12 @@ public class MapLevelPowerup : MonoBehaviour
             text.text = rawString;
             return;
         }
-
-        if (Reward.Data[RewardType] == 0)
-        {
-            // todo: go to store
-        }
-        else
-        {
-            InUse = !InUse;
-        }
     }
 
-
+    void UpdateIconImage()
+    {
+        InUseImage.SetActive(Interactable && InUse);
+        PurchaseImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] == 0);
+        TextImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] != 0);
+    }
 }
