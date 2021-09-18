@@ -76,11 +76,16 @@ fixed4 _Color;
 
 void surf (Input IN, inout SurfaceOutputStandard o)
 {
-fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+	float2 uvCoord;
+	uvCoord.x = 1.0 - IN.uv_MainTex.x;
+	uvCoord.y = IN.uv_MainTex.y;
+//fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+	fixed4 c = tex2D(_MainTex, uvCoord) * _Color;
 o.Albedo = c.rgb;
 o.Metallic = _Metallic;
 o.Smoothness = _Glossiness;
 o.Alpha = c.a;
+o.Albedo = pow(o.Albedo,  2.2f);//2021.9.17 added by pengyuan for gamma correction
 }
 
 ENDCG

@@ -214,6 +214,12 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         return JsonExtensions.ListToJson(configs);
     }
 
+    public void Mapmaker_DeleteItem(GameObject target)
+    {
+        Destroy(gameObject);
+        UpdateCropsView();
+    }
+
     #endregion
 }
 

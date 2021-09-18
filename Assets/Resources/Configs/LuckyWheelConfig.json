@@ -1,0 +1,650 @@
+[
+  {
+    "ID": 1,
+    "WheelNum": 1,
+    "WheelReward": 113,
+    "PotNum": 1,
+    "Weight": 0,
+    "IsSuper": false,
+    "IsGrand": true
+  },
+  {
+    "ID": 2,
+    "WheelNum": 1,
+    "WheelReward": 114,
+    "PotNum": 2,
+    "Weight": 1500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 3,
+    "WheelNum": 1,
+    "WheelReward": 115,
+    "PotNum": 3,
+    "Weight": 2250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 4,
+    "WheelNum": 1,
+    "WheelReward": 116,
+    "PotNum": 4,
+    "Weight": 500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 5,
+    "WheelNum": 1,
+    "WheelReward": 117,
+    "PotNum": 5,
+    "Weight": 2000,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 6,
+    "WheelNum": 1,
+    "WheelReward": 118,
+    "PotNum": 6,
+    "Weight": 1250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 7,
+    "WheelNum": 1,
+    "WheelReward": 119,
+    "PotNum": 7,
+    "Weight": 1750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 8,
+    "WheelNum": 1,
+    "WheelReward": 120,
+    "PotNum": 8,
+    "Weight": 750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 9,
+    "WheelNum": 2,
+    "WheelReward": 121,
+    "PotNum": 1,
+    "Weight": 0,
+    "IsSuper": false,
+    "IsGrand": true
+  },
+  {
+    "ID": 10,
+    "WheelNum": 2,
+    "WheelReward": 122,
+    "PotNum": 2,
+    "Weight": 1500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 11,
+    "WheelNum": 2,
+    "WheelReward": 123,
+    "PotNum": 3,
+    "Weight": 2250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 12,
+    "WheelNum": 2,
+    "WheelReward": 124,
+    "PotNum": 4,
+    "Weight": 500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 13,
+    "WheelNum": 2,
+    "WheelReward": 125,
+    "PotNum": 5,
+    "Weight": 2000,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 14,
+    "WheelNum": 2,
+    "WheelReward": 126,
+    "PotNum": 6,
+    "Weight": 1250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 15,
+    "WheelNum": 2,
+    "WheelReward": 127,
+    "PotNum": 7,
+    "Weight": 1750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 16,
+    "WheelNum": 2,
+    "WheelReward": 128,
+    "PotNum": 8,
+    "Weight": 750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 17,
+    "WheelNum": 3,
+    "WheelReward": 129,
+    "PotNum": 1,
+    "Weight": 0,
+    "IsSuper": false,
+    "IsGrand": true
+  },
+  {
+    "ID": 18,
+    "WheelNum": 3,
+    "WheelReward": 130,
+    "PotNum": 2,
+    "Weight": 1500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 19,
+    "WheelNum": 3,
+    "WheelReward": 131,
+    "PotNum": 3,
+    "Weight": 2250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 20,
+    "WheelNum": 3,
+    "WheelReward": 132,
+    "PotNum": 4,
+    "Weight": 500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 21,
+    "WheelNum": 3,
+    "WheelReward": 133,
+    "PotNum": 5,
+    "Weight": 2000,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 22,
+    "WheelNum": 3,
+    "WheelReward": 134,
+    "PotNum": 6,
+    "Weight": 1250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 23,
+    "WheelNum": 3,
+    "WheelReward": 135,
+    "PotNum": 7,
+    "Weight": 1750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 24,
+    "WheelNum": 3,
+    "WheelReward": 136,
+    "PotNum": 8,
+    "Weight": 750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 25,
+    "WheelNum": 4,
+    "WheelReward": 137,
+    "PotNum": 1,
+    "Weight": 0,
+    "IsSuper": false,
+    "IsGrand": true
+  },
+  {
+    "ID": 26,
+    "WheelNum": 4,
+    "WheelReward": 138,
+    "PotNum": 2,
+    "Weight": 1500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 27,
+    "WheelNum": 4,
+    "WheelReward": 139,
+    "PotNum": 3,
+    "Weight": 2250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 28,
+    "WheelNum": 4,
+    "WheelReward": 140,
+    "PotNum": 4,
+    "Weight": 500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 29,
+    "WheelNum": 4,
+    "WheelReward": 141,
+    "PotNum": 5,
+    "Weight": 2000,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 30,
+    "WheelNum": 4,
+    "WheelReward": 142,
+    "PotNum": 6,
+    "Weight": 1250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 31,
+    "WheelNum": 4,
+    "WheelReward": 143,
+    "PotNum": 7,
+    "Weight": 1750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 32,
+    "WheelNum": 4,
+    "WheelReward": 144,
+    "PotNum": 8,
+    "Weight": 750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 33,
+    "WheelNum": 5,
+    "WheelReward": 145,
+    "PotNum": 1,
+    "Weight": 0,
+    "IsSuper": false,
+    "IsGrand": true
+  },
+  {
+    "ID": 34,
+    "WheelNum": 5,
+    "WheelReward": 146,
+    "PotNum": 2,
+    "Weight": 1500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 35,
+    "WheelNum": 5,
+    "WheelReward": 147,
+    "PotNum": 3,
+    "Weight": 2250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 36,
+    "WheelNum": 5,
+    "WheelReward": 148,
+    "PotNum": 4,
+    "Weight": 500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 37,
+    "WheelNum": 5,
+    "WheelReward": 149,
+    "PotNum": 5,
+    "Weight": 2000,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 38,
+    "WheelNum": 5,
+    "WheelReward": 150,
+    "PotNum": 6,
+    "Weight": 1250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 39,
+    "WheelNum": 5,
+    "WheelReward": 151,
+    "PotNum": 7,
+    "Weight": 1750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 40,
+    "WheelNum": 5,
+    "WheelReward": 152,
+    "PotNum": 8,
+    "Weight": 750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 41,
+    "WheelNum": 6,
+    "WheelReward": 153,
+    "PotNum": 1,
+    "Weight": 0,
+    "IsSuper": false,
+    "IsGrand": true
+  },
+  {
+    "ID": 42,
+    "WheelNum": 6,
+    "WheelReward": 154,
+    "PotNum": 2,
+    "Weight": 1500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 43,
+    "WheelNum": 6,
+    "WheelReward": 155,
+    "PotNum": 3,
+    "Weight": 2250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 44,
+    "WheelNum": 6,
+    "WheelReward": 156,
+    "PotNum": 4,
+    "Weight": 500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 45,
+    "WheelNum": 6,
+    "WheelReward": 157,
+    "PotNum": 5,
+    "Weight": 2000,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 46,
+    "WheelNum": 6,
+    "WheelReward": 158,
+    "PotNum": 6,
+    "Weight": 1250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 47,
+    "WheelNum": 6,
+    "WheelReward": 159,
+    "PotNum": 7,
+    "Weight": 1750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 48,
+    "WheelNum": 6,
+    "WheelReward": 160,
+    "PotNum": 8,
+    "Weight": 750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 49,
+    "WheelNum": 7,
+    "WheelReward": 161,
+    "PotNum": 1,
+    "Weight": 0,
+    "IsSuper": false,
+    "IsGrand": true
+  },
+  {
+    "ID": 50,
+    "WheelNum": 7,
+    "WheelReward": 162,
+    "PotNum": 2,
+    "Weight": 1500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 51,
+    "WheelNum": 7,
+    "WheelReward": 163,
+    "PotNum": 3,
+    "Weight": 2250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 52,
+    "WheelNum": 7,
+    "WheelReward": 164,
+    "PotNum": 4,
+    "Weight": 500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 53,
+    "WheelNum": 7,
+    "WheelReward": 165,
+    "PotNum": 5,
+    "Weight": 2000,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 54,
+    "WheelNum": 7,
+    "WheelReward": 166,
+    "PotNum": 6,
+    "Weight": 1250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 55,
+    "WheelNum": 7,
+    "WheelReward": 167,
+    "PotNum": 7,
+    "Weight": 1750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 56,
+    "WheelNum": 7,
+    "WheelReward": 168,
+    "PotNum": 8,
+    "Weight": 750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 57,
+    "WheelNum": 8,
+    "WheelReward": 169,
+    "PotNum": 1,
+    "Weight": 0,
+    "IsSuper": false,
+    "IsGrand": true
+  },
+  {
+    "ID": 58,
+    "WheelNum": 8,
+    "WheelReward": 170,
+    "PotNum": 2,
+    "Weight": 1500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 59,
+    "WheelNum": 8,
+    "WheelReward": 171,
+    "PotNum": 3,
+    "Weight": 2250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 60,
+    "WheelNum": 8,
+    "WheelReward": 172,
+    "PotNum": 4,
+    "Weight": 500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 61,
+    "WheelNum": 8,
+    "WheelReward": 173,
+    "PotNum": 5,
+    "Weight": 2000,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 62,
+    "WheelNum": 8,
+    "WheelReward": 174,
+    "PotNum": 6,
+    "Weight": 1250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 63,
+    "WheelNum": 8,
+    "WheelReward": 175,
+    "PotNum": 7,
+    "Weight": 1750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 64,
+    "WheelNum": 8,
+    "WheelReward": 176,
+    "PotNum": 8,
+    "Weight": 750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 65,
+    "WheelNum": 9,
+    "WheelReward": 177,
+    "PotNum": 1,
+    "Weight": 0,
+    "IsSuper": false,
+    "IsGrand": true
+  },
+  {
+    "ID": 66,
+    "WheelNum": 9,
+    "WheelReward": 178,
+    "PotNum": 2,
+    "Weight": 1500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 67,
+    "WheelNum": 9,
+    "WheelReward": 179,
+    "PotNum": 3,
+    "Weight": 2250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 68,
+    "WheelNum": 9,
+    "WheelReward": 180,
+    "PotNum": 4,
+    "Weight": 500,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 69,
+    "WheelNum": 9,
+    "WheelReward": 181,
+    "PotNum": 5,
+    "Weight": 2000,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 70,
+    "WheelNum": 9,
+    "WheelReward": 182,
+    "PotNum": 6,
+    "Weight": 1250,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 71,
+    "WheelNum": 9,
+    "WheelReward": 183,
+    "PotNum": 7,
+    "Weight": 1750,
+    "IsSuper": false,
+    "IsGrand": false
+  },
+  {
+    "ID": 72,
+    "WheelNum": 9,
+    "WheelReward": 184,
+    "PotNum": 8,
+    "Weight": 750,
+    "IsSuper": false,
+    "IsGrand": false
+  }
+]

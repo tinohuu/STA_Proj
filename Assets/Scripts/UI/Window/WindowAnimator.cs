@@ -12,6 +12,7 @@ public class WindowAnimator : Window
     public bool InverseOnFadeOut = false;
     public bool CanCloseByPanel = true;
     public float IntervalMultiplerOnFadeOut = 1;
+    
 
     public static List<WindowAnimator> WindowQueue = new List<WindowAnimator>();
     public delegate void WindowHandler();

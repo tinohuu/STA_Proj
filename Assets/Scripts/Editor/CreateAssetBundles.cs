@@ -1,5 +1,6 @@
 using UnityEditor;
 using System.IO;
+using UnityEngine;
 
 public class CreateAssetBundles
 {
@@ -40,5 +41,34 @@ public class CreateAssetBundles
         BuildPipeline.BuildAssetBundles(assetBundleDirectory,
                                         BuildAssetBundleOptions.None,
                                         BuildTarget.iOS);
+    }
+
+    [MenuItem("Tools/Set Level Name/Chapter_0001")]
+    static void SetLevelAssetBundleName_0001()
+    {
+        string assetBundleDirectory = "Assets/Resources/Configs/LevelInfo/Chapter_0001";
+        DirectoryInfo directoryInfo = new DirectoryInfo(assetBundleDirectory);
+        if(directoryInfo == null)
+        {
+            Debug.LogError("************* Tools/Set Level Name/Chapter_0001 not exist!!! ****************");
+        }
+
+        FileSystemInfo[] fileInfos = directoryInfo.GetFileSystemInfos();
+        foreach(FileSystemInfo fileInfo in fileInfos)
+        {
+            if(fileInfo is FileInfo  && fileInfo.Extension != ".meta")
+            {
+                int nIndex = fileInfo.FullName.LastIndexOf('\\');
+                string fileName = fileInfo.FullName.Substring(nIndex);
+
+                AssetImporter assetImporter = AssetImporter.GetAtPath(assetBundleDirectory + fileName);
+                if(assetImporter !=  null)
+                {
+                    //Debug.Log(assetBundleDirectory + fileName);
+                    assetImporter.assetBundleName = "chapter_0001";
+                    assetImporter.assetBundleVariant = "level";
+                }
+            }
+        }
     }
 }

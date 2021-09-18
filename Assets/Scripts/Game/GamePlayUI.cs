@@ -458,6 +458,16 @@ public class GamePlayUI : MonoBehaviour
         streakBonusUI.SetStreakBonusStatus(nCount, nStreakBonus);
     }
 
+    public void SetClearAllStreakBonus(List<GameplayMgr.StreakBonusInfo> bonusInfos)
+    {
+        streakBonusUI.SetClearAllStreakBonus(bonusInfos);
+    }
+
+    public void WithDrawClearAllStreakBonus(List<GameplayMgr.StreakBonusInfo> bonusInfos)
+    {
+        streakBonusUI.WithDrawClearAllStreakBonus(bonusInfos);
+    }
+
     public void AddGold(int nValue)
     {
         goldAndScoreUI.AddGold(nValue);

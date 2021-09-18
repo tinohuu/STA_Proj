@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class RewardManager : MonoBehaviour
 {
-    [SavedData] public static RewardManagerData Data = new RewardManagerData();
+    public static RewardManagerData Data = new RewardManagerData();
     public static RewardManager Instance = null;
     public delegate void RewardHandler(bool add);
     public RewardHandler[] OnValueChanged = new RewardHandler[Data.Rewards.Count];
@@ -14,6 +14,32 @@ public class RewardManager : MonoBehaviour
     {
         if (!Instance) Instance = this;
         for (int i = 0; i < OnValueChanged.Length; i++) OnValueChanged[i] = null;
+
+        Data = SaveManager.Bind(InitialData);
+        GetRewardCost(RewardType.ClearPlayables);
+    }
+    RewardManagerData InitialData
+    {
+        get
+        {
+            RewardManagerData data = new RewardManagerData();
+            var config = ConfigsAsset.GetConfigObject<PublicConfig>();
+            if (config != null) data[RewardType.Coin] = config.StartCoin;
+            return data;
+        }
+    }
+
+    public static int GetRewardCost(RewardType type)
+    {
+        var configs = ConfigsAsset.GetConfigList<PowerupCostConfig>().FindAll(e => e.PowerUpsID == (int)type);
+        configs.Sort((x, y) => x.RiseLevel.CompareTo(y.RiseLevel));
+        configs.Reverse();
+
+        foreach (var config in configs)
+        {
+            if (MapManager.Instance.Data.CompleteLevel >= config.RiseLevel) return config.StandardCost;
+        }
+        return 9999;
     }
 }
 
@@ -77,7 +103,6 @@ public class RewardManagerData
     {
         int length = Enum.GetValues(typeof(RewardType)).Length;
         for (int i = 0; i < length; i++) Rewards.Add(0);
-        Rewards[1] = 20000;
     }
 
     public void UpdateData()

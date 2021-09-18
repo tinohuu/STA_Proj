@@ -8,11 +8,11 @@ public class RewardNumber : MonoBehaviour
 {
     public int current = 0;
     public RewardType Type = RewardType.None;
-
+    public bool BlockAnimation = false;
     static bool[] m_switches;
 
     public static RewardNumberSwitches Switches = new RewardNumberSwitches();
-    public Transform ParticleGroup;
+    //public Transform ParticleGroup;
     Coroutine animCoroutine;
 
     TMP_Text text;
@@ -26,7 +26,7 @@ public class RewardNumber : MonoBehaviour
             m_switches = new bool[System.Enum.GetValues(typeof(RewardType)).Length];
             for (int i = 0; i < m_switches.Length; i++) m_switches[i] = true;
         }
-        ParticleGroup = ParticleManager.Instance.ParticleGroup;
+
     }
 
     private void Start()
@@ -48,6 +48,14 @@ public class RewardNumber : MonoBehaviour
     public void Animate()
     {
         if (!Switches[Type]) return;
+
+        if (BlockAnimation)
+        {
+            text.text = Reward.Data[Type].ToString();
+            return;
+        }
+
+
         if (animCoroutine == null) animCoroutine = StartCoroutine(IAnimate());
         /*textTween.Kill(false);
         if (textTween.IsActive()) duration = duration >= textTween.Duration() - textTween.Elapsed() ? duration : textTween.Duration() - textTween.Elapsed();
@@ -64,11 +72,12 @@ public class RewardNumber : MonoBehaviour
         while (current < Reward.Data[Type])
         {
             int diff = Reward.Data[Type] - current;
-            int target = current + (ParticleGroup.childCount > 0 ? (int)(diff * 0.5f) : diff);
+            int target = current + (ParticleManager.Instance.ParticleGroup.childCount > 0 ? (int)(diff * 0.5f) : diff);
             DOTween.To(() => current, x => current = x, target, 1)
                 .OnUpdate(() => text.text = current.ToString("N0"));
             yield return new WaitForSeconds(1);
         }
+        text.text = Reward.Data[Type].ToString("N0");
         AnimateScale(false);
         animCoroutine = null;
     }

@@ -57,31 +57,44 @@ public class MapTrackManager : MonoBehaviour, IMapmakerModule
     // Update is called once per frame
     void Update()
     {
-        if (trackPoints.Count != TrackPointGroup.childCount) UpdatePoints();
+        Move();
+    }
+
+    void Move()
+    {
         if (trackPoints.Count > 1)
         {
-            //Debug.Log("Doing");
-            // Switch waypoints
-            if (curIndex < trackPoints.Count - 1 && Camera.main.transform.position.x > trackPoints[curIndex + 1].transform.position.x) curIndex++;
-            if (curIndex > 0 && Camera.main.transform.position.x < trackPoints[curIndex].transform.position.x) curIndex--;
+            try
+            {
 
-            // Get current and next waypoints data
-            float curX = trackPoints[curIndex].transform.position.x;
-            float curY = trackPoints[curIndex].transform.localPosition.y;
-            float nextX = curIndex + 1 == trackPoints.Count ? curX : trackPoints[curIndex + 1].transform.position.x;
-            float nextY = curIndex + 1 == trackPoints.Count ? curY : trackPoints[curIndex + 1].transform.localPosition.y;
+                {
+                    //Debug.Log("Doing");
+                    // Switch waypoints
+                    if (curIndex < trackPoints.Count - 1 && Camera.main.transform.position.x > trackPoints[curIndex + 1].transform.position.x) curIndex++;
+                    if (curIndex > 0 && Camera.main.transform.position.x < trackPoints[curIndex].transform.position.x) curIndex--;
 
-            // Calculate content pos y data
-            //Debug.Log(moveRangeEdge);
-            curY = Mathf.Clamp(Mathf.Abs(curY) - moveRangeEdge, 0, moveRangeH) / moveRangeH * moveMaxH * (MapScale - 1);
-            nextY = Mathf.Clamp(Mathf.Abs(nextY) - moveRangeEdge, 0, moveRangeH) / moveRangeH * moveMaxH * (MapScale - 1);
+                    // Get current and next waypoints data
+                    float curX = trackPoints[curIndex].transform.position.x;
+                    float curY = trackPoints[curIndex].transform.localPosition.y;
+                    float nextX = curIndex + 1 == trackPoints.Count ? curX : trackPoints[curIndex + 1].transform.position.x;
+                    float nextY = curIndex + 1 == trackPoints.Count ? curY : trackPoints[curIndex + 1].transform.localPosition.y;
+
+                    // Calculate content pos y data
+                    //Debug.Log(moveRangeEdge);
+                    curY = Mathf.Clamp(Mathf.Abs(curY) - moveRangeEdge, 0, moveRangeH) / moveRangeH * moveMaxH * (MapScale - 1);
+                    nextY = Mathf.Clamp(Mathf.Abs(nextY) - moveRangeEdge, 0, moveRangeH) / moveRangeH * moveMaxH * (MapScale - 1);
 
 
-            float posY = Mathf.SmoothStep(curY, nextY,
-                (Camera.main.transform.position.x - curX) / (nextX - curX));
+                    float posY = Mathf.SmoothStep(curY, nextY,
+                        (Camera.main.transform.position.x - curX) / (nextX - curX));
 
-
-            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, posY);
+                    rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, posY);
+                }
+            }
+            catch
+            {
+                UpdatePoints();
+            }
         }
     }
 
@@ -118,9 +131,18 @@ public class MapTrackManager : MonoBehaviour, IMapmakerModule
 
     public Transform Mapmaker_AddItem()
     {
-        GameObject obj = Instantiate(TrackPointPrefab, TrackPointGroup);
-        obj.transform.localPosition = TrackPointGroup.InverseTransformPoint(Vector3.zero);
+        Vector3 initLocPos = TrackPointGroup.InverseTransformPoint(Vector3.zero);
 
+        var points = TrackPointGroup.GetComponentsInChildren<MapTrackPoint>().ToList();
+
+        if (points.Find(e => Mathf.Abs(e.transform.localPosition.x - initLocPos.x) < 100))
+        {
+            Mapmaker.Log("Track points too close.");
+            return null;
+        }
+
+        GameObject obj = Instantiate(TrackPointPrefab, TrackPointGroup);
+        obj.transform.localPosition = initLocPos;
         UpdatePoints();
 
         return obj.transform;
@@ -141,5 +163,11 @@ public class MapTrackManager : MonoBehaviour, IMapmakerModule
             configs.Add(config);
         }
         return JsonExtensions.ListToJson(configs);
+    }
+
+    public void Mapmaker_DeleteItem(GameObject target)
+    {
+        DestroyImmediate(gameObject);
+        UpdatePoints();
     }
 }

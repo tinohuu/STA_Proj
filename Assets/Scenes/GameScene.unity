@@ -381,6 +381,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nChapterID: 1
   nLevelID: 1
+  InUseItems: 
 --- !u!1 &73076251
 GameObject:
   m_ObjectHideFlags: 0
@@ -2035,7 +2036,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.7
+  m_Intensity: 0.75
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -5622,7 +5623,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -46, y: 20.982}
+  m_AnchoredPosition: {x: -46, y: 20.982002}
   m_SizeDelta: {x: 210, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1206050383
@@ -6182,7 +6183,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1555347627}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
@@ -6216,6 +6218,7 @@ MonoBehaviour:
   nGold: 0
   nScore: 0
   pokerPrefab: {fileID: 0}
+  pokerCard: {fileID: 0}
   wildcardPrefab: {fileID: 0}
   scoreStarPrefab: {fileID: 0}
   lockPrefab: {fileID: 0}
@@ -6229,6 +6232,10 @@ MonoBehaviour:
   bombNumbers: []
   addNPrefab: {fileID: 0}
   addNNumbers: []
+  removeThreePrefabs: []
+  nRemoveThreeLeftCount: 3
+  nRemoveThreeFinishCount: 0
+  bIsRemovingThree: 0
   cardIndex: 0
   cardsArray: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   cardsArray2nd: 
@@ -6559,7 +6566,71 @@ MonoBehaviour:
     height: 0
   ascendTexture: {fileID: 0}
   addNTexture: {fileID: 0}
+  clearAllTexture:
+  - {fileID: 0}
+  - {fileID: 0}
   gameplayUI: {fileID: 0}
+--- !u!1001 &1457002873
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1285799127}
+    m_Modifications:
+    - target: {fileID: 8485146447462032611, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_Name
+      value: Poker_Card
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032611, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
 --- !u!1 &1465297933
 GameObject:
   m_ObjectHideFlags: 0
@@ -6844,6 +6915,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1494646735}
   m_CullTransparentMesh: 0
+--- !u!4 &1555347627 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8485146447462032620, guid: ace7b72d7a1450f4f9219424d03e3eb2, type: 3}
+  m_PrefabInstance: {fileID: 1457002873}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1560505473
 GameObject:
   m_ObjectHideFlags: 0

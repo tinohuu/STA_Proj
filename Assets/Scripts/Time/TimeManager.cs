@@ -80,12 +80,12 @@ public class TimeManager : MonoBehaviour
 
 		if (!_isAuthentic)
         {
-			TimeDebugText.Text.text += "\nUnauthentic during 1st verificaion: " + RealNow.ToString();
+			TimeDebugText.Log("Unauthentic during 1st verificaion: " + RealNow.ToString());
 			GetTime(TimeAuthenticity.Unauthentic);
 		}
 		else
         {
-			TimeDebugText.Text.text += "\nAuthentic during 1st verificaion: " + RealNow.ToString();
+			TimeDebugText.Log("Authentic during 1st verificaion: " + RealNow.ToString());
 			Data.CheckedAuthenticity = TimeAuthenticity.Authentic;
 			RefreshTime();
 		}
@@ -116,7 +116,7 @@ public class TimeManager : MonoBehaviour
 				TimeSpan oldOffset = Data.CheckedSystemOffset.ToTimeSpan();
 				RecordTime(TimeSource.Internet, String2DateTime(value));
 				TimeSpan newOffset = SystemNow - Data.CheckedDateTime;
-				TimeDebugText.Text.text += "\nRecorded from " + url;
+				TimeDebugText.Log("Recorded from " + url);
 
 				// 2nd verification: system-world time offset
 				if (firstStepAuth == TimeAuthenticity.Unauthentic)
@@ -124,12 +124,12 @@ public class TimeManager : MonoBehaviour
 					if (VerifyTimeSpan(newOffset, oldOffset, ThresholdMinutes)) // Authentic
 					{
 						Data.CheckedAuthenticity = TimeAuthenticity.Authentic;
-						TimeDebugText.Text.text += "\nNot punish as passing 2nd verification.";
+						TimeDebugText.Log("Not punish as passing 2nd verification.");
 					}
 					else // Not authentic
 					{
 						Data.CheckedAuthenticity = TimeAuthenticity.Unauthentic;
-						TimeDebugText.Text.text += "\nPunush!";
+						TimeDebugText.Log("Punush!");
 					}
 				}
 
@@ -144,11 +144,11 @@ public class TimeManager : MonoBehaviour
 
 		// Record system time
 		RecordTime(TimeSource.System, RealNow);
-		TimeDebugText.Text.text += "\nRecorded system time.";
+		TimeDebugText.Log("Recorded system time.");
 
 		if (firstStepAuth == TimeAuthenticity.Unauthentic)
 		{
-			TimeDebugText.Text.text += "\nPunush!";
+			TimeDebugText.Log("Punush!");
 			Data.CheckedAuthenticity = TimeAuthenticity.Unauthentic;
 		}
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ItemPlusCallBack : MonoBehaviour
 {
+    public GameObject rootObject;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +21,7 @@ public class ItemPlusCallBack : MonoBehaviour
     {
         //Debug.Log("--------------------------ItemPlusCallBack::OnEndMove--------------------------------------\n switch to next state that is plus change.");
 
-        GamePoker pokerScript = transform.parent.GetComponent<GamePoker>();
+        GamePoker pokerScript = rootObject.GetComponent<GamePoker>();
         if(pokerScript.bAccelAddingNPoker)
         {
             GetComponent<Animator>().SetTrigger("PlusChangeQuick");
@@ -34,14 +35,14 @@ public class ItemPlusCallBack : MonoBehaviour
         
         //Debug.Log("--------------------------ItemPlusCallBack::OnEndMove--------------------------------------\n --------------------------------this is the first time to add one add n poker-----------------------.");
         transform.parent.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
-        GameplayMgr.Instance.OnAddNPoker_One(transform.parent.GetComponent<GamePoker>());
+        GameplayMgr.Instance.OnAddNPoker_One(transform.parent.parent.GetComponent<GamePoker>());
     }
 
     public void OnPlusChangeEnd()
     {
         //Debug.Log("--------------------------ItemPlusCallBack::OnPlusChangeEnd--------------------------------------");
 
-        GamePoker pokerScript = transform.parent.GetComponent<GamePoker>();
+        GamePoker pokerScript = rootObject.GetComponent<GamePoker>();
         if (pokerScript.nAddNCount == 0)
             return;
         
@@ -55,7 +56,7 @@ public class ItemPlusCallBack : MonoBehaviour
                 GetComponent<Animator>().SetTrigger("PlusChangeQuick");
                 //Debug.Log("--------------------------ItemPlusCallBack::OnPlusChangeQuickEnd----------------------------111111111");
             }
-            GameplayMgr.Instance.OnAddNPoker_One(transform.parent.GetComponent<GamePoker>());
+            GameplayMgr.Instance.OnAddNPoker_One(transform.parent.parent.GetComponent<GamePoker>());
         }
         else
         {
@@ -74,7 +75,7 @@ public class ItemPlusCallBack : MonoBehaviour
                 //Debug.Log("--------------------------ItemPlusCallBack::OnPlusChangeEnd----------------------------normal exit....");
             }
             
-            GameplayMgr.Instance.OnAddNPokerExit(transform.parent.GetComponent<GamePoker>());
+            GameplayMgr.Instance.OnAddNPokerExit(transform.parent.parent.GetComponent<GamePoker>());
         }
         
         pokerScript.UpdateAddNEffectDisplay();
@@ -85,7 +86,7 @@ public class ItemPlusCallBack : MonoBehaviour
     {
         //Debug.Log("--------------------------ItemPlusCallBack::OnEmptyStateEnd--------------------------------------");
         return;
-        GamePoker pokerScript = transform.parent.GetComponent<GamePoker>();
+        GamePoker pokerScript = rootObject.GetComponent<GamePoker>();
 
         if (pokerScript.nAddNCount > 0)
         {

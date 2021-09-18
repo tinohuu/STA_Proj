@@ -11,6 +11,8 @@ public class MapManager : MonoBehaviour
 {
     [Header("Ref")]
     [SerializeField] GameObject mapmakerPrefab;
+    [SerializeField] GameObject mapImagePrefab;
+    [SerializeField] RectTransform mapImageGroup;
 
     [Header("Data")]
     public int MapID = 1;
@@ -20,7 +22,7 @@ public class MapManager : MonoBehaviour
     public Dictionary<int, FunctionConfig> FunctionConfigsByFuncID;
 
     public static MapManager Instance = null;
-
+    public List<Image> mapImages = new List<Image>();
     GameObject mapMaker;
 
     private void Awake()
@@ -32,15 +34,31 @@ public class MapManager : MonoBehaviour
         FunctionConfigsByFuncID = ConfigsAsset.GetConfigList<FunctionConfig>().ToDictionary(p => p.FunctionID);
 
         UpdateLevelData();
+        UpdateView();
     }
 
     private void Update()
     {
-        if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.M))
+        if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.KeypadPlus))
         {
             if (mapMaker) Destroy(mapMaker.gameObject);
             else mapMaker = Instantiate(mapmakerPrefab, transform);
         }
+    }
+
+    void UpdateView()
+    {
+        mapImages.ForEach(e => DestroyImmediate(e));
+        List<Image> _mapImages = new List<Image>();
+        for (int i = 0; i < 15; i++)
+        {
+            Image image = Instantiate(mapImagePrefab, mapImageGroup).GetComponent<Image>();
+            Sprite sprite = Resources.Load<Sprite>("Maps/Map_" + MapID + "_" + i);
+            image.sprite = sprite;
+            _mapImages.Add(image);
+        }
+        mapImages = _mapImages;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(mapImageGroup);
     }
 
     public void UpdateLevelData()
@@ -68,6 +86,8 @@ public class MapManagerData
     public int CompleteLevel = 0;
     public int SelectedLevel = 0;
     public DateTime LastHarvestTime = new DateTime();
+    public int WheelCollectedLevel = 0;
+    public int WheelTimesSinceGrand = 0;
     public List<MapLevelData> MapLevelDatas = new List<MapLevelData>();
 }
 

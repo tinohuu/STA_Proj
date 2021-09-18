@@ -6,7 +6,14 @@ using DG.Tweening;
 
 public class HandPoker : MonoBehaviour
 {
-    int nIndex;
+    public int Index { get; set; }
+
+    public GameObject pokerInst = null;
+
+    Animator animator = null;
+    Vector3 clearAllPos;
+
+    public string strClearAllPokerIDs = "";
 
     public GameplayMgr.PokerType pokerType { get; set; }
 
@@ -33,10 +40,13 @@ public class HandPoker : MonoBehaviour
     bool bIsAddN { get; set; } = false;
     float fAddNTime = 0.0f;
 
+    bool bIsClearAll { get; set; } = false;
+
     bool bIsJumping { get; set; } = false;
 
     string strName;//this is for test
     float screenX = 0.0f;
+    float screenY = 0.0f;
     TextMesh textName;
 
     //data
@@ -51,52 +61,67 @@ public class HandPoker : MonoBehaviour
 
     public void Init(GameObject goPrefab, JsonReadWriteTest.LevelData leveInfo, int index, Vector3 pos, Vector3 rendererSize, float fBeginTime)
     {
+        pokerInst = transform.Find("Poker_Club_10").gameObject;
+        animator = GetComponent<Animator>();
+
         pokerType = GameplayMgr.PokerType.HandPoker;
         handPokerSource = GameplayMgr.HandPokerSource.Hand;
 
-        nIndex = index;
-        nFoldIndex = nIndex;
-
-        targetPos.x = pos.x - (leveInfo.handPokerCount - index) * 0.2f;
-        targetPos.y = pos.y + rendererSize.y * 0.3f;// + pokerInfo.fPosY * 0.01f;
-        targetPos.z = pos.z - index * 0.05f;
+        Index = index;
+        nFoldIndex = Index;
 
         screenX = rendererSize.x;
+        screenY = rendererSize.y;
+
+        targetPos.x = pos.x - (leveInfo.handPokerCount - index) * 0.2f;
+        targetPos.y = pos.y + screenY * 0.3f;// + pokerInfo.fPosY * 0.01f;
+        targetPos.z = pos.z - index * 0.05f;
 
         //Debug.Log("HandPoker:;Init... the target pos is: " + targetPos + "  pos.y is: " + pos.y);
 
         fTime = fBeginTime;
 
-        Transform textTrans = gameObject.transform.Find("Text");
+        Transform textTrans = pokerInst.transform.Find("Text");
         textName = textTrans.GetComponent<TextMesh>();
         textName.text = "手牌";
+
+        transform.DOMove(targetPos, 1.0f);
     }
 
     public void InitStreakBonusHandPoker(int index, Vector3 pos, Vector3 rendererSize, float fBeginTime)
     {
+        pokerInst = transform.Find("Poker_Club_10").gameObject;
+        animator = GetComponent<Animator>();
+
         pokerType = GameplayMgr.PokerType.HandPoker;
         handPokerSource = GameplayMgr.HandPokerSource.StreakBonus;
 
-        nIndex = index;
+        Index = index;
         originPos = transform.position;
         targetPos = pos;
 
         screenX = rendererSize.x;
+        screenY = rendererSize.y;
 
         fTime = fBeginTime;
 
-        Transform textTrans = gameObject.transform.Find("Text");
+        Transform textTrans = pokerInst.transform.Find("Text");
         textName = textTrans.GetComponent<TextMesh>();
         textName.text = "奖励牌";
+
+        transform.DOMove(targetPos, 1.0f);
 
     }
 
     public void InitAddNHandPoker(int index, Vector3 pos, Vector3 rendererSize, float fBeginTime)
     {
+        pokerInst = transform.Find("Poker_Club_10").gameObject;
+        animator = GetComponent<Animator>();
+
         pokerType = GameplayMgr.PokerType.HandPoker;
         handPokerSource = GameplayMgr.HandPokerSource.AddNPoker;
 
-        nIndex = index;
+        Index = index;
         originPos = transform.position;
         //targetPos = pos;
         targetPos.x = pos.x - 0.2f;
@@ -104,10 +129,11 @@ public class HandPoker : MonoBehaviour
         targetPos.z = pos.z - index * 0.05f;
 
         screenX = rendererSize.x;
+        screenY = rendererSize.y;
 
         fTime = fBeginTime;
 
-        Transform textTrans = gameObject.transform.Find("Text");
+        Transform textTrans = pokerInst.transform.Find("Text");
         textName = textTrans.GetComponent<TextMesh>();
         textName.text = "加N牌";
 
@@ -117,24 +143,155 @@ public class HandPoker : MonoBehaviour
         //Debug.Log("InitAddNHandPoker...inde x is:  " + index + "  the target pos is: " + targetPos + " init pos is: " + transform.position);
 
         //StartCoroutine(CardJump(gameObject.GetComponent<MeshFilter>().transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
-        StartCoroutine(CardJump(gameObject.transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
+        StartCoroutine(CardJump(gameObject.transform, pokerInst.GetComponent<Renderer>().bounds.size.x, targetPos));
 
         //StartCoroutine(adjustPosition());
 
     }
 
+    public void InitClearAllHandPoker(int index, Vector3 pos1, Vector3 pos2, Vector3 rendererSize, float fBeginTime)
+    {
+        pokerInst = transform.Find("Poker_Club_10").gameObject;
+        animator = GetComponent<Animator>();
+
+        pokerType = GameplayMgr.PokerType.HandPoker;
+        handPokerSource = GameplayMgr.HandPokerSource.ClearAll;
+        pokerSuit = GameplayMgr.PokerSuit.Suit_Club;
+        nPokerNumber = 1;
+
+        pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex", GameplayMgr.Instance.clearAllTexture[0]);
+        pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.clearAllTexture[1]);
+
+        screenX = rendererSize.x;
+        screenY = rendererSize.y;
+
+        Index = index;
+        originPos = transform.position;
+        targetPos = pos1;
+        targetPos.z = -2.0f;
+
+        clearAllPos = pos2;
+        /*targetPos.x = pos.x - 0.2f;
+        targetPos.y = pos.y;
+        targetPos.z = pos.z - index * 0.05f;*/
+
+        fTime = fBeginTime;
+
+        Transform textTrans = pokerInst.transform.Find("Text");
+        textName = textTrans.GetComponent<TextMesh>();
+        textName.text = "";
+
+        bIsClearAll = true;
+        fAddNTime = 0.0f;
+
+        Debug.Log("InitClearAllHandPoker...inde x is:  " + index + "  the target pos is: " + targetPos + " init pos is: " + transform.position);
+
+        //StartCoroutine(CardJump(gameObject.GetComponent<MeshFilter>().transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
+        //StartCoroutine(CardJump(gameObject.transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
+
+        animator.SetTrigger("Appear");
+        transform.DOMove(targetPos, 2.0f);
+    }
+
+    public void ClearAllFinishAppear()
+    {
+        Debug.Log("---------------------------------------------------clear all finish appearing...----------------------------");
+
+        animator.SetTrigger("GetItem");
+        StartCoroutine(InsertClearAllPoker());
+    }
+
+    public void UseClearAllPoker()
+    {
+        if (handPokerSource != GameplayMgr.HandPokerSource.ClearAll)
+            return;
+
+        Debug.Log("---------------------------------------------------00000000000000 using clear all, trigger the function...----------------------------");
+
+        animator.SetTrigger("Use");
+        
+        StartCoroutine(ClearAllFirstStage());
+    }
+
+    public void Test_ClearAllFinishAppear()
+    {
+        Debug.Log("**************************************** test clear all finish appearing...******************************");
+
+        StartCoroutine(InsertClearAllPoker());
+    }
+
+
+
+    IEnumerator InsertClearAllPoker()
+    {
+        Vector3 _pos = transform.position;
+        _pos.z = clearAllPos.z;
+        transform.position = _pos;
+
+        transform.DOMove(clearAllPos, 1.5f);
+
+        float fStartTime = Time.time;
+
+        while(Time.time - fStartTime < 1.5f)
+        {
+            yield return null;
+        }
+
+        GameplayMgr.Instance.AdjustAllHandPokerPosition();
+        GameplayMgr.Instance.powerUpProcess.FinishUsingClearAll();
+    }
+
+    IEnumerator ClearAllFirstStage()
+    {
+        float fStartTime = Time.time;
+
+        Vector3 firstPos = transform.position;
+        firstPos.y = 0.0f;
+        transform.DOMove(firstPos, 1.0f);
+
+        GameplayMgr.Instance.UseClearAllPoker(this);
+
+        while (Time.time - fStartTime < 1.0f)
+        {
+            yield return null;
+        }
+
+        StartCoroutine(ClearAllSecondStage());
+    }
+
+    IEnumerator ClearAllSecondStage()
+    {
+        float fStartTime = Time.time;
+
+        while (Time.time - fStartTime < 0.5f)
+        {
+            yield return null;
+        }
+
+        Vector3 secondPos = transform.position;
+        secondPos.x = 12.0f;
+        transform.DOMove(secondPos, 3.0f);
+
+        while (Time.time - fStartTime < 3.0f)
+        {
+            yield return null;
+        }
+
+        GameplayMgr.Instance.UpdateUseClearAllStepInfo(this);
+    }
+
     IEnumerator CardJumpIEnumerator()
     {
-        yield return StartCoroutine(CardJump(GetComponent<MeshFilter>().transform, gameObject.GetComponent<Renderer>().bounds.size.x, targetPos));
+        yield return StartCoroutine(CardJump(pokerInst.GetComponent<MeshFilter>().transform, pokerInst.GetComponent<Renderer>().bounds.size.x, targetPos));
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        if (!bFlip && !bCancel && !bIsAddN)
+        if (!bFlip && !bCancel && !bIsAddN && !bIsClearAll)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.1f);
+            //transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.1f);
 
             fTime += Time.deltaTime;
             Quaternion quatFrom = Quaternion.Euler(90.0f, 0.0f, 0.0f);
@@ -151,17 +308,14 @@ public class HandPoker : MonoBehaviour
             pos.y = targetPos.y;
             //pos.z = targetPos.z;
             pos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
-            //Debug.Log("the hand poker flip position is; " + pos);
 
-            //2021.8.10 added by pengyuan for testing the z value
-            //transform.position = Vector3.MoveTowards(transform.position, pos, 0.1f);
-            //transform.position -= Vector3.forward;
-            transform.position = Vector3.MoveTowards(transform.position, pos, 0.1f);
+            //transform.position = Vector3.MoveTowards(transform.position, pos, 0.08f);
 
             fFlipTime += Time.deltaTime;
             Quaternion quatTo = Quaternion.Euler(0.0f, 180.0f, 0.0f);
 
-            transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fFlipTime / fFlipTotalTime);
+            //2021.9.16 pengyuan comment out, now we use the animator to control the flip/unflip
+            //transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fFlipTime / fFlipTotalTime);
 
             if (fFlipTime >= fFlipTotalTime)
             {
@@ -187,11 +341,6 @@ public class HandPoker : MonoBehaviour
         if (bIsAddN)
         {
             fAddNTime += Time.deltaTime;
-            
-            if(!bFlip)
-            {
-                ;
-            }
         }
     }
 
@@ -215,7 +364,7 @@ public class HandPoker : MonoBehaviour
         textName.text = GameplayMgr.Instance.Test_GetSuitDisplayString(pokerSuit, nPokerNumber);
 
         int textureIndex = ((int)suit - 1) * 13 + nPokerNumber - 1;
-        GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
+        pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
     }
 
     public void Test_EnableDisplayText()
@@ -240,17 +389,24 @@ public class HandPoker : MonoBehaviour
             return;
         }
 
-        Debug.Log("here we flip the poker, name is: " + gameObject.name + "  number is: " + nPokerNumber);
-
         bFlip = true;
         bIsFlipping = true;
         fFlipTime = 0.0f;
 
         nFoldIndex = nIndex;
 
-        //transform.position -= Vector3.forward * 5;
+        Vector3 pos = Vector3.zero;
+        pos.x = screenX * 0.1f;
+        pos.y = screenY * -0.4f;
+        pos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
 
-        //targetPos.z = fZ;
+        Debug.Log("here we flip the poker, name is: " + gameObject.name + "  number is: " + nPokerNumber + "  pos is: " + pos);
+
+        transform.DOMove(pos, 0.35f);
+
+        GameplayMgr.Instance.ResetAllTriggers(animator);
+
+        animator.SetTrigger("Flip");
     }
 
     public void Withdraw()
@@ -263,8 +419,34 @@ public class HandPoker : MonoBehaviour
             Vector3 newPos = GameplayMgr.Instance.GetTopHandPoker().transform.position;
             newPos.z = newPos.z - 0.05f;
             transform.DOMove(newPos, 0.25f);
+
+            GameplayMgr.Instance.AdjustAllHandPokerPosition();
         }
+        else if(handPokerSource == GameplayMgr.HandPokerSource.ClearAll)
+        {
+            Vector3 newPos = GameplayMgr.Instance.GetTopHandPoker().transform.position;
+            newPos.z = newPos.z - 0.05f;
+
+            //transform.DOMove(newPos, 0.5f);
+            StartCoroutine(MoveToNewPosition(newPos, 0.5f));
+        }
+        else
+        {
+            transform.DORotate(new Vector3(0.0f, 180.0f, 0.0f), 0.2f, RotateMode.WorldAxisAdd);
+            Vector3 newPos = GameplayMgr.Instance.GetTopHandPoker().transform.position;
+            newPos.z = newPos.z - 0.05f;
+            //transform.DOMove(newPos, 0.25f);
+            //Debug.Log("here we withdraw a hadn poker, the new pos Is: " + newPos + "  the name is: " + gameObject.name + "  top hadn poker is: " + GameplayMgr.Instance.GetTopHandPoker().name);
+
+            StartCoroutine(MoveToNewPosition(newPos, 0.5f));
+            //GameplayMgr.Instance.AdjustAllHandPokerPosition();
+        }
+
+        animator.SetTrigger("Withdraw");
     }
+
+    public void ClearAll()
+    { }
 
     public void WithdrawAddNPoker(GamePoker gamePoker)
     {
@@ -320,14 +502,35 @@ public class HandPoker : MonoBehaviour
             newPos.z = pos.z - index * 0.05f;
         }
 
-        //Debug.Log("AdjustHandPokerPosition... the newPos is: " + newPos + ", the total count is: " + nTotalCount + ", the idnex is : " + index + "  name is: " + gameObject.name);
+        /*if (handPokerSource == GameplayMgr.HandPokerSource.ClearAll)
+        {
+            transform.position = newPos;
+            Debug.Log("AdjustHandPokerPosition... the newPos is: " + newPos + ", the total count is: " + nTotalCount + ", the idnex is : " + index + "  name is: " + gameObject.name);
+        }
 
         targetPos = newPos;
+        transform.position = targetPos;
 
-        if(handPokerSource == GameplayMgr.HandPokerSource.AddNPoker && !bIsJumping)
+        if (handPokerSource == GameplayMgr.HandPokerSource.AddNPoker && !bIsJumping)
         {
             transform.position = targetPos;
+        }*/
+
+        if(handPokerSource == GameplayMgr.HandPokerSource.ClearAll)
+        {
+            //transform.position = newPos;
+            //targetPos = newPos;
+            transform.DOMove(newPos, 0.2f);
+            
         }
+        else
+        {
+            targetPos = newPos;
+            transform.DOMove(newPos, 0.2f);
+        }
+
+        //Debug.Log("AdjustHandPokerPosition... the newPos is: " + newPos + ", the total count is: " + nTotalCount + ", the idnex is : " + index + "  name is: " + gameObject.name);
+
     }
 
     IEnumerator CardJump(Transform card, float cardWidth, Vector3 target)
@@ -395,9 +598,24 @@ public class HandPoker : MonoBehaviour
         transform.DOMove(targetPos, 0.1f);*/
     }
 
+    IEnumerator MoveToNewPosition(Vector3 newPos, float fTotalTime)
+    {
+        transform.DOMove(newPos, fTotalTime);
+
+        float fTime = 0.0f;
+
+        while (fTime < fTotalTime)
+        {
+            fTime += Time.deltaTime;
+            yield return null;
+        }
+
+        GameplayMgr.Instance.AdjustAllHandPokerPosition();
+    }
+
     IEnumerator adjustPosition()
     {
-        Debug.Log("here we enter coroutine adjustPosition, the index is: " + nIndex);
+        Debug.Log("here we enter coroutine adjustPosition, the index is: " + Index);
 
         yield return new WaitForEndOfFrame();
 

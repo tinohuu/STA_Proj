@@ -71,5 +71,13 @@ public class MapLevelWindowBoost : MonoBehaviour
             else BoostIndex--;
         }
         UpdateView();
+        GetComponentInParent<MapLevelWindow>().UpdateView();
+    }
+
+    public int GetBoostModifer()
+    {
+        if (BoostIndex == 0) return 1;
+        else if (BoostIndex == 1) return 2;
+        else return 4;
     }
 }

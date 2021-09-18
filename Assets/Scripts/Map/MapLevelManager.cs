@@ -24,16 +24,25 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
     private void Awake()
     {
         if (!Instance) Instance = this;
+        
 
-        Mapmaker_CreateItems(Mapmaker.GetConfig(this));
     }
 
     void Start()
     {
+        Mapmaker_CreateItems(Mapmaker.GetConfig(this));
         //if (l)
         //MapLevel level = LevelGroup.GetChild(MapManager.Instance.Data.SelectedLevel - 1).GetComponent<MapLevel>();
-        //if (level) MapPlayer.Instance.MoveToLevel(level, false);
+    }
 
+    void UpdateLevelsView()
+    {
+        var levels = LevelGroup.GetComponentsInChildren<MapLevel>();
+        for (int i = 0; i < levels.Length; i++)
+        {
+            levels[i].Data = MapManager.Instance.Data.MapLevelDatas[i + MapManager.Instance.CurMapStageConfigs[0].LevelID - 1];
+            levels[i].UpdateView();
+        }
     }
 
     #region Mapmaker
@@ -49,6 +58,7 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
             var level = Instantiate(LevelPrefab, LevelGroup).GetComponent<MapLevel>();
             level.transform.localPosition = configs[i].LocPos;
             level.Data = MapManager.Instance.Data.MapLevelDatas[i + MapManager.Instance.CurMapStageConfigs[0].LevelID - 1];
+            if (level.Data.ID == MapManager.Instance.Data.SelectedLevel) MapPlayer.Instance.MoveToLevel(level, false);
         }
     }
 
@@ -99,6 +109,12 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
             configs.Add(config);
         }
         return JsonExtensions.ListToJson(configs);
+    }
+
+    public void Mapmaker_DeleteItem(GameObject target)
+    {
+        DestroyImmediate(target);
+        UpdateLevelsView();
     }
     #endregion
 }

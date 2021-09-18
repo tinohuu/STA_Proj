@@ -1,0 +1,194 @@
+[
+  {
+    "ID": 1,
+    "PowerUpsID": 8,
+    "RiseLevel": 1,
+    "StandardCost": 2000,
+    "GrandCost": 3000,
+    "EpicCost": 6000
+  },
+  {
+    "ID": 2,
+    "PowerUpsID": 8,
+    "RiseLevel": 58,
+    "StandardCost": 3000,
+    "GrandCost": 5000,
+    "EpicCost": 8000
+  },
+  {
+    "ID": 3,
+    "PowerUpsID": 8,
+    "RiseLevel": 168,
+    "StandardCost": 4000,
+    "GrandCost": 6000,
+    "EpicCost": 11000
+  },
+  {
+    "ID": 4,
+    "PowerUpsID": 8,
+    "RiseLevel": 396,
+    "StandardCost": 5000,
+    "GrandCost": 7000,
+    "EpicCost": 13000
+  },
+  {
+    "ID": 5,
+    "PowerUpsID": 9,
+    "RiseLevel": 1,
+    "StandardCost": 3000,
+    "GrandCost": 4000,
+    "EpicCost": 8000
+  },
+  {
+    "ID": 6,
+    "PowerUpsID": 9,
+    "RiseLevel": 58,
+    "StandardCost": 4000,
+    "GrandCost": 6000,
+    "EpicCost": 10000
+  },
+  {
+    "ID": 7,
+    "PowerUpsID": 9,
+    "RiseLevel": 168,
+    "StandardCost": 5000,
+    "GrandCost": 7000,
+    "EpicCost": 13000
+  },
+  {
+    "ID": 8,
+    "PowerUpsID": 9,
+    "RiseLevel": 396,
+    "StandardCost": 6000,
+    "GrandCost": 9000,
+    "EpicCost": 16000
+  },
+  {
+    "ID": 9,
+    "PowerUpsID": 10,
+    "RiseLevel": 1,
+    "StandardCost": 4000,
+    "GrandCost": 6000,
+    "EpicCost": 10000
+  },
+  {
+    "ID": 10,
+    "PowerUpsID": 10,
+    "RiseLevel": 58,
+    "StandardCost": 5000,
+    "GrandCost": 8000,
+    "EpicCost": 14000
+  },
+  {
+    "ID": 11,
+    "PowerUpsID": 10,
+    "RiseLevel": 168,
+    "StandardCost": 7000,
+    "GrandCost": 10000,
+    "EpicCost": 18000
+  },
+  {
+    "ID": 12,
+    "PowerUpsID": 10,
+    "RiseLevel": 396,
+    "StandardCost": 8000,
+    "GrandCost": 12000,
+    "EpicCost": 21000
+  },
+  {
+    "ID": 13,
+    "PowerUpsID": 11,
+    "RiseLevel": 1,
+    "StandardCost": 2000,
+    "GrandCost": 3000,
+    "EpicCost": 6000
+  },
+  {
+    "ID": 14,
+    "PowerUpsID": 11,
+    "RiseLevel": 58,
+    "StandardCost": 3000,
+    "GrandCost": 5000,
+    "EpicCost": 8000
+  },
+  {
+    "ID": 15,
+    "PowerUpsID": 11,
+    "RiseLevel": 168,
+    "StandardCost": 4000,
+    "GrandCost": 6000,
+    "EpicCost": 11000
+  },
+  {
+    "ID": 16,
+    "PowerUpsID": 11,
+    "RiseLevel": 396,
+    "StandardCost": 5000,
+    "GrandCost": 7000,
+    "EpicCost": 13000
+  },
+  {
+    "ID": 17,
+    "PowerUpsID": 12,
+    "RiseLevel": 1,
+    "StandardCost": 3000,
+    "GrandCost": 4000,
+    "EpicCost": 8000
+  },
+  {
+    "ID": 18,
+    "PowerUpsID": 12,
+    "RiseLevel": 58,
+    "StandardCost": 4000,
+    "GrandCost": 6000,
+    "EpicCost": 10000
+  },
+  {
+    "ID": 19,
+    "PowerUpsID": 12,
+    "RiseLevel": 168,
+    "StandardCost": 5000,
+    "GrandCost": 7000,
+    "EpicCost": 13000
+  },
+  {
+    "ID": 20,
+    "PowerUpsID": 12,
+    "RiseLevel": 396,
+    "StandardCost": 6000,
+    "GrandCost": 9000,
+    "EpicCost": 16000
+  },
+  {
+    "ID": 21,
+    "PowerUpsID": 13,
+    "RiseLevel": 1,
+    "StandardCost": 2000,
+    "GrandCost": 3000,
+    "EpicCost": 6000
+  },
+  {
+    "ID": 22,
+    "PowerUpsID": 13,
+    "RiseLevel": 58,
+    "StandardCost": 3000,
+    "GrandCost": 5000,
+    "EpicCost": 8000
+  },
+  {
+    "ID": 23,
+    "PowerUpsID": 13,
+    "RiseLevel": 168,
+    "StandardCost": 4000,
+    "GrandCost": 6000,
+    "EpicCost": 11000
+  },
+  {
+    "ID": 24,
+    "PowerUpsID": 13,
+    "RiseLevel": 396,
+    "StandardCost": 5000,
+    "GrandCost": 7000,
+    "EpicCost": 13000
+  }
+]

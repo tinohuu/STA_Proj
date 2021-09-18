@@ -111,7 +111,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     {
         CropList.rectTransform.anchoredPosition = Vector2.zero - Vector2.up * CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y;
         int coinCount = 2000;
-        CropList.text = "Farm " + "Coin".ToIcon() + " " + 2000;
+        string text = "Farm " + "Coin".ToIcon() + " " + 2000;
         int firstLevelOfMap = 0;// MapManager.MapMakerConfig.LevelToStarting(MapManager.Instance.Data.CompleteLevel);
 
         CropConfig cropConfig = CropManager.Instance.LevelToCropConfig(firstLevelOfMap);
@@ -123,7 +123,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
             cropConfig = CropManager.Instance.CropConfigs[i];
             if (cropConfig.Level <= MapManager.Instance.Data.CompleteLevel)
             {
-                CropList.text += "\n" + cropConfig.Name + " " + "Coin".ToIcon() + " 50";
+                text += "\n" + cropConfig.Name + " " + "Coin".ToIcon() + " 50";
                 lastCropIndex = i;
             }
             else
@@ -131,10 +131,15 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
                 break;
             }
         }
+        CropList.text = text;
+
         coinCount += (lastCropIndex + 1) * 50;
         LayoutRebuilder.ForceRebuildLayoutImmediate(CropList.rectTransform);
         CropList.rectTransform.DOAnchorPosY(CropList.rectTransform.sizeDelta.y + CropList.transform.parent.GetComponent<RectTransform>().sizeDelta.y, 10);
-        if (CropList.transform.childCount > 0) CropList.transform.GetChild(0).gameObject.AddComponent<SoftMaskable>();
+        if (CropList.transform.childCount > 0 && !CropList.transform.GetChild(0).gameObject.GetComponent<SoftMaskable>())
+        {
+            CropList.transform.GetChild(0).gameObject.AddComponent<SoftMaskable>();
+        }
         return coinCount;
     }
 
@@ -148,7 +153,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
             bool clamp = now < data.LastHarvestTime;
             if (clamp)
             {
-                TimeDebugText.Text.text += "\nClamped the harvest time.";
+                TimeDebugText.Log("Clamped the harvest time.");
                 data.LastHarvestTime = now;
             }
             CropManager.Instance.UpdateCropsAnimator(true);

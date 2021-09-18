@@ -16,6 +16,7 @@ public class StreakBonusUI : MonoBehaviour
     int nSpriteCount = 0;
     GameObject[] streakSprites = new GameObject[6];
 
+    Image streakBonusBG;
     Image currentStreak;
     Image nextStreak;
 
@@ -27,6 +28,9 @@ public class StreakBonusUI : MonoBehaviour
     public GameplayMgr.StreakType nextStreakType;
 
     GamePlayUI gameplayUI;
+
+    List<GameplayMgr.StreakBonusInfo> clearAllStreakBonus = new List<GameplayMgr.StreakBonusInfo>();
+    List<GameplayMgr.StreakBonusInfo> withdrawClearAllStreakBonus = new List<GameplayMgr.StreakBonusInfo>();
 
     private void Awake()
     {
@@ -67,7 +71,12 @@ public class StreakBonusUI : MonoBehaviour
         if (addWildcardSprite == null)
             Debug.Log("StreakBonusUI::Start... Init addWildcardSprite error!!!");
 
+        streakBonusBG = rectTrans.transform.Find("BonusBG").GetComponent<Image>();
+        currentStreak = rectTrans.transform.Find("BonusImage").GetComponent<Image>();
+        nextStreak = rectTrans.transform.Find("NextBonusImage").GetComponent<Image>();
+
         //test code
+        streakBonusBG.rectTransform.sizeDelta = new Vector2(608.0f, 156.0f);
         Rect rectSize = rectTrans.rect;
         for (int i = 0; i < GameplayMgr.Max_StreakBonus_Count; ++i)
         {
@@ -76,14 +85,14 @@ public class StreakBonusUI : MonoBehaviour
             streakSprites[i].AddComponent<Image>().sprite = whiteDotSprite;
             streakSprites[i].GetComponent<RectTransform>().sizeDelta  = new Vector2(40.0f, 40.0f);
 
-            Vector3 posOffset = new Vector3(rectSize.width * (i * 0.06f - 0.3f), rectSize.height * 0.05f, 0.0f);
+            //Vector3 posOffset = new Vector3(rectSize.width * (i * 0.06f - 0.3f), rectSize.height * 0.05f, 0.0f);
+            Vector3 posOffset = new Vector3(- rectSize.width/2 + 145.0f + (i * 40.0f), rectSize.height * 0.05f - 3.0f, 0.0f);
             streakSprites[i].transform.position = rectTrans.transform.position + posOffset;
 
             streakSprites[i].SetActive(false);
         }
 
-        currentStreak = rectTrans.transform.Find("BonusImage").GetComponent<Image>();
-        nextStreak = rectTrans.transform.Find("NextBonusImage").GetComponent<Image>();
+        
 
     }
 
@@ -100,18 +109,39 @@ public class StreakBonusUI : MonoBehaviour
         
         int nCount = GameplayMgr.Instance.GetStreakFinishCount(streak);
 
-        for(int i = 0; i < nCount; ++i)
+        InitDotSprites(nCount);
+
+        UpdateStreakImage();
+    }
+
+    void InitDotSprites(int nCount)
+    {
+        streakBonusBG.rectTransform.sizeDelta = new Vector2(358.0f + 50.0f * nCount, 156.0f);
+
+        int nOffset = 0;
+        if (nCount == 5)
+            nOffset = 0;
+        else if (nCount == 4)
+            nOffset = 1;
+        else if (nCount == 6)
+            nOffset = -1;
+
+        Rect rectSize = GetComponent<RectTransform>().rect;
+        
+        for (int i = 0; i < nCount; ++i)
         {
             streakSprites[i].GetComponent<Image>().sprite = whiteDotSprite;
             streakSprites[i].SetActive(true);
+
+            Vector3 posOffset = new Vector3(-rectSize.width / 2 + 145.0f + (i + nOffset) * 40.0f, rectSize.height * 0.05f - 3.0f, 0.0f);
+            streakSprites[i].transform.position = rectTrans.transform.position + posOffset;
         }
 
-        for(int i = nCount; i < GameplayMgr.Max_StreakBonus_Count; ++i)
+        for (int i = nCount; i < GameplayMgr.Max_StreakBonus_Count; ++i)
         {
             streakSprites[i].SetActive(false);
         }
 
-        UpdateStreakImage();
     }
 
     public void SetStreakBonusStatus(int nCount, int nStreakBonus)
@@ -145,8 +175,11 @@ public class StreakBonusUI : MonoBehaviour
             streakSprites[i].SetActive(true);
         }
 
-        int nTotalCount = GameplayMgr.Instance.GetStreakFinishCount(currentStreakType);
-        for (int i = nCount; i < nTotalCount; ++i)
+        //int nTotalCount = GameplayMgr.Instance.GetStreakFinishCount(currentStreakType);
+
+        //InitDotSprites(nTotalCount);
+
+        /*for (int i = nCount; i < nTotalCount; ++i)
         {
             streakSprites[i].SetActive(true);
             streakSprites[i].GetComponent<Image>().sprite = whiteDotSprite;
@@ -155,6 +188,32 @@ public class StreakBonusUI : MonoBehaviour
         for (int i = nTotalCount; i < GameplayMgr.Max_StreakBonus_Count; ++i)
         {
             streakSprites[i].SetActive(false);
+        }*/
+    }
+
+    public void SetClearAllStreakBonus(List<GameplayMgr.StreakBonusInfo> bonusInfos)
+    {
+        clearAllStreakBonus.Clear();
+
+        clearAllStreakBonus = bonusInfos;
+    }
+
+    public void WithDrawClearAllStreakBonus(List<GameplayMgr.StreakBonusInfo> bonusInfos)
+    {
+        withdrawClearAllStreakBonus.Clear();
+
+        withdrawClearAllStreakBonus = bonusInfos;
+
+        for(int i = bonusInfos.Count - 1; i >= 0; --i)
+        {
+            GameplayMgr.StreakBonusInfo info = bonusInfos[i];
+            int nCount = GameplayMgr.Instance.GetStreakFinishCount((GameplayMgr.StreakType)info.StreakType);
+
+            InitStreakBonus(GameplayMgr.Instance.GetPreviousStreakType(), currentStreakType);
+
+            //这里如果是最后一个，将其解码，然后减去实际的个数，设置到显示的数组中，或者直接每个都解码，然后设置数组
+            if(i == 0)
+            {; }
         }
     }
 

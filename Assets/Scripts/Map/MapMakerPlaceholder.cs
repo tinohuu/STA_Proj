@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MapMakerPlaceholder : MonoBehaviour, IDragHandler, IPointerDownHandler
+public class MapmakerPlaceholder : MonoBehaviour, IDragHandler, IPointerDownHandler
 {
     public static Transform Target = null;
     private void Awake()

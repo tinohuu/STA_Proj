@@ -12,9 +12,10 @@ public class MapLevelWindowPowerup : MonoBehaviour
     public GameObject PurchaseImage;
     public GameObject InUseImage;
     public GameObject TextImage;
+    [SerializeField] RewardNumber rewardNumber;
 
     [Header("Settings")]
-    public RewardType RewardType;
+    [HideInInspector] public RewardType RewardType;
 
     [Header("Data")]
     public bool InUse = false;
@@ -22,31 +23,42 @@ public class MapLevelWindowPowerup : MonoBehaviour
 
     ButtonAnimator button;
     CanvasGroup canvasGroup;
-    private void Start()
+    Image image;
+    private void Awake()
     {
-        Interactable = MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigsByFuncID[(int)RewardType + 1012 - 8].FunctionParams;
-
         button = GetComponent<ButtonAnimator>();
         canvasGroup = GetComponent<CanvasGroup>();
+        image = GetComponent<Image>();
+        var icons = Resources.LoadAll<Sprite>("Sprites/IconAtlas");
+        Sprite sprite = Array.Find(icons, e => e.name == RewardType.ToString());
+        image.sprite = sprite;
+        rewardNumber.Type = RewardType;
+        Interactable = MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigsByFuncID[(int)RewardType + 1012 - 8].FunctionParams;
         canvasGroup.alpha = Interactable ? 1 : 0.5f;
+    }
+    private void Start()
+    {
 
-        Reward.Data[RewardType] = UnityEngine.Random.Range(1, 10); // test only
-        UpdateIconImage();
     }
 
+    private void Update()
+    {
+        UpdateIconImage();
+    }
     public void OnClick()
     {
         if (Interactable)
         {
             if (Reward.Data[RewardType] == 0)
             {
-                // todo: go to store
+                RewardPurchaseWindow window = Window.CreateWindowPrefab(Resources.Load<GameObject>("Windows/Window_PowerupPurchase")).GetComponent<RewardPurchaseWindow>();
+                window.Type = RewardType;
             }
             else
             {
                 InUse = !InUse;
-                UpdateIconImage();
             }
+
         }
         // Show the window waiting to be locked
         else
@@ -56,7 +68,6 @@ public class MapLevelWindowPowerup : MonoBehaviour
             rawString = string.Format(text.text, RewardType.ToString(), MapManager.Instance.FunctionConfigsByFuncID[(int)RewardType + 1012 - 8].FunctionParams);
             rawString = System.Text.RegularExpressions.Regex.Replace(rawString, "([a-z])_?([A-Z])", "$1 $2");
             text.text = rawString;
-            return;
         }
     }
 

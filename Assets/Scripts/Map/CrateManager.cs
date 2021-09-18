@@ -71,6 +71,11 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
         return JsonExtensions.ListToJson(configs);
     }
 
+    public void Mapmaker_DeleteItem(GameObject target)
+    {
+        Destroy(target);
+    }
+
     #endregion
 }
 

@@ -7,7 +7,6 @@ using UnityEditor;
 [CustomEditor(typeof(RewardManager))]
 public class RewardManagerEditor : Editor
 {
-
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();

@@ -10,7 +10,6 @@ public class SoundManager : MonoBehaviour
 
     public static SoundManager Instance;
     public List<AudioClip> Clips = new List<AudioClip>();
-    public SoundManager _Debug = null;
     private void Awake()
     {
         if (!Instance) Instance = this;
@@ -27,12 +26,6 @@ public class SoundManager : MonoBehaviour
         StartCoroutine(ITest());
         StartCoroutine(ITest());
         UpdateMusicVolume();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        _Debug = Instance;
     }
 
     public void PlaySFX(string name, bool isSingle = false)

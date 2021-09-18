@@ -24,7 +24,7 @@ public class MapLevel : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        //ButtonSpriteRenderer.sprite = CropManager.Instance.LevelToCropConfig(Data.ID).ID % 2 == 1 ? LevelSprites[0] : LevelSprites[1];
+        ButtonSpriteRenderer.sprite = CropManager.Instance.LevelToCropConfig(Data.ID).ID % 2 == 1 ? LevelSprites[0] : LevelSprites[1];
         ButtonSpriteRenderer.color = IsOpen ? Color.white : new Color(1, 1, 1, 0.5f);
 
         LevelText.text = Data.ID.ToString();

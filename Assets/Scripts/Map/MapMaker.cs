@@ -89,16 +89,16 @@ public class Mapmaker : MonoBehaviour
     {
         string fileName = ModuleFilename(module, mapId);
         string json;
-        if (Debug.isDebugBuild && File.Exists(Application.dataPath + fileName))
+        if (Debug.isDebugBuild && File.Exists(Application.dataPath + "/" + fileName))
             json = File.ReadAllText(Application.dataPath + fileName);
-        else json = ConfigsAsset.GetConfig(fileName);
+        else json = ConfigsAsset.GetConfig("Mapmaker/" + fileName.Replace(".json", ""));
         return json;
     }
     public static string GetConfig(IMapmakerModule module) => GetConfig(module, MapManager.Instance.MapID);
 
     public static string ModuleFilename(IMapmakerModule module, int mapId)
     {
-        return "/MapMakerConfig_" + mapId + "_" + module.Mapmaker_ItemType.ToString() + ".json";
+        return "MapmakerConfig_" + mapId + "_" + module.Mapmaker_ItemType.ToString() + ".json";
     }
 
     public static void Log(string log)
@@ -110,9 +110,9 @@ public class Mapmaker : MonoBehaviour
     #region UI
     void ApplyMode(bool recreateInputs = true)
     {
-        MapMakerPlaceholder.Target = null;
+        MapmakerPlaceholder.Target = null;
 
-        MapMakerPlaceholder[] placeholders = FindObjectsOfType<MapMakerPlaceholder>();
+        MapmakerPlaceholder[] placeholders = FindObjectsOfType<MapmakerPlaceholder>();
         for (int i = 0; i < placeholders.Length; i++) Destroy(placeholders[i].gameObject);
 
         Type type = CurModule.Mapmaker_ItemType;
@@ -139,7 +139,7 @@ public class Mapmaker : MonoBehaviour
     {
         CreateInputs();
 
-        string[] dataText = CurModule.Mapmaker_UpdateInputs(MapMakerPlaceholder.Target.parent);
+        string[] dataText = CurModule.Mapmaker_UpdateInputs(MapmakerPlaceholder.Target.parent);
         if (dataText == null) return;
         var inputs = InputGroup.GetComponentsInChildren<InputField>();
         for (int i = 0; i < inputs.Length; i++)
@@ -158,7 +158,7 @@ public class Mapmaker : MonoBehaviour
             if (inputs[i].text == "") return;
             inputDatas[i] = inputs[i].text;
         }
-        CurModule.Mapmaker_ApplyInputs(MapMakerPlaceholder.Target?.parent, inputDatas);
+        CurModule.Mapmaker_ApplyInputs(MapmakerPlaceholder.Target?.parent, inputDatas);
         ApplyMode();
     }
 
@@ -170,8 +170,8 @@ public class Mapmaker : MonoBehaviour
 
     void DeleteItem()
     {
-        if (MapMakerPlaceholder.Target)
-            DestroyImmediate(MapMakerPlaceholder.Target.parent.gameObject);
+        if (MapmakerPlaceholder.Target)
+            CurModule.Mapmaker_DeleteItem(MapmakerPlaceholder.Target.parent.gameObject);
     }
 
     public void SaveConfig()
@@ -182,7 +182,7 @@ public class Mapmaker : MonoBehaviour
             string json = module.Mapmaker_ToConfig();
             if (json == "" || json == "[]" || json == null) continue;
 
-            string file = Application.dataPath + ModuleFilename(module, MapManager.Instance.MapID);
+            string file = Application.dataPath + "/" + ModuleFilename(module, MapManager.Instance.MapID);
             if (!File.Exists(file))
             {
                 var fs = File.Create(file);
@@ -204,9 +204,11 @@ namespace STA.Mapmaker
         public Type Mapmaker_ItemType { get; }
         public string[] Mapmaker_InputInfos { get; }
         public void Mapmaker_CreateItems(string config);
-        public Transform Mapmaker_AddItem();
+
         public string[] Mapmaker_UpdateInputs(Transform target);
+        public Transform Mapmaker_AddItem();
         public void Mapmaker_ApplyInputs(Transform target, string[] inputDatas);
+        public void Mapmaker_DeleteItem(GameObject target);
         public string Mapmaker_ToConfig();
     }
 

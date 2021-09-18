@@ -7,6 +7,13 @@ using DG.Tweening;
 public class GamePoker : MonoBehaviour
 {
     public int Index { get; set; }
+
+    public GameObject pokerInst = null;
+
+    Animator animator = null;
+
+    public GameDefines.PokerStatus pokerStatus = GameDefines.PokerStatus.None;
+
     public JsonReadWriteTest.PokerInfo pokerInfo { get; set; }
     public GameplayMgr.PokerType pokerType { get; set; }
 
@@ -38,6 +45,9 @@ public class GamePoker : MonoBehaviour
     Image addNUnitImage;    //number
     Animator addNAnim;
     public string strHandPokerIDs = "";
+
+    //pengyuan 2021.9.17 add for clear all poker
+    bool bClearAll = false;
 
     public Vector3 originPos;
     public Vector3 targetPos;
@@ -107,7 +117,18 @@ public class GamePoker : MonoBehaviour
 
     //Collider2D
 
-    Transform trans;
+    //Transform trans;
+
+    private void Awake()
+    {
+        //if (transform == null)
+        //    Debug.Log("transform is null---------------------------");
+
+        //pokerInst = transform.Find("Poker_Club_10").gameObject;
+        //Transform childTrans = transform.Find("Poker_Club_10");
+
+        //Debug.Log("child trans is: " + childTrans);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -120,11 +141,16 @@ public class GamePoker : MonoBehaviour
         if (curveHelper == null)
             Debug.Log("@@@@ we init curveHelper error!!! please check your code!");*/
 
-        trans = GetComponent<MeshFilter>().transform;
+        //trans = GetComponent<MeshFilter>().transform;
     }
 
     public void Init(GameObject goPrefab, JsonReadWriteTest.PokerInfo info, int nIndex, Vector3 pos, Vector3 rendererSize, float fBeginTime)
     {
+        //Debug.Log("game poker init function ,  here we set the pokerinfo class... ... ... ");
+        pokerInst = transform.Find("Poker_Club_10").gameObject;
+        animator = GetComponent<Animator>();
+        //trans = pokerInst.GetComponent<MeshFilter>().transform;
+
         Index = nIndex;
         nFoldIndex = nIndex;
         originPos = transform.position;
@@ -147,7 +173,7 @@ public class GamePoker : MonoBehaviour
 
         fTime = fBeginTime;
 
-        Transform textTrans = gameObject.transform.Find("Text");
+        Transform textTrans = pokerInst.gameObject.transform.Find("Text");
         textName = textTrans.GetComponent<TextMesh>();
         textName.text = "测试代码";
 
@@ -157,7 +183,8 @@ public class GamePoker : MonoBehaviour
         //this canvas is used to display ui animation, ascending, descending poker.
         if(pokerInfo.nItemType != (int)GameDefines.PokerItemType.None)
         {
-            gameObject.AddComponent<Canvas>();
+            //gameObject.AddComponent<Canvas>();
+            pokerInst.gameObject.AddComponent<Canvas>();
         }
         
         itemType = (GameDefines.PokerItemType)info.nItemType;
@@ -172,7 +199,7 @@ public class GamePoker : MonoBehaviour
     {
         fTime += Time.deltaTime;
 
-        if (!bFlip && !bFold && !bUnFlip && !bDismiss && !bAddNPoker)
+        if (!bFlip && !bFold && !bUnFlip && !bDismiss && !bAddNPoker && !bClearAll)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.08f);
 
@@ -271,7 +298,8 @@ public class GamePoker : MonoBehaviour
 
             Vector3 pos = GameplayMgr.Instance.GetFoldPokerPosition();
 
-            Vector3 oldPos = trans.position;
+            //Vector3 oldPos = trans.position;
+            Vector3 oldPos = transform.position;
             //transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
 
             if (fFoldTime >= fFoldTotalTime)
@@ -328,6 +356,7 @@ public class GamePoker : MonoBehaviour
         {
             nPokerNumber = nNumber;
         }
+        
         nOriginNumber = nPokerNumber;
         //Debug.Log("GamePoker::Test_SetSuitNumber... the suit is: " + suit + "the name is: " + gameObject.name);
 
@@ -340,7 +369,7 @@ public class GamePoker : MonoBehaviour
         //string strPokerName = string.Format("Poker/Poker_{0:3D}", nNumber + 1);
 
         int textureIndex = ((int)suit - 1) * 13 + nPokerNumber - 1;
-        GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
+        pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
         //int offsetX = textureIndex * 142;
         //GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerAtlas);
         //GetComponent<Renderer>().material.SetTextureOffset("_MainTex2", new Vector2(textureIndex * 142, 0));
@@ -360,7 +389,7 @@ public class GamePoker : MonoBehaviour
 
         textName.text = "";
 
-        GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.addNTexture);
+        pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.addNTexture);
     }
 
     //pengyuan 2021.9.1 added for update ascend and descend poker status
@@ -390,7 +419,7 @@ public class GamePoker : MonoBehaviour
             }
 
             int textureIndex = ((int)pokerSuit - 1) * 13 + nPokerNumber - 1;
-            GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
+            pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
         }
         if(itemType == GameDefines.PokerItemType.Descending_Poker)
         {
@@ -407,7 +436,7 @@ public class GamePoker : MonoBehaviour
             }
 
             int textureIndex = ((int)pokerSuit - 1) * 13 + nPokerNumber - 1;
-            GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
+            pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
         }
     }
 
@@ -493,7 +522,7 @@ public class GamePoker : MonoBehaviour
 
     void PostInitAscDesEffect()
     {
-        ascendEffect.transform.SetParent(GetComponent<Canvas>().transform);
+        ascendEffect.transform.SetParent(pokerInst.GetComponent<Canvas>().transform);
         ascendEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         ascendEffect.SetActive(false);
     }
@@ -503,8 +532,11 @@ public class GamePoker : MonoBehaviour
         nAddNCount = int.Parse(pokerInfo.strItemInfo);
         nAddNOriginCount = nAddNCount;
 
-        addNEffect.transform.SetParent(GetComponent<Canvas>().transform);
+        //addNEffect.gameObject.layer = 0;
+        addNEffect.GetComponent<ItemPlusCallBack>().rootObject = gameObject;
+        addNEffect.transform.SetParent(pokerInst.GetComponent<Canvas>().transform);
         addNEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        pokerInst.GetComponent<Canvas>().sortingLayerName = "Environment";
 
         Transform numberTrans = addNEffect.transform.Find("FXPlus/FXCard/Group/Plus");
         if (numberTrans == null)
@@ -565,7 +597,7 @@ public class GamePoker : MonoBehaviour
 
         CheckCorrectBombStepCount();
 
-        bombEffect.transform.SetParent(GetComponent<Canvas>().transform);
+        bombEffect.transform.SetParent(pokerInst.GetComponent<Canvas>().transform);
         bombEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
 
         bombAnim = bombEffect.GetComponent<Animator>();
@@ -649,13 +681,13 @@ public class GamePoker : MonoBehaviour
 
         transform.DOMove(GameplayMgr.Instance.Trans.position - Vector3.forward * 2.0f, 0.5f);
 
-        ResetAllTriggers(addNAnim);
+        GameplayMgr.Instance.ResetAllTriggers(addNAnim);
         addNAnim.SetTrigger("PlusMove");
 
         Debug.Log("----------------------here we add n poker , set the plusmove trigger...------------------the name is: " + gameObject.name + " the nAddNCount is: " + nAddNCount);
 
         bIsAddingNPoker = true;
-        gameObject.GetComponent<MeshRenderer>().enabled = false;
+        pokerInst.gameObject.GetComponent<MeshRenderer>().enabled = false;
 
         return true;
     }
@@ -667,28 +699,6 @@ public class GamePoker : MonoBehaviour
 
         //gameObject.transform.position = originPos;
     }
-
-    /// <summary>
-    /// 清除所有的激活中的trigger缓存
-    /// </summary>
-    public void ResetAllTriggers(Animator animator)
-    {
-        AnimatorControllerParameter[] aps = animator.parameters;
-        for (int i = 0; i < aps.Length; i++)
-        {
-            AnimatorControllerParameter paramItem = aps[i];
-            if (paramItem.type == AnimatorControllerParameterType.Trigger)
-            {
-                string triggerName = paramItem.name;
-                bool isActive = animator.GetBool(triggerName);
-                if (isActive)
-                {
-                    animator.ResetTrigger(triggerName);
-                }
-            }
-        }
-    }
-
 
     //public void Withdraw
 
@@ -713,7 +723,7 @@ public class GamePoker : MonoBehaviour
             return;
         }
 
-        Debug.Log("here we flip the poker, name is: " + gameObject.name + "  depth is: " + transform.position.z);
+        //Debug.Log("here we flip the poker, name is: " + gameObject.name + "  depth is: " + transform.position.z);
         
         bFlip = true;
         bUnFlip = false;
@@ -782,7 +792,8 @@ public class GamePoker : MonoBehaviour
 
         Debug.Log("we fold a poker, and the origin pos is: " + transform.position + "  mid point is: " + foldPeekPoint + "  end point is: " + foldPos);*/
 
-        StartCoroutine(CardJump(trans, gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
+        //StartCoroutine(CardJump(trans, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
+        StartCoroutine(CardJump(transform, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
     }
 
     public void FoldPokerWithLock(int nIndex, Vector3 lockPos)
@@ -808,8 +819,9 @@ public class GamePoker : MonoBehaviour
         Debug.Log("game card jump second coroutine... the target1 is: " + lockPos);
 
         //StartCoroutine(CardJump(trans, gameObject.GetComponent<Renderer>().bounds.size.x, lockPos));
-        
-        StartCoroutine(CardJumpSecond(trans, gameObject.GetComponent<Renderer>().bounds.size.x, lockPos, foldPos));
+
+        //StartCoroutine(CardJumpSecond(trans, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, lockPos, foldPos));
+        StartCoroutine(CardJumpSecond(transform, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, lockPos, foldPos));
 
         //Debug.Log("game card jump second coroutine... the time is: " + Time.time);
 
@@ -825,9 +837,11 @@ public class GamePoker : MonoBehaviour
 
         bHasWithdrawed = true;
 
+        pokerStatus = GameDefines.PokerStatus.None;
+
         if(itemType == GameDefines.PokerItemType.Add_N_Poker)
         {
-            gameObject.GetComponent<MeshRenderer>().enabled = true;
+            pokerInst.gameObject.GetComponent<MeshRenderer>().enabled = true;
             bAddNPoker = false;
             transform.position = originPos;
             nAddNCount = nAddNOriginCount;
@@ -860,6 +874,62 @@ public class GamePoker : MonoBehaviour
 
         transform.DOMove(dismissPos, fDismissTotalTime);
         transform.DORotate(new Vector3(90.0f, 180.0f, 90.0f), fDismissTotalTime, RotateMode.WorldAxisAdd);
+    }
+
+    //2021.9.13 added by pengyuan, to process remove three cards effect
+    public void RemoveThree()
+    {
+        if (bFold)
+        {
+            return;
+        }
+
+        Debug.Log("here we process RemoveThree poker effect, name is: " + gameObject.name + "  number is: " + nPokerNumber);
+
+        bFold = true;
+        bIsFolding = true;
+        fFoldTime = 0.0f;
+
+        Vector3 foldPos = new Vector3(0.0f, -0.5f, -2.0f);
+
+        //StartCoroutine(CardJumpRemoveThree(trans, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
+        StartCoroutine(CardJumpRemoveThree(transform, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
+    }
+
+    public void ClearAll()
+    {
+        bClearAll = true;
+        pokerStatus = GameDefines.PokerStatus.Clearing;
+
+        bFlip = false;
+        bFold = false;
+        bUnFlip = false;
+        bDismiss = false;
+
+        //Debug.Log("here we process ClearAll poker effect, name is: " + gameObject.name + "  number is: " + nPokerNumber);
+
+        animator.SetTrigger("Remove");
+
+        StartCoroutine(OnRemoveAction());
+    }
+
+    int GetCutEffectIndexBySuitAndIndex(GameplayMgr.PokerColor color, int nRemoveIndex)
+    {
+        int nRemainder = nRemoveIndex % 2;
+        if (nRemainder == 0)
+        {
+            if (color == GameplayMgr.PokerColor.Black)
+                return 0;
+            else
+                return 1;
+        }
+        else
+        {
+            if (color == GameplayMgr.PokerColor.Black)
+                return 2;
+            else
+                return 3;
+        }
     }
 
     void SetDismissPosition()
@@ -908,6 +978,20 @@ public class GamePoker : MonoBehaviour
             bombAnim.SetBool("Die", true);
             //Debug.Log("-----------------------bombAnim.SetBool(Die, true);----------------------");
         }
+    }
+
+    IEnumerator OnRemoveAction()
+    {
+        float fStartTime = Time.time;
+
+        while (Time.time - fStartTime < 1.5f)
+        {
+            yield return null;
+        }
+
+        Vector3 newPos = transform.position;
+        newPos.x = 12.0f;
+        transform.DOMove(newPos, 2.0f);
     }
 
     IEnumerator CardJump(Transform card, float cardWidth, Vector3 target)
@@ -1047,5 +1131,94 @@ public class GamePoker : MonoBehaviour
         }
 
         card.position = target2;
+    }
+
+    IEnumerator CardJumpRemoveThree(Transform card, float cardWidth, Vector3 target)
+    {
+        float _Width = target.x - card.position.x;
+        float _Height = card.transform.position.y - target.y;
+        float _xSpeed = 5f / 3 * _Width;
+        float _ySpeed = 10 * cardWidth;
+        float _StartTime = Time.time;
+
+        // Rotate card by Dotween
+        transform.DORotate(new Vector3(0, 0, _Width < 0 ? 360 : -360), 0.8f, RotateMode.WorldAxisAdd).SetEase(Ease.OutSine);
+        transform.DOScale(new Vector3(1.4f, 1.4f, 1.0f), 0.8f);
+
+        Vector3 midPoint = (target + card.position) / 2;
+        midPoint.y = card.position.y + cardWidth;
+        midPoint.z = -2.0f;
+        transform.DOMove(midPoint, 0.4f).SetEase(Ease.InSine) ;
+        _xSpeed = (target.x - card.position.x) / 0.8f;
+        _ySpeed = 2 * cardWidth / 0.8f;
+        // Stage 1
+        while (Time.time - _StartTime < 0.4f)
+        {
+            //_ySpeed -= (25f * cardWidth) * Time.deltaTime;
+            //card.position += new Vector3(_xSpeed, _ySpeed, 0) * Time.deltaTime;
+
+            //Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            //card.position = newPosZ;
+
+            yield return null;
+        }
+        _ySpeed = 0;
+
+        //_xSpeed = (target.x - card.position.x) / 0.8f;
+        transform.DOMove(target, 0.4f).SetEase(Ease.InSine);
+        _ySpeed = (target.y - card.position.y) / 0.4f;
+        // Stage 2
+        while (Time.time - _StartTime < 0.8f)
+        {
+            //_xSpeed -= (25f / 6 * _Width) * Time.deltaTime;
+            //_ySpeed += (50f / 3 * (2 * cardWidth + Mathf.Abs(_Height))) * Time.deltaTime;
+            //card.position += new Vector3(_xSpeed, -_ySpeed, 0) * Time.deltaTime;
+
+            //Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            //card.position = newPosZ;
+
+            yield return null;
+        }
+        _ySpeed = 10f / 3 * (2 * cardWidth + Mathf.Abs(_Height));
+
+        // Stage 3
+        /*Vector3 oriPos = card.position;
+        float dis = (oriPos - target).magnitude;
+        while (Time.time - _StartTime < 0.8f)
+        {
+            card.position = Vector3.Lerp(oriPos, target, (Time.time - _StartTime - 0.7f) / 0.1f);
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            card.position = newPosZ;
+
+            yield return null;
+        }*/
+
+        //card.position = target;
+
+        Debug.Log("game card jump remove three coroutine end time is: " + Time.time);
+
+        //todo: here we play the remove cards effect
+        GameplayMgr.Instance.DestroyOnePublicPoker(gameObject);
+        int nPrefabIndex = GetCutEffectIndexBySuitAndIndex(pokerColor, GameplayMgr.Instance.removeThreeCurrentIndex);
+        GameObject cutEffect = Instantiate(GameplayMgr.Instance.removeThreePrefabs[nPrefabIndex], target, Quaternion.identity);
+        cutEffect.transform.localScale = new Vector3(1.4f, 1.4f, 1.0f) ;
+
+        int textureIndex = ((int)pokerSuit - 1) * 13 + nPokerNumber - 1;
+        Transform cutUPTrans = cutEffect.transform.Find("FXCardUp");
+        Transform cutDownTrans = cutEffect.transform.Find("FXCardDown");
+        cutUPTrans.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
+        cutDownTrans.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.pokerTexture[textureIndex]);
+
+        if (!GameplayMgr.Instance.MoveToNextRemovePoker())
+            GameplayMgr.Instance.bIsRemovingThree = false;
+
+        Destroy(cutEffect, 1.0f);
+
+        GameplayMgr.Instance.nRemoveThreeFinishCount++; 
+        if (GameplayMgr.Instance.nRemoveThreeFinishCount >= 3)
+        {
+            GameplayMgr.Instance.FinishUsingOncePowerUPs();
+        }
     }
 }

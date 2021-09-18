@@ -82,7 +82,7 @@ public class MapPlayer : MonoBehaviour
 
         if  (mapLevel.Data.ID != MapManager.Instance.Data.SelectedLevel)
         {
-            SoundManager.Instance.PlaySFX("uiAvatarFly");
+            SoundManager.Instance.PlaySFX("uiAvatarLanding");
             MapManager.Instance.Data.SelectedLevel = mapLevel.Data.ID;
             Tween tween = transform.DOLocalJump(mapLevel.transform.localPosition, 1, 1, 1.5f);
             yield return tween.WaitForCompletion();
@@ -96,7 +96,7 @@ public class MapPlayer : MonoBehaviour
             windowIndex = 1;
 
         MapLevelWindow panel = Window.CreateWindowPrefab(LevelWindowPrefabs[windowIndex]).GetComponent<MapLevelWindow>();
-        panel.UpdateView(mapLevel.Data);
+        panel.LevelData = mapLevel.Data;
         
         //isRunning = false;
     }
