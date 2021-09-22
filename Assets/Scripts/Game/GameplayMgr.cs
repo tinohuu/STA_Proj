@@ -279,6 +279,10 @@ public class GameplayMgr : MonoBehaviour
 
     public PowerUPProcess powerUpProcess = new PowerUPProcess();
 
+    //2021.9.18 added by pengyuan, to record withdraw and add5_poker buy times.
+    int nWithdrawBuyTimes = 0;
+    int nAdd5BuyTimes = 0;
+
     public class StageConfig
     {
         public int ID = 0;
@@ -494,12 +498,15 @@ public class GameplayMgr : MonoBehaviour
         nRemoveThreeFinishCount = 0;
         bIsRemovingThree = false;
 
+        nWithdrawBuyTimes = 0;
+        nAdd5BuyTimes = 0;
+
         Trans = GetComponent<Transform>();
         if (Trans == null)
             Debug.Log("GameplayMgr::Start()... rectTrans is null....");
 
         renderer = GetComponent<MeshRenderer>();
-        Debug.Log("GameplayMgr::Start()... bounds is: " + renderer.bounds.size.y);
+        //Debug.Log("GameplayMgr::Start()... bounds is: " + renderer.bounds.size.y);
 
         Test_Shuffle();
 
@@ -528,8 +535,11 @@ public class GameplayMgr : MonoBehaviour
 
         //2021.8.6 added by pengyaun for display gold and score in game playing.
         //gameplayUI.goldAndScoreUI.nGold = 0;
-        gameplayUI.goldAndScoreUI.nGold = Reward.Coin;
+        //gameplayUI.goldAndScoreUI.nGold = Reward.Coin;
+        gameplayUI.goldAndScoreUI.SetGold(Reward.Coin);
         gameplayUI.goldAndScoreUI.nScore = 0;
+
+        //Debug.Log("GameplayMgr::Start()... nGold is: " + Reward.Coin);
     }
 
     void InitConfigInformation()
@@ -552,6 +562,9 @@ public class GameplayMgr : MonoBehaviour
         nRemoveThreeLeftCount = 3;
         nRemoveThreeFinishCount = 0;
         bIsRemovingThree = false;
+
+        nWithdrawBuyTimes = 0;
+        nAdd5BuyTimes = 0;
 
         Test_Shuffle();
 
@@ -576,7 +589,9 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.InitStreakBonus(streakType, GetNextStreakType());
 
         //2021.8.6 added by pengyaun for display gold and score in game playing.
-        gameplayUI.goldAndScoreUI.nGold = 0;
+        //gameplayUI.goldAndScoreUI.nGold = 0;
+        //gameplayUI.goldAndScoreUI.nGold = Reward.Coin;
+        gameplayUI.goldAndScoreUI.SetGold(Reward.Coin);
         gameplayUI.goldAndScoreUI.nScore = 0;
 
         gameplayUI.Reset();
@@ -1350,7 +1365,7 @@ public class GameplayMgr : MonoBehaviour
 
         //todo: this level should come from a call from map ...
         int nTempLevel = Random.Range(1, 6);
-        nTempLevel = 1;// STAGameManager.Instance.nLevelID;
+        nTempLevel =  STAGameManager.Instance.nLevelID;
         nCurrentLevel = nTempLevel;
         JsonReadWriteTest.Test_ReadLevelData(strLevel, 1, nTempLevel, out levelData);
 
@@ -1482,6 +1497,7 @@ public class GameplayMgr : MonoBehaviour
         return fZ;
     }
 
+    //when click withdraw button, we call this method.
     public void WithDrawClicked()
     {
         if(opStepInfos.Count == 0)
@@ -1499,6 +1515,14 @@ public class GameplayMgr : MonoBehaviour
         {
             return;
         }
+
+        int nBuyCost = GetWithdrawCost();
+        if (Reward.Coin < nBuyCost)
+            return;
+
+        nWithdrawBuyTimes++;
+        gameplayUI.AddGold(-nBuyCost);
+        Reward.Coin -= nBuyCost;
 
         GameObject topHandPoker = foldPoker.Peek();
         HandPoker handPokerScript = topHandPoker.GetComponent<HandPoker>();
@@ -1719,6 +1743,15 @@ public class GameplayMgr : MonoBehaviour
     //when click "Add5Btn", add 5 pokers to the hand poker
     public void Add5HandPoker()
     {
+        //first check if we have enough gold
+        int nBuyCost = GetBuy5PokerCost();
+        if (Reward.Coin < nBuyCost)
+            return;
+
+        nAdd5BuyTimes++;
+        gameplayUI.AddGold(-nBuyCost);
+        Reward.Coin -= nBuyCost;
+
         PokerSuit[] suits = new PokerSuit[5];
         int[] nNumbers = new int[5];
 
@@ -1768,6 +1801,13 @@ public class GameplayMgr : MonoBehaviour
                 return;
             }
         }
+
+        int nBuyCost = GetWildCardCost();
+        if (Reward.Coin < nBuyCost)
+            return;
+
+        gameplayUI.AddGold(-nBuyCost);
+        Reward.Coin -= nBuyCost;
 
         //Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, -1.0f);
         Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * -0.35f, -1.0f);
@@ -1916,6 +1956,10 @@ public class GameplayMgr : MonoBehaviour
         {
             needChangeAseDesStatus = false;
             needChangeBombStatus = false;
+
+            int nBuyCost = GetWildCardCost();
+            gameplayUI.AddGold(nBuyCost);
+            Reward.Coin += nBuyCost;
         }
         
         Test_EnableTopFoldPokerText();
@@ -3745,6 +3789,45 @@ public class GameplayMgr : MonoBehaviour
         return nScore;
     }
 
+    int GetWildCardCost()
+    {
+        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+
+        return stageConfig.WildCost;
+    }
+
+    int GetWithdrawCost()
+    {
+        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+
+        string[] strParams = stageConfig.CancelCost.Split('_');
+
+        if(nWithdrawBuyTimes >= 2)
+        {
+            return int.Parse(strParams[2]);
+        }
+        else
+        {
+            return int.Parse(strParams[nWithdrawBuyTimes]);
+        }
+    }
+
+    int GetBuy5PokerCost()
+    {
+        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+
+        string[] strParams = stageConfig.BuyCard.Split('_');
+
+        if (nAdd5BuyTimes >= 2)
+        {
+            return int.Parse(strParams[2]);
+        }
+        else
+        {
+            return int.Parse(strParams[nAdd5BuyTimes]);
+        }
+    }
+
     public void Test_ComputeStars(int nScore, ref float[] fillAmounts)
     {
         StageConfig stageConfig = stageConfigs[nCurrentLevel];
@@ -3911,6 +3994,7 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.DisableAllGameButton();
 
         Reward.Coin += nCollectGold;
+        gameplayUI.goldAndScoreUI.SetGold(Reward.Coin);
 
         StartCoroutine(SettleAllHandPokers());
 
@@ -4021,7 +4105,7 @@ public class GameplayMgr : MonoBehaviour
 
         Debug.Log("collect gold is: " + nCollectGold + "  clear gold is: " + nClearGold);
 
-        gameplayUI.goldAndScoreUI.SetGold(nCollectGold + nClearGold);
+        //gameplayUI.goldAndScoreUI.SetGold(nCollectGold + nClearGold);
         gameplayUI.WinGame(nCollectGold, nClearGold);
 
         //gameStatus = GameStatus.GameStatus_After_Settle;

@@ -19,24 +19,31 @@ public class PowerUPProcess// : MonoBehaviour
     {
         Debug.Log("here we init the power up process, to get information from the STAGameManager... ... ");
 
-        //this is test code, normally, we should get real data from STAGameManager
-        GameDefines.PowerUPInfo info = new GameDefines.PowerUPInfo();
-        info.itemType = GameDefines.PowerUPType.Remove_Three;
-        info.useStatus = GameDefines.PowerUPUseStatus.Unused;
-        info.useType = GameDefines.PowerUPUseType.Once;
-        powerUpInfos.Add(info);
+        int nRemoveCards = Reward.Data[RewardType.RemoveCards];
+        if(nRemoveCards > 0)
+        {
+            GameDefines.PowerUPInfo info = new GameDefines.PowerUPInfo();
+            info.itemType = GameDefines.PowerUPType.Remove_Three;
+            info.useStatus = GameDefines.PowerUPUseStatus.Unused;
+            info.useType = GameDefines.PowerUPUseType.Once;
+            powerUpInfos.Add(info);
 
-        bHasClearThree = true;
-        bUsingClearThree = true;
+            bHasClearThree = true;
+            bUsingClearThree = true;
+        }
 
-        info = new GameDefines.PowerUPInfo();
-        info.itemType = GameDefines.PowerUPType.Clear_All;
-        info.useStatus = GameDefines.PowerUPUseStatus.Unused;
-        info.useType = GameDefines.PowerUPUseType.Once;
-        powerUpInfos.Add(info);
+        int nClearPlayable = Reward.Data[RewardType.ClearPlayables];
+        if(nClearPlayable > 0)
+        {
+            GameDefines.PowerUPInfo info = new GameDefines.PowerUPInfo();
+            info.itemType = GameDefines.PowerUPType.Clear_All;
+            info.useStatus = GameDefines.PowerUPUseStatus.Unused;
+            info.useType = GameDefines.PowerUPUseType.Once;
+            powerUpInfos.Add(info);
 
-        bHasClearAll = true;
-        bUsingClearAll = false;
+            bHasClearAll = true;
+            bUsingClearAll = false;
+        }
 
         powerUpInfos.Sort(delegate(GameDefines.PowerUPInfo info1, GameDefines.PowerUPInfo info2)
         {
@@ -56,7 +63,13 @@ public class PowerUPProcess// : MonoBehaviour
     //use the once powerups, we should use it at the beginning of a frame
     public void BeginUsePowerUPs()
     {
-        for(int i = 0; i < powerUpInfos.Count; ++i)
+        if(powerUpInfos.Count == 0)
+        {
+            GameplayMgr.Instance.FinishUsingOncePowerUPs();
+            return;
+        }
+
+        for (int i = 0; i < powerUpInfos.Count; ++i)
         {
             if(powerUpInfos[i].useType == GameDefines.PowerUPUseType.Once
                 && powerUpInfos[i].useStatus != GameDefines.PowerUPUseStatus.Used)

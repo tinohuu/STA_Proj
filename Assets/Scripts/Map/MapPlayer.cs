@@ -22,13 +22,25 @@ public class MapPlayer : MonoBehaviour
         if (!Instance) Instance = this;
         MapScrollRect.onValueChanged.AddListener(UpdaterRemoteView);
         RemoteImage.gameObject.SetActive(false);
-
     }
+
     private void Start()
     {
         LayoutRebuilder.ForceRebuildLayoutImmediate(MapScrollRect.content);
-        OnClickRomote(0);
+
+        /*var levels = FindObjectsOfType<MapLevel>();
+        var curLevel = System.Array.Find(levels, e => e.Data.ID == MapManager.Instance.Data.CompleteLevel);
+        Debug.Log(MapManager.Instance.Data.CompleteLevel);
+        MoveToLevel(curLevel, false);
+
+        OnClickRomote(0);*/
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R)) StartCoroutine(IOnClickRomote()); 
+    }
+
     void UpdaterRemoteView(Vector2 scrollRect = new Vector2())
     {
         screenPoint = Camera.main.WorldToScreenPoint(transform.position);
@@ -79,7 +91,7 @@ public class MapPlayer : MonoBehaviour
     IEnumerator IMoveToLevel(MapLevel mapLevel)
     {
         //isRunning = true;
-
+        yield return null;
         if  (mapLevel.Data.ID != MapManager.Instance.Data.SelectedLevel)
         {
             SoundManager.Instance.PlaySFX("uiAvatarLanding");
@@ -104,17 +116,19 @@ public class MapPlayer : MonoBehaviour
     [ContextMenu("Check")]
     public void OnClickRomote(float duration = 1)
     {
-       Vector3[] corners = new Vector3[4];
-       MapScrollRect.content.GetWorldCorners(corners);
-       float width = corners[3].x - corners[0].x - 20; // Full screen width is 20 in world space
-        float levelWidth = 0;// Map.Instance.GetMapLevelButton(MapManager.Instance.Data.SelectedLevel).transform.position.x - corners[0].x - 10;
+        Vector3[] corners = new Vector3[4];
+        MapScrollRect.content.GetWorldCorners(corners);
+        float width = corners[3].x - corners[0].x - 20; // Full screen width is 20 in world space
+        var levels = FindObjectsOfType<MapLevel>();
+        var curLevel = System.Array.Find(levels, e => e.Data.ID == MapManager.Instance.Data.SelectedLevel);
+        float levelWidth = curLevel.transform.position.x - corners[0].x - 10;
         if (duration == 0) MapScrollRect.normalizedPosition = new Vector3(levelWidth / width, MapScrollRect.normalizedPosition.y);
-       MapScrollRect.DOHorizontalNormalizedPos(levelWidth / width, duration);
+        else MapScrollRect.DOHorizontalNormalizedPos(levelWidth / width, duration);
     }
 
     IEnumerator IOnClickRomote()
     {
-        yield return null;
+        yield return new WaitForEndOfFrame();
         OnClickRomote();
     }
 }

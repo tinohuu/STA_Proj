@@ -24,21 +24,20 @@ public class MapLevelWindowPowerup : MonoBehaviour
     ButtonAnimator button;
     CanvasGroup canvasGroup;
     Image image;
+    WindowAnimator windowAnimator;
     private void Awake()
     {
         button = GetComponent<ButtonAnimator>();
         canvasGroup = GetComponent<CanvasGroup>();
         image = GetComponent<Image>();
+        windowAnimator = GetComponentInParent<WindowAnimator>();
+
         var icons = Resources.LoadAll<Sprite>("Sprites/IconAtlas");
         Sprite sprite = Array.Find(icons, e => e.name == RewardType.ToString());
         image.sprite = sprite;
         rewardNumber.Type = RewardType;
         Interactable = MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigsByFuncID[(int)RewardType + 1012 - 8].FunctionParams;
         canvasGroup.alpha = Interactable ? 1 : 0.5f;
-    }
-    private void Start()
-    {
-
     }
 
     private void Update()
@@ -76,5 +75,11 @@ public class MapLevelWindowPowerup : MonoBehaviour
         InUseImage.SetActive(Interactable && InUse);
         PurchaseImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] == 0);
         TextImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] != 0);
+
+        if (RewardPurchaseWindow.LastPurchasedReward == RewardType)
+        {
+            RewardPurchaseWindow.LastPurchasedReward = RewardType.None;
+            OnClick();
+        }
     }
 }

@@ -5,18 +5,19 @@ using UnityEngine;
 
 public class RewardManager : MonoBehaviour
 {
-    public static RewardManagerData Data = new RewardManagerData();
+    public RewardManagerData Data = new RewardManagerData();
     public static RewardManager Instance = null;
     public delegate void RewardHandler(bool add);
-    public RewardHandler[] OnValueChanged = new RewardHandler[Data.Rewards.Count];
+    public RewardHandler[] OnValueChanged = new RewardHandler[Enum.GetValues(typeof(RewardType)).Length];
 
     private void Awake()
     {
         if (!Instance) Instance = this;
+        else if (Instance != this) DestroyImmediate(gameObject);
+
         for (int i = 0; i < OnValueChanged.Length; i++) OnValueChanged[i] = null;
 
         Data = SaveManager.Bind(InitialData);
-        GetRewardCost(RewardType.ClearPlayables);
     }
     RewardManagerData InitialData
     {
@@ -45,7 +46,7 @@ public class RewardManager : MonoBehaviour
 
 public static class Reward
 {
-    public static RewardManagerData Data = RewardManager.Data;
+    public static RewardManagerData Data => RewardManager.Instance.Data;
 
     public static int Coin { get => Data[RewardType.Coin]; set => Data[RewardType.Coin] = value; }
 
@@ -91,6 +92,13 @@ public static class Reward
             itemsByType.Add(type, count);
         }
         return itemsByType;
+    }
+
+    public static Sprite ToSprite(this RewardType type)
+    {
+        var icons = Resources.LoadAll<Sprite>("Sprites/IconAtlas");
+        Sprite sprite = Array.Find(icons, e => e.name == type.ToString());
+        return sprite;
     }
 }
 

@@ -12,10 +12,10 @@ public class WindowAnimator : Window
     public bool InverseOnFadeOut = false;
     public bool CanCloseByPanel = true;
     public float IntervalMultiplerOnFadeOut = 1;
-    
 
     public static List<WindowAnimator> WindowQueue = new List<WindowAnimator>();
     public delegate void WindowHandler();
+    public event WindowHandler OnFadeIn = null;
     public static event WindowHandler OnQueueChanged = null;
     //Coroutine currentCoroutine = null;
     private void Awake()
@@ -51,6 +51,7 @@ public class WindowAnimator : Window
         ResetWinodws();
         if (WindowQueue.Count > 0 && WindowQueue.Last() != this) WindowQueue.Last().FadeOut();
         if (!WindowQueue.Contains(this)) WindowQueue.Add(this);
+        OnFadeIn?.Invoke();
         OnQueueChanged?.Invoke();
 
         foreach (WindowAnimatorElement window in Elements)

@@ -141,6 +141,15 @@ public class CropHarvestWindow : MonoBehaviour
     {
         CanvasGroup topGroup = TopLayoutGroup.GetComponent<CanvasGroup>();
         CanvasGroup btmGroup = BottomLayoutGroup.GetComponent<CanvasGroup>();
+
+        if (MapManager.Instance.MapID == 1)
+        {
+            ShowCrop();
+            topGroup.alpha = 1;
+            btmGroup.alpha = 1;
+            yield break;
+        }
+
         for (int i = 0; i < 3; i++)
         {
             ShowCrop();

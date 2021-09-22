@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class RewardPurchaseWindow : MonoBehaviour
 {
     public RewardType Type;
+    public static RewardType LastPurchasedReward = RewardType.None;
     [SerializeField] TMP_Text rewardNameText;
     [SerializeField] Image rewardImage;
     [SerializeField] TMP_Text purchasePromptText;
@@ -48,6 +49,7 @@ public class RewardPurchaseWindow : MonoBehaviour
         {
             Reward.Coin -= cost;
             Reward.Data[Type]++;
+            LastPurchasedReward = Type;
         }
     }
 }

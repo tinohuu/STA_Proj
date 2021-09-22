@@ -166,6 +166,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
             GameObject prefab = Resources.Load<GameObject>("Crops/Crop_" + config.Name);
             var crop = Instantiate(prefab, CropGroup).GetComponent<Crop>();
             crop.MapmakerConfig = config;
+            crop.UpdateView(true);
         }
         UpdateCropsView();
     }

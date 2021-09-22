@@ -898,8 +898,8 @@
   {
     "ID": 113,
     "RewardID": 113,
-    "CoinReward": 30000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_30000",
     "VipReward": 0,
     "Comment": "1号普通转盘奖励格1"
   },
@@ -914,8 +914,8 @@
   {
     "ID": 115,
     "RewardID": 115,
-    "CoinReward": 2000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_2000",
     "VipReward": 0,
     "Comment": "1号普通转盘奖励格3"
   },
@@ -946,8 +946,8 @@
   {
     "ID": 119,
     "RewardID": 119,
-    "CoinReward": 6000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_6000",
     "VipReward": 0,
     "Comment": "1号普通转盘奖励格7"
   },
@@ -962,8 +962,8 @@
   {
     "ID": 121,
     "RewardID": 121,
-    "CoinReward": 40000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_40000",
     "VipReward": 0,
     "Comment": "2号普通转盘奖励格1"
   },
@@ -978,8 +978,8 @@
   {
     "ID": 123,
     "RewardID": 123,
-    "CoinReward": 3000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_3000",
     "VipReward": 0,
     "Comment": "2号普通转盘奖励格3"
   },
@@ -1010,8 +1010,8 @@
   {
     "ID": 127,
     "RewardID": 127,
-    "CoinReward": 8000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_8000",
     "VipReward": 0,
     "Comment": "2号普通转盘奖励格7"
   },
@@ -1026,8 +1026,8 @@
   {
     "ID": 129,
     "RewardID": 129,
-    "CoinReward": 40000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_40000",
     "VipReward": 0,
     "Comment": "3号普通转盘奖励格1"
   },
@@ -1042,8 +1042,8 @@
   {
     "ID": 131,
     "RewardID": 131,
-    "CoinReward": 3000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_3000",
     "VipReward": 0,
     "Comment": "3号普通转盘奖励格3"
   },
@@ -1074,8 +1074,8 @@
   {
     "ID": 135,
     "RewardID": 135,
-    "CoinReward": 8000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_8000",
     "VipReward": 0,
     "Comment": "3号普通转盘奖励格7"
   },
@@ -1090,8 +1090,8 @@
   {
     "ID": 137,
     "RewardID": 137,
-    "CoinReward": 50000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_50000",
     "VipReward": 0,
     "Comment": "4号普通转盘奖励格1"
   },
@@ -1106,8 +1106,8 @@
   {
     "ID": 139,
     "RewardID": 139,
-    "CoinReward": 4000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_4000",
     "VipReward": 0,
     "Comment": "4号普通转盘奖励格3"
   },
@@ -1138,8 +1138,8 @@
   {
     "ID": 143,
     "RewardID": 143,
-    "CoinReward": 10000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_10000",
     "VipReward": 0,
     "Comment": "4号普通转盘奖励格7"
   },
@@ -1154,8 +1154,8 @@
   {
     "ID": 145,
     "RewardID": 145,
-    "CoinReward": 50000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_50000",
     "VipReward": 0,
     "Comment": "5号普通转盘奖励格1"
   },
@@ -1170,8 +1170,8 @@
   {
     "ID": 147,
     "RewardID": 147,
-    "CoinReward": 4000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_4000",
     "VipReward": 0,
     "Comment": "5号普通转盘奖励格3"
   },
@@ -1202,8 +1202,8 @@
   {
     "ID": 151,
     "RewardID": 151,
-    "CoinReward": 10000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_10000",
     "VipReward": 0,
     "Comment": "5号普通转盘奖励格7"
   },
@@ -1218,8 +1218,8 @@
   {
     "ID": 153,
     "RewardID": 153,
-    "CoinReward": 55000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_55000",
     "VipReward": 0,
     "Comment": "6号普通转盘奖励格1"
   },
@@ -1234,8 +1234,8 @@
   {
     "ID": 155,
     "RewardID": 155,
-    "CoinReward": 5000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_5000",
     "VipReward": 0,
     "Comment": "6号普通转盘奖励格3"
   },
@@ -1266,8 +1266,8 @@
   {
     "ID": 159,
     "RewardID": 159,
-    "CoinReward": 11000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_11000",
     "VipReward": 0,
     "Comment": "6号普通转盘奖励格7"
   },
@@ -1282,8 +1282,8 @@
   {
     "ID": 161,
     "RewardID": 161,
-    "CoinReward": 55000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_55000",
     "VipReward": 0,
     "Comment": "7号普通转盘奖励格1"
   },
@@ -1298,8 +1298,8 @@
   {
     "ID": 163,
     "RewardID": 163,
-    "CoinReward": 6000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_6000",
     "VipReward": 0,
     "Comment": "7号普通转盘奖励格3"
   },
@@ -1330,8 +1330,8 @@
   {
     "ID": 167,
     "RewardID": 167,
-    "CoinReward": 11000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_11000",
     "VipReward": 0,
     "Comment": "7号普通转盘奖励格7"
   },
@@ -1346,8 +1346,8 @@
   {
     "ID": 169,
     "RewardID": 169,
-    "CoinReward": 60000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_60000",
     "VipReward": 0,
     "Comment": "8号普通转盘奖励格1"
   },
@@ -1362,8 +1362,8 @@
   {
     "ID": 171,
     "RewardID": 171,
-    "CoinReward": 5000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_5000",
     "VipReward": 0,
     "Comment": "8号普通转盘奖励格3"
   },
@@ -1394,8 +1394,8 @@
   {
     "ID": 175,
     "RewardID": 175,
-    "CoinReward": 12000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_12000",
     "VipReward": 0,
     "Comment": "8号普通转盘奖励格7"
   },
@@ -1410,8 +1410,8 @@
   {
     "ID": 177,
     "RewardID": 177,
-    "CoinReward": 65000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_65000",
     "VipReward": 0,
     "Comment": "9号普通转盘奖励格1"
   },
@@ -1426,8 +1426,8 @@
   {
     "ID": 179,
     "RewardID": 179,
-    "CoinReward": 5000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_5000",
     "VipReward": 0,
     "Comment": "9号普通转盘奖励格3"
   },
@@ -1458,8 +1458,8 @@
   {
     "ID": 183,
     "RewardID": 183,
-    "CoinReward": 13000,
-    "ItemReward": "",
+    "CoinReward": 0,
+    "ItemReward": "1_13000",
     "VipReward": 0,
     "Comment": "9号普通转盘奖励格7"
   },

@@ -37,6 +37,11 @@ public class MapLevel : MonoBehaviour, IPointerClickHandler
         Frame.SetActive(Data.Rating >= 3);
     }
 
+    internal object Find()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!IsOpen) return;

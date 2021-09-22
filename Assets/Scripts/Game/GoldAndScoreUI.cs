@@ -129,6 +129,12 @@ public class GoldAndScoreUI : MonoBehaviour
         goldDisplay.text = nGold.ToString("N0");
     }
 
+    public void SetScore(int nValue)
+    {
+        nScore = nValue;
+        //goldDisplay.text = nGold.ToString("N0");
+    }
+
     public void AddScore(int nAddValue)
     {
         nScore += nAddValue;

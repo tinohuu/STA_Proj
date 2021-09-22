@@ -90,7 +90,7 @@ public class Mapmaker : MonoBehaviour
         string fileName = ModuleFilename(module, mapId);
         string json;
         if (Debug.isDebugBuild && File.Exists(Application.dataPath + "/" + fileName))
-            json = File.ReadAllText(Application.dataPath + fileName);
+            json = File.ReadAllText(Application.dataPath + "/" + fileName);
         else json = ConfigsAsset.GetConfig("Mapmaker/" + fileName.Replace(".json", ""));
         return json;
     }
@@ -201,15 +201,14 @@ namespace STA.Mapmaker
 {
     public interface IMapmakerModule
     {
-        public Type Mapmaker_ItemType { get; }
-        public string[] Mapmaker_InputInfos { get; }
-        public void Mapmaker_CreateItems(string config);
-
-        public string[] Mapmaker_UpdateInputs(Transform target);
-        public Transform Mapmaker_AddItem();
-        public void Mapmaker_ApplyInputs(Transform target, string[] inputDatas);
-        public void Mapmaker_DeleteItem(GameObject target);
-        public string Mapmaker_ToConfig();
+        Type Mapmaker_ItemType { get; }
+        string[] Mapmaker_InputInfos { get; }
+        void Mapmaker_CreateItems(string config);
+        string[] Mapmaker_UpdateInputs(Transform target);
+        Transform Mapmaker_AddItem();
+        void Mapmaker_ApplyInputs(Transform target, string[] inputDatas);
+        void Mapmaker_DeleteItem(GameObject target);
+        string Mapmaker_ToConfig();
     }
 
     [System.Serializable]
