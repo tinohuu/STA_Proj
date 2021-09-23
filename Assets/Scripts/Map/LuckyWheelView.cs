@@ -25,10 +25,12 @@ public class LuckyWheelView : MonoBehaviour
     [SerializeField] ButtonAnimator m_ButtonAnimator;
     [SerializeField] Graphic m_SpinText;
     [SerializeField] Graphic m_TickImage;
+    [SerializeField] Button m_LuckyWheelButton;
 
     [SerializeField] bool isSpinning = false;
+    [SerializeField] bool isSpun = false;
     List<LuckyWheelRewardSlot> m_Slots = new List<LuckyWheelRewardSlot>();
-    int m_WheelID = 1;
+    LuckyWheel m_Wheel;
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +40,7 @@ public class LuckyWheelView : MonoBehaviour
 
         Vector3 firstSlotLocPos = m_InitPoint.localPosition;
 
-        var rewards = LuckyWheelManager.Instance.GetRewards(m_WheelID);
+        var rewards = LuckyWheelManager.GetRewards(m_Wheel.WheelID);
         for (int i = 0; i < 8; i++)
         {
             var slot = Instantiate(m_SlotPrefab, m_SlotGroup).GetComponent<LuckyWheelRewardSlot>();
@@ -48,24 +50,44 @@ public class LuckyWheelView : MonoBehaviour
         }
 
         m_ButtonAnimator.OnClick.AddListener(() => Spin());
+        m_LuckyWheelButton.onClick.AddListener(() => Spin());
+        m_LuckyWheelButton.onClick.AddListener(() => m_LuckyWheelButton.interactable = false);
     }
-    
+
+    public void SetWheel(LuckyWheel wheel)
+    {
+        m_Wheel = wheel;
+    }
+
     void Spin()
     {
         m_ButtonAnimator.Interactable = false;
         m_SpinText.DOFade(0.5f, 0.25f);
 
-        int rewardIndex = LuckyWheelManager.Instance.Spin(m_WheelID);
+        int rewardIndex = LuckyWheelManager.Spin(m_Wheel.WheelID);
         Debug.Log(rewardIndex);
         m_PointerImage.rectTransform.DOKill();
         Vector3 rewardRot = -Vector3.forward * rewardIndex * 45;
         m_PointerImage.rectTransform.rotation = Quaternion.identity;
-        m_PointerImage.rectTransform.DOLocalRotate(-Vector3.forward * (360 * 4) + rewardRot, 10, RotateMode.LocalAxisAdd).SetEase(Ease.OutCirc).OnComplete(() => Shine());
+        m_PointerImage.rectTransform.DOLocalRotate(-Vector3.forward * (360 * 5) + rewardRot, 7, RotateMode.LocalAxisAdd).SetEase(Ease.OutSine).OnComplete(() => Shine());
         isSpinning = true;
         m_OuterLightImage.sprite = m_OuterLightSprites[1];
         m_InnerLightImage.sprite = m_InnerLightSprites[1];
 
         m_BoxRewardText.text = m_Slots[rewardIndex].RewardText;
+
+        var rewards = LuckyWheelManager.GetRewards(m_Wheel.WheelID)[rewardIndex];
+        MapManager.Instance.Data.WheelCollectedLevel = m_Wheel.LevelID;
+        Destroy(m_Wheel.gameObject);
+        foreach (var type in rewards.Keys)
+        {
+            Reward.Data[type] += rewards[type];
+        }
+    }
+
+    void Exit()
+    {
+        GetComponent<CanvasGroup>().DOFade(0, 0.5f).OnComplete(() => Destroy(gameObject));
     }
 
     void Shine()
@@ -83,7 +105,9 @@ public class LuckyWheelView : MonoBehaviour
         m_TickImage.DOFade(1, 0.25f);
 
 
-        //m_ButtonAnimator.Interactable = true;
+        m_ButtonAnimator.Interactable = true;
+        m_ButtonAnimator.OnClick.RemoveAllListeners();
+        m_ButtonAnimator.OnClick.AddListener(() => Exit());
     }
 
     IEnumerator IOuterIdle()

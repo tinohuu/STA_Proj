@@ -25,7 +25,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
     DailyGoodyData InitializeData()
     {
         var data = Data;
-        data.LastGoodyTime = TimeManager.Instance.RealNow.Date;
+        data.LastGoodyTime = TimeManager.Instance.RealNow.Date;// - TimeSpan.FromDays(1);
         return data;
     }
 
@@ -34,7 +34,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
     {
         if (TimeManager.Instance.RealNow.Date != Data.LastGoodyTime.Date && !view && !IsSuspended && !TimeManager.Instance.IsGettingTime) // for local time specific + Data.CheckedSystemOffset.ToTimeSpan();
         {
-            view = Instantiate(viewPrefab, transform);
+            view = Instantiate(viewPrefab, MapManager.Instance.UICanvas.transform);
         }
     }
 

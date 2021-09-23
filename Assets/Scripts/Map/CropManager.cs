@@ -67,7 +67,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
             List<Crop> crops = cropsByName[name];
             for (int i = 0; i < crops.Count; i++)
             {
-                float localLevelCount = configsByName[name].Level + (float)i / crops.Count * levelCount;
+                float localLevelCount = (float)i / crops.Count * levelCount;
                 crops[i].UnlockingLevel = configsByName[name].MinLevel + (int)localLevelCount;
                 crops[i].UnlockedLevel = configsByName[name].Level;
             }
@@ -151,6 +151,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         GameObject obj = Instantiate(Resources.Load<GameObject>("Crops/Crop_Cabbage"), CropManager.Instance.CropGroup);
         obj.transform.localPosition = CropGroup.InverseTransformPoint(Vector3.zero);
         UpdateCropsView();
+        obj.GetComponent<Crop>().UpdateView();
         return obj.transform;
     }
 
@@ -217,7 +218,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 
     public void Mapmaker_DeleteItem(GameObject target)
     {
-        Destroy(gameObject);
+        Destroy(target.gameObject);
         UpdateCropsView();
     }
 

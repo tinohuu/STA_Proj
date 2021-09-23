@@ -68,7 +68,7 @@ public class DailyGoodies : MonoBehaviour
             Debug.Log(boxGroup.childCount + ":" + i);
             rt = boxGroup.GetChild(i).GetComponent<RectTransform>();
             int week = i / 7 + 1;
-            tween = boxGroup.DOAnchorPosX(-rt.anchoredPosition.x + rt.sizeDelta.x / 2, i == 21 ? 0.75f : 1.5f ).SetEase(Ease.OutFlash).OnStart(() => calendar.UpdateWeekView(week));
+            tween = boxGroup.DOAnchorPosX(-rt.anchoredPosition.x + rt.sizeDelta.x / 2, i == 21 ? 0.75f/2 : 0.75f).SetEase(Ease.OutBack, 1.2f).OnStart(() => calendar.UpdateWeekView(week));
             sequence.Append(tween);
         }
         // Then restore boxes if streak broken
@@ -77,10 +77,10 @@ public class DailyGoodies : MonoBehaviour
 
         // Then box jump
         var box = boxGroup.GetChild(curStkDays - 1).GetComponent<DailyGoodiesBox>();
-        sequence.Append(box.Box.DOScale(Vector3.one * 1.5f, 2)).SetEase(Ease.InSine);
-        sequence.Join(box.Box.DOJump(Vector3.back * 2 + Vector3.down * 2, 3, 1, 2));
+        //sequence.Append(box.Box.transform.DOScale(box.Box.transform.localScale * 1.5f, 1.25f)).SetEase(Ease.InSine);
+        sequence.Append(box.BoxParent.transform.DOJump(Vector3.back * 5 + Vector3.down * 2, 3, 1, 1.25f).OnStart(() => box.SetState("Ready"))).OnComplete(() => box.SetState("Idle"));
         sequence.AppendCallback(() => OpenBoxButton.gameObject.SetActive(true));
-        OpenBoxButton.onClick.AddListener(() => ShowBox(box));
+        OpenBoxButton.onClick.AddListener(() => StartCoroutine(ShowBox(box)));
 
         // Then show box
         //sequence.AppendCallback(() => ShowBox());
@@ -112,13 +112,16 @@ public class DailyGoodies : MonoBehaviour
         foreach (var box in boxes) box.UpdateView(collectedDays);
     }
 
-    public void ShowBox(DailyGoodiesBox box)
+    IEnumerator ShowBox(DailyGoodiesBox box)
     {
         OpenBoxButton.onClick.RemoveAllListeners();
         OpenBoxButton.gameObject.SetActive(false);
-        // todo: animate
-
+        box.SetState("Open");
         boxGroup.transform.DestroyChildren();
+        box.BoxParent.transform.SetParent(transform);
+        yield return new WaitForSeconds(1);
+
+
         RewardConfig config = DailyGoodiesManager.Instance.GetGoodyConfig(box.Day);
         var rewards = Reward.StringToReward(config.ItemReward);
         rewards.Add(RewardType.Coin, DailyGoodiesManager.Instance.GetCoin(box.Day));
@@ -151,6 +154,10 @@ public class DailyGoodies : MonoBehaviour
 
     public void Collect()
     {
+        CollectButton.Interactable = false;
+        //CollectButton.transform.DOKill();
+        //CollectButton.transform.DOScale(Vector3.zero, 0.25f);
+
         int day = DailyGoodiesManager.Instance.CheckDate(true);
         //var config = DailyGoodiesManager.Instance.GetGoodyConfig(day);
         DailyGoodiesManager.Instance.CollectGoodyReward(curRewards);
@@ -160,6 +167,7 @@ public class DailyGoodies : MonoBehaviour
         {
             text.OnCollect(CollectButton.transform.position);
         }
+
         Shade.DOFade(0, 0.5f);
         View.DOFade(0, 0.5f).OnComplete(() => Destroy(View.gameObject)).SetDelay(0.5f);
         // todo: exit

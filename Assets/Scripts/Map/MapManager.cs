@@ -10,9 +10,10 @@ using STA.Mapmaker;
 public class MapManager : MonoBehaviour
 {
     [Header("Ref")]
-    [SerializeField] GameObject mapmakerPrefab;
-    [SerializeField] GameObject mapImagePrefab;
-    [SerializeField] RectTransform mapImageGroup;
+    [SerializeField] GameObject m_MapmakerPrefab;
+    [SerializeField] GameObject m_MapImagePrefab;
+    [SerializeField] RectTransform m_MapImageGroup;
+    public Canvas UICanvas;
 
     [Header("Data")]
     public int MapID = 1;
@@ -42,7 +43,7 @@ public class MapManager : MonoBehaviour
         if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.KeypadPlus))
         {
             if (mapMaker) Destroy(mapMaker.gameObject);
-            else mapMaker = Instantiate(mapmakerPrefab, transform);
+            else mapMaker = Instantiate(m_MapmakerPrefab, transform);
         }
     }
 
@@ -52,13 +53,13 @@ public class MapManager : MonoBehaviour
         List<Image> _mapImages = new List<Image>();
         for (int i = 0; i < 15; i++)
         {
-            Image image = Instantiate(mapImagePrefab, mapImageGroup).GetComponent<Image>();
+            Image image = Instantiate(m_MapImagePrefab, m_MapImageGroup).GetComponent<Image>();
             Sprite sprite = Resources.Load<Sprite>("Maps/Map_" + MapID + "_" + i);
             image.sprite = sprite;
             _mapImages.Add(image);
         }
         mapImages = _mapImages;
-        LayoutRebuilder.ForceRebuildLayoutImmediate(mapImageGroup);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(m_MapImageGroup);
     }
 
     public void UpdateLevelData()

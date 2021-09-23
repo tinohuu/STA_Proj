@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class LuckyWheel : MonoBehaviour
 {
-    public int LevelId = 0;
-    public int WheelId = 0;
+    public int LevelID = 0;
+    public int WheelID = 0;
     public void UpdateView()
     {
 

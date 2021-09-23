@@ -55,6 +55,20 @@ public class Mapmaker : MonoBehaviour
         ApplyMode();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            MapmakerPlaceholder[] placeholders = FindObjectsOfType<MapmakerPlaceholder>();
+            foreach (var p in placeholders)
+            {
+                Color color = p.GetComponentInChildren<SpriteRenderer>().color;
+                color.a = color.a == 0 ? 0.5f : 0;
+                p.GetComponentInChildren<SpriteRenderer>().color = color;
+            }
+        }
+    }
+
     public void InitializeModules()
     {
         var modules = FindObjectsOfType<MonoBehaviour>().OfType<IMapmakerModule>();
@@ -131,6 +145,7 @@ public class Mapmaker : MonoBehaviour
         {
             InputField input = Instantiate(InputPrefab, InputGroup).GetComponent<InputField>();
             input.placeholder.GetComponent<Text>().text = info;
+            //input.onEndEdit.AddListener((string s) => ApplyInputs());
         }
         LayoutRebuilder.ForceRebuildLayoutImmediate(InputGroup.parent.GetComponent<RectTransform>());
     }

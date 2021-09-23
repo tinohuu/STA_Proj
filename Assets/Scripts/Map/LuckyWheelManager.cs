@@ -8,31 +8,43 @@ using UnityEngine;
 public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
 {
     [Header("Ref")]
-    [SerializeField] GameObject wheelPrefab;
-    [SerializeField] Transform wheelGroup;
+    [SerializeField] GameObject m_WheelViewPrefab;
+    [SerializeField] GameObject m_WheelPrefab;
+    [SerializeField] Transform m_WheelGroup;
 
     public static LuckyWheelManager Instance = null;
 
     private void Awake()
     {
         if (!Instance) Instance = this;
-
     }
 
     private void Start()
     {
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.S))
+        var wheel = GetAvailableWheel();
+        if (wheel)
         {
-            Spin(1);
+            var view = Instantiate(m_WheelViewPrefab, MapManager.Instance.UICanvas.transform).GetComponent<LuckyWheelView>();
+            view.SetWheel(wheel);
         }
     }
 
-    public List<Dictionary<RewardType, int>> GetRewards(int wheelID)
+    LuckyWheel GetAvailableWheel()
+    {
+        var wheels = m_WheelGroup.GetComponentsInChildren<LuckyWheel>();
+        foreach (var wheel in wheels)
+        {
+            if (wheel.LevelID <= MapManager.Instance.Data.CompleteLevel && wheel.LevelID > MapManager.Instance.Data.WheelCollectedLevel)
+            {
+                return wheel;
+            }
+        }
+        return null;
+    }
+
+    public static List<Dictionary<RewardType, int>> GetRewards(int wheelID)
     {
         var wheelConfigs = ConfigsAsset.GetConfigList<LuckyWheelConfig>().FindAll(e => e.WheelNum == wheelID);
         var rewardConfigs = ConfigsAsset.GetConfigList<RewardConfig>();
@@ -48,7 +60,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
         return rewards;
     }
 
-    public int Spin(int wheelID)
+    public static int Spin(int wheelID)
     {
         // This method returns slot INDEX
 
@@ -98,38 +110,43 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
     {
         if (json == null) return;
 
-        wheelGroup.DestroyChildren();
+        m_WheelGroup.DestroyChildren();
 
         var configs = JsonExtensions.JsonToList<Mapmaker_WheelConfig>(json);
         foreach (var config in configs)
         {
-            var luckyWheel = Instantiate(wheelPrefab, wheelGroup).GetComponent<LuckyWheel>();
-            luckyWheel.transform.localPosition = config.LocPos;
+            if (config.LevelID > MapManager.Instance.Data.WheelCollectedLevel)
+            {
+                var luckyWheel = Instantiate(m_WheelPrefab, m_WheelGroup).GetComponent<LuckyWheel>();
+                luckyWheel.transform.localPosition = config.LocPos;
+                luckyWheel.WheelID = config.WheelID;
+                luckyWheel.LevelID = config.LevelID;
+            }
         }
     }
     public Transform Mapmaker_AddItem()
     {
-        GameObject obj = Instantiate(wheelPrefab, wheelGroup);
-        obj.transform.localPosition = wheelGroup.InverseTransformPoint(Vector3.zero);
+        GameObject obj = Instantiate(m_WheelPrefab, m_WheelGroup);
+        obj.transform.localPosition = m_WheelGroup.InverseTransformPoint(Vector3.zero);
         return obj.transform;
     }
 
     public void Mapmaker_ApplyInputs(Transform target, string[] inputs)
     {
         var wheel = target.GetComponent<LuckyWheel>();
-        wheel.LevelId = int.Parse(inputs[0]);
-        wheel.WheelId = int.Parse(inputs[1]);
+        wheel.LevelID = int.Parse(inputs[0]);
+        wheel.WheelID = int.Parse(inputs[1]);
     }
 
     public string Mapmaker_ToConfig()
     {
-        var wheels = wheelGroup.GetComponentsInChildren<LuckyWheel>();
+        var wheels = m_WheelGroup.GetComponentsInChildren<LuckyWheel>();
         var configs = new List<Mapmaker_WheelConfig>();
         foreach (var wheel in wheels)
         {
             var config = new Mapmaker_WheelConfig();
-            config.LevelID = wheel.LevelId;
-            config.WheelID = wheel.WheelId;
+            config.LevelID = wheel.LevelID;
+            config.WheelID = wheel.WheelID;
             config.LocPos = wheel.transform.localPosition;
             configs.Add(config);
         }
@@ -139,7 +156,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
     public string[] Mapmaker_UpdateInputs(Transform target)
     {
         var wheel = target.GetComponent<LuckyWheel>();
-        var inputDatas = new string[] { wheel.LevelId.ToString(), wheel.WheelId.ToString()};
+        var inputDatas = new string[] { wheel.LevelID.ToString(), wheel.WheelID.ToString()};
         return inputDatas;
     }
 

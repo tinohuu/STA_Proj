@@ -38,7 +38,7 @@ public class MapPlayer : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) StartCoroutine(IOnClickRomote()); 
+        //if (Input.GetKeyDown(KeyCode.R)) StartCoroutine(IOnClickRomote()); 
     }
 
     void UpdaterRemoteView(Vector2 scrollRect = new Vector2())
