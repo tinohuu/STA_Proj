@@ -35,13 +35,13 @@ public class LuckyWheelView : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(IOuterIdle());
-        StartCoroutine(IInnerIdle());
+
 
         Vector3 firstSlotLocPos = m_InitPoint.localPosition;
 
         var rewards = LuckyWheelManager.GetRewards(m_Wheel.WheelID);
-        for (int i = 0; i < 8; i++)
+        Debug.Log(m_Wheel.WheelID);
+        for (int i = 0; i < rewards.Count; i++)
         {
             var slot = Instantiate(m_SlotPrefab, m_SlotGroup).GetComponent<LuckyWheelRewardSlot>();
             slot.transform.localPosition = Quaternion.AngleAxis(-45 * i, Vector3.forward) * firstSlotLocPos;
@@ -51,7 +51,12 @@ public class LuckyWheelView : MonoBehaviour
 
         m_ButtonAnimator.OnClick.AddListener(() => Spin());
         m_LuckyWheelButton.onClick.AddListener(() => Spin());
-        m_LuckyWheelButton.onClick.AddListener(() => m_LuckyWheelButton.interactable = false);
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(IOuterIdle());
+        StartCoroutine(IInnerIdle());
     }
 
     public void SetWheel(LuckyWheel wheel)
@@ -62,6 +67,7 @@ public class LuckyWheelView : MonoBehaviour
     void Spin()
     {
         m_ButtonAnimator.Interactable = false;
+        m_LuckyWheelButton.interactable = false;
         m_SpinText.DOFade(0.5f, 0.25f);
 
         int rewardIndex = LuckyWheelManager.Spin(m_Wheel.WheelID);
@@ -69,7 +75,7 @@ public class LuckyWheelView : MonoBehaviour
         m_PointerImage.rectTransform.DOKill();
         Vector3 rewardRot = -Vector3.forward * rewardIndex * 45;
         m_PointerImage.rectTransform.rotation = Quaternion.identity;
-        m_PointerImage.rectTransform.DOLocalRotate(-Vector3.forward * (360 * 5) + rewardRot, 7, RotateMode.LocalAxisAdd).SetEase(Ease.OutSine).OnComplete(() => Shine());
+        m_PointerImage.rectTransform.DOLocalRotate(-Vector3.forward * (360 * 10) + rewardRot, 5, RotateMode.LocalAxisAdd).SetEase(Ease.OutSine).OnComplete(() => Shine());
         isSpinning = true;
         m_OuterLightImage.sprite = m_OuterLightSprites[1];
         m_InnerLightImage.sprite = m_InnerLightSprites[1];
@@ -87,7 +93,7 @@ public class LuckyWheelView : MonoBehaviour
 
     void Exit()
     {
-        GetComponent<CanvasGroup>().DOFade(0, 0.5f).OnComplete(() => Destroy(gameObject));
+        GetComponent<CanvasGroup>().DOFade(0, 0.5f).OnComplete(() => GetComponent<WindowAnimator>().FadeOut(true));
     }
 
     void Shine()

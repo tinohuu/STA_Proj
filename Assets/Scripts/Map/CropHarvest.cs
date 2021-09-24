@@ -34,6 +34,11 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
         //TimeManager.Instance.Refresher += RefreshHarvestTime;
     }
 
+    private void Start()
+    {
+        TutorialManager.Instance.Show("Harvest", buttonAnimator.gameObject);
+    }
+
     void Update()
     {
         TimeSpan timeSpan;
@@ -156,7 +161,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
                 TimeDebugText.Log("Clamped the harvest time.");
                 data.LastHarvestTime = now;
             }
-            CropManager.Instance.UpdateCropsAnimator(true);
+            //CropManager.Instance.UpdateCropsAnimator(true);
         }
         else ResetTime(now);
     }

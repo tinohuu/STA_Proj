@@ -35,7 +35,7 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
         //MapLevel level = LevelGroup.GetChild(MapManager.Instance.Data.SelectedLevel - 1).GetComponent<MapLevel>();
     }
 
-    void UpdateLevelsView()
+    public void UpdateLevelsView()
     {
         var levels = LevelGroup.GetComponentsInChildren<MapLevel>();
         for (int i = 0; i < levels.Length; i++)

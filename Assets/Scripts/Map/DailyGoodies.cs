@@ -169,7 +169,7 @@ public class DailyGoodies : MonoBehaviour
         }
 
         Shade.DOFade(0, 0.5f);
-        View.DOFade(0, 0.5f).OnComplete(() => Destroy(View.gameObject)).SetDelay(0.5f);
+        View.DOFade(0, 0.5f).OnComplete(() => GetComponent<WindowAnimator>().FadeOut(true)).SetDelay(0.5f);
         // todo: exit
     }
 }

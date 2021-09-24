@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
 {
+    public bool EnableDailyGoodies = true;
     [SerializeField] int MaxWeeks = 4;
     [SerializeField] int MaxVersions = 2;
 
@@ -25,16 +26,17 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
     DailyGoodyData InitializeData()
     {
         var data = Data;
-        data.LastGoodyTime = TimeManager.Instance.RealNow.Date;// - TimeSpan.FromDays(1);
+        data.LastGoodyTime = TimeManager.Instance.RealNow.Date - TimeSpan.FromDays(1);
         return data;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (TimeManager.Instance.RealNow.Date != Data.LastGoodyTime.Date && !view && !IsSuspended && !TimeManager.Instance.IsGettingTime) // for local time specific + Data.CheckedSystemOffset.ToTimeSpan();
+        if (TimeManager.Instance.RealNow.Date != Data.LastGoodyTime.Date && !view && !IsSuspended && !TimeManager.Instance.IsGettingTime && EnableDailyGoodies) // for local time specific + Data.CheckedSystemOffset.ToTimeSpan();
         {
             view = Instantiate(viewPrefab, MapManager.Instance.UICanvas.transform);
+            //view = WindowManager.Instance.OpenView(viewPrefab);
         }
     }
 

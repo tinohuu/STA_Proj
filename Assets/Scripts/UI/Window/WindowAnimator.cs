@@ -10,7 +10,9 @@ public class WindowAnimator : Window
     [Tooltip("Please add Canvas Group component to animated UI elements")]
     public List<WindowAnimatorElement> Elements = new List<WindowAnimatorElement>();
     public bool InverseOnFadeOut = false;
+    public bool ShowPanel = true;
     public bool CanCloseByPanel = true;
+    public bool InQueue = true;
     public float IntervalMultiplerOnFadeOut = 1;
 
     public static List<WindowAnimator> WindowQueue = new List<WindowAnimator>();
@@ -44,13 +46,23 @@ public class WindowAnimator : Window
     [ContextMenu("Fade Out")] void FadeOut_Menu() { StopAllCoroutines(); StartCoroutine(IFadeOut(false)); }
     public void FadeOut(bool disable = false) { StopAllCoroutines(); StartCoroutine(IFadeOut(disable)); }
 
+    public void Close() => FadeOut(true);
+
     IEnumerator IFadeIn()
     {
-        SoundManager.Instance.PlaySFX("uiPanelOpen");
+        //SoundManager.Instance.PlaySFX("uiPanelOpen");
         CompleteWinodws();
         ResetWinodws();
-        if (WindowQueue.Count > 0 && WindowQueue.Last() != this) WindowQueue.Last().FadeOut();
-        if (!WindowQueue.Contains(this)) WindowQueue.Add(this);
+
+        if (InQueue)
+        {
+            if (WindowQueue.Count > 0 && WindowQueue.Last() != this)
+            {
+                WindowQueue.Last().FadeOut();
+            }
+            if (!WindowQueue.Contains(this)) WindowQueue.Add(this);
+        }
+
         OnFadeIn?.Invoke();
         OnQueueChanged?.Invoke();
 
@@ -66,7 +78,7 @@ public class WindowAnimator : Window
         }
     }
 
-    IEnumerator IFadeOut(bool disable = false)
+    IEnumerator IFadeOut(bool destroy = false)
     {
         SoundManager.Instance.PlaySFX("uiPanelClose");
         CompleteWinodws();
@@ -84,16 +96,36 @@ public class WindowAnimator : Window
             yield return i == 0 ? new WaitForSeconds(0) : new WaitForSeconds(Elements[i - 1].Interval * IntervalMultiplerOnFadeOut);
         }
 
-        if (disable)
+
+        if (destroy)
         {
-            if (WindowQueue.Contains(this)) WindowQueue.Remove(this);
-            OnQueueChanged?.Invoke();
-            if (WindowQueue.Count > 0) WindowQueue.Last().FadeIn();
-            yield return new WaitForSeconds(Elements[0].Duration * 2);
+            if (InQueue)
+            {
+                if (WindowQueue.Contains(this)) WindowQueue.Remove(this);
+                OnQueueChanged?.Invoke();
+                if (WindowQueue.Count > 0)
+                {
+                    WindowQueue.Last().gameObject.SetActive(true);
+                    WindowQueue.Last().FadeIn();
+                }
+            }
+
+
+            yield return new WaitForSeconds(Elements[0].Duration);
             //ResetWinodws();
             Destroy(gameObject);
             //gameObject.SetActive(false);
         }
+        else
+        {
+            yield return new WaitForSeconds(tween.Duration());
+            gameObject.SetActive(false);
+        }
+    }
+
+    void Exit()
+    {
+
     }
 
     

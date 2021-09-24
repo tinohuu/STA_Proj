@@ -75,7 +75,7 @@ public class MapCropEditor : Editor
                 crop.Controllers.Add(controller);
                 variantIndex++;
             }
-            while (variantIndex < 5);
+            while (variantIndex < 7);
             AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(crop), "Crop_" + crop.MapmakerConfig.Name);
             crop.gameObject.name = "Crop_" + crop.MapmakerConfig.Name;
             crop.SpinePrefab = GetAssetByName<GameObject>("Crop_" + crop.MapmakerConfig.Name + "_Spine");

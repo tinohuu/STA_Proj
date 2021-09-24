@@ -167,7 +167,7 @@ public class MapTrackManager : MonoBehaviour, IMapmakerModule
 
     public void Mapmaker_DeleteItem(GameObject target)
     {
-        DestroyImmediate(gameObject);
+        DestroyImmediate(target.gameObject);
         UpdatePoints();
     }
 }

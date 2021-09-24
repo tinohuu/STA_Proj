@@ -561,6 +561,7 @@ GameObject:
   - component: {fileID: 2828721208861683388}
   - component: {fileID: 2828721208861683389}
   - component: {fileID: 779565244}
+  - component: {fileID: 4057242492933863134}
   m_Layer: 5
   m_Name: LuckWheelImage
   m_TagString: Untagged
@@ -676,6 +677,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &4057242492933863134
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2828721208861683385}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2828721209046925696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1173,6 +1186,7 @@ GameObject:
   - component: {fileID: 2828721209400240423}
   - component: {fileID: 2828721209400240420}
   - component: {fileID: 2828721209400240421}
+  - component: {fileID: 194344093844618883}
   m_Layer: 5
   m_Name: LuckyWheelView
   m_TagString: Untagged
@@ -1285,6 +1299,31 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &194344093844618883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2828721209400240417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1098c4f2c05198c44bfebad1c06b59a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Elements:
+  - CanvasGroup: {fileID: 4057242492933863134}
+    FromOffset: {x: 0, y: -60, z: 0}
+    Duration: 0.6
+    Interval: 0
+    IsScale: 0
+    OriPos: {x: 0, y: 0, z: 0}
+    OriScale: {x: 0, y: 0, z: 0}
+  InverseOnFadeOut: 0
+  ShowPanel: 0
+  CanCloseByPanel: 0
+  InQueue: 1
+  IntervalMultiplerOnFadeOut: 1
 --- !u!1 &2828721209477673497
 GameObject:
   m_ObjectHideFlags: 0

@@ -45,7 +45,7 @@ public class Crop : MonoBehaviour
 
         if (curLevel < UnlockingLevel)
             CropState = State.locked;
-        else if (curLevel < UnlockingLevel)
+        else if (curLevel < UnlockedLevel)
             CropState = State.unlocking;
         else
             CropState = CropManager.Instance.IsMature ? State.mature : State.immature;

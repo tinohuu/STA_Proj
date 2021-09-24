@@ -45,6 +45,7 @@ public class Mapmaker : MonoBehaviour
         CheatButton.onClick.AddListener(() => CropHarvest.Instance.Cheat());
         ProgressSlider.onValueChanged.AddListener((float ratio) => MapManager.Instance.SetProgress(ratio));
         ProgressSlider.onValueChanged.AddListener((float ratio) => CropManager.Instance.UpdateCropsView());
+        ProgressSlider.onValueChanged.AddListener((float ratio) => MapLevelManager.Instance.UpdateLevelsView());
 
         InitializeModules();
     }

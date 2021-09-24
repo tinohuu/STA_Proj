@@ -11,6 +11,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
     [SerializeField] GameObject m_WheelViewPrefab;
     [SerializeField] GameObject m_WheelPrefab;
     [SerializeField] Transform m_WheelGroup;
+    public bool EnableWheel = true;
 
     public static LuckyWheelManager Instance = null;
 
@@ -24,9 +25,10 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
 
         var wheel = GetAvailableWheel();
-        if (wheel)
+        if (wheel && EnableWheel)
         {
             var view = Instantiate(m_WheelViewPrefab, MapManager.Instance.UICanvas.transform).GetComponent<LuckyWheelView>();
+            //var view = WindowManager.Instance.OpenView(m_WheelViewPrefab).GetComponent<LuckyWheelView>();
             view.SetWheel(wheel);
         }
     }

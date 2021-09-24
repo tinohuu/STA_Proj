@@ -2458,6 +2458,7 @@ GameObject:
   - component: {fileID: 5668969312729318519}
   - component: {fileID: 5668969312729318518}
   - component: {fileID: 3374192796547296023}
+  - component: {fileID: 5692580486673289759}
   m_Layer: 5
   m_Name: DailyGoodiesWindow
   m_TagString: Untagged
@@ -2525,6 +2526,31 @@ MonoBehaviour:
   View: {fileID: 5668969312729318518}
   Shade: {fileID: 5668969312312412808}
   Speed: 20
+--- !u!114 &5692580486673289759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5668969312729318512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1098c4f2c05198c44bfebad1c06b59a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Elements:
+  - CanvasGroup: {fileID: 5668969312729318518}
+    FromOffset: {x: 0, y: -60, z: 0}
+    Duration: 0.6
+    Interval: 0
+    IsScale: 0
+    OriPos: {x: 0, y: 0, z: 0}
+    OriScale: {x: 0, y: 0, z: 0}
+  InverseOnFadeOut: 0
+  ShowPanel: 0
+  CanCloseByPanel: 0
+  InQueue: 1
+  IntervalMultiplerOnFadeOut: 1
 --- !u!1 &5668969312869739888
 GameObject:
   m_ObjectHideFlags: 0
