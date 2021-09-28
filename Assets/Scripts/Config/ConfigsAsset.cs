@@ -16,6 +16,18 @@ public class ConfigsAsset// : ScriptableObject
     public static string GetConfig(string name)
     {
         IEnumerable<AssetBundle> bundles = AssetBundle.GetAllLoadedAssetBundles();
+
+        if (Debug.isDebugBuild)
+        {
+            string path = Application.dataPath + "/DebugConfigs/" + name + ".json";
+            if (File.Exists(path))
+            {
+                Debug.Log("ConfigAsset: from debug configs.");
+                return File.ReadAllText(path);
+            }
+        }
+
+
         foreach (AssetBundle bundle in bundles)
         {
             foreach (string assetName in bundle.GetAllAssetNames())
@@ -23,7 +35,7 @@ public class ConfigsAsset// : ScriptableObject
                 string[] assetFileName = assetName.Split(new[] { "/" }, StringSplitOptions.None);
                 if (name.ToLower() + ".json" == assetFileName[assetFileName.Length - 1])
                 {
-                    Debug.Log("ConfigAsset::GetFromAssetBundles");
+                    Debug.Log("ConfigAsset: from asset bundles");
                     return bundle.LoadAsset(assetName).ToString();
                 }
             }

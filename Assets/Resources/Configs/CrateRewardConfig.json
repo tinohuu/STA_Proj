@@ -1,0 +1,79 @@
+[
+  {
+    "ID": 1,
+    "RewardType": 1,
+    "RewardCountMin": 0,
+    "RewardCountMax": 0,
+    "Comment": "金币奖励"
+  },
+  {
+    "ID": 2,
+    "RewardType": 5,
+    "RewardCountMin": 1,
+    "RewardCountMax": 3,
+    "Comment": "FreeRound奖励"
+  },
+  {
+    "ID": 3,
+    "RewardType": 2,
+    "RewardCountMin": 2,
+    "RewardCountMax": 10,
+    "Comment": "Undo奖励"
+  },
+  {
+    "ID": 4,
+    "RewardType": 4,
+    "RewardCountMin": 1,
+    "RewardCountMax": 2,
+    "Comment": "WildCard奖励"
+  },
+  {
+    "ID": 5,
+    "RewardType": 3,
+    "RewardCountMin": 1,
+    "RewardCountMax": 4,
+    "Comment": "MoreCards奖励"
+  },
+  {
+    "ID": 6,
+    "RewardType": 8,
+    "RewardCountMin": 1,
+    "RewardCountMax": 1,
+    "Comment": "移除三张卡奖励"
+  },
+  {
+    "ID": 7,
+    "RewardType": 9,
+    "RewardCountMin": 1,
+    "RewardCountMax": 1,
+    "Comment": "风车牌奖励"
+  },
+  {
+    "ID": 8,
+    "RewardType": 10,
+    "RewardCountMin": 1,
+    "RewardCountMax": 5,
+    "Comment": "插入三张狂野牌奖励"
+  },
+  {
+    "ID": 9,
+    "RewardType": 11,
+    "RewardCountMin": 1,
+    "RewardCountMax": 1,
+    "Comment": "移除加减牌奖励"
+  },
+  {
+    "ID": 10,
+    "RewardType": 12,
+    "RewardCountMin": 1,
+    "RewardCountMax": 1,
+    "Comment": "移除牌锁奖励"
+  },
+  {
+    "ID": 11,
+    "RewardType": 13,
+    "RewardCountMin": 1,
+    "RewardCountMax": 1,
+    "Comment": "移除炸弹奖励"
+  }
+]

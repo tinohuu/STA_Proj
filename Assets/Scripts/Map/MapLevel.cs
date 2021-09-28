@@ -30,7 +30,7 @@ public class MapLevel : MonoBehaviour, IPointerClickHandler
         LevelText.text = Data.ID.ToString();
         LevelText.color = IsOpen ? Color.white : new Color(1, 1, 1, 0.5f);
 
-        Data.Rating = IsOpen && Data.ID != MapManager.Instance.Data.CompleteLevel + 1 ? Random.Range(1, 4) : 0; // Test: temp rating
+        //Data.Rating = IsOpen && Data.ID != MapManager.Instance.Data.CompleteLevel + 1 ? Random.Range(3, 4) : 0; // Test: temp rating
 
         foreach (SpriteRenderer star in StarSpriteRenderers) star.color = IsOpen ? new Color(1, 1, 1, 0.5f) : Color.clear;
         for (int i = 0; i < Data.Rating; i++) StarSpriteRenderers[i].color = Color.white;

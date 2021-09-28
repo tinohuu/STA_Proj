@@ -1,0 +1,32 @@
+[
+  {
+    "ID": 1,
+    "Base": 500,
+    "MultiplierMin": 2,
+    "MultiplierMax": 6,
+    "Weight": 35,
+    "StepMultiplierMin": 0,
+    "StepMultiplierMax": 1,
+    "LevelStep": 100
+  },
+  {
+    "ID": 2,
+    "Base": 500,
+    "MultiplierMin": 7,
+    "MultiplierMax": 12,
+    "Weight": 55,
+    "StepMultiplierMin": 1,
+    "StepMultiplierMax": 1,
+    "LevelStep": 100
+  },
+  {
+    "ID": 3,
+    "Base": 500,
+    "MultiplierMin": 13,
+    "MultiplierMax": 20,
+    "Weight": 10,
+    "StepMultiplierMin": 1,
+    "StepMultiplierMax": 1,
+    "LevelStep": 100
+  }
+]

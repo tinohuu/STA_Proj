@@ -5,6 +5,8 @@ using UnityEngine;
 public class ParticleManager : MonoBehaviour
 {
     public Transform ParticleGroup;
+    public Transform LeftSide;
+    public Transform RightSide;
     [SerializeField] Transform triggerGroup;
     [SerializeField] Transform forceFieldGroup;
     [SerializeField] GameObject coinPrefab;
@@ -54,7 +56,7 @@ public class ParticleManager : MonoBehaviour
         // Set sorting order
         var rendererModule = particle.GetComponent<ParticleSystemRenderer>();
         rendererModule.sortingLayerName = "Environment";
-        rendererModule.sortingOrder = 1;
+        rendererModule.sortingOrder = 3;
 
         return obj;
     }

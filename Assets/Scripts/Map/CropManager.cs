@@ -8,11 +8,14 @@ using UnityEngine;
 public class CropManager : MonoBehaviour, IMapmakerModule
 {
     [Header("Ref")]
-    [SerializeField] Transform LeftSide;
-    [SerializeField] Transform RightSide;
+    //[SerializeField] Transform LeftSide;
+    //[SerializeField] Transform RightSide;
     [SerializeField] Transform CropGroup;
+    [SerializeField] GameObject CropGrowthWindow;
+
 
     [Header("Config & Data")]
+    [SavedData] public CropManagerData Data = new CropManagerData();
     public List<CropConfig> CropConfigs = new List<CropConfig>();
     public bool IsMature = false;
 
@@ -27,6 +30,21 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     }
     private void Start()
     {
+        /*var crop = CropConfigs.Find(e => e.ID > Data.LastCropGrowthID && e.Level <= MapManager.Instance.Data.CompleteLevel);
+        if (crop != null)
+        {
+            Window.CreateWindowPrefab(CropGrowthWindow).GetComponent<CropGrowthWindow>().SetCrop(crop.Name);
+            Data.LastCropGrowthID = crop.ID;
+        }*/
+
+        /*var crops = CropConfigs.FindAll(e => e.ID > Data.LastCropGrowthID && e.Level <= MapManager.Instance.Data.CompleteLevel);
+        foreach (var c in crops)
+        {
+            Window.CreateWindowPrefab(CropGrowthWindow).GetComponent<CropGrowthWindow>().SetCrop(c.Name);
+            Data.LastCropGrowthID = c.ID;
+        }*/
+
+
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
     }
 
@@ -124,8 +142,8 @@ public class CropManager : MonoBehaviour, IMapmakerModule
             }
             else
             {
-                CreateParticle(config.Name, leftSide ? LeftSide.position : RightSide.position);
-                CreateParticle(config.Name, leftSide ? LeftSide.position : RightSide.position);
+                CreateParticle(config.Name, leftSide ? ParticleManager.Instance.LeftSide.position : ParticleManager.Instance.RightSide.position);
+                CreateParticle(config.Name, leftSide ? ParticleManager.Instance.LeftSide.position : ParticleManager.Instance.RightSide.position);
             }
         }
 
@@ -225,6 +243,12 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     #endregion
 }
 
+[Serializable]
+public class CropManagerData
+{
+    public int LastCropGrowthID = 0;
+}
+
 namespace STA.Mapmaker
 {
     [System.Serializable]
@@ -233,5 +257,13 @@ namespace STA.Mapmaker
         public string Name = "Cabbage";
         public float Scale = 0.5f;
         public int Variant = 0;
+    }
+}
+
+public static class CropExtension
+{
+    public static Sprite ToFruitSprite(this string name)
+    {
+        return Resources.Load<Sprite>("Sprites/Crops/Crop_Fruit_" + name);
     }
 }

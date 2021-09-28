@@ -975,7 +975,7 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!1 &1451562805320831955
 GameObject:
   m_ObjectHideFlags: 0
@@ -1210,6 +1210,7 @@ MonoBehaviour:
   enableAnimationTest: 1
   hasCropEffect: 0
   isJointEffect: 0
+  m_CollectButton: {fileID: 6339934642931455139}
 --- !u!114 &1451562805639286462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1273,7 +1274,9 @@ MonoBehaviour:
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
   InverseOnFadeOut: 1
+  ShowPanel: 1
   CanCloseByPanel: 1
+  InQueue: 1
   IntervalMultiplerOnFadeOut: 0
 --- !u!1 &1451562805985723673
 GameObject:
@@ -2141,7 +2144,7 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!225 &4743768469272127581
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3151,7 +3154,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!225 &8210486715699423782
 CanvasGroup:
   m_ObjectHideFlags: 0

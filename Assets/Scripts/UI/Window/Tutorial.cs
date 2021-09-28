@@ -1,5 +1,7 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -7,36 +9,95 @@ using UnityEngine.UI;
 
 public class Tutorial : MonoBehaviour
 {
-    //bool m_RunByEvent = false;
-    UnityAction m_OnClickCircle;
-    GameObject m_Target;
+    enum Type { Circle, Flat, Auto }
 
-    public Button CircleButton;
-    // Start is called before the first frame update
+    [SerializeField] GameObject m_Target;
+    TutorialConfig m_Config;
+    
+    //[SerializeField] RectTransform m_Text;
+    [SerializeField] RectTransform[] m_Arrows = new RectTransform[4];
+    [SerializeField] RectTransform m_Hand;
+
+    float m_StartTime = 0;
+    [SerializeField] Button m_CirclePanel;
+    [SerializeField] Button m_FlatPanel;
+
+    [SerializeField] bool m_IsExiting = false;
+    int m_ArrowIndex = 0;
+    Vector2 m_ArrowOffset = Vector2.one;
+    private void Awake()
+    {
+        m_CirclePanel.gameObject.SetActive(false);
+        m_Hand.gameObject.SetActive(false);
+        m_FlatPanel.gameObject.SetActive(false);
+    }
     void Start()
     {
-        CircleButton.transform.position = m_Target.transform.position;
-
-        if (m_OnClickCircle == null)
-        {
-            CircleButton.onClick.AddListener(() => ExecuteEvents.Execute(m_Target, new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler));
-        }
-        else
-        {
-            CircleButton.onClick.AddListener(() => m_OnClickCircle());
-        }
-        CircleButton.onClick.AddListener(() => GetComponent<WindowAnimator>().Close());
+        m_StartTime = Time.time;
+        m_Hand.transform.DOScale(Vector3.one * 1.1f, 0.5f).SetLoops(-1, LoopType.Yoyo);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (m_Target && (Type)(m_Config.Type) == Type.Auto)
+        {
+            m_Arrows[m_ArrowIndex].transform.position = m_Target.transform.position;
+            m_Arrows[m_ArrowIndex].anchoredPosition += m_ArrowOffset;
+        }
+
+        if (!m_IsExiting && (!m_Target || !m_Target.activeSelf))
+        {
+            m_IsExiting = true;
+            GetComponent<WindowAnimator>().Close();
+            if (Time.time - m_StartTime > 1) TutorialManager.Instance.Finish(m_Config);
+        }
     }
 
-    public void SetTutorial(GameObject target, UnityAction onClickCircle = null)
+    public void SetTutorial(TutorialConfig config, GameObject target, UnityAction onClickCircle = null)
     {
         m_Target = target;
-        m_OnClickCircle = onClickCircle;
+        m_Config = config;
+
+        Vector2 targetPos = Camera.main.WorldToScreenPoint(target.transform.position);
+
+        m_ArrowIndex = targetPos.x > Screen.width / 2f ? 2 : 0;
+        m_ArrowIndex += targetPos.y > Screen.height / 2f ? 1 : 0;
+        foreach (var a in m_Arrows) a.gameObject.SetActive(false);
+
+       //float xOffset = targetPos.x > Screen.width / 2f ? -300 : 300;
+        float yOffset = targetPos.y > Screen.height / 2f ? -200 : 200;
+        m_ArrowOffset = new Vector2(0, yOffset);
+        targetPos += m_ArrowOffset;
+
+        if (config.Content != "")
+        {
+            m_Arrows[m_ArrowIndex].gameObject.SetActive(true);
+            m_Arrows[m_ArrowIndex].anchoredPosition = targetPos;
+            config.Content = config.Content.Replace("\\n", "\n");
+            m_Arrows[m_ArrowIndex].GetComponentInChildren<TMP_Text>().text = config.Content;
+            //m_Arrows[arrowIndex].GetComponentInChildren<TMP_Text>().GetRenderedValues();
+        }
+
+        if ((Type)(config.Type) == Type.Circle)
+        {
+            m_CirclePanel.gameObject.SetActive(true);
+            m_CirclePanel.transform.position = m_Target.transform.position;
+            m_CirclePanel.onClick.AddListener(onClickCircle);
+            m_CirclePanel.onClick.AddListener(() => GetComponent<WindowAnimator>().Close());
+            m_CirclePanel.onClick.AddListener(() => TutorialManager.Instance.Finish(config));
+            m_CirclePanel.onClick.AddListener(() => m_CirclePanel.interactable = false);
+
+            m_Hand.gameObject.SetActive(true);
+            m_Hand.transform.position = m_Target.transform.position;
+            m_Hand.anchoredPosition += new Vector2(100, -100);// new Vector2(targetPos.x > Screen.width / 2f ? 100 : -100, -100);
+        }
+        else if ((Type)(config.Type) == Type.Flat)
+        {
+            m_FlatPanel.gameObject.SetActive(true);
+            m_FlatPanel.onClick.AddListener(() => GetComponent<WindowAnimator>().Close());
+            m_FlatPanel.onClick.AddListener(() => TutorialManager.Instance.Finish(config));
+            m_FlatPanel.onClick.AddListener(() => m_CirclePanel.interactable = false);
+        }
     }
 }

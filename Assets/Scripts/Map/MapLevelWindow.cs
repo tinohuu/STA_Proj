@@ -23,13 +23,17 @@ public class MapLevelWindow : Window
 
     private void Start()
     {
-        var rawRewards = MapManager.Instance.CurMapStageConfigs[LevelData.ID - 1].PowerUpsOrder.Split('_');
-        for (int i = 0; i < rawRewards.Length; i++)
+        if (powerups.Count > 0)
         {
-            int rewardID;
-            if (int.TryParse(rawRewards[i], out rewardID))
-                powerups[i].RewardType = (RewardType)rewardID;
+            var rawRewards = MapManager.Instance.CurMapStageConfigs[LevelData.ID - 1].PowerUpsOrder.Split('_');
+            for (int i = 0; i < rawRewards.Length; i++)
+            {
+                int rewardID;
+                if (int.TryParse(rawRewards[i], out rewardID))
+                    powerups[i].RewardType = (RewardType)rewardID;
+            }
         }
+
         UpdateView();
     }
 

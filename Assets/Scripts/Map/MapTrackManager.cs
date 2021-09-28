@@ -120,6 +120,7 @@ public class MapTrackManager : MonoBehaviour, IMapmakerModule
 
         if (configs.Count == 0) return;
 
+        configs.Sort((x, y) => x.PosX.CompareTo(y.PosX));
         foreach (var config in configs)
         {
             var point = Instantiate(TrackPointPrefab, TrackPointGroup).GetComponent<MapTrackPoint>();

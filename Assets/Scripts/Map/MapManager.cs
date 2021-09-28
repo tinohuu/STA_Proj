@@ -18,7 +18,7 @@ public class MapManager : MonoBehaviour
     [Header("Data")]
     public int MapID = 1;
     public List<StageConfig> CurMapStageConfigs;
-    public MapManagerData Data = new MapManagerData();
+    public MapManagerData Data => MapDataManager.Instance.Data;
     public List<StageConfig> StageConfigs;
     public Dictionary<int, FunctionConfig> FunctionConfigsByFuncID;
 
@@ -34,7 +34,7 @@ public class MapManager : MonoBehaviour
         CurMapStageConfigs = MapManager.Instance.StageConfigs.Where(e => e.ChapterNum == MapManager.Instance.MapID).ToList();
         FunctionConfigsByFuncID = ConfigsAsset.GetConfigList<FunctionConfig>().ToDictionary(p => p.FunctionID);
 
-        UpdateLevelData();
+
         UpdateView();
     }
 
@@ -51,7 +51,7 @@ public class MapManager : MonoBehaviour
     {
         mapImages.ForEach(e => DestroyImmediate(e));
         List<Image> _mapImages = new List<Image>();
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 16; i++)
         {
             Image image = Instantiate(m_MapImagePrefab, m_MapImageGroup).GetComponent<Image>();
             Sprite sprite = Resources.Load<Sprite>("Maps/Map_" + MapID + "_" + i);
@@ -62,48 +62,20 @@ public class MapManager : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(m_MapImageGroup);
     }
 
-    public void UpdateLevelData()
-    {
-        var configs = ConfigsAsset.GetConfigList<StageConfig>();
-        int maxLevelCount = configs.Count;
-        if (Data.MapLevelDatas.Count < maxLevelCount)
-        {
-            for (int i = Data.MapLevelDatas.Count; i < maxLevelCount; i++)
-            {
-                Data.MapLevelDatas.Add(new MapLevelData(i + 1));
-            }
-        }
-    }
+
 
     public void SetProgress(float ratio)
     {
         Data.CompleteLevel = CurMapStageConfigs[0].LevelID + Mathf.CeilToInt(ratio * (CurMapStageConfigs.Last().LevelID - CurMapStageConfigs[0].LevelID));
     }
-}
 
-[System.Serializable]
-public class MapManagerData
-{
-    public int CompleteLevel = 0;
-    public int SelectedLevel = 0;
-    public DateTime LastHarvestTime = new DateTime();
-    public int WheelCollectedLevel = 0;
-    public int WheelTimesSinceGrand = 0;
-    public List<MapLevelData> MapLevelDatas = new List<MapLevelData>();
-}
-
-[System.Serializable]
-public class MapLevelData
-{
-    public int ID = 1;
-    public int Rating = 0;
-    public bool IsComplete => Rating != 0;
-
-    public MapLevelData(int id)
+    public static void SetRating(int level, int rating)
     {
-        ID = id;
+
+
     }
 }
+
 
 [System.Serializable]
 public class CropConfig

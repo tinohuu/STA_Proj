@@ -19,6 +19,7 @@ public class CropHarvestWindow : MonoBehaviour
     [SerializeField] bool enableAnimationTest = true;
     [SerializeField] bool hasCropEffect = false;
     [SerializeField] bool isJointEffect = true;
+    [SerializeField] ButtonAnimator m_CollectButton;
 
     float lastGyroTime = 0;
     private void OnEnable()
@@ -43,6 +44,8 @@ public class CropHarvestWindow : MonoBehaviour
         CoinText.text = string.Format(CoinText.text, CropHarvest.Instance.GetHarvestCoin().ToString("N0"));
         AdText.text = string.Format(AdText.text, (CropHarvest.Instance.GetHarvestCoin() * 2).ToString("N0"));
         //CoinText.rectTransform.DOScale(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+
+        TutorialManager.Instance.Show("Harvest", 2, m_CollectButton.gameObject);
     }
 
     private void FixedUpdate()
@@ -184,5 +187,10 @@ public class CropHarvestWindow : MonoBehaviour
         FindObjectOfType<CropHarvest>().Harvest();
         SoundManager.Instance.PlaySFX("coin", true);
         SoundManager.Instance.PlaySFX("harvestStart");
+    }
+
+    void OnDestroy()
+    {
+        MapLevelManager.Instance.ShowTutorial();
     }
 }

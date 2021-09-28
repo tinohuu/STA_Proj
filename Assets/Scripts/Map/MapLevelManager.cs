@@ -45,6 +45,17 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
         }
     }
 
+    public void ShowTutorial()
+    {
+        TutorialManager.Instance.Show("Harvest", 3, () => FindLevelButton(5).gameObject);
+    }
+
+    MapLevel FindLevelButton(int level)
+    {
+        var levels = LevelGroup.GetComponentsInChildren<MapLevel>().ToList();
+        return levels.Find(e => e.Data.ID == level);
+    }
+
     #region Mapmaker
     public void Mapmaker_CreateItems(string json)
     {

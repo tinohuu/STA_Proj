@@ -36,7 +36,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
 
     private void Start()
     {
-        TutorialManager.Instance.Show("Harvest", buttonAnimator.gameObject);
+        TutorialManager.Instance.Show("Harvest", 1, buttonAnimator.gameObject);
     }
 
     void Update()
