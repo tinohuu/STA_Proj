@@ -72,7 +72,6 @@ public class MapManager : MonoBehaviour
     public static void SetRating(int level, int rating)
     {
 
-
     }
 }
 

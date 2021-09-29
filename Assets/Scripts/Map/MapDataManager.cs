@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MapDataManager : MonoBehaviour
 {
-    public MapManagerData Data = new MapManagerData();
+    [SavedData] public MapManagerData Data = new MapManagerData();
     public static MapDataManager Instance;
 
     private void Awake()

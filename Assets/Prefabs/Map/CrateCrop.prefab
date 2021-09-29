@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7422779709127855545}
   - component: {fileID: 5910837755398709959}
   - component: {fileID: 1283294348571344678}
+  - component: {fileID: 5820387741558754799}
+  - component: {fileID: 278548435709209129}
   m_Layer: 5
   m_Name: CrateCrop
   m_TagString: Untagged
@@ -52,10 +54,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38b42b4a1407fcd4a8dbb2140e885452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CropImage: {fileID: 720923847318073224}
-  RewardImage: {fileID: 6714847100933783142}
-  RewardText: {fileID: 1104136120231811964}
+  m_CropImage: {fileID: 720923847318073224}
+  m_RewardImage: {fileID: 6714847100933783142}
+  m_RewardText: {fileID: 1104136120231811964}
   m_Reward: {fileID: 3809415725799444068}
+  m_Light: {fileID: 8854047366366704485}
+  IsOpen: 0
 --- !u!225 &5910837755398709959
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -89,6 +93,44 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   TargetTransform: {fileID: 0}
+--- !u!222 &5820387741558754799
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720923847165266688}
+  m_CullTransparentMesh: 1
+--- !u!114 &278548435709209129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720923847165266688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &720923847318073230
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 2e15dbe6feec29344aaea3fb81c499df, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

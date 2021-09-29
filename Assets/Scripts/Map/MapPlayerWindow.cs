@@ -11,9 +11,12 @@ public class MapPlayerWindow : MonoBehaviour
     private void Start()
     {
         CropConfig curCrop = CropManager.Instance.LevelToCropConfig(MapManager.Instance.Data.CompleteLevel);
-        CropText.text = "Crop " + (CropManager.Instance.CropConfigs.IndexOf(curCrop) + 1).ToString() + " " + curCrop.Name;
-        CurLevelText.text = "Level " + MapManager.Instance.Data.CompleteLevel;
-        RatingCountText.text = GetRatingCount().ToString();
+        if (curCrop != null)
+        {
+            CropText.text = "Crop " + (CropManager.Instance.CropConfigs.IndexOf(curCrop) + 1).ToString() + " " + curCrop.Name;
+            CurLevelText.text = "Level " + MapManager.Instance.Data.CompleteLevel;
+            RatingCountText.text = GetRatingCount().ToString();
+        }
     }
 
     int GetRatingCount()

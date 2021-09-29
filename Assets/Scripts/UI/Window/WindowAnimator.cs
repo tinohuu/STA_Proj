@@ -111,7 +111,7 @@ public class WindowAnimator : Window
             }
 
 
-            yield return new WaitForSeconds(Elements[0].Duration);
+            yield return new WaitForSeconds(Elements.Count == 0 ? 0 : Elements[0].Duration);
             //ResetWinodws();
             Destroy(gameObject);
             //gameObject.SetActive(false);

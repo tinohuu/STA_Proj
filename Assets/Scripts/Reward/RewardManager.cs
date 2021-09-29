@@ -100,6 +100,18 @@ public static class Reward
         Sprite sprite = Array.Find(icons, e => e.name == type.ToString());
         return sprite;
     }
+
+    public static (RewardType, int) ToReward(this string rewardString)
+    {
+        string[] raws = rewardString.Split('_');
+        if (raws.Length >= 2)
+        {
+            RewardType type = (RewardType)int.Parse(raws[0]);
+            int count = int.Parse(raws[1]);
+            return (type, count);
+        }
+        return default;
+    }
 }
 
 [System.Serializable]
