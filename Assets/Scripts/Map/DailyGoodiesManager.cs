@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
+public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
 {
     public bool EnableDailyGoodies = true;
     [SerializeField] int MaxWeeks = 4;
     [SerializeField] int MaxVersions = 2;
 
-    public DailyGoodyData Data = new DailyGoodyData();
+    [SavedData] public DailyGoodyData Data = new DailyGoodyData();
     public static DailyGoodiesManager Instance = null;
     public Dictionary<int, DailyGoodiesConfig> ConfigsByDay;
 
@@ -21,12 +21,14 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
     {
         if (!Instance) Instance = this;
         UpdateConfig();
+        //Data = SaveManager.Bind(InitializeData());
+        Debug.Log("CollectedTime::" + Data.LastGoodyTime.ToString());
     }
 
     DailyGoodyData InitializeData()
     {
         var data = Data;
-        data.LastGoodyTime = TimeManager.Instance.RealNow.Date - TimeSpan.FromDays(1);
+        //data.LastGoodyTime = TimeManager.Instance.RealNow.Date - TimeSpan.FromDays(1);
         return data;
     }
 
@@ -55,7 +57,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable, IDataSavable
         {
             Reward.Data[type] += rewards[type];
         }
-        ResetTime(TimeManager.Instance.RealNow);
+        ResetTime(TimeManager.Instance.RealNow.Date);
     }
 
     public int GetCoin(int streakDays)

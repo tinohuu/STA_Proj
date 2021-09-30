@@ -29,12 +29,15 @@ public class RewardNumber : MonoBehaviour
 
     }
 
+
     private void Start()
     {
         RewardManager.Instance.OnValueChanged[(int)Type] += new RewardManager.RewardHandler(Animate);
         text = GetComponent<TMP_Text>();
         oriScale = transform.localScale;
         Animate();
+        current = Reward.Data[Type];
+        text.text = Reward.Data[Type].ToString();
     }
     private void Update()
     {

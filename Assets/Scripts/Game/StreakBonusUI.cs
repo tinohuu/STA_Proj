@@ -83,11 +83,15 @@ public class StreakBonusUI : MonoBehaviour
             streakSprites[i] = new GameObject();
             streakSprites[i].transform.SetParent(gameObject.transform);
             streakSprites[i].AddComponent<Image>().sprite = whiteDotSprite;
-            streakSprites[i].GetComponent<RectTransform>().sizeDelta  = new Vector2(40.0f, 40.0f);
+            streakSprites[i].GetComponent<RectTransform>().sizeDelta  = new Vector2(0.4f, 0.4f);
 
             //Vector3 posOffset = new Vector3(rectSize.width * (i * 0.06f - 0.3f), rectSize.height * 0.05f, 0.0f);
-            Vector3 posOffset = new Vector3(- rectSize.width/2 + 145.0f + (i * 40.0f), rectSize.height * 0.05f - 3.0f, 0.0f);
-            streakSprites[i].transform.position = rectTrans.transform.position + posOffset;
+            Vector3 posOffset = new Vector3(- rectSize.width/200 + 0.5f + (i * 0.4f), rectSize.height * 0.01f - 1.6f, 0.0f);
+            //streakSprites[i].transform.position = rectTrans.transform.position + posOffset;
+            //Vector3 posOffset = new Vector3(0.0f, 0.0f, 0.0f);
+            //streakSprites[i].transform.position = posOffset;
+
+            //Debug.Log("the streak sprite pos is: " + streakSprites[i].transform.position + "  posoffset is: " + posOffset);
 
             streakSprites[i].SetActive(false);
         }
@@ -133,7 +137,7 @@ public class StreakBonusUI : MonoBehaviour
             streakSprites[i].GetComponent<Image>().sprite = whiteDotSprite;
             streakSprites[i].SetActive(true);
 
-            Vector3 posOffset = new Vector3(-rectSize.width / 2 + 145.0f + (i + nOffset) * 40.0f, rectSize.height * 0.05f - 3.0f, 0.0f);
+            Vector3 posOffset = new Vector3(-rectSize.width / 200 + 1.2f + (i + nOffset) * 0.4f, rectSize.height * 0.01f - 1.5f, 0.0f);
             streakSprites[i].transform.position = rectTrans.transform.position + posOffset;
         }
 

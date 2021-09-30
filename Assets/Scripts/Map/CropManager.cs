@@ -12,7 +12,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     //[SerializeField] Transform RightSide;
     [SerializeField] Transform CropGroup;
     [SerializeField] GameObject CropGrowthWindow;
-
+    [SerializeField] GameObject m_HarvestButton;
 
     [Header("Config & Data")]
     [SavedData] public CropManagerData Data = new CropManagerData();
@@ -30,6 +30,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     }
     private void Start()
     {
+        m_HarvestButton.SetActive(MapManager.Instance.Data.CompleteLevel >= 4);
         /*var crop = CropConfigs.Find(e => e.ID > Data.LastCropGrowthID && e.Level <= MapManager.Instance.Data.CompleteLevel);
         if (crop != null)
         {

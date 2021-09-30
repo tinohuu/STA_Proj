@@ -12,7 +12,8 @@ public class GameDefines
         Bomb,
         Ladder,
         Add_N_Poker,
-        Double_Number_Poker
+        Double_Number_Poker,
+        WildDrop                    //this game poker is a wild drop.
     }
 
     public enum PowerUPType : int
@@ -23,7 +24,8 @@ public class GameDefines
         Wild_Drop,
         Remove_Ascend_Descend,
         Remove_Bomb,
-        Remove_Lock
+        Remove_Lock,
+        Max
     }
 
     public enum PowerUPUseType : int
@@ -53,5 +55,14 @@ public class GameDefines
     {
         None,
         Clearing,  //this is used to recognize that this poker is cleared by ClearAll
+    }
+
+    public enum WildCardSource : int
+    {
+        None,
+        Gold,
+        Item,
+        StreakBonus,
+        WildDrop
     }
 }

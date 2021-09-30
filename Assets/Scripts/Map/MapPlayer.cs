@@ -61,7 +61,7 @@ public class MapPlayer : MonoBehaviour
         }
     }
 
-    public void MoveToLevel(MapLevel mapLevel, bool showPanel = true)
+    public void MoveToLevel(MapLevel mapLevel, bool showPanel = true, bool animate = true)
     {
         //if (isRunning) return;
 
@@ -84,21 +84,24 @@ public class MapPlayer : MonoBehaviour
         }
 
 
-
-        StartCoroutine(IMoveToLevel(mapLevel));
+        StartCoroutine(IMoveToLevel(mapLevel, animate && mapLevel.Data.ID != MapManager.Instance.Data.SelectedLevel));
+        MapManager.Instance.Data.SelectedLevel = mapLevel.Data.ID;
     }
 
-    IEnumerator IMoveToLevel(MapLevel mapLevel)
+    IEnumerator IMoveToLevel(MapLevel mapLevel, bool animate)
     {
         //isRunning = true;
         yield return null;
-        if  (mapLevel.Data.ID != MapManager.Instance.Data.SelectedLevel)
+        if  (animate)
         {
             SoundManager.Instance.PlaySFX("uiAvatarLanding");
-            MapManager.Instance.Data.SelectedLevel = mapLevel.Data.ID;
             Tween tween = transform.DOLocalJump(mapLevel.transform.localPosition, 1, 1, 1.5f);
             yield return tween.WaitForCompletion();
             SoundManager.Instance.PlaySFX("uiAvatarLanding");
+        }
+        else
+        {
+            transform.localPosition = mapLevel.transform.localPosition;
         }
 
         int windowIndex = 0;
@@ -116,19 +119,19 @@ public class MapPlayer : MonoBehaviour
     [ContextMenu("Check")]
     public void OnClickRomote(float duration = 1)
     {
+        StartCoroutine(IOnClickRomote(duration));
+    }
+
+    IEnumerator IOnClickRomote(float duration)
+    {
+        yield return null;
         Vector3[] corners = new Vector3[4];
         MapScrollRect.content.GetWorldCorners(corners);
         float width = corners[3].x - corners[0].x - 20; // Full screen width is 20 in world space
-        var levels = FindObjectsOfType<MapLevel>();
-        var curLevel = System.Array.Find(levels, e => e.Data.ID == MapManager.Instance.Data.SelectedLevel);
-        float levelWidth = curLevel.transform.position.x - corners[0].x - 10;
+        //var levels = FindObjectsOfType<MapLevel>();
+        //var curLevel = System.Array.Find(levels, e => e.Data.ID == levelID);
+        float levelWidth = transform.position.x - corners[0].x - 10;
         if (duration == 0) MapScrollRect.normalizedPosition = new Vector3(levelWidth / width, MapScrollRect.normalizedPosition.y);
         else MapScrollRect.DOHorizontalNormalizedPos(levelWidth / width, duration);
-    }
-
-    IEnumerator IOnClickRomote()
-    {
-        yield return new WaitForEndOfFrame();
-        OnClickRomote();
     }
 }

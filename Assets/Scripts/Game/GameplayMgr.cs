@@ -70,13 +70,6 @@ public class GameplayMgr : MonoBehaviour
         ClearAll
     }
 
-    public enum WildCardSource : int
-    {
-        Gold,
-        Item,
-        StreakBonus
-    }
-
     public enum LockState : int
     {
         LockState_None,      //no state
@@ -115,6 +108,7 @@ public class GameplayMgr : MonoBehaviour
         public int nLockAreaCleared;//this records lock area's clearing: groupID
         public string strClearAllStreakInfo;  //2021.9.17 for clear all info, the format is: count_SteakType1_StreakValueEncode1_Bonus11_Bonus12_SteakType2_......
         public string strClearAllPokerInfo;   //2021.9.17 for clear all public poker info, the format is: Index1_Index2_...
+        public string strClearAllLockInfos;   //2021.9.22 for clear all PowerUP, record all the locks and lockarea ids that been cleared, the format is: Count_GroupID1_GroupID2_...
     }
 
     public class StreakBonusInfo
@@ -164,6 +158,8 @@ public class GameplayMgr : MonoBehaviour
 
     public GameObject scoreStarPrefab;
 
+    int ScoreStar = 1;
+
     public GameObject lockPrefab;    //2021.8.17 added by pengyuan for lock in the game
 
     public GameObject lockAreaPrefab; //2021.8.18 added by pengyuan for lock area in the game
@@ -212,6 +208,8 @@ public class GameplayMgr : MonoBehaviour
 
     List<UnlockAreaPokerIDs> unlockAreaPokerIDs = new List<UnlockAreaPokerIDs>();
 
+    List<GameObject> wildDropPokers = new List<GameObject>();
+
     //store all the ascend and descend poker id and number, that has been assigned suit and number.
     AscDesPokerIDs ascDesPokerIDs = new AscDesPokerIDs();
 
@@ -219,7 +217,9 @@ public class GameplayMgr : MonoBehaviour
 
     float fGameTime;
 
-    bool bAutoFlipHandPoker = false;
+    public bool bAutoFlipHandPoker = false;
+
+    public bool bFirstCheckPowerUPs = false;
 
     //2021.9.10 added by pengyuan, to record whether once powerups has been used.
     bool bHasUsedOncePowerUPs = false;
@@ -273,11 +273,15 @@ public class GameplayMgr : MonoBehaviour
     public Texture2D ascendTexture;
     public Texture2D addNTexture;
     public Texture2D[] clearAllTexture = new Texture2D[2];
+    public Texture2D wildCardTexture;
 
     //the following is about some ui
     public GamePlayUI gameplayUI;
 
     public PowerUPProcess powerUpProcess = new PowerUPProcess();
+
+    int[] nItemCounts = new int[(int)GameDefines.PowerUPType.Max];
+    int nSingleClearScore = 0;
 
     //2021.9.18 added by pengyuan, to record withdraw and add5_poker buy times.
     int nWithdrawBuyTimes = 0;
@@ -316,6 +320,7 @@ public class GameplayMgr : MonoBehaviour
         public int QuadrupleStreakBonus = 0;
         public string StreakBonusScore = "";
         public string StreakType = "";
+        public int PowerUpScore = 0;
         //public string StreakType = "";    //2021.8.9 added by pengyuan for streak bonus amounts
         public int StageIcon = 0;
     }
@@ -337,6 +342,8 @@ public class GameplayMgr : MonoBehaviour
     {
         Instance = this;
 
+        //Screen.SetResolution(1920, 1080, false);
+
         Debug.Log("GameplayMgr::Awake()... ");
 
         pokerPrefab = (GameObject)Resources.Load("Poker/Poker_Club_10"); 
@@ -347,7 +354,8 @@ public class GameplayMgr : MonoBehaviour
         if (pokerCard == null)
             Debug.Log("GameplayMgr::Awake()... Poker_Card is null....");
 
-        wildcardPrefab = (GameObject)Resources.Load("Poker/WildCard");
+        wildcardPrefab = (GameObject)Resources.Load("Poker/Wild_Card");
+        //wildcardPrefab = (GameObject)Resources.Load("Poker/WildCard");
         // wildcardPrefab = (GameObject)Resources.Load("Poker_Club_10");
         if (wildcardPrefab == null)
             Debug.Log("GameplayMgr::Awake()... WildCard is null....");
@@ -370,11 +378,11 @@ public class GameplayMgr : MonoBehaviour
         lockSprites = Resources.LoadAll<Sprite>("Lock/LockMark");
         Debug.Log("the lock sprites length is: " + lockSprites.Length);
 
-        ascendingPrefab = (GameObject)Resources.Load("Poker/ChangeUp");
+        ascendingPrefab = (GameObject)Resources.Load("Poker/FXChangeUp");
         if (ascendingPrefab == null)
             Debug.Log("GameplayMgr::Awake()... ChangeUp is null....");
 
-        descendingPrefab = (GameObject)Resources.Load("Poker/ChangeDown");
+        descendingPrefab = (GameObject)Resources.Load("Poker/FXChangeDown");
         if (descendingPrefab == null)
             Debug.Log("GameplayMgr::Awake()... ChangeDown is null....");
 
@@ -404,6 +412,10 @@ public class GameplayMgr : MonoBehaviour
         clearAllTexture[1] = Resources.Load("Poker/ItemClear") as Texture2D;
         if (clearAllTexture[1] == null)
             Debug.Log("GameplayMgr::Awake()... ItemClearBack is null....");
+
+        wildCardTexture = Resources.Load("Poker/ItemWild") as Texture2D;
+        if (wildCardTexture == null)
+            Debug.Log("GameplayMgr::Awake()... ItemWild is null....");
 
         removeThreePrefabs = new GameObject[4];
         removeThreePrefabs[0] = (GameObject)Resources.Load("Poker/FXCardCutLeftBlack");
@@ -480,6 +492,7 @@ public class GameplayMgr : MonoBehaviour
         RenderTexture.ReleaseTemporary(renderTex);
         return readableText;
     }
+    
 
     // Start is called before the first frame update
     void Start()
@@ -490,13 +503,16 @@ public class GameplayMgr : MonoBehaviour
 
         publicConfigs = JsonExtensions.JsonToList<PublicConfig>(ConfigsAsset.GetConfig("PublicConfig"));
 
-        InitConfigInformation();
-
         //2021.9.10 added by pengyuan, to process powerups.
         powerUpProcess.Init();
         nRemoveThreeLeftCount = 3;
         nRemoveThreeFinishCount = 0;
         bIsRemovingThree = false;
+
+        wildDropPokers.Clear();
+
+
+        InitConfigInformation();
 
         nWithdrawBuyTimes = 0;
         nAdd5BuyTimes = 0;
@@ -533,6 +549,8 @@ public class GameplayMgr : MonoBehaviour
         nGold = 0;
         nScore = 0;
 
+        ScoreStar = 1;
+
         //2021.8.6 added by pengyaun for display gold and score in game playing.
         //gameplayUI.goldAndScoreUI.nGold = 0;
         //gameplayUI.goldAndScoreUI.nGold = Reward.Coin;
@@ -549,13 +567,15 @@ public class GameplayMgr : MonoBehaviour
         ReadLevelData(nCurrentChapter);
 
         InitStreakConfig();
+
+        InitItemCount();
     }
 
     public void RestartGame()
     {
         EndGame();
 
-        InitConfigInformation();
+        wildDropPokers.Clear();
 
         //2021.9.10 added by pengyuan, to process powerups.
         powerUpProcess.Reset();
@@ -563,6 +583,9 @@ public class GameplayMgr : MonoBehaviour
         nRemoveThreeFinishCount = 0;
         bIsRemovingThree = false;
 
+
+        InitConfigInformation();
+        
         nWithdrawBuyTimes = 0;
         nAdd5BuyTimes = 0;
 
@@ -591,6 +614,9 @@ public class GameplayMgr : MonoBehaviour
         //2021.8.6 added by pengyaun for display gold and score in game playing.
         //gameplayUI.goldAndScoreUI.nGold = 0;
         //gameplayUI.goldAndScoreUI.nGold = Reward.Coin;
+
+        ScoreStar = 1;
+
         gameplayUI.goldAndScoreUI.SetGold(Reward.Coin);
         gameplayUI.goldAndScoreUI.nScore = 0;
 
@@ -792,7 +818,8 @@ public class GameplayMgr : MonoBehaviour
 
     void InitHandPokerInfo()
     {
-        Debug.Log("GameplayMgr::InitHandPokerInfo...");
+        Debug.Log("GameplayMgr::InitHandPokerInfo... count is : " + levelData.handPokerCount);
+
         Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, -1.0f);
 
         for (int i = 0; i < levelData.handPokerCount; ++i)
@@ -1031,7 +1058,7 @@ public class GameplayMgr : MonoBehaviour
         {
             GameLock lockScript = tempLockList[i].GetComponent<GameLock>();
             GameLock lockScript2 = lockGroups[nGroupIndex].locks[nLastIndex - j].GetComponent<GameLock>();
-            tempLockList[i].transform.position = lockScript2.oriPosition;
+            tempLockList[i].transform.position = lockScript2.originPos;
             lockScript.AdjustPosition(nLastIndex2 - j);
         }
         /*for (int i = 0; i < tempLockList.Count; ++i)
@@ -1196,6 +1223,9 @@ public class GameplayMgr : MonoBehaviour
         foreach (var item in lockGroupDict1)
         {
             GameObject go = item.Value;
+            if (go == null)
+                continue;
+
             GameLock lockScript = go.GetComponent<GameLock>();
 
             if (lockScript.lockState == LockState.LockState_Working
@@ -1284,6 +1314,8 @@ public class GameplayMgr : MonoBehaviour
                 GamePoker gamePokerScript = gamePoker.GetComponent<GamePoker>();
                 gamePokerScript.Withdraw();
 
+                //AddToPublicPoker(gamePoker);
+
                 UnflipAllCoveredGamePoker(gamePoker);
             }
         }
@@ -1353,9 +1385,26 @@ public class GameplayMgr : MonoBehaviour
                 default:
                     break;
             }
+
+            nCurrentStreakIndex--;
         }
     }
 
+    void WithdrawClearAllLockInfos(OpStepInfo stepInfo)
+    {
+        string[] strParams = stepInfo.strClearAllLockInfos.Split('_');
+
+        int nCount = int.Parse(strParams[0]);
+
+        Debug.Log("WithdrawClearAllLockInfos... ... ... the lock group info is: " + stepInfo.strClearAllLockInfos);
+
+        for(int i = 0; i < nCount; ++i)
+        {
+            int nGroupID = int.Parse(strParams[i+1]);
+            Cancel_ClearAll_ClearLockGroup(nGroupID);
+            Cancel_ClearAll_ClearLockArea(nGroupID);
+        }
+    }
 
 
     void ReadLevelData(int nChapter)
@@ -1475,7 +1524,7 @@ public class GameplayMgr : MonoBehaviour
         Vector3 pos = new Vector3();
 
         pos.x = renderer.bounds.size.x * 0.1f;
-        pos.y = Trans.position.y + renderer.bounds.size.y * -0.4f;
+        pos.y = Trans.position.y + renderer.bounds.size.y * -0.35f;
         if(foldPoker.Count == 0)
             pos.z = -0.05f;
         else
@@ -1518,8 +1567,11 @@ public class GameplayMgr : MonoBehaviour
 
         int nBuyCost = GetWithdrawCost();
         if (Reward.Coin < nBuyCost)
+        {
+            Debug.Log("WithDrawClicked, but money is not enough!");
             return;
-
+        }
+            
         nWithdrawBuyTimes++;
         gameplayUI.AddGold(-nBuyCost);
         Reward.Coin -= nBuyCost;
@@ -1561,7 +1613,24 @@ public class GameplayMgr : MonoBehaviour
         //here we withdraw one poker to its original place 
         bool bNeedAscDesStatusChange = true;
         bool bNeedBombStatusChange = true;
+
         GameObject poker = foldPoker.Peek();
+        if(poker.tag == "wildDrop")
+        {
+            AddToPublicPoker(poker);
+
+            GamePoker gamePoker = poker.GetComponent<GamePoker>();
+            if(gamePoker.wildSource == GameDefines.WildCardSource.WildDrop)
+            {
+                gameplayUI.IncWildCard();
+                Reward.Data[RewardType.WildCard]++;
+            }
+
+            Debug.Log("Withdraw poker name is: " + poker.name + "  wild source is: " + gamePoker.wildSource);
+
+            foldPoker.Pop();
+            poker = foldPoker.Peek();
+        }
         Debug.Log("Withdraw poker name is: " + poker.name + "  tag is: " + poker.tag);
 
         OpStepInfo stepInfo = opStepInfos.Peek();
@@ -1668,6 +1737,7 @@ public class GameplayMgr : MonoBehaviour
             WithdrawLockArea(stepInfo.nLockAreaCleared);
         }
 
+        //this statement is used to withdraw all pokers that has been 
         if(stepInfo.strClearAllPokerInfo.Length != 0)
         {
             WithdrawClearAllPokers(stepInfo);
@@ -1676,6 +1746,11 @@ public class GameplayMgr : MonoBehaviour
         if(stepInfo.strClearAllStreakInfo.Length != 0)
         {
             WithdrawClearAllStreakBonus(stepInfo);
+        }
+
+        if(stepInfo.strClearAllLockInfos.Length != 0)
+        {
+            WithdrawClearAllLockInfos(stepInfo);
         }
 
         gameplayUI.InitStreakBonus(streakType, GetNextStreakType());
@@ -1789,6 +1864,12 @@ public class GameplayMgr : MonoBehaviour
         AdjustAllHandPokerPosition();
     }
 
+    public void OnClickNextLevelButton()
+    {
+        MapDataManager.SetRetry(nCurrentLevel+1);
+        SceneManager.LoadScene("MapTest");
+    }
+
     //when click "Wild Card" button, we call this method
     public void OnClickWildCardBtn()
     {
@@ -1802,35 +1883,82 @@ public class GameplayMgr : MonoBehaviour
             }
         }
 
-        int nBuyCost = GetWildCardCost();
-        if (Reward.Coin < nBuyCost)
-            return;
+        if(Reward.Data[RewardType.WildCard] > 0)
+        {
+            gameplayUI.DecWildCard();
+            Reward.Data[RewardType.WildCard]--;
 
-        gameplayUI.AddGold(-nBuyCost);
-        Reward.Coin -= nBuyCost;
+            GameObject wildDrop = FindInActiveWildDrop();
+            if(wildDrop != null)
+            {
+                GamePoker gamePoker = wildDrop.GetComponent<GamePoker>();
+                gamePoker.UnFoldWildDropPoker();
 
-        //Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, -1.0f);
-        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * -0.35f, -1.0f);
+                foldPoker.Push(wildDrop);
+            }
+            else
+            {
+                Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * -0.35f, -1.0f);
 
-        GameObject go = (GameObject)Instantiate(wildcardPrefab, Trans.position + posOffset, Quaternion.identity);
-        go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
-        //go.transform.SetParent(Trans);
-        go.tag = "wildCard";
+                GameObject go = (GameObject)Instantiate(wildcardPrefab, Trans.position + posOffset, Quaternion.identity);
+                //go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
+                go.tag = "wildCard";
 
-        WildCard wildcardScript = go.GetComponent<WildCard>();
-        GameObject topPoker = foldPoker.Peek();
-        float fZ = topPoker.GetComponent<Transform>().position.z;
-        wildcardScript.Init(wildcardPrefab, foldPoker.Count, Trans.position, renderer.bounds.size, 0.0f);//the second parameter should be the top foldPoker's index
+                WildCard wildcardScript = go.GetComponent<WildCard>();
+                GameObject topPoker = foldPoker.Peek();
+                float fZ = topPoker.GetComponent<Transform>().position.z;
+                wildcardScript.Init(wildcardPrefab, foldPoker.Count, Trans.position, renderer.bounds.size, 0.0f);//the second parameter should be the top foldPoker's index
 
-        //
+                foldPoker.Push(go);
+            }
+        }
+        else
+        {
+            int nBuyCost = GetWildCardCost();
+            if (Reward.Coin < nBuyCost)
+                return;
+
+            gameplayUI.AddGold(-nBuyCost);
+            Reward.Coin -= nBuyCost;
+
+            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * -0.35f, -1.0f);
+
+            GameObject go = (GameObject)Instantiate(wildcardPrefab, Trans.position + posOffset, Quaternion.identity);
+            //go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
+            go.tag = "wildCard";
+
+            WildCard wildcardScript = go.GetComponent<WildCard>();
+            GameObject topPoker = foldPoker.Peek();
+            float fZ = topPoker.GetComponent<Transform>().position.z;
+            wildcardScript.Init(wildcardPrefab, foldPoker.Count, Trans.position, renderer.bounds.size, 0.0f);//the second parameter should be the top foldPoker's index
+
+            foldPoker.Push(go);
+        }
+
         int nColors = GetStreakBonusEncode();
         int nHasStreak = nStreakCount > 0 ? 1 : 0;
-        //AddOpStepInfo(opStepInfos.Count, nStreakCount, nColors, 0, nHasStreak, StreakType.Add_Gold);
+        
         AddOpStepInfo(opStepInfos.Count, nStreakCount, nColors, 0, 0, nHasStreak, streakType, nTotalComboCount);
 
-        foldPoker.Push(go);
         gameplayUI.HideEndGameBtn();
         gameplayUI.EnableWithdrawBtn();
+    }
+
+    GameObject FindInActiveWildDrop()
+    {
+        foreach(GameObject go in publicPokers)
+        {
+            GamePoker gamePoker = go.GetComponent<GamePoker>();
+            if (gamePoker.wildSource == GameDefines.WildCardSource.WildDrop)
+            {
+                if(gamePoker.pokerInst.GetComponent<MeshRenderer>().enabled == false)
+                {
+                    return go;
+                }
+            }
+        }
+
+        return null;
     }
 
     void WithdrawGamePoker(GameObject poker)
@@ -1853,7 +1981,9 @@ public class GameplayMgr : MonoBehaviour
         //nTotalComboCount -= 1;
 
         foldPoker.Pop();
-        publicPokers.Add(poker);
+
+        AddToPublicPoker(poker);
+        //publicPokers.Add(poker);
 
         Test_EnableTopFoldPokerText();
 
@@ -1948,7 +2078,7 @@ public class GameplayMgr : MonoBehaviour
         wildCard.Withdraw();
 
         foldPoker.Pop();
-        if(wildCard.wildcardSource == WildCardSource.StreakBonus)
+        if(wildCard.wildcardSource == GameDefines.WildCardSource.StreakBonus)
         {
             handPokers.Add(poker);
         }
@@ -2159,6 +2289,9 @@ public class GameplayMgr : MonoBehaviour
                 UpdateAllAscDesPokerStatus(gamePokerScript.name);
                 UpdateAllBombStatus(gamePokerScript.name);
 
+                //2021.9.24 added by pengyuan
+                //CheckCanFoldWildDrop(gamePokerScript);
+
                 int nColors = GetStreakBonusEncode();
 
                 int nLastStreakCount = nStreakCount;
@@ -2200,7 +2333,7 @@ public class GameplayMgr : MonoBehaviour
 
                 publicPokers.Remove(topGamePoker);
 
-                Test_DisableAllFoldPokerText();
+                //Test_DisableAllFoldPokerText();
                 foldPoker.Push(topGamePoker);
                 gameplayUI.EnableWithdrawBtn();
 
@@ -2222,7 +2355,7 @@ public class GameplayMgr : MonoBehaviour
         if (topHandPoker.tag == "handCard")
         {
             HandPoker handPokerScript = topHandPoker.GetComponent<HandPoker>();
-            handPokerScript.FlipPoker(foldPoker.Count);
+            handPokerScript.FlipPoker(foldPoker.Count, bFirstFlip);
 
             float fZ = GetFoldPokerPosition_Z();
 
@@ -2232,7 +2365,7 @@ public class GameplayMgr : MonoBehaviour
         else if (topHandPoker.tag == "wildCard")//if hand poker is wildcard, we still need to interrupt the streak
         {
             WildCard wildcardScript = topHandPoker.GetComponent<WildCard>();
-            wildcardScript.FlipPoker(foldPoker.Count);
+            wildcardScript.FlipPoker(foldPoker.Count, bFirstFlip);
 
             wildcardScript.SetFoldIndex(foldPoker.Count);
         }
@@ -2255,15 +2388,13 @@ public class GameplayMgr : MonoBehaviour
 
             OpStepInfo stepInfo = opStepInfos.Peek();
             stepInfo.strCardName = topHandPoker.name;  //2021.9.17 added by pengyuan, to store the clear all hand poker's name , so when the clear all animation has finished, we can store the information to opStepInfos.
-
-
         }
 
         currentFlippingPoker = topHandPoker;
         handPokers.Remove(topHandPoker);
         foldPoker.Push(topHandPoker);
 
-        Test_DisableAllFoldPokerText();
+        //Test_DisableAllFoldPokerText();
 
         //update withdraw button
         if (foldPoker.Count <= 1)
@@ -2374,6 +2505,7 @@ public class GameplayMgr : MonoBehaviour
         info.nLockAreaCleared = -1;
         info.strClearAllStreakInfo = "";
         info.strClearAllPokerInfo = "";
+        info.strClearAllLockInfos = "";
 
         opStepInfos.Push(info);
     }
@@ -2578,7 +2710,13 @@ public class GameplayMgr : MonoBehaviour
 
     void DecodeStreakBonus(string strBonus, ref int nBonus1, ref int nBonus2)
     {
-        if(strBonus.IndexOf('_') == -1 )
+        //if strBonus.Length == 0, this means that the bonus is add money.
+        if (strBonus.Length == 0)
+        {
+            return;
+        }
+
+        if (strBonus.IndexOf('_') == -1 )
         {
             nBonus1 = int.Parse(strBonus);
         }
@@ -2703,7 +2841,7 @@ public class GameplayMgr : MonoBehaviour
         for (int i = 0; i < nMultiple; ++i)
         {
             //instantiate a hand poker , find a position in handpoker, insert it into handpoker.
-            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * 0.4f, -1.0f);
+            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * 0.35f, -1.0f);
 
             //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
             GameObject go = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
@@ -2723,7 +2861,7 @@ public class GameplayMgr : MonoBehaviour
             PokerSuit suit;
             int nNumber;
             Test_GetNextStreakPoker(out suit, out nNumber);
-            Debug.Log("AddStreakBonusPoker... the suit is:  " + suit + "  the number is: " + nNumber);
+            Debug.Log("AddStreakBonusPoker... the suit is:  " + suit + "  the number is: " + nNumber + "  the pos is: " + go.transform.position);
             handPokerScript.Test_SetSuitNumber(suit, nNumber);
 
             string strName = string.Format("handpoker_bonus_{0}", insertIndex);
@@ -2749,7 +2887,7 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.HideAdd5Btn();
         gameplayUI.HideEndGameBtn();
 
-        AdjustAllHandPokerPosition();
+        //AdjustAllHandPokerPosition();
     }
     
     void AddStreakBonusWildcard(bool bDouble = false)
@@ -2762,7 +2900,7 @@ public class GameplayMgr : MonoBehaviour
         for (int i = 0; i < nMultiple; ++i)
         {
             //instantiate a wild card , find a position in handpoker, insert it into handpoker.
-            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * 0.4f, -1.0f);
+            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * 0.35f, -1.0f);
 
             GameObject go = (GameObject)Instantiate(wildcardPrefab, Trans.position + posOffset, Quaternion.identity);
             go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
@@ -2848,23 +2986,29 @@ public class GameplayMgr : MonoBehaviour
                 {
                     //todo: flip the top pokers
                     GamePoker gamePokerScript = topPokers[i].GetComponent<GamePoker>();
-                    if (gamePokerScript.itemType != GameDefines.PokerItemType.Add_N_Poker)
+                    if (gamePokerScript.itemType != GameDefines.PokerItemType.Add_N_Poker 
+                        && gamePokerScript.itemType != GameDefines.PokerItemType.WildDrop)
                     {
                         gamePokerScript.FlipPoker();
                     }
                     else
                     {
-                        if(HasPokerIsAddN() < 0 && powerUpProcess.HasFinishedOncePowerUPUsage())
+                        if(HasPokerIsAddN() < 0 && powerUpProcess.HasFinishedOncePowerUPUsage()
+                            && gamePokerScript.itemType == GameDefines.PokerItemType.Add_N_Poker)
                         {
                             if (gamePokerScript.AddNPoker())
                             {
                                 Add_AddNPokerStep(gamePokerScript);
                             }
                         }
-                    }
 
-                    //gameStatus = GameStatus.GameStatus_Gaming;
+                        /*if(gamePokerScript.itemType == GameDefines.PokerItemType.WildDrop)
+                        { }*/
+                    }
                 }
+
+                //2021.9.24 added by pengyuan, to process all wild drops
+                //ProcessWildDropUpdate();
                 /*Debug.Log("we found on top pokers count is: " + topPokers.Count);
                 for(int i=0; i<topPokers.Count; ++i)
                 {
@@ -2888,7 +3032,18 @@ public class GameplayMgr : MonoBehaviour
                     OnTopHandPokerClicked(handPoker, true);
                     bAutoFlipHandPoker = true;
                 }
+
+                if(!bFirstCheckPowerUPs)
+                {
+                    CheckPowerUP_Clear();
+
+                    //CheckPowerUP_ClearLock();
+
+                    bFirstCheckPowerUPs = true;
+                }
             }
+
+            CheckGameEnd();
         }
     }
 
@@ -2906,6 +3061,38 @@ public class GameplayMgr : MonoBehaviour
             GamePoker pokerScript = go.GetComponent<GamePoker>();
             if (pokerScript.pokerFacing == PokerFacing.Facing)
                 topPokers.Add(go);
+        }
+
+        for(int i = topPokers.Count - 1; i >= 0; --i)
+        {
+            GamePoker pokerScript = topPokers[i].GetComponent<GamePoker>();
+            BoxCollider2D collider = topPokers[i].GetComponent<BoxCollider2D>();
+
+            if (pokerScript.pokerInst.GetComponent<MeshRenderer>().enabled == false)
+            {
+                topPokers.Remove(topPokers[i]);
+                break;
+            }
+
+            RaycastHit2D[] hitResults = Physics2D.BoxCastAll(collider.bounds.center, collider.size, pokerScript.pokerInfo.fRotation, Vector2.zero);
+            if (hitResults.Length > 0)
+            {
+                int nMinIndex;
+                if (pokerScript.itemType == GameDefines.PokerItemType.Add_N_Poker)
+                {
+                    nMinIndex = GetMinDepthIndex(ref hitResults);
+                }
+                else
+                {
+                    nMinIndex = GetMinDepthIndexOutsideLockArea(ref hitResults);
+                }
+
+                //if (nMinIndex >= 0 && hitResults[nMinIndex].collider.name == collider.name && !pokerScript.bAddNPoker)
+                if (nMinIndex < 0 || hitResults[nMinIndex].collider.name != collider.name || pokerScript.bAddNPoker)
+                {
+                    topPokers.Remove(topPokers[i]);
+                }
+            }
         }
     }
 
@@ -2925,16 +3112,8 @@ public class GameplayMgr : MonoBehaviour
             //Debug.Log("enter fixed update.. get top poker infos... the hit result length is: " + hitResults.Length + ", the collider is: " + collider.name);
             if (hitResults.Length > 0)
             {
-                //2021.8.19 modified by pengyuan for lockarea block the top poker. so we use the second method
-                //int nMinIndex = GetMinDepthIndex(ref hitResults);
                 //this is for debug:
-                /*string strDebugOutput = ";";
-                for (int i = 0; i < hitResults.Length; ++i)
-                {
-                    strDebugOutput += hitResults[i].collider.name;
-                    strDebugOutput += "    ";
-                }
-                Debug.Log(strDebugOutput);*/
+                //OutputHitResultDebugString(hitResults);
 
                 int nMinIndex;
                 if (pokerScript.itemType == GameDefines.PokerItemType.Add_N_Poker)
@@ -2961,6 +3140,17 @@ public class GameplayMgr : MonoBehaviour
         {
             return false;
         }
+    }
+
+    void OutputHitResultDebugString(RaycastHit2D[] hitResults)
+    {
+        string strDebugOutput = ";";
+        for (int i = 0; i < hitResults.Length; ++i)
+        {
+            strDebugOutput += hitResults[i].collider.name;
+            strDebugOutput += "    ";
+        }
+        Debug.Log(strDebugOutput);
     }
 
     int GetMinDepthIndex(ref RaycastHit2D[] hitResults)
@@ -3012,6 +3202,36 @@ public class GameplayMgr : MonoBehaviour
         return nMinIndex;
     }
 
+    int GetMinDepthIndexOutsideLockArea(ref RaycastHit2D[] hitResults)
+    {
+        float fMinDepth = float.MaxValue;
+        int nMinIndex = -1;
+
+        for (int i = 0; i < hitResults.Length; ++i)
+        {
+            if (hitResults[i].collider.tag == "lockArea")
+            {
+                return -1;
+            }
+
+            GamePoker gamePoker = hitResults[i].collider.GetComponent<GamePoker>();
+            if (gamePoker == null)
+            {
+                continue;
+            }
+
+            GameObject go = gamePoker.pokerInst;
+            if ((hitResults[i].collider.transform.position.z < fMinDepth)
+                && (go.GetComponent<MeshRenderer>().enabled))
+            {
+                fMinDepth = hitResults[i].collider.transform.position.z;
+                nMinIndex = i;
+            }
+        }
+
+        return nMinIndex;
+    }
+
     public GameObject GetTopHandPoker()
     {
         if(handPokers.Count == 0)
@@ -3041,6 +3261,17 @@ public class GameplayMgr : MonoBehaviour
             Debug.Log("~~~~~~~~~~~~~~~~~~~~~public poker is flipping......");*/
 
         return bRet;
+    }
+
+    public void AddToPublicPoker(GameObject go)
+    {
+        Debug.Log("AddToPublicPoker ... name is: " + go.name + "  tag is: " + go.tag);
+        publicPokers.Add(go);
+    }
+
+    public void RemoveOnePublicPoker(GameObject go)
+    {
+        publicPokers.Remove(go);
     }
 
     public void DestroyOnePublicPoker(GameObject go)
@@ -3308,7 +3539,7 @@ public class GameplayMgr : MonoBehaviour
     //2021.9.7 added by pengyaun add one poker
     public void OnAddNPoker_One(GamePoker gamePokerScript)
     {
-        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.4f, -1.0f);
+        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.35f, -1.0f);
 
         //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position, Quaternion.identity);
         GameObject go = (GameObject)Instantiate(pokerCard, Trans.position, Quaternion.identity);
@@ -3481,11 +3712,11 @@ public class GameplayMgr : MonoBehaviour
 
                     //todo: here maybe we should add the removed poker to another list.
                     //...    
-                    Debug.Log("预生成扑克ID：" + nAllocatedPoker);
+                    //Debug.Log("预生成扑克ID：" + nAllocatedPoker);
                     PokerSuit suit = (PokerSuit)(nAllocatedPoker / 13 + 1);
                     int nDigit = nAllocatedPoker % 13;
                     string strDebugString = string.Format("_{0}_{1}", Test_GetSuitDisplayString(suit, nDigit), nAllocatedPoker);
-                    Debug.Log("预生成扑克，移除：" + strDebugString);
+                    //Debug.Log("预生成扑克，移除：" + strDebugString);
                 }
 
                 break ;
@@ -3640,6 +3871,88 @@ public class GameplayMgr : MonoBehaviour
         return 0;
     }
 
+    //2021.9.22 added by pengyuan, to get all lock groups that is working.
+    void GetWorkingLockGroups(ref List<int> lockGroupIDs)
+    {
+        lockGroupIDs.Clear();
+
+        foreach(LockGroup lockGroup in lockGroups)
+        {
+            bool bWorking = true;
+
+            for (int i = 0; i < lockGroup.locks.Count; ++i)
+            {
+                GameLock gameLock = lockGroup.locks[i].GetComponent<GameLock>();
+                bWorking &= (gameLock.lockState == LockState.LockState_Working || gameLock.lockState == LockState.LockState_Dying) ? true : false;
+            }
+
+            if (bWorking)
+                lockGroupIDs.Add(lockGroup.nGroupID);
+        }
+    }
+
+    void ClearAll_ClearLockGroup(int nID, bool bLeft)
+    {
+        for (int i = 0; i < lockGroups.Count; ++i)
+        {
+            if(lockGroups[i].nGroupID == nID)
+            {
+                for(int j = 0; j < lockGroups[i].locks.Count; ++j)
+                {
+                    GameLock gameLock = lockGroups[i].locks[j].GetComponent<GameLock>();
+                    gameLock.ClearAll_ClearLock(bLeft);
+                }
+                
+                break;
+            }
+        }
+    }
+
+    void Cancel_ClearAll_ClearLockGroup(int nID)
+    {
+        for (int i = 0; i < lockGroups.Count; ++i)
+        {
+            if (lockGroups[i].nGroupID == nID)
+            {
+                for (int j = 0; j < lockGroups[i].locks.Count; ++j)
+                {
+                    GameLock gameLock = lockGroups[i].locks[j].GetComponent<GameLock>();
+                    gameLock.Cancel_ClearAll_ClearLock();
+                }
+
+                break;
+            }
+        }
+    }
+
+    bool ClearAll_ClearLockArea(int nID)
+    {
+        for(int i = 0; i < lockAreas.Count; ++i)
+        {
+            if (lockAreas[i].nGroupID == nID)
+            {
+                LockArea lockArea = lockAreas[i].Area.GetComponent<LockArea>();
+                return lockArea.ClearAll_ClearLock();
+                //break;
+            }
+        }
+
+        return false;
+    }
+
+    void Cancel_ClearAll_ClearLockArea(int nID)
+    {
+        for (int i = 0; i < lockAreas.Count; ++i)
+        {
+            if (lockAreas[i].nGroupID == nID)
+            {
+                LockArea lockArea = lockAreas[i].Area.GetComponent<LockArea>();
+                lockArea.Cancel_ClearAll_ClearLock();
+                break;
+            }
+        }
+    }
+
     void Test_DisableAllFoldPokerText()
     {
         foreach(GameObject go in foldPoker)
@@ -3740,7 +4053,7 @@ public class GameplayMgr : MonoBehaviour
 
     bool TopFoldPokerIsWildcard(GameObject handPoker)
     {
-        if(handPoker.tag == "wildCard")
+        if(handPoker.tag == "wildCard" || handPoker.tag == "wildDrop")
         {
             return true;
         }
@@ -3828,6 +4141,29 @@ public class GameplayMgr : MonoBehaviour
         }
     }
 
+    public int ComputeStars(int nScore)
+    {
+        int nStar = 0;
+
+        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+
+        string strStarConfig = stageConfig.Star;
+        string[] strParams = strStarConfig.Split('_');
+
+        int oneStar = int.Parse(strParams[0]);
+        int twoStar = int.Parse(strParams[1]);
+        int threeStar = int.Parse(strParams[2]);
+
+        if (nScore > threeStar)
+            return 3;
+        else if (nScore > twoStar)
+            return 2;
+        else
+            return 1;
+
+        return nStar;
+    }
+
     public void Test_ComputeStars(int nScore, ref float[] fillAmounts)
     {
         StageConfig stageConfig = stageConfigs[nCurrentLevel];
@@ -3891,6 +4227,39 @@ public class GameplayMgr : MonoBehaviour
         {
             nStreakBonusScore[i] = int.Parse(strBonusScoreParams[i]);
         }
+    }
+
+    void InitItemCount()
+    {
+        nSingleClearScore = 0;
+        for(int i = 0; i < nItemCounts.Length; ++i)
+        {
+            nItemCounts[i] = 0;
+        }
+
+        foreach(JsonReadWriteTest.PokerInfo info in levelData.pokerInfo)
+        {
+            if (info.nItemType == (int)GameDefines.PokerItemType.Bomb)
+                nItemCounts[(int)GameDefines.PowerUPType.Remove_Bomb]++;
+
+            if (info.nItemType == (int)GameDefines.PokerItemType.Ascending_Poker
+                || info.nItemType == (int)GameDefines.PokerItemType.Descending_Poker)
+                nItemCounts[(int)GameDefines.PowerUPType.Remove_Ascend_Descend]++;
+        }
+
+        nItemCounts[(int)GameDefines.PowerUPType.Remove_Lock] = levelData.lockGroup.nLockGroupCount;
+
+        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+
+        //compute each step's score
+        if (powerUpProcess.HasPowerUP_ClearBomb())
+            nSingleClearScore = stageConfig.PowerUpScore / nItemCounts[(int)GameDefines.PowerUPType.Remove_Bomb];
+
+        if (powerUpProcess.HasPowerUP_ClearAscDes())
+            nSingleClearScore = stageConfig.PowerUpScore / nItemCounts[(int)GameDefines.PowerUPType.Remove_Ascend_Descend];
+
+        if(powerUpProcess.HasPowerUP_ClearLock())
+            nSingleClearScore = stageConfig.PowerUpScore / nItemCounts[(int)GameDefines.PowerUPType.Remove_Lock];
     }
 
     int GetStreakBonusGold()
@@ -4108,6 +4477,9 @@ public class GameplayMgr : MonoBehaviour
         //gameplayUI.goldAndScoreUI.SetGold(nCollectGold + nClearGold);
         gameplayUI.WinGame(nCollectGold, nClearGold);
 
+        ScoreStar = ComputeStars(nCollectScore);
+        MapDataManager.SetLevelRating(nCurrentLevel, ScoreStar);  //pengyuan 2021.9.28 added, to record stars in chapter data.
+
         //gameStatus = GameStatus.GameStatus_After_Settle;
         EndGame();
 
@@ -4186,15 +4558,6 @@ public class GameplayMgr : MonoBehaviour
             }
         }
 
-        /*if (removeThreePokers.Count < 3)
-        {
-            GetMoreUnflipPublicPoker(ref removeThreePokers, 3 - removeThreePokers.Count);
-        }
-        else
-        {
-            removeThreePokers.RemoveRange(3, removeThreePokers.Count - 3);
-        }*/
-
         if(removeThreePokers.Count == 0)
         {
             List<GameObject> pokersToRemove = new List<GameObject>();
@@ -4240,6 +4603,38 @@ public class GameplayMgr : MonoBehaviour
         return bResult;
     }
 
+    public bool UsePowerUP_WildDrop(GameDefines.PowerUPInfo powerUPInfo)
+    {
+        for(int i = 0; i < 3; ++i)
+        {
+            Vector3 posOffset = Vector3.right * (i - 1) * 5f - Vector3.forward * 3.0f;
+            Debug.Log("UsePowerUP_WildDrop   the offset is: " + posOffset);
+            GameObject wildDrop = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
+
+            wildDrop.tag = "wildDrop";
+            wildDrop.name = string.Format("wilddrop_{0}", i);
+
+            GamePoker gamePoker = wildDrop.GetComponent<GamePoker>();
+            gamePoker.InitWildDrop(i);
+
+            HandPoker handPoker = wildDrop.GetComponent<HandPoker>();
+            Destroy(handPoker);
+
+            //todo: set the texture to wildcard
+
+            //todo: set the animation controller to wildcard animation controller
+            //GameObject
+            //wildDrop.GetComponent<Animator>().runtimeAnimatorController = (RuntimeAnimatorController)RuntimeAnimatorController.Instantiate(obj);
+            wildDrop.GetComponent<Animator>().runtimeAnimatorController = (RuntimeAnimatorController)Resources.Load("Animations/FXWildCardAnim") ;
+
+            //todo: set the animator trigger, "appear"
+
+            wildDropPokers.Add(wildDrop);
+        }
+
+        return true;
+    }
+
     public void UseClearAllPoker(HandPoker handPoker)
     {
         //1. get all top public poker
@@ -4247,19 +4642,25 @@ public class GameplayMgr : MonoBehaviour
         List<GameObject> topPokers = new List<GameObject>();
         //int nIndex = -1;
         GetAllFacingPoker(ref topPokers);
+        //GetTopPokerInfos(ref topPokers);
 
         Debug.Log("here we clear all facing poker... the facing poker count is: " + topPokers.Count);
 
         handPoker.strClearAllPokerIDs = string.Format("{0}", handPoker.Index);
 
+        bool bFirst = true;
         foreach (GameObject go in topPokers)
         {
             GamePoker gamePoker = go.GetComponent<GamePoker>();
 
             handPoker.strClearAllPokerIDs += string.Format("_{0}", gamePoker.Index);
 
-            gamePoker.ClearAll();
+            gamePoker.ClearAll(bFirst);
+
+            bFirst = false;
         }
+
+        //CheckCanFoldWildDrop(topPokers[0].GetComponent<GamePoker>());
 
         OpStepInfo stepInfo = opStepInfos.Peek(); 
         stepInfo.strClearAllPokerInfo = handPoker.strClearAllPokerIDs;
@@ -4400,6 +4801,7 @@ public class GameplayMgr : MonoBehaviour
 
     public void FinishUsingOncePowerUPs()
     {
+        //Debug.Log("------------------------------ 111111111 ---------------FinishUsingOncePowerUPs----------------");
         bHasFinishedOncePowerUPs = true;
     }
 
@@ -4424,6 +4826,30 @@ public class GameplayMgr : MonoBehaviour
         }
     }
 
+    //pengyuan 2021.9.22 added, to process clearing the locks and lockareas...
+    //get active locks groups, then clear them temporarily.
+    public void UseClearAllSecondStage(HandPoker handPoker)
+    {
+        List<int> workingLockGroups = new List<int>();
+
+        GetWorkingLockGroups(ref workingLockGroups);
+
+        if (workingLockGroups.Count > 0)
+        {
+            string strInfo = string.Format("{0}", workingLockGroups.Count);
+
+            for (int i = 0; i < workingLockGroups.Count; ++i)
+            {
+                bool bLeft = ClearAll_ClearLockArea(workingLockGroups[i]);
+                ClearAll_ClearLockGroup(workingLockGroups[i], bLeft);
+                
+                strInfo += string.Format("_{0}", workingLockGroups[i]);
+            }
+
+            opStepInfos.Peek().strClearAllLockInfos = strInfo;
+        }
+    }
+
     public void UpdateUseClearAllStepInfo(HandPoker handPoker)
     {
         foreach(OpStepInfo stepInfo in opStepInfos)
@@ -4435,5 +4861,302 @@ public class GameplayMgr : MonoBehaviour
             }
         }
     }
+
+    public void InsertWildDrop()
+    {
+        //1. select 3 random position(3 random public poker), then sort the position by x coordinate, then 
+        Random.InitState((int)System.DateTime.Now.Ticks);
+
+        int nInitRandom = Random.Range(0, publicPokers.Count);
+        int nOffset = (int)publicPokers.Count / 3;
+
+        for(int i = 0; i < 3; ++i)
+        {
+            int nPokerIndex = (nInitRandom + nOffset * i) % publicPokers.Count;
+
+            GameObject insertObj = publicPokers[nPokerIndex];
+            GamePoker gamePoker = insertObj.GetComponent<GamePoker>();
+
+            Vector3 topPosition = insertObj.transform.position;
+            bool bUP = (topPosition.x - wildDropPokers[i].transform.position.x) > 0.0 ? true : false;
+            topPosition.y = GetWildDropInsertPosY(gamePoker, bUP);
+            topPosition.z = insertObj.transform.position.z + 0.025f;
+
+            Vector3 endPos;// = insertObj.transform.position;
+
+            GameObject collapseObj = GetInsertWildDropBackPoker(insertObj);
+            if(collapseObj == null)
+            {
+                endPos = insertObj.transform.position + Vector3.forward * 0.0125f;
+                wildDropPokers[i].GetComponent<GamePoker>().pokerInfo.fRotation = insertObj.GetComponent<GamePoker>().pokerInfo.fRotation + 10.0f;
+            }
+            else
+            {
+                endPos = (insertObj.transform.position + collapseObj.transform.position) / 2;// - Vector3.forward * 0.0125f ;
+                wildDropPokers[i].GetComponent<GamePoker>().pokerInfo.fRotation = (insertObj.GetComponent<GamePoker>().pokerInfo.fRotation + collapseObj.GetComponent<GamePoker>().pokerInfo.fRotation) / 2;
+            }
+
+            wildDropPokers[i].GetComponent<GamePoker>().WildDropInsertFirstStage(topPosition, endPos, bUP);
+        }
+    }
+
+    float GetWildDropInsertPosY(GamePoker insertObject, bool bUP)
+    {
+        if (bUP)
+            return insertObject.pokerInst.GetComponent<Renderer>().bounds.max.y + 0.5f;
+        else
+            return insertObject.pokerInst.GetComponent<Renderer>().bounds.min.y - 0.5f;
+    }
+
+    GameObject GetInsertWildDropBackPoker(GameObject insertObject)
+    {
+        GamePoker pokerScript = insertObject.GetComponent<GamePoker>();
+        BoxCollider2D collider = insertObject.GetComponent<BoxCollider2D>();
+
+        if (pokerScript.pokerInst.GetComponent<MeshRenderer>().enabled == false)
+        {
+            return null;
+        }
+
+        GameObject collapseObject = null;
+        RaycastHit2D[] hitResults = Physics2D.BoxCastAll(collider.bounds.center, collider.size, pokerScript.pokerInfo.fRotation, Vector2.zero);
+        if (hitResults.Length > 0)
+        {
+            float fMaxZ = insertObject.transform.position.z;
+
+            for(int i = 0; i < hitResults.Length; ++i)
+            {
+                if (hitResults[i].transform.tag != "poker")
+                    continue;
+
+                if (hitResults[i].transform.position.z > fMaxZ)
+                {
+                    collapseObject = hitResults[i].collider.gameObject;
+                    fMaxZ = hitResults[i].transform.position.z;
+                }
+            }
+        }
+
+        return collapseObject;
+    }
+
+    public void CheckCanFoldWildDrop(GamePoker gamePokerScript)
+    {
+        Debug.Log("CheckCanFoldWildDrop... the wilddrop poker count is: " + wildDropPokers.Count);
+
+        //Reward.Coin += 10000;
+        List<GameObject> topPokers = new List<GameObject>();
+        List<GameObject> wildDrops = new List<GameObject>();
+
+        if (GetTopPokerInfos(ref topPokers))
+        {
+            foreach (GameObject go in topPokers)
+            {
+                GamePoker gamePoker = go.GetComponent<GamePoker>();
+                if(gamePoker.itemType == GameDefines.PokerItemType.WildDrop)
+                {
+                    wildDrops.Add(go);
+                    Debug.Log("CheckCanFoldWildDrop... the wilddrop poker name is: " + go.name);
+                }
+            }
+
+            StartCoroutine(FoldWildDropPoker(wildDrops, gamePokerScript));
+
+            /*for(int i = 0; i < wildDrops.Count; ++i)
+            {
+                GamePoker gamePoker = wildDrops[i].GetComponent<GamePoker>();
+                if (i == 0)
+                {
+                    gamePoker.FoldPoker(foldPoker.Count);
+                    foldPoker.Push(wildDrops[i]);    
+                }
+                else
+                {
+                    gamePoker.FoldWildDropPoker(foldPoker.Count);
+                }
+
+                gamePokerScript.AddAttachedWildDrop(wildDrops[i]);
+                RemoveOnePublicPoker(wildDrops[i]);
+            }*/
+        }
+        
+    }
+
+    IEnumerator FoldWildDropPoker(List<GameObject> pokerList, GamePoker gamePokerScript)
+    {
+        float fStartTime = Time.time;
+
+        for (int i = 0; i < pokerList.Count; ++i)
+        {
+            GamePoker gamePoker = pokerList[i].GetComponent<GamePoker>();
+            if (i == 0)
+            {
+                gamePoker.FoldPoker(foldPoker.Count);
+                foldPoker.Push(pokerList[i]);
+
+                RemoveOnePublicPoker(pokerList[i]);
+
+                gamePoker.wildSource = GameDefines.WildCardSource.None;
+            }
+            else
+            {
+                gamePoker.FoldWildDropPoker(foldPoker.Count);
+
+                gamePoker.wildSource = GameDefines.WildCardSource.WildDrop;
+            }
+
+            gamePokerScript.AddAttachedWildDrop(pokerList[i]);
+            //RemoveOnePublicPoker(pokerList[i]);
+
+            while( Time.time - fStartTime < 0.8f * (i+1))
+            {
+                yield return null;
+            }
+
+            if(i >= 1)
+            {
+                gameplayUI.IncWildCard();
+                Reward.Data[RewardType.WildCard]++;
+                //gamePoker.wildSource = GameDefines.WildCardSource.WildDrop;
+            }
+            else
+            {
+                ;//gamePoker.wildSource = GameDefines.WildCardSource.None;
+            }
+        }
+    }
+
+    public void AddPowerUP_ClearScore()
+    {
+        AddCollectScore(nSingleClearScore);
+    }
+
+    public void AddCollectScore(int nScore)
+    {
+        nCollectScore += nScore;
+        gameplayUI.AddScore(nScore);
+    }
+
+    /*public void CheckCanFoldWildDrop(List<GameObject> pokerList)
+    {
+        Debug.Log("CheckCanFoldWildDrop... input a list... the wilddrop poker count is: " + wildDropPokers.Count);
+
+        
+        List<GameObject> wildDrops = new List<GameObject>();
+
+        foreach(GameObject go in pokerList)
+        {
+            List<GameObject> topPokers = new List<GameObject>();
+            if (GetTopPokerInfos(ref topPokers))
+            {
+                foreach (GameObject go1 in topPokers)
+                {
+                    GamePoker gamePoker = go1.GetComponent<GamePoker>();
+                    if (gamePoker.itemType == GameDefines.PokerItemType.WildDrop 
+                        && !wildDrops.Exists( t => t.name == go1.name ))
+                    {
+                        wildDrops.Add(go1);
+                    }
+                }
+            }
+        }
+    }*/
+
+    void CheckPowerUP_Clear()
+    {
+        if (!powerUpProcess.HasPowerUP_ClearAscDes() && !powerUpProcess.HasPowerUP_ClearBomb())
+            return;
+
+        foreach (GameObject go in publicPokers)
+        {
+            GamePoker gamePoker = go.GetComponent<GamePoker>();
+
+            if(gamePoker && gamePoker.pokerFacing == PokerFacing.Facing)
+            {
+                gamePoker.CheckClearPowerUPs();
+            }
+        }
+    }
+
+    public void CheckPowerUP_ClearLock()
+    {
+        if (!powerUpProcess.HasPowerUP_ClearLock())
+            return;
+
+        if (lockGroups.Count == 0)
+            return;
+
+        List<int> workingLockGroups = new List<int>();
+
+        GetWorkingLockGroups(ref workingLockGroups);
+
+        if (workingLockGroups.Count > 0)
+        {
+            //string strInfo = string.Format("{0}", workingLockGroups.Count);
+
+            for (int i = 0; i < workingLockGroups.Count; ++i)
+            {
+                bool bLeft = true;
+
+                for (int j = 0; j < lockAreas.Count; ++j)
+                {
+                    if (lockAreas[j].nGroupID == workingLockGroups[i])
+                    {
+                        LockArea lockArea = lockAreas[j].Area.GetComponent<LockArea>();
+                        bLeft = lockArea.PowerUP_ClearLockArea();
+                        break;
+                    }
+                }
+
+                for (int j = 0; j < lockGroups.Count; ++j)
+                {
+                    if (lockGroups[j].nGroupID == workingLockGroups[i])
+                    {
+                        for (int k = 0; k < lockGroups[j].locks.Count; ++k)
+                        {
+                            GameLock gameLock = lockGroups[j].locks[k].GetComponent<GameLock>();
+                            gameLock.PowerUP_ClearLock(bLeft);
+                        }
+
+                        lockGroups.RemoveAt(j);
+
+                        break;
+                    }
+                }
+                //bool bLeft = ClearAll_ClearLockArea(workingLockGroups[i]);
+                //ClearAll_ClearLockGroup(workingLockGroups[i], bLeft);
+
+                //strInfo += string.Format("_{0}", workingLockGroups[i]);
+            }
+
+            //opStepInfos.Peek().strClearAllLockInfos = strInfo;
+        }
+    }
+
+    public void PowerUP_ClearOneLock(int nGroupID, GameObject lockObject)
+    {
+        for(int i = 0; i < lockGroups.Count; ++i)
+        {
+            if(lockGroups[i].nGroupID == nGroupID)
+            {
+                lockGroups[i].locks.Remove(lockObject);
+                break;
+            }
+        }
+    }
+
+    public void PowerUP_ClearLockArea(int nGroupID)
+    {
+        for (int i = 0; i < lockAreas.Count; ++i)
+        {
+            if (lockAreas[i].nGroupID == nGroupID)
+            {
+                lockAreas.RemoveAt(i);
+                
+                break;
+            }
+        }
+    }
+
 }
 

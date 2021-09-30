@@ -66,4 +66,9 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         Window.CreateWindowPrefab(windowPrefab, null);
     }
+
+    public void OpenShop()
+    {
+        ShopManager.Instance.Open();
+    }
 }

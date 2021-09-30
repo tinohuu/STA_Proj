@@ -245,6 +245,8 @@ public class JsonReadWriteTest : MonoBehaviour
         string strLevelFile = levelFile.ToString();
 
         levelData = JsonUtility.FromJson<LevelData>(strLevelFile);
+
+        levelBundle.Unload(true);
         
 #endif
 

@@ -42,7 +42,7 @@ public class GamePlayUI : MonoBehaviour
         Vector3 newPos = withdrawBtn.GetComponent<Transform>().position;
         newPos.x = Screen.width * 0.75f;
         newPos.y = Screen.height * 0.1f;
-        withdrawBtn.GetComponent<Transform>().position = newPos;
+        //withdrawBtn.GetComponent<Transform>().position = newPos;
 
         withdrawBtn.onClick.AddListener(delegate { this.OnClickWithdrawBtn(); });
         //withdrawBtn.enabled = false;
@@ -53,9 +53,9 @@ public class GamePlayUI : MonoBehaviour
             Debug.Log("game ui init error! we can not find Add5Btn Button! ");
 
         newPos = add5Btn.GetComponent<Transform>().position;
-        newPos.x = Screen.width * 0.4f;
-        newPos.y = Screen.height * -0.05f;
-        add5Btn.GetComponent<Transform>().position = newPos;
+        //newPos.x = Screen.width * 0.4f;
+        //newPos.y = Screen.height * -0.05f;
+        //add5Btn.GetComponent<Transform>().position = newPos;
 
         add5Btn.onClick.AddListener(delegate { this.OnClickAdd5Btn(); });
         add5Btn.gameObject.SetActive(false);
@@ -66,7 +66,7 @@ public class GamePlayUI : MonoBehaviour
 
         newPos.x = Screen.width * 0.2f;
         newPos.y = Screen.height * -0.1f;
-        endGameBtn.GetComponent<Transform>().position = newPos;
+        //endGameBtn.GetComponent<Transform>().position = newPos;
         endGameBtn.onClick.AddListener(delegate { this.OnClickEndGameBtn(); });
         endGameBtn.gameObject.SetActive(false);
 
@@ -75,9 +75,11 @@ public class GamePlayUI : MonoBehaviour
             Debug.Log("game ui init error! we can not find wildcardBtn Button! ");
 
         newPos = wildcardBtn.GetComponent<Transform>().position;
-        newPos.x = Screen.width * 0.95f;
-        newPos.y = Screen.height * 0.1f;
-        wildcardBtn.GetComponent<Transform>().position = newPos;
+        //newPos.x = Screen.width * 0.005f;
+        //newPos.y = Screen.height * 0.001f;
+        //wildcardBtn.GetComponent<Transform>().position = newPos;
+
+        Debug.Log("the wild card btn's new pos is: " + newPos + "  the screen width is: " + Screen.width);
 
         wildcardBtn.onClick.AddListener(delegate { this.OnClickWildCardBtn(); });
 
@@ -174,9 +176,11 @@ public class GamePlayUI : MonoBehaviour
         /*Vector3 destPos = new Vector3(add5Btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
         add5Btn.transform.DOMove(destPos, 0.7f);*/
         add5Btn.enabled = true ;
-        Vector3 dest = new Vector3(add5Btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
+        //Vector3 dest = new Vector3(add5Btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
+        Vector3 dest = new Vector3(add5Btn.transform.position.x, -4.0f, add5Btn.transform.position.z);
+        Debug.Log("the add5 btn target pos is : " + dest + " origin pos is: " + add5Btn.transform.position);
         StopAllCoroutines();
-        StartCoroutine(ShowButton(add5Btn, dest, 0.0f));
+        StartCoroutine(ShowButton(add5Btn, dest, 0.7f));
 
         //add5Btn.gameObject.SetActive(true);
     }
@@ -195,7 +199,7 @@ public class GamePlayUI : MonoBehaviour
 
         bIsHidingAdd5Btn = true;
         add5Btn.enabled = false;
-        Vector3 dest = new Vector3(add5Btn.transform.position.x, Screen.height * -0.05f, add5Btn.transform.position.z);
+        Vector3 dest = new Vector3(add5Btn.transform.position.x, -8.0f, add5Btn.transform.position.z);
         StopAllCoroutines();
         StartCoroutine(HideButton(add5Btn, dest));
     }
@@ -210,7 +214,7 @@ public class GamePlayUI : MonoBehaviour
         btn.gameObject.SetActive(true);
 
         float fBeginTime = 0.0f;
-
+/*
         Vector3 moveSpeed = (destPos - btn.transform.position) / 0.7f;
 
         while(fBeginTime < fWaitTime)
@@ -223,6 +227,14 @@ public class GamePlayUI : MonoBehaviour
         {
             fBeginTime += Time.deltaTime;
             btn.transform.position += moveSpeed * Time.deltaTime;
+            yield return null;
+        }*/
+
+        btn.transform.DOMove(destPos, fWaitTime);
+
+        while (fBeginTime < fWaitTime)
+        {
+            fBeginTime += Time.deltaTime;
             yield return null;
         }
 
@@ -253,7 +265,8 @@ public class GamePlayUI : MonoBehaviour
     public void ShowEndGameBtn()
     {
         //endGameBtn.gameObject.SetActive(true);
-        Vector3 dest = new Vector3(endGameBtn.transform.position.x, Screen.height * 0.15f, endGameBtn.transform.position.z);
+        //Vector3 dest = new Vector3(endGameBtn.transform.position.x, Screen.height * 0.15f, endGameBtn.transform.position.z);
+        Vector3 dest = new Vector3(endGameBtn.transform.position.x, -4.0f, endGameBtn.transform.position.z);
 
         //StopAllCoroutines();
         StartCoroutine(ShowButton(endGameBtn, dest, 0.7f));
@@ -263,7 +276,8 @@ public class GamePlayUI : MonoBehaviour
     {
         //endGameBtn.gameObject.SetActive(false);
 
-        Vector3 dest = new Vector3(endGameBtn.transform.position.x, Screen.height * -0.1f, endGameBtn.transform.position.z);
+        //Vector3 dest = new Vector3(endGameBtn.transform.position.x, Screen.height * -0.1f, endGameBtn.transform.position.z);
+        Vector3 dest = new Vector3(endGameBtn.transform.position.x, -8.0f, endGameBtn.transform.position.z);
         //StopAllCoroutines();
         StartCoroutine(HideButton(endGameBtn, dest));
     }
@@ -516,5 +530,26 @@ public class GamePlayUI : MonoBehaviour
         Debug.Log("GamePlayUI...  You Clicked WildCard Button");
 
         GameplayMgr.Instance.OnClickWildCardBtn();
+    }
+
+    public void IncWildCard()
+    {
+        WildCardButton wildCardScript = wildcardBtn.GetComponent<WildCardButton>();
+
+        wildCardScript.IncWildCardItem();
+    }
+
+    public void DecWildCard()
+    {
+        WildCardButton wildCardScript = wildcardBtn.GetComponent<WildCardButton>();
+
+        wildCardScript.DecWildCardItem();
+    }
+
+    public void SetWildCardCount(int nCount)
+    {
+        WildCardButton wildCardScript = wildcardBtn.GetComponent<WildCardButton>();
+
+        wildCardScript.SetWildItemCount(nCount);
     }
 }

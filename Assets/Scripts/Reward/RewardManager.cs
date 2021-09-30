@@ -101,6 +101,20 @@ public static class Reward
         return sprite;
     }
 
+    public static List<(RewardType, int)> ToRewards(this string rewardString)
+    {
+        string[] raws = rewardString.Split('_');
+        List<(RewardType, int)> rewardList = new List<(RewardType, int)>();
+        for (int i = 0; i < raws.Length; i += 2)
+        {
+            if (i + 1 >= raws.Length) break;
+            RewardType type = (RewardType)int.Parse(raws[i]);
+            int count = int.Parse(raws[i + 1]);
+            rewardList.Add((type, count));
+        }
+        return rewardList;
+    }
+
     public static (RewardType, int) ToReward(this string rewardString)
     {
         string[] raws = rewardString.Split('_');

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class GameLock : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class GameLock : MonoBehaviour
 
     public GameplayMgr.LockState lockState = GameplayMgr.LockState.LockState_None;
 
-    public Vector3 oriPosition;
+    public Vector3 originPos;
 
     //public float fPosX = 0.0f;
     //public float fPosY = 0.0f;
@@ -105,7 +106,7 @@ public class GameLock : MonoBehaviour
             lockState = GameplayMgr.LockState.LockState_Working;
         }
 
-        oriPosition = transform.position;
+        originPos = transform.position;
     }
 
     public bool CanLockBeCleared(GamePoker pokerScript)
@@ -194,6 +195,45 @@ public class GameLock : MonoBehaviour
         suitImage.GetComponent<SpriteRenderer>().enabled = false;
         colorImage.GetComponent<SpriteRenderer>().enabled = false;
         numberImage.GetComponent<SpriteRenderer>().enabled = false;
+    }
+
+    public void ClearAll_ClearLock(bool bLeft)
+    {
+        lockState = GameplayMgr.LockState.LockState_Dying;
+
+        Vector3 newPos = gameObject.transform.position;
+
+        //if (gameObject.transform.position.x > 0.0f)
+        if(bLeft)
+            newPos.x -= 15.0f;
+        else
+            newPos.x += 15.0f;
+
+        gameObject.transform.DOMove(newPos, 1.0f);//.OnComplete();
+    }
+
+    public void Cancel_ClearAll_ClearLock()
+    {
+        Debug.Log("GameLock::Cancel_ClearAll_ClearLock... the oriPosition is: " + originPos);
+
+        lockState = GameplayMgr.LockState.LockState_Working;
+
+        gameObject.transform.position = originPos;
+        //gameObject.GetComponent<SpriteRenderer>().DOFade(0.3f, 1.0f);
+    }
+
+    public void PowerUP_ClearLock(bool bLeft)
+    {
+        lockState = GameplayMgr.LockState.LockState_None;
+
+        Vector3 newPos = gameObject.transform.position;
+
+        if (bLeft)
+            newPos.x -= 15.0f;
+        else
+            newPos.x += 15.0f;
+
+        gameObject.transform.DOMove(newPos, 2.0f).OnComplete(()=> { GameplayMgr.Instance.PowerUP_ClearOneLock(nGroupID, gameObject); Destroy(gameObject); });
     }
 
     public void AdjustPosition(int nNewIndex)

@@ -69,12 +69,16 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
             var level = Instantiate(LevelPrefab, LevelGroup).GetComponent<MapLevel>();
             level.transform.localPosition = configs[i].LocPos;
             level.Data = MapManager.Instance.Data.MapLevelDatas[i + MapManager.Instance.CurMapStageConfigs[0].LevelID - 1];
-            if (level.Data.ID == MapManager.Instance.Data.SelectedLevel)
+            if (MapDataManager.Instance.RetriedLevel > 0)
             {
-                MapPlayer.Instance.MoveToLevel(level, false);
-                MapPlayer.Instance.OnClickRomote(0);
+                if (level.Data.ID == MapDataManager.Instance.RetriedLevel)
+                MapPlayer.Instance.MoveToLevel(level, true, false);
             }
+            else if (level.Data.ID == MapManager.Instance.Data.SelectedLevel)
+                MapPlayer.Instance.MoveToLevel(level, false, false);
         }
+        MapPlayer.Instance.OnClickRomote(0);
+        MapDataManager.Instance.RetriedLevel = 0;
     }
 
     public Transform Mapmaker_AddItem()

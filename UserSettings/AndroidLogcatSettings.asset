@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "3HX5T17402008765",
         "name": "com.DefaultCompany.STA_MapMaker",
-        "processId": 30031,
+        "processId": 1418,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -30,6 +30,12 @@
             "deviceId": "3HX5T17402008765",
             "name": "com.DefaultCompany.STA_MapMaker",
             "processId": 30031,
+            "exited": false
+        },
+        {
+            "deviceId": "3HX5T17402008765",
+            "name": "com.DefaultCompany.STA_MapMaker",
+            "processId": 1418,
             "exited": false
         }
     ],

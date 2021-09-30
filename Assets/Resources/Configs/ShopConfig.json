@@ -1,0 +1,68 @@
+[
+  {
+    "ID": 1,
+    "Reward": 213,
+    "Times": 1,
+    "IsSmall": false,
+    "Price": 12,
+    "Background": "StarterKit",
+    "Icon": "B",
+    "TagIcon": "",
+    "TagText": ""
+  },
+  {
+    "ID": 2,
+    "Reward": 214,
+    "Times": -1,
+    "IsSmall": false,
+    "Price": 45,
+    "Background": "Normal",
+    "Icon": "C",
+    "TagIcon": "",
+    "TagText": ""
+  },
+  {
+    "ID": 3,
+    "Reward": 215,
+    "Times": -1,
+    "IsSmall": false,
+    "Price": 108,
+    "Background": "Normal",
+    "Icon": "D",
+    "TagIcon": "Orange",
+    "TagText": "Most_Popular"
+  },
+  {
+    "ID": 4,
+    "Reward": 216,
+    "Times": -1,
+    "IsSmall": false,
+    "Price": 238,
+    "Background": "Normal",
+    "Icon": "E",
+    "TagIcon": "Pink",
+    "TagText": "Best_Value"
+  },
+  {
+    "ID": 5,
+    "Reward": 217,
+    "Times": -1,
+    "IsSmall": true,
+    "Price": 12,
+    "Background": "Normal",
+    "Icon": "Coin",
+    "TagIcon": "",
+    "TagText": ""
+  },
+  {
+    "ID": 6,
+    "Reward": 218,
+    "Times": -1,
+    "IsSmall": true,
+    "Price": 40,
+    "Background": "Normal",
+    "Icon": "Coin",
+    "TagIcon": "",
+    "TagText": ""
+  }
+]

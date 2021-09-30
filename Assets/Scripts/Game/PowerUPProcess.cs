@@ -15,11 +15,17 @@ public class PowerUPProcess// : MonoBehaviour
     bool bHasWildDrop     = false;
     bool bUsingWildDrop   = false;
 
+    bool bHasClearBomb    = false;
+
+    bool bHasClearLock    = false;
+
+    bool bHasClearAscDes  = false;
+
     public void Init()
     {
         Debug.Log("here we init the power up process, to get information from the STAGameManager... ... ");
-
-        int nRemoveCards = Reward.Data[RewardType.RemoveCards];
+        
+        int nRemoveCards = STAGameManager.Instance.InUseItems.Contains(RewardType.RemoveCards) ? 1 : -1;
         if(nRemoveCards > 0)
         {
             GameDefines.PowerUPInfo info = new GameDefines.PowerUPInfo();
@@ -32,8 +38,8 @@ public class PowerUPProcess// : MonoBehaviour
             bUsingClearThree = true;
         }
 
-        int nClearPlayable = Reward.Data[RewardType.ClearPlayables];
-        if(nClearPlayable > 0)
+        int nClearPlayable =  STAGameManager.Instance.InUseItems.Contains(RewardType.ClearPlayables) ? 1 : -1;
+        if (nClearPlayable > 0)
         {
             GameDefines.PowerUPInfo info = new GameDefines.PowerUPInfo();
             info.itemType = GameDefines.PowerUPType.Clear_All;
@@ -42,7 +48,50 @@ public class PowerUPProcess// : MonoBehaviour
             powerUpInfos.Add(info);
 
             bHasClearAll = true;
-            bUsingClearAll = false;
+            bUsingClearAll = true;
+        }
+
+        int nWildDrop =  STAGameManager.Instance.InUseItems.Contains(RewardType.WildDrop) ? 1 : -1;
+        if (nWildDrop > 0)
+        {
+            GameDefines.PowerUPInfo info = new GameDefines.PowerUPInfo();
+            info.itemType = GameDefines.PowerUPType.Wild_Drop;
+            info.useStatus = GameDefines.PowerUPUseStatus.Unused;
+            info.useType = GameDefines.PowerUPUseType.Once;
+            powerUpInfos.Add(info);
+
+            bHasWildDrop = true;
+            bUsingWildDrop = true;
+        }
+        
+        int nClearBomb =  STAGameManager.Instance.InUseItems.Contains(RewardType.RemoveBombs) ? 1 : -1;
+        if(nClearBomb > 0)
+        {
+            bHasClearBomb = true;
+        }
+        else
+        {
+            bHasClearBomb = false;
+        }
+
+        int nClearLock =  STAGameManager.Instance.InUseItems.Contains(RewardType.RemoveCodeBreakers) ? 1 : -1;
+        if (nClearLock > 0)
+        {
+            bHasClearLock = true;
+        }
+        else
+        {
+            bHasClearLock = false;
+        }
+
+        int nClearAscDes =  STAGameManager.Instance.InUseItems.Contains(RewardType.RemoveValueChangers) ? 1 : -1;
+        if (nClearAscDes > 0)
+        {
+            bHasClearAscDes = true;
+        }
+        else
+        {
+            bHasClearAscDes = false;
         }
 
         powerUpInfos.Sort(delegate(GameDefines.PowerUPInfo info1, GameDefines.PowerUPInfo info2)
@@ -97,16 +146,59 @@ public class PowerUPProcess// : MonoBehaviour
     public void FinishUsingClearAll()
     {
         bUsingClearAll = false;
+
+        for (int i = 0; i < powerUpInfos.Count; ++i)
+        {
+            if (powerUpInfos[i].itemType == GameDefines.PowerUPType.Clear_All )
+            {
+                powerUpInfos[i].useStatus = GameDefines.PowerUPUseStatus.Used;
+                break;
+            }
+        }
+        //Debug.Log("--------------------------------------------------- PowerUPProcess ... FinishUsingClearAll using clear all ...1111111111111 ----------------------------");
+        if (FinishUsingAllOncePowerUP())
+        {
+            //Debug.Log("--------------------------------------------------- PowerUPProcess ... FinishUsingClearAll using clear all ...22222222222 ----------------------------");
+            GameplayMgr.Instance.FinishUsingOncePowerUPs();
+        }
     }
 
     public void FinishUsingClearThree()
     {
         bUsingClearThree = false;
+
+        for (int i = 0; i < powerUpInfos.Count; ++i)
+        {
+            if (powerUpInfos[i].itemType == GameDefines.PowerUPType.Remove_Three)
+            {
+                powerUpInfos[i].useStatus = GameDefines.PowerUPUseStatus.Used;
+                break;
+            }
+        }
+
+        if (FinishUsingAllOncePowerUP())
+        {
+            GameplayMgr.Instance.FinishUsingOncePowerUPs();
+        }
     }
 
     public void FinishUsingWildDrop()
     {
         bUsingWildDrop = false;
+
+        for (int i = 0; i < powerUpInfos.Count; ++i)
+        {
+            if (powerUpInfos[i].itemType == GameDefines.PowerUPType.Wild_Drop)
+            {
+                powerUpInfos[i].useStatus = GameDefines.PowerUPUseStatus.Used;
+                break;
+            }
+        }
+
+        if (FinishUsingAllOncePowerUP())
+        {
+            GameplayMgr.Instance.FinishUsingOncePowerUPs();
+        }
     }
 
     public bool FinishUsingAllOncePowerUP()
@@ -118,7 +210,7 @@ public class PowerUPProcess// : MonoBehaviour
         bRet &= ((bHasClearThree && !bUsingClearThree) || (!bHasClearThree));
 
         bRet &= ((bHasWildDrop && !bUsingWildDrop) || (!bHasWildDrop));
-
+        //Debug.Log("the bHasWildDrop is: " + bHasWildDrop + "  bUsingWildDrop is: " + bUsingWildDrop);
         return bRet;
     }
 
@@ -182,6 +274,21 @@ public class PowerUPProcess// : MonoBehaviour
 
         bUsingWildDrop = true;
 
-        return true;
+        return GameplayMgr.Instance.UsePowerUP_WildDrop(powerUPInfo);
+    }
+
+    public bool HasPowerUP_ClearBomb()
+    {
+        return bHasClearBomb;
+    }
+
+    public bool HasPowerUP_ClearLock()
+    {
+        return bHasClearLock;
+    }
+
+    public bool HasPowerUP_ClearAscDes()
+    {
+        return bHasClearAscDes;
     }
 }

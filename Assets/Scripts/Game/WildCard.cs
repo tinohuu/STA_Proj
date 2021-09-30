@@ -6,7 +6,11 @@ public class WildCard : MonoBehaviour
 {
     public GameplayMgr.PokerType pokerType { get; set; }
 
-    public GameplayMgr.WildCardSource wildcardSource { get; set; }
+    public GameDefines.WildCardSource wildcardSource { get; set; }
+
+    GameObject pokerInst = null;
+
+    Animator animator = null;
 
     Vector3 originPos;
 
@@ -25,6 +29,8 @@ public class WildCard : MonoBehaviour
     bool bFlip { get; set; } = false;
     float fFlipTime = 0.0f;
 
+    bool bFirstFlip = false;
+
     bool bCancel { get; set; } = false;
     float fCancelTime = 0.0f;
 
@@ -39,8 +45,10 @@ public class WildCard : MonoBehaviour
 
     public void Init(GameObject goPrefab, int nIndex, Vector3 pos, Vector3 rendererSize, float fBeginTime)
     {
+        pokerInst = transform.Find("Poker_Club_10").gameObject;
+
         pokerType = GameplayMgr.PokerType.WildPoker;
-        wildcardSource = GameplayMgr.WildCardSource.Gold;
+        wildcardSource = GameDefines.WildCardSource.Gold;
 
         nFoldIndex = nIndex;
 
@@ -55,6 +63,12 @@ public class WildCard : MonoBehaviour
 
         fTime = fBeginTime;
 
+        pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex", GameplayMgr.Instance.wildCardTexture);
+        pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.wildCardTexture);
+
+        animator = GetComponent<Animator>();
+        animator.SetTrigger("WildBuy");
+
         //Transform textTrans = gameObject.transform.Find("Text");
         //textName = textTrans.GetComponent<TextMesh>();
         //textName.text = "WildCard";
@@ -63,7 +77,7 @@ public class WildCard : MonoBehaviour
     public void InitStreakBonusWildcard(int nIndex, Vector3 pos, Vector3 rendererSize, float fBeginTime)
     {
         pokerType = GameplayMgr.PokerType.WildPoker;
-        wildcardSource = GameplayMgr.WildCardSource.StreakBonus;
+        wildcardSource = GameDefines.WildCardSource.StreakBonus;
 
         nFoldIndex = nIndex;
         originPos = transform.position;
@@ -82,12 +96,12 @@ public class WildCard : MonoBehaviour
         {
             //targetPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
 
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.1f);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.05f);
             
             Quaternion quatFrom = Quaternion.Euler(90.0f, 0.0f, 0.0f);
             Quaternion quatTo = Quaternion.Euler(0.0f, 0.0f, 0.0f);// y=180.0
 
-            transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fTime / fRotateTime);
+            //transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fTime / fRotateTime);
         }
 
         //the wild card should fly back to its original position and disappear
@@ -98,7 +112,7 @@ public class WildCard : MonoBehaviour
 
             //targetPos = originPos;
             //transform.position = Vector3.MoveTowards(transform.position, originPos + Vector3.one * 2.0f, 0.1f);
-            if (wildcardSource == GameplayMgr.WildCardSource.Gold || wildcardSource == GameplayMgr.WildCardSource.Item)
+            if (wildcardSource == GameDefines.WildCardSource.Gold || wildcardSource == GameDefines.WildCardSource.Item)
             {
                 transform.position = Vector3.MoveTowards(transform.position, originPos + Vector3.right * 2.0f, 0.1f);
 
@@ -124,7 +138,7 @@ public class WildCard : MonoBehaviour
             if(fWithdrawTime > fWithdrawTotalTime)
             {
                 bWithdraw = false;
-                if (wildcardSource == GameplayMgr.WildCardSource.Gold || wildcardSource == GameplayMgr.WildCardSource.Item)
+                if (wildcardSource == GameDefines.WildCardSource.Gold || wildcardSource == GameDefines.WildCardSource.Item)
                 {
                     Destroy(gameObject);
                 }
@@ -145,6 +159,11 @@ public class WildCard : MonoBehaviour
             if(fFlipTime > fFlipTotalTime)
             {
                 bFlip = false;
+
+                if(bFirstFlip)
+                {
+                    GameplayMgr.Instance.CheckPowerUP_ClearLock();
+                }
             }
         }
 
@@ -185,7 +204,7 @@ public class WildCard : MonoBehaviour
         fCancelTime = 0.0f;
     }
 
-    public void FlipPoker(int nIndex)
+    public void FlipPoker(int nIndex, bool bFirst = false)
     {
         if (bFlip)
         {
@@ -198,6 +217,8 @@ public class WildCard : MonoBehaviour
         bFlip = true;
         //bIsFlipping = true;
         fFlipTime = 0.0f;
+
+        bFirstFlip = bFirst;
 
         nFoldIndex = nIndex;
 
@@ -217,13 +238,13 @@ public class WildCard : MonoBehaviour
         if (nTotalCount > 20)
         {
             newPos.x = pos.x - (20 - index) * 0.2f;
-            newPos.y = pos.y + rendererSize.y * 0.3f;
+            newPos.y = pos.y + rendererSize.y * 0.35f;
             newPos.z = pos.z - index * 0.05f;
         }
         else
         {
             newPos.x = pos.x - (nTotalCount - index) * 0.2f;
-            newPos.y = pos.y + rendererSize.y * 0.3f;
+            newPos.y = pos.y + rendererSize.y * 0.35f;
             newPos.z = pos.z - index * 0.05f;
         }
 

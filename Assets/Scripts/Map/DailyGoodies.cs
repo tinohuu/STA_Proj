@@ -65,7 +65,7 @@ public class DailyGoodies : MonoBehaviour
         int curStkDays = DailyGoodiesManager.Instance.CheckDate(false);
         for (int i = 21; i > curStkDays - 7; i -= 7)
         {
-            Debug.Log(boxGroup.childCount + ":" + i);
+            //Debug.Log(boxGroup.childCount + ":" + i);
             rt = boxGroup.GetChild(i).GetComponent<RectTransform>();
             int week = i / 7 + 1;
             tween = boxGroup.DOAnchorPosX(-rt.anchoredPosition.x + rt.sizeDelta.x / 2, i == 21 ? 0.75f/2 : 0.75f).SetEase(Ease.OutBack, 1.2f).OnStart(() => calendar.UpdateWeekView(week));

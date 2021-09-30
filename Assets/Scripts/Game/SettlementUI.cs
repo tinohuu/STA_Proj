@@ -68,5 +68,6 @@ public class SettlementUI : MonoBehaviour
 
         //todo:here we should switch to next level
         //...
+        GameplayMgr.Instance.OnClickNextLevelButton();
     }
 }

@@ -14,6 +14,8 @@ public class GamePoker : MonoBehaviour
 
     public GameDefines.PokerStatus pokerStatus = GameDefines.PokerStatus.None;
 
+    public GameDefines.WildCardSource wildSource = GameDefines.WildCardSource.None;
+
     public JsonReadWriteTest.PokerInfo pokerInfo { get; set; }
     public GameplayMgr.PokerType pokerType { get; set; }
 
@@ -28,6 +30,8 @@ public class GamePoker : MonoBehaviour
 
     //pengyuan 2021.8.31 the ascend poker and descend poker effect
     GameObject ascendEffect = null;
+
+    GameObject ascendEffectEntity = null;
 
     //pengyuan 2021.9.1, the following are used for bomb process
     GameObject bombEffect = null;
@@ -48,6 +52,9 @@ public class GamePoker : MonoBehaviour
 
     //pengyuan 2021.9.17 add for clear all poker
     bool bClearAll = false;
+
+    //pengyuan 2021.9.23 added for wild drop
+    bool bWildDrop = false;
 
     public Vector3 originPos;
     public Vector3 targetPos;
@@ -112,6 +119,10 @@ public class GamePoker : MonoBehaviour
 
     int testIdnex = 0;
     public GameObject scoreStarPrefab;
+
+    int nWildDropIndex = -1;
+
+    List<GameObject> wildDrops = new List<GameObject>();
 
     //SimpleCurveHelper curveHelper;
 
@@ -194,12 +205,42 @@ public class GamePoker : MonoBehaviour
 
     }
 
+    public void InitWildDrop(int dropIndex)
+    {
+        bWildDrop = true;
+
+        itemType = GameDefines.PokerItemType.WildDrop;
+        //wildSource = GameDefines.WildCardSource.WildDrop;
+
+        pokerInst = transform.Find("Poker_Club_10").gameObject;
+        animator = GetComponent<Animator>();
+
+        nWildDropIndex = dropIndex;
+
+        pokerInfo = new JsonReadWriteTest.PokerInfo();
+        pokerInfo.fPosX = transform.position.x;
+        pokerInfo.fPosY = transform.position.y;
+        pokerInfo.fRotation = 0.0f;
+        pokerInfo.nGroupID = 0;
+        pokerInfo.nItemType = (int)GameDefines.PokerItemType.WildDrop;
+        pokerInfo.strItemInfo = "";
+
+        //targetPos = transform.position;
+
+        pokerType = GameplayMgr.PokerType.PublicPoker;
+        pokerFacing = GameplayMgr.PokerFacing.Backing;
+
+        pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex", GameplayMgr.Instance.wildCardTexture);
+        pokerInst.GetComponent<Renderer>().material.SetTexture("_MainTex2", GameplayMgr.Instance.wildCardTexture);
+
+    }
+
     // Update is called once per frame
     void Update()
     {
         fTime += Time.deltaTime;
 
-        if (!bFlip && !bFold && !bUnFlip && !bDismiss && !bAddNPoker && !bClearAll)
+        if (!bFlip && !bFold && !bUnFlip && !bDismiss && !bAddNPoker && !bClearAll && !bWildDrop)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.08f);
 
@@ -266,7 +307,9 @@ public class GamePoker : MonoBehaviour
             {
                 bIsFlipping = false;
                 pokerFacing = GameplayMgr.PokerFacing.Facing;
+
                 UpdatePokerItemDisplay(true);
+                CheckClearPowerUPs();
 
                 //2021.8.26 added by pengyaun to adjust the rotation of the poker.
                 /*if(Mathf.Abs(pokerInfo.fRotation) > 0.1f)
@@ -302,11 +345,19 @@ public class GamePoker : MonoBehaviour
             Vector3 oldPos = transform.position;
             //transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
 
-            if (fFoldTime >= fFoldTotalTime)
+            if (fFoldTime >= fFoldTotalTime && bIsFolding)
             {
                 bIsFolding = false;
                 transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
-                //transform.position = pos;
+
+                if (itemType != GameDefines.PokerItemType.WildDrop)
+                    GameplayMgr.Instance.CheckCanFoldWildDrop(this);
+                if (wildSource == GameDefines.WildCardSource.WildDrop)
+                {
+                    Debug.Log("---------------------pokerInst.gameObject.GetComponent<MeshRenderer>().enabled = false... ... ... ");
+                    pokerInst.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                }
+
             }
         }
 
@@ -475,6 +526,8 @@ public class GamePoker : MonoBehaviour
         {
             nBombStep = (nBombStep <= 1) ? 0 : (nBombStep - 1);
 
+            Debug.Log("-------------------nBombStep is -------------------------------------: " + nBombStep);
+
             if (nBombStep >= 10)
                 bombAnim.SetTrigger("StepDecDigit");
             else
@@ -495,6 +548,7 @@ public class GamePoker : MonoBehaviour
     void InitItemEffect(JsonReadWriteTest.PokerInfo pokeInfo)
     {
         ascendEffect = null;
+        ascendEffectEntity = null;
         bombEffect   = null;
         addNEffect   = null;
 
@@ -502,11 +556,11 @@ public class GamePoker : MonoBehaviour
         {
             case GameDefines.PokerItemType.Ascending_Poker:
                 ascendEffect = Instantiate(GameplayMgr.Instance.ascendingPrefab, _ascendPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
-                PostInitAscDesEffect();
+                PostInitAscDesEffect(true);
                 break;
             case GameDefines.PokerItemType.Descending_Poker:
                 ascendEffect = Instantiate(GameplayMgr.Instance.descendingPrefab, _ascendPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
-                PostInitAscDesEffect();
+                PostInitAscDesEffect(false);
                 break;
             case GameDefines.PokerItemType.Bomb:
                 bombEffect = Instantiate(GameplayMgr.Instance.bombPrefab, _bombPos, Quaternion.Euler(0.0f, 180.0f, 0.0f));
@@ -520,11 +574,17 @@ public class GamePoker : MonoBehaviour
         }
     }
 
-    void PostInitAscDesEffect()
+    void PostInitAscDesEffect(bool bAscend)
     {
         ascendEffect.transform.SetParent(pokerInst.GetComponent<Canvas>().transform);
         ascendEffect.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         ascendEffect.SetActive(false);
+
+        //ascendEffectEntity = ascendEffect.transform.Find("ChangeUp").GetComponent<GameObject>();
+        if(bAscend)
+            ascendEffectEntity = ascendEffect.transform.Find("ChangeUp").gameObject;
+        else
+            ascendEffectEntity = ascendEffect.transform.Find("ChangeDown").gameObject;
     }
 
     void PostInitAddNEffect(JsonReadWriteTest.PokerInfo pokeInfo)
@@ -614,7 +674,7 @@ public class GamePoker : MonoBehaviour
 
         numberTrans = bombEffect.transform.Find("FXBomb/FXBomb/Group/unitNum");
         GameObject mountUnit = numberTrans.gameObject;
-        bombDigitImage = mountUnit.GetComponent<Image>();
+        bombUnitImage = mountUnit.GetComponent<Image>();
 
         numberTrans = bombEffect.transform.Find("FXBomb/FXBomb/singleNum");
         GameObject mountSingle = numberTrans.gameObject;
@@ -633,10 +693,10 @@ public class GamePoker : MonoBehaviour
             int nUnitIndex = nBombStep % 10;
 
             bombDigitImage.sprite = GameplayMgr.Instance.bombNumbers[nDigitIndex];
-            bombDigitImage.sprite = GameplayMgr.Instance.bombNumbers[nUnitIndex];
+            bombUnitImage.sprite = GameplayMgr.Instance.bombNumbers[nUnitIndex];
 
             bombDigitImage.enabled = true;
-            bombDigitImage.enabled = true;
+            bombUnitImage.enabled = true;
             bombSingleImage.enabled = false;
         }
         else
@@ -645,7 +705,7 @@ public class GamePoker : MonoBehaviour
 
             bombSingleImage.enabled = true;
             bombDigitImage.enabled = false;
-            bombDigitImage.enabled = false;
+            bombUnitImage.enabled = false;
         }
         
     }
@@ -735,6 +795,8 @@ public class GamePoker : MonoBehaviour
 
         pokerFacing = GameplayMgr.PokerFacing.Facing;
         UpdatePokerItemDisplay(true);
+
+        //CheckClearBomb();
     }
 
     public void UnflipPoker()
@@ -763,6 +825,7 @@ public class GamePoker : MonoBehaviour
         bFold = true;
         bIsFolding = true;
         fFoldTime = 0.0f;
+        fFoldTotalTime = 0.8f;
 
         nFoldIndex = nIndex;
 
@@ -773,26 +836,45 @@ public class GamePoker : MonoBehaviour
         Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
         foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
 
-        /*foldPeekPoint.x = transform.position.x + (GameplayMgr.Instance.GetFoldPokerPosition().x - transform.position.x) * 0.5f;
-        foldPeekPoint.y = transform.position.y + gameObject.GetComponent<Renderer>().bounds.size.x * 2;
-        foldPeekPoint.z = transform.position.z;
+        //StartCoroutine(CardJump(trans, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
+        StartCoroutine(CardJump(transform, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
+    }
 
-        foldSecondPoint.x = GameplayMgr.Instance.GetFoldPokerPosition().x;
-        foldSecondPoint.y = targetPos.y;
-        foldSecondPoint.z = transform.position.z;
+    public void FoldWildDropPoker(int nIndex)
+    {
+        if (bFold)
+        {
+            return;
+        }
 
-        secondVelocity.x = (GameplayMgr.Instance.GetFoldPokerPosition().x - foldSecondPoint.x) / 0.2f;
-        secondVelocity.y = (GameplayMgr.Instance.GetFoldPokerPosition().y - foldSecondPoint.y) / 0.2f;
-        secondVelocity.z = (GameplayMgr.Instance.GetFoldPokerPosition().z - foldSecondPoint.z) / 0.2f;*///GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
-        /*secondVelocity.Normalize();
+        //Debug.Log("here we fold a wilddrop poker, name is: " + gameObject.name + "  number is: " + nPokerNumber);
 
-        fSecondSpeed = Vector3.Distance(GameplayMgr.Instance.GetFoldPokerPosition() , foldSecondPoint) / fFoldSecondStage;
+        bFold = true;
+        bIsFolding = true;
+        fFoldTime = 0.0f;
+        fFoldTotalTime = 1.6f;
 
-        curveHelper.SetCurveParams(transform.position, foldPeekPoint, foldPos, 0.4f, 0.8f);
+        //nFoldIndex = nIndex;
 
-        Debug.Log("we fold a poker, and the origin pos is: " + transform.position + "  mid point is: " + foldPeekPoint + "  end point is: " + foldPos);*/
+        //2021.8.11 added by pengyuan 
+        Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
+        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+        foldPos.y += 2.0f;
+
+        Vector3 wildCardPos = new Vector3(5.6f, -4.0f, -1.0f);
 
         //StartCoroutine(CardJump(trans, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
+        StartCoroutine(CardJumpSecond(transform, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos, wildCardPos));
+    }
+
+    public void UnFoldWildDropPoker()
+    {
+        Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
+        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+        //foldPos.y += 2.0f;
+
+        pokerInst.gameObject.GetComponent<MeshRenderer>().enabled = true;
+
         StartCoroutine(CardJump(transform, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
     }
 
@@ -808,6 +890,7 @@ public class GamePoker : MonoBehaviour
         bFold = true;
         bIsFolding = true;
         fFoldTime = 0.0f;
+        fFoldTotalTime = 1.6f;
 
         nFoldIndex = nIndex;
 
@@ -853,11 +936,33 @@ public class GamePoker : MonoBehaviour
 
             UpdateAddNEffectDisplay();
         }
-        Debug.Log("----------the name is : " + gameObject.name + "   origin pos is: " + originPos + "the target pos is: " + targetPos);
+        Debug.Log("----------the name is : " + gameObject.name + "   origin pos is: " + originPos + "the target pos is: " + targetPos + "  wildDrops count is: " + wildDrops.Count);
 
-        transform.DOMove(targetPos, 0.5f);
+        if(wildSource == GameDefines.WildCardSource.WildDrop)
+        {
+            GameplayMgr.Instance.gameplayUI.DecWildCard();
+            Reward.Data[RewardType.WildCard]--;
+            wildSource = GameDefines.WildCardSource.None;
+            pokerInst.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        }
 
-        //GameplayMgr.Instance.nWithdrawCount++;
+        transform.DOMove(targetPos, 0.5f).OnComplete(() => { transform.DORotate(new Vector3(0.0f, 0.0f, pokerInfo.fRotation), 0.0f, RotateMode.WorldAxisAdd); }) ;
+
+        //here we process the wild drop
+        //todo: 
+        foreach(GameObject go in wildDrops)
+        {
+            Debug.Log("the wild drop count is: " + wildDrops.Count);
+            GamePoker gamePoker = go.GetComponent<GamePoker>();
+
+            //if(gamePoker.wildSource != GameDefines.WildCardSource.WildDrop)
+              //  GameplayMgr.Instance.AddToPublicPoker(go);
+
+            gamePoker.Withdraw();
+        }
+        wildDrops.Clear();
+
+        GameplayMgr.Instance.UnflipAllCoveredGamePoker(gameObject);
     }
 
     //when the game is end, and the player failed, we call this method to dismiss the poker.
@@ -889,6 +994,7 @@ public class GamePoker : MonoBehaviour
         bFold = true;
         bIsFolding = true;
         fFoldTime = 0.0f;
+        fFoldTotalTime = 0.8f;
 
         Vector3 foldPos = new Vector3(0.0f, -0.5f, -2.0f);
 
@@ -896,7 +1002,7 @@ public class GamePoker : MonoBehaviour
         StartCoroutine(CardJumpRemoveThree(transform, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
     }
 
-    public void ClearAll()
+    public void ClearAll(bool bFirst)
     {
         bClearAll = true;
         pokerStatus = GameDefines.PokerStatus.Clearing;
@@ -910,7 +1016,44 @@ public class GamePoker : MonoBehaviour
 
         animator.SetTrigger("Remove");
 
-        StartCoroutine(OnRemoveAction());
+        StartCoroutine(OnRemoveAction(bFirst));
+    }
+
+    //2021.9.23 added by pengyuan, wilddrop appear end callback...
+    public void WildDropAppearEnd()
+    {
+        if(nWildDropIndex == 2)
+        {
+            //todo: do next step, that is to select the position, and insert to the position.
+            GameplayMgr.Instance.InsertWildDrop();
+        }
+    }
+
+    public void WildDropInsertFirstStage(Vector3 pos1, Vector3 pos2, bool bUP)
+    {
+        //first set the trigger, then move to position
+        if (bUP)
+            animator.SetTrigger("GetUp");
+        else
+            animator.SetTrigger("GetDown");
+
+        transform.DOMove(pos1, 0.5f).OnComplete(() => { WildDropInsertSecondStage(pos2); }); 
+    }
+
+    public void WildDropInsertSecondStage(Vector3 pos)
+    {
+        targetPos = pos;
+
+        //first set the trigger, then move to position        
+        transform.DORotate(new Vector3( 0.0f, 0.0f, pokerInfo.fRotation), 0.5f, RotateMode.WorldAxisAdd);
+        transform.DOMove(pos, 0.5f).OnComplete(() => { GameplayMgr.Instance.powerUpProcess.FinishUsingWildDrop(); });
+
+        GameplayMgr.Instance.AddToPublicPoker(gameObject);
+    }
+
+    public void AddAttachedWildDrop(GameObject go)
+    {
+        wildDrops.Add(go);
     }
 
     int GetCutEffectIndexBySuitAndIndex(GameplayMgr.PokerColor color, int nRemoveIndex)
@@ -965,6 +1108,68 @@ public class GamePoker : MonoBehaviour
         }
     }
 
+    public void CheckClearPowerUPs()
+    {
+        if (!GameplayMgr.Instance.bAutoFlipHandPoker)
+            return;
+
+        CheckClearBomb();
+
+        CheckClearAscDes();
+    }
+
+    void CheckClearBomb()
+    {
+        if(!GameplayMgr.Instance.powerUpProcess.HasPowerUP_ClearBomb())
+        {
+            return;
+        }
+
+        if (bombEffect == null)
+        {
+            return;
+        }
+
+        if (GameplayMgr.Instance.powerUpProcess.HasPowerUP_ClearBomb())
+        {
+            bombAnim.SetTrigger("Remove");
+            itemType = GameDefines.PokerItemType.None;
+
+            GameplayMgr.Instance.AddPowerUP_ClearScore();
+
+            Destroy(bombEffect, 1.0f);
+            bombEffect = null;
+        }
+    }
+
+    void CheckClearAscDes()
+    {
+        if (!GameplayMgr.Instance.powerUpProcess.HasPowerUP_ClearAscDes())
+        {
+            return;
+        }
+
+        if (ascendEffect == null)
+        {
+            return;
+        }
+
+        if(GameplayMgr.Instance.powerUpProcess.HasPowerUP_ClearAscDes())
+        {
+            Animator ascDesAnim = ascendEffectEntity.GetComponent<Animator>();
+            ascDesAnim.SetTrigger("Remove");
+
+            //Debug.Log("------------------------CheckClearAscDes------------------name is: " + gameObject.name);
+
+            itemType = GameDefines.PokerItemType.None;
+
+            GameplayMgr.Instance.AddPowerUP_ClearScore();
+
+            Destroy(ascendEffect, 1.25f);
+            ascendEffect = null;
+        }
+    }
+
     void DisablePokerItemDisplay()
     {
         if (itemType == GameDefines.PokerItemType.Ascending_Poker || itemType == GameDefines.PokerItemType.Descending_Poker)
@@ -980,7 +1185,7 @@ public class GamePoker : MonoBehaviour
         }
     }
 
-    IEnumerator OnRemoveAction()
+    IEnumerator OnRemoveAction(bool bFirst)
     {
         float fStartTime = Time.time;
 
@@ -992,6 +1197,14 @@ public class GamePoker : MonoBehaviour
         Vector3 newPos = transform.position;
         newPos.x = 12.0f;
         transform.DOMove(newPos, 2.0f);
+
+        while (Time.time - fStartTime < 3.5f)
+        {
+            yield return null;
+        }
+
+        if(bFirst)
+            GameplayMgr.Instance.CheckCanFoldWildDrop(this);
     }
 
     IEnumerator CardJump(Transform card, float cardWidth, Vector3 target)
@@ -1002,8 +1215,10 @@ public class GamePoker : MonoBehaviour
         float _ySpeed = 10 * cardWidth;
         float _StartTime = Time.time;
 
+        float fZ = -4.0f;
+
         // Rotate card by Dotween
-        transform.DORotate(new Vector3(0, 0, _Width < 0 ? 360 : -360), 0.8f, RotateMode.WorldAxisAdd).SetEase(Ease.OutSine);
+        transform.DORotate(new Vector3(0, 0, _Width < 0 ? 360 - pokerInfo.fRotation : -360 - pokerInfo.fRotation), 0.8f, RotateMode.WorldAxisAdd).SetEase(Ease.OutSine);
 
         // Stage 1
         while (Time.time - _StartTime < 0.4f)
@@ -1011,7 +1226,8 @@ public class GamePoker : MonoBehaviour
             _ySpeed -= (25f * cardWidth) * Time.deltaTime;
             card.position += new Vector3(_xSpeed, _ySpeed, 0) * Time.deltaTime;
 
-            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            //Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, fZ);
             card.position = newPosZ;
 
             yield return null;
@@ -1025,7 +1241,8 @@ public class GamePoker : MonoBehaviour
             _ySpeed += (50f / 3 * (2 * cardWidth + Mathf.Abs(_Height))) * Time.deltaTime;
             card.position += new Vector3(_xSpeed, -_ySpeed, 0) * Time.deltaTime;
 
-            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            //Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, fZ);
             card.position = newPosZ;
 
             yield return null;
@@ -1034,14 +1251,18 @@ public class GamePoker : MonoBehaviour
 
         // Stage 3
         Vector3 oriPos = card.position;
+        Vector3 midTarget = target;
+        midTarget.z = fZ;
+
         float dis = (oriPos - target).magnitude;
         while (Time.time - _StartTime < 0.8f)
         {
-            card.position = Vector3.Lerp(oriPos, target, (Time.time - _StartTime - 0.7f) / 0.1f);
+            //card.position = Vector3.Lerp(oriPos, target, (Time.time - _StartTime - 0.7f) / 0.1f);
+            card.position = Vector3.Lerp(oriPos, midTarget, (Time.time - _StartTime - 0.7f) / 0.1f);
 
             //Debug.Log("the old z is: " + oriPos.z + "  the new z is: " + target.z);
 
-            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, target.z);
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, fZ);
             card.position = newPosZ;
 
             yield return null;
@@ -1061,8 +1282,10 @@ public class GamePoker : MonoBehaviour
         float _ySpeed = 10 * cardWidth;
         float _StartTime = Time.time;
 
+        float fZ = -4.0f;
+
         // Rotate card by Dotween
-        transform.DORotate(new Vector3(0, 0, _Width1 < 0 ? 360 : -360), 0.8f, RotateMode.WorldAxisAdd).SetEase(Ease.OutSine);
+        transform.DORotate(new Vector3(0, 0, _Width1 < 0 ? 360 - pokerInfo.fRotation : -360 - pokerInfo.fRotation), 0.8f, RotateMode.WorldAxisAdd).SetEase(Ease.OutSine);
         //transform.DORotate(new Vector3(80, 90, 0), 0.8f, RotateMode.WorldAxisAdd).SetEase(Ease.OutSine);
 
         // Stage 1
@@ -1070,6 +1293,10 @@ public class GamePoker : MonoBehaviour
         {
             _ySpeed -= (25f * cardWidth) * Time.deltaTime;
             card.position += new Vector3(_xSpeed, _ySpeed, 0) * Time.deltaTime;
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, fZ);
+            card.position = newPosZ;
+
             yield return null;
         }
         _ySpeed = 0;
@@ -1080,6 +1307,10 @@ public class GamePoker : MonoBehaviour
             _xSpeed -= (25f / 6 * _Width1) * Time.deltaTime;
             _ySpeed += (50f / 3 * (2 * cardWidth + Mathf.Abs(_Height1))) * Time.deltaTime;
             card.position += new Vector3(_xSpeed, -_ySpeed, 0) * Time.deltaTime;
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, fZ);
+            card.position = newPosZ;
+
             yield return null;
         }
         _ySpeed = 10f / 3 * (2 * cardWidth + Mathf.Abs(_Height1));
@@ -1090,6 +1321,10 @@ public class GamePoker : MonoBehaviour
         while (Time.time - _StartTime < 0.8f)
         {
             card.position = Vector3.Lerp(oriPos, target1, (Time.time - _StartTime - 0.7f) / 0.1f);
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, fZ);
+            card.position = newPosZ;
+
             yield return null;
         }
 
@@ -1099,6 +1334,8 @@ public class GamePoker : MonoBehaviour
         _xSpeed = 5f / 3 * _Width2;
         _ySpeed = 10 * cardWidth;
 
+        animator.SetTrigger("WildExtra");
+
         //transform.DORotate(new Vector3(0, 0, _Width2 < 0 ? 360 : -360), 0.8f, RotateMode.WorldAxisAdd).SetEase(Ease.OutSine);
 
         //2021.8.18 added by pengyuan 
@@ -1107,6 +1344,10 @@ public class GamePoker : MonoBehaviour
         {
             _ySpeed -= (25f * cardWidth) * Time.deltaTime;
             card.position += new Vector3(_xSpeed, _ySpeed, 0) * Time.deltaTime;
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, fZ);
+            card.position = newPosZ;
+
             yield return null;
         }
         _ySpeed = 0;
@@ -1117,6 +1358,10 @@ public class GamePoker : MonoBehaviour
             _xSpeed -= (25f / 6 * _Width2) * Time.deltaTime;
             _ySpeed += (50f / 3 * (2 * cardWidth + Mathf.Abs(_Height2))) * Time.deltaTime;
             card.position += new Vector3(_xSpeed, -_ySpeed, 0) * Time.deltaTime;
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, fZ);
+            card.position = newPosZ;
+
             yield return null;
         }
         _ySpeed = 10f / 3 * (2 * cardWidth + Mathf.Abs(_Height2));
@@ -1127,6 +1372,10 @@ public class GamePoker : MonoBehaviour
         while (Time.time - _StartTime < 1.6f)
         {
             card.position = Vector3.Lerp(oriPos, target2, (Time.time - _StartTime - 0.7f) / 0.1f);
+
+            Vector3 newPosZ = new Vector3(card.position.x, card.position.y, fZ);
+            card.position = newPosZ;
+
             yield return null;
         }
 
@@ -1218,7 +1467,8 @@ public class GamePoker : MonoBehaviour
         GameplayMgr.Instance.nRemoveThreeFinishCount++; 
         if (GameplayMgr.Instance.nRemoveThreeFinishCount >= 3)
         {
-            GameplayMgr.Instance.FinishUsingOncePowerUPs();
+            //GameplayMgr.Instance.FinishUsingOncePowerUPs();
+            GameplayMgr.Instance.powerUpProcess.FinishUsingClearThree();
         }
     }
 }

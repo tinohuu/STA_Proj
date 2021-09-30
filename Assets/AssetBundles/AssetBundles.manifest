@@ -1,0 +1,13 @@
+ManifestFileVersion: 0
+CRC: 182047351
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: jiahuitest
+      Dependencies: {}
+    Info_1:
+      Name: chapter_0001.level
+      Dependencies: {}
+    Info_2:
+      Name: chapter_data.chap
+      Dependencies: {}

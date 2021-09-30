@@ -95,6 +95,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ParticleGroup: {fileID: 1594269308}
+  LeftSide: {fileID: 6409090549117504382}
+  RightSide: {fileID: 6409090547926771268}
   triggerGroup: {fileID: 1999069656}
   forceFieldGroup: {fileID: 6409090548404165391}
   coinPrefab: {fileID: 8483244729959781514, guid: 0fcacaeddca2ea7499314f30bb5d3fd6, type: 3}
@@ -142,11 +144,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data:
-    CompleteLevel: 0
-    SelectedLevel: 1
+    CompleteLevel: 150
+    SelectedLevel: 10
     WheelCollectedLevel: 0
     WheelTimesSinceGrand: 0
     MapLevelDatas: []
+  RetriedLevel: 0
 --- !u!1 &1392232509
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +267,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Views: []
   CurView: {fileID: 0}
+--- !u!1 &1404687524
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1404687525}
+  - component: {fileID: 1404687526}
+  m_Layer: 0
+  m_Name: ShopManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1404687525
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404687524}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2839194961230771640}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1404687526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404687524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae3509db415b5849b58ab3abf4afa13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShopViewPrefab: {fileID: 7767598825572532190, guid: 9c62f9eb4725a094ea2e5f653f649385, type: 3}
+  Data:
+    PurchaseTimes: 
 --- !u!1 &1594269307
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,6 +581,7 @@ Transform:
   - {fileID: 1392232514}
   - {fileID: 290416167}
   - {fileID: 1122259982}
+  - {fileID: 1404687525}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -593,7 +643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 305338f3d89bcc44aaa958daee5099c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ClearOnAwake: 1
+  ClearOnAwake: 0
 --- !u!1 &2839194961462446414
 GameObject:
   m_ObjectHideFlags: 0
@@ -5913,11 +5963,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d2892c1818884548adbcefd881afe5e, type: 3}
---- !u!1 &576304191283672430 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2349094901836274251, guid: 6d2892c1818884548adbcefd881afe5e, type: 3}
-  m_PrefabInstance: {fileID: 2839194960885575461}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &576304191283672431 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2349094901836274250, guid: 6d2892c1818884548adbcefd881afe5e, type: 3}
@@ -5926,6 +5971,11 @@ RectTransform:
 --- !u!1 &4958890202680649139 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7185313553452632726, guid: 6d2892c1818884548adbcefd881afe5e, type: 3}
+  m_PrefabInstance: {fileID: 2839194960885575461}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &576304191283672430 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2349094901836274251, guid: 6d2892c1818884548adbcefd881afe5e, type: 3}
   m_PrefabInstance: {fileID: 2839194960885575461}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6147186377773306544

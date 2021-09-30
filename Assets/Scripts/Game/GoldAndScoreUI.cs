@@ -70,43 +70,45 @@ public class GoldAndScoreUI : MonoBehaviour
 
         firstScoreStar = ((GameObject)Instantiate(scoreStarPrefab, scoreBG.transform)).GetComponent<Image>();
         Vector3 pos = firstScoreStar.transform.position;
-        pos.x += -rectBG.width * 0.25f;
-        pos.y += -rectBG.height * 0.2f;
+        pos.x += -rectBG.width * 0.0025f;
+        pos.y += -rectBG.height * 0.002f;
         firstScoreStar.transform.position = pos;
         firstScoreStar.enabled = false;
 
+        //Debug.Log("the score star pos is: " + pos);
+
         secondScoreStars[0] = ((GameObject)Instantiate(scoreStarPrefab, scoreBG.transform)).GetComponent<Image>();
         pos = secondScoreStars[0].transform.position;
-        pos.x += -rectBG.width * 0.15f;
-        pos.y += rectBG.height * 0.05f;
+        pos.x += -rectBG.width * 0.0015f;
+        pos.y += rectBG.height * 0.0005f;
         secondScoreStars[0].transform.position = pos;
         secondScoreStars[0].enabled = false;
 
         secondScoreStars[1] = ((GameObject)Instantiate(scoreStarPrefab, scoreBG.transform)).GetComponent<Image>();
         pos = secondScoreStars[1].transform.position;
-        pos.x += -rectBG.width * 0.25f;
-        pos.y += rectBG.height * 0.05f;
+        pos.x += -rectBG.width * 0.0025f;
+        pos.y += rectBG.height * 0.0005f;
         secondScoreStars[1].transform.position = pos;
         secondScoreStars[1].enabled = false;
 
         thirdScoreStars[0] = ((GameObject)Instantiate(scoreStarPrefab, scoreBG.transform)).GetComponent<Image>();
         pos = thirdScoreStars[0].transform.position;
-        pos.x += -rectBG.width * 0.05f;
-        pos.y += rectBG.height * 0.3f;
+        pos.x += -rectBG.width * 0.0005f;
+        pos.y += rectBG.height * 0.003f;
         thirdScoreStars[0].transform.position = pos;
         thirdScoreStars[0].enabled = false;
 
         thirdScoreStars[1] = ((GameObject)Instantiate(scoreStarPrefab, scoreBG.transform)).GetComponent<Image>();
         pos = thirdScoreStars[1].transform.position;
-        pos.x += -rectBG.width * 0.15f;
-        pos.y += rectBG.height * 0.3f;
+        pos.x += -rectBG.width * 0.0015f;
+        pos.y += rectBG.height * 0.003f;
         thirdScoreStars[1].transform.position = pos;
         thirdScoreStars[1].enabled = false;
 
         thirdScoreStars[2] = ((GameObject)Instantiate(scoreStarPrefab, scoreBG.transform)).GetComponent<Image>();
         pos = thirdScoreStars[2].transform.position;
-        pos.x += -rectBG.width * 0.25f;
-        pos.y += rectBG.height * 0.3f;
+        pos.x += -rectBG.width * 0.0025f;
+        pos.y += rectBG.height * 0.003f;
         thirdScoreStars[2].transform.position = pos;
         thirdScoreStars[2].enabled = false;
     }

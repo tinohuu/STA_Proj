@@ -7,6 +7,7 @@ public class MapDataManager : MonoBehaviour
 {
     [SavedData] public MapManagerData Data = new MapManagerData();
     public static MapDataManager Instance;
+    public int RetriedLevel = 0;
 
     private void Awake()
     {
@@ -14,6 +15,13 @@ public class MapDataManager : MonoBehaviour
         UpdateLevelData();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SetLevelRating(1, 3);
+        }
+    }
     public void UpdateLevelData()
     {
         var configs = ConfigsAsset.GetConfigList<StageConfig>();
@@ -34,6 +42,11 @@ public class MapDataManager : MonoBehaviour
         return null;
     }
 
+    public static void SetRetry(int levelID)
+    {
+        Instance.RetriedLevel = levelID;
+    }
+
     public static int GetLevelRating(int levelID)
     {
         if (levelID <= Instance.Data.MapLevelDatas.Count)
@@ -43,6 +56,7 @@ public class MapDataManager : MonoBehaviour
 
     public static void SetLevelRating(int levelID, int rating)
     {
+        Debug.Log("MapDataManager::SetLevelRating");
         if (levelID <= Instance.Data.MapLevelDatas.Count)
             Instance.Data.MapLevelDatas[levelID - 1].Rating = rating;
 

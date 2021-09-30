@@ -122,6 +122,15 @@ public class Mapmaker : MonoBehaviour
         Debug.LogWarning(log);
     }
 
+    private void OnDestroy()
+    {
+        MapmakerPlaceholder[] placeholders = FindObjectsOfType<MapmakerPlaceholder>();
+        foreach (var p in placeholders)
+        {
+            DestroyImmediate(p.gameObject);
+        }
+    }
+
     #region UI
     void ApplyMode(bool recreateInputs = true)
     {

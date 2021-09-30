@@ -14,19 +14,25 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance;
     private void Awake()
     {
-        if (!Instance) Instance = this;
-        if (ClearOnAwake) Clear();
-
-        Save = SaveSystem.Load();
-        if (Save == null) Save = new Save();
-
-        AttrBindAll();
-
-        var savables = FindObjectsOfType<MonoBehaviour>().OfType<IDataSavable>();
-        foreach (var savable in savables)
+        if (!Instance)
         {
-            savable.BindSavedData();
+            Instance = this;
+            if (ClearOnAwake) Clear();
+
+
+
+            /*var savables = FindObjectsOfType<MonoBehaviour>().OfType<IDataSavable>();
+            foreach (var savable in savables)
+            {
+                savable.BindSavedData();
+            }
+            Debug.Log("Save::Awake");*/
         }
+
+        if (Save == null) Save = new Save();
+        else SaveSystem.Save(Save);
+        Save = SaveSystem.Load();
+        AttrBindAll();
     }
 
     private void Update()
