@@ -2968,19 +2968,7 @@ MonoBehaviour:
   m_VerticalScrollbarSpacing: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1126480551}
-        m_TargetAssemblyTypeName: CropManager, Assembly-CSharp
-        m_MethodName: UpdateCropsAnimator
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &868452507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4071,6 +4059,7 @@ MonoBehaviour:
   CropGroup: {fileID: 985967770}
   CropGrowthWindow: {fileID: 8226363164457564904, guid: cb1cfeb1f0cbe3f40b2d58e8900638dd, type: 3}
   m_HarvestButton: {fileID: 1400060573}
+  m_CropPrefab: {fileID: 2771757302548880857, guid: 1066cfc5e306e4a47b33f16501c7fdb3, type: 3}
   Data:
     LastCropGrowthID: 0
   CropConfigs: []
@@ -5074,7 +5063,7 @@ MonoBehaviour:
   m_WheelViewPrefab: {fileID: 2828721209400240417, guid: 02a814c9715c77c4da7dd0f13aabd951, type: 3}
   m_WheelPrefab: {fileID: 1124687218495626963, guid: 4b446f58b37517b42be7cb244af13029, type: 3}
   m_WheelGroup: {fileID: 651820891}
-  EnableWheel: 1
+  EnableWheel: 0
 --- !u!1 &1418630843
 GameObject:
   m_ObjectHideFlags: 0
@@ -8331,11 +8320,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.CompleteLevel
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.SelectedLevel
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1392232513, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_Camera
@@ -8391,7 +8380,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2839194961365692647, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: ClearOnAwake
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2839194961471910075, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4958890202177373248, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_AnchorMax.y

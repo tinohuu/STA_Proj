@@ -4,84 +4,64 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Crop)), CanEditMultipleObjects]
+[CustomEditor(typeof(CropSpine)), CanEditMultipleObjects]
 public class MapCropEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        Crop crop = target as Crop;
-        /*
-        if (GUILayout.Button("Update Levels"))
-        {
-            List<CropConfig> cropConfigs = MapManager.GetCropConfigs();
-            Dictionary<string, CropConfig> configsByName = cropConfigs.ToDictionary(p => p.Name);
-            MapCrop[] crops = FindObjectsOfType<MapCrop>();
-            foreach (MapCrop crop in crops)
-            {
-                if (!configsByName.ContainsKey(crop.Name)) continue;
-                crop.Config = configsByName[crop.Name];
-            }
-        }
-        EditorGUILayout.HelpBox("Update all crops according to Crop Name and Configs.", MessageType.Info);*/
+        CropSpine cropSpine = target as CropSpine;
 
-        if (GUILayout.Button(crop.Controllers.Count > 0 ? "Update Controllers" : "Create Conterollers"))
+        if (GUILayout.Button(cropSpine.Controllers.Count > 0 ? "Update Controllers" : "Create Conterollers"))
         {
-            //string oriControllerGuid = (AssetDatabase.FindAssets("Controller_Crop", null))[0];
-            //RuntimeAnimatorController oriController = GuidToAsset<RuntimeAnimatorController>(oriControllerGuid);
             RuntimeAnimatorController oriController = GetAssetByName<RuntimeAnimatorController>("Controller_Crop");
-            crop.Controllers.Clear();
+            cropSpine.Controllers.Clear();
 
             int variantIndex = 0;
-            do
+
+            while (true)
             {
                 AnimatorOverrideController controller = new AnimatorOverrideController();
                 controller.runtimeAnimatorController = oriController;
 
-                if (crop.HasState(Crop.State.locked))
-                {
-                    string assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Locked_Idle";
-                    if (!UpdateConrtoller(controller, "Crop_Locked_Idle", assetName)) break;
-                }
+                string assetName;
 
-                if (crop.HasState(Crop.State.unlocking))
-                {
-                    string assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Unlocking_Idle";
-                    if (!UpdateConrtoller(controller, "Crop_Unlocking_Idle", assetName)) break;
-                }
+                List<int> animCounts = new List<int> { 0, 0, 0, 0 };
 
-                if (crop.HasState(Crop.State.immature))
-                {
-                    string assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Immature_Idle";
-                    if (!UpdateConrtoller(controller, "Crop_Immature_Idle", assetName)) break;
-                }
+                assetName = cropSpine.SpineName + "_" + variantIndex + "_Locked_Idle";
+                if (UpdateConrtoller(controller, "Crop_Locked_Idle", assetName)) animCounts[(int)Crop.State.locked]++;
 
-                if (crop.HasState(Crop.State.mature))
-                {
-                    string assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Mature_Idle";
-                    if (!UpdateConrtoller(controller, "Crop_Mature_Idle", assetName)) break;
+                assetName = cropSpine.SpineName + "_" + variantIndex + "_Unlocking_Idle";
+                if (UpdateConrtoller(controller, "Crop_Unlocking_Idle", assetName)) animCounts[(int)Crop.State.unlocking]++;
 
-                    assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Mature_ToMature";
-                    if (!UpdateConrtoller(controller, "Crop_Mature_ToMature", assetName)) break;
+                assetName = cropSpine.SpineName + "_" + variantIndex + "_Immature_Idle";
+                if (UpdateConrtoller(controller, "Crop_Immature_Idle", assetName)) animCounts[(int)Crop.State.immature]++;
 
-                    assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Mature_Harvest";
-                    if (!UpdateConrtoller(controller, "Crop_Mature_Harvest", assetName)) break;
+                assetName = cropSpine.SpineName + "_" + variantIndex + "_Mature_Idle";
+                if (UpdateConrtoller(controller, "Crop_Mature_Idle", assetName)) animCounts[(int)Crop.State.mature]++;
 
-                    assetName = crop.MapmakerConfig.Name + "_" + variantIndex + "_Mature_ToImmature";
-                    if (!UpdateConrtoller(controller, "Crop_Mature_ToImmature", assetName)) break;
-                }
+                assetName = cropSpine.SpineName + "_" + variantIndex + "_Mature_ToMature";
+                if (UpdateConrtoller(controller, "Crop_Mature_ToMature", assetName)) animCounts[(int)Crop.State.mature]++;
 
-                AssetDatabase.CreateAsset(controller, "Assets/Animations/Crops/Controller_" + crop.MapmakerConfig.Name + "_" + variantIndex + ".overrideController");
-                crop.Controllers.Add(controller);
+                assetName = cropSpine.SpineName + "_" + variantIndex + "_Mature_Harvest";
+                if (UpdateConrtoller(controller, "Crop_Mature_Harvest", assetName)) animCounts[(int)Crop.State.mature]++;
+
+                assetName = cropSpine.SpineName + "_" + variantIndex + "_Mature_ToImmature";
+                if (UpdateConrtoller(controller, "Crop_Mature_ToImmature", assetName)) animCounts[(int)Crop.State.mature]++;
+
+                AssetDatabase.CreateAsset(controller, "Assets/Animations/Crops/Controller_" + cropSpine.SpineName + "_" + variantIndex + ".overrideController");
+                cropSpine.Controllers.Add(controller);
                 variantIndex++;
+
+                if (animCounts.Sum() <= 0) break;
+
+                cropSpine.MinState = (Crop.State)animCounts.FindIndex(e => e > 0);
+                cropSpine.MaxState = (Crop.State)animCounts.FindLastIndex(e => e > 0);
             }
-            while (variantIndex < 7);
-            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(crop), "Crop_" + crop.MapmakerConfig.Name);
-            crop.gameObject.name = "Crop_" + crop.MapmakerConfig.Name;
-            crop.SpinePrefab = GetAssetByName<GameObject>("Crop_" + crop.MapmakerConfig.Name + "_Spine");
-            EditorUtility.SetDirty(crop);
+            EditorUtility.SetDirty(cropSpine);
         }
 
+        /*
         if (crop.Controllers.Count > 0)
         {
             if (GUILayout.Button("Randomize Variant"))
@@ -93,19 +73,11 @@ public class MapCropEditor : Editor
                     EditorUtility.SetDirty(targetCrop);
                 }
             }
-        }
+        }*/
     }
 
     bool UpdateConrtoller(AnimatorOverrideController controller, string oldName, string newName)
     {
-        /*string[] guids = AssetDatabase.FindAssets(newName, null);
-        if (guids.Length == 0)
-        {
-            Debug.LogWarning("Controller creation stopped at finding " + newName);
-            return false;
-        }
-        AnimationClip clip = GuidToAsset<AnimationClip>(guids[0]);*/
-
         AnimationClip clip = GetAssetByName<AnimationClip>(newName);
         if (clip == null) return false;
         controller[oldName] = clip;

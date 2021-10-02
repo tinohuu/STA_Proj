@@ -180,7 +180,7 @@ public class Mapmaker : MonoBehaviour
         string[] inputDatas = new string[inputs.Length];
         for (int i = 0; i < inputs.Length; i++)
         {
-            if (inputs[i].text == "") return;
+            //if (inputs[i].text == "") return;
             inputDatas[i] = inputs[i].text;
         }
         CurModule.Mapmaker_ApplyInputs(MapmakerPlaceholder.Target?.parent, inputDatas);

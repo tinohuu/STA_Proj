@@ -81,6 +81,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
 
         CropManager.Instance.PlayHarvestEffects();
         Reward.Coin += UpdateHarvestText();
+        CropManager.Instance.UpdateCropsAnimator(true);
     }
 
     public void Cheat()

@@ -13,7 +13,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     [SerializeField] Transform CropGroup;
     [SerializeField] GameObject CropGrowthWindow;
     [SerializeField] GameObject m_HarvestButton;
-
+    [SerializeField] GameObject m_CropPrefab;
     [Header("Config & Data")]
     [SavedData] public CropManagerData Data = new CropManagerData();
     public List<CropConfig> CropConfigs = new List<CropConfig>();
@@ -72,10 +72,10 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         Crop[] allCrops = FindObjectsOfType<Crop>();
         foreach (Crop crop in allCrops)
         {
-            if (!configsByName.ContainsKey(crop.MapmakerConfig.Name)) continue;
+            if (!configsByName.ContainsKey(crop.CropName)) continue;
 
-            if (!cropsByName.ContainsKey(crop.MapmakerConfig.Name)) cropsByName.Add(crop.MapmakerConfig.Name, new List<Crop>());
-            cropsByName[crop.MapmakerConfig.Name].Add(crop);
+            if (!cropsByName.ContainsKey(crop.CropName)) cropsByName.Add(crop.CropName, new List<Crop>());
+            cropsByName[crop.CropName].Add(crop);
         }
 
         // Set crop with unlocking level and unlocked level
@@ -124,10 +124,10 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         foreach (Crop crop in crops)
         {
             crop.UpdateState();
-            if (crop.UpdateAnimator() && crop.CropState == Crop.State.immature)
+            if (crop.IsVisible && crop.CropState == Crop.State.immature)
             {
-                CreateParticle(crop.MapmakerConfig.Name, crop.transform.position);
-                shownCropNames.Add(crop.MapmakerConfig.Name);
+                CreateParticle(crop.CropName, crop.transform.position);
+                shownCropNames.Add(crop.CropName);
             }
         }
 
@@ -155,7 +155,8 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 
     void CreateParticle(string cropName, Vector3 pos)
     {
-        GameObject prefab = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + cropName);
+        GameObject prefab = Resources.Load<GameObject>("Prefabs/Crops/HarvestParticles/FXHarvest" + cropName);
+        Debug.Log(cropName + prefab);
         GameObject obj = ParticleManager.Instance.CreateParticle(prefab, pos);
         particles.Add(obj.transform);
     }
@@ -163,11 +164,11 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     #region Mapmaker
     public Type Mapmaker_ItemType => typeof(Crop);
 
-    public string[] Mapmaker_InputInfos => new string[] { "Crop Name", "Crop Scale", "Crop Variant" };
+    public string[] Mapmaker_InputInfos => new string[] { "Crop Name", "Crop Scale", "Crop Variant", "Spine Name" };
 
     public Transform Mapmaker_AddItem()
     {
-        GameObject obj = Instantiate(Resources.Load<GameObject>("Crops/Crop_Cabbage"), CropManager.Instance.CropGroup);
+        GameObject obj = Instantiate(m_CropPrefab, CropGroup);
         obj.transform.localPosition = CropGroup.InverseTransformPoint(Vector3.zero);
         UpdateCropsView();
         obj.GetComponent<Crop>().UpdateView();
@@ -183,9 +184,12 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         var configs = JsonExtensions.JsonToList<Mapmaker_CropConfig>(json);
         foreach (var config in configs)
         {
-            GameObject prefab = Resources.Load<GameObject>("Crops/Crop_" + config.Name);
-            var crop = Instantiate(prefab, CropGroup).GetComponent<Crop>();
-            crop.MapmakerConfig = config;
+            var crop = Instantiate(m_CropPrefab, CropGroup).GetComponent<Crop>();
+            crop.CropName = config.Name;
+            crop.SpineName = config.SpineName;
+            crop.Variant = config.Variant;
+            crop.transform.localPosition = config.LocPos;
+            crop.transform.localScale = new Vector3(config.Scale, Mathf.Abs(config.Scale), 1);
             crop.UpdateView(true);
         }
         UpdateCropsView();
@@ -194,33 +198,29 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     public string[] Mapmaker_UpdateInputs(Transform target)
     {
         var crop = target.GetComponent<Crop>();
-        var inputDatas = new string[] { crop.MapmakerConfig.Name, crop.MapmakerConfig.Scale.ToString(), crop.MapmakerConfig.Variant.ToString() };
+        var inputDatas = new string[] { crop.CropName, crop.transform.localScale.x.ToString(), crop.Variant.ToString(), crop.SpineName };
         return inputDatas;
     }
 
     public void Mapmaker_ApplyInputs(Transform target, string[] inputDatas)
     {
         var crop = target.GetComponent<Crop>();
-        var config = crop.MapmakerConfig;
+        //var config = crop.MapmakerConfig;
 
         if (CropConfigs.Find(e => e.Name == inputDatas[0]) != null)
-            config.Name = inputDatas[0];
+            crop.CropName = inputDatas[0];
         else
         {
             Mapmaker.Log("Can't match the crop name.");
             return;
         }
-        config.Scale = float.Parse(inputDatas[1]);
-        config.Variant = int.Parse(inputDatas[2]);
-        config.LocPos = crop.transform.localPosition;
+        //crop = Instantiate(prefab, CropGroup).GetComponent<Crop>();
 
-        Destroy(crop.gameObject);
-        GameObject prefab = Resources.Load<GameObject>("Crops/Crop_" + config.Name);
-        crop = Instantiate(prefab, CropGroup).GetComponent<Crop>();
-        crop.MapmakerConfig = config;
-        crop.UpdateView(true);
-        Debug.Log(config);
-        UpdateCropsView();
+        float scale = int.Parse(inputDatas[1]);
+        crop.transform.localScale = new Vector3(scale, Mathf.Abs(scale), 1);
+        crop.Variant = int.Parse(inputDatas[2]);
+        crop.SpineName = inputDatas[3];
+        crop.UpdateView();
     }
 
     public string Mapmaker_ToConfig()
@@ -229,8 +229,13 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         var configs = new List<Mapmaker_CropConfig>();
         foreach (var crop in crops)
         {
-            crop.MapmakerConfig.LocPos = crop.transform.localPosition;
-            configs.Add(crop.MapmakerConfig);
+            Mapmaker_CropConfig config = new Mapmaker_CropConfig();
+            config.Name = crop.CropName;
+            config.LocPos = crop.transform.localPosition;
+            config.Scale = crop.transform.localScale.x;
+            config.Variant = crop.Variant;
+            config.SpineName = crop.SpineName;
+            configs.Add(config);
         }
         return JsonExtensions.ListToJson(configs);
     }
@@ -256,6 +261,7 @@ namespace STA.Mapmaker
     public class Mapmaker_CropConfig : Mapmaker_BaseConfig
     {
         public string Name = "Cabbage";
+        public string SpineName = "";
         public float Scale = 0.5f;
         public int Variant = 0;
     }
