@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 
 public class TutorialManager : MonoBehaviour
 {
-
     public GameObject TutorialPrefab;
 
     [SerializeField] Tutorial m_CurTutorial;
@@ -29,19 +28,13 @@ public class TutorialManager : MonoBehaviour
         UpdateData();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     float GetSize(RectTransform rt)
     {
         var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(rt);
         return Mathf.Max(bounds.size.x, bounds.size.y);
     }
 
-    public void Show(string code, int progress, Getter getter, UnityAction onClick = null)
+    public void Show(string code, int progress, Getter getter, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
         code = code.ToUpper();
 
@@ -50,15 +43,15 @@ public class TutorialManager : MonoBehaviour
         GameObject target = getter();
         if (!target) return;
 
-        CreateTutorial(code, progress, target, onClick);
+        StartCoroutine(ICreateTutorial(code, progress, target, scale, delay, onClick, onStart, onExit));
     }
 
-    public void Show(string code, int progress, GameObject target, UnityAction onClick = null)
+    public void Show(string code, int progress, GameObject target, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
         code = code.ToUpper();
 
         if (!CheckTutorial(code, progress)) return;
-        CreateTutorial(code, progress, target, onClick);
+        StartCoroutine(ICreateTutorial(code, progress, target, scale, delay, onClick, onStart, onExit));
     }
 
     bool CheckTutorial(string code, int progress)
@@ -72,7 +65,7 @@ public class TutorialManager : MonoBehaviour
         return true;
     }
 
-    void CreateTutorial(string code, int progress, GameObject target, UnityAction onClick)
+    /*void CreateTutorial(string code, int progress, GameObject target = null, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
         var config = ConfigsAsset.GetConfigList<TutorialConfig>().Find(e => e.Code == code && e.Progress == progress);
         Debug.Log(config.Code);
@@ -80,8 +73,23 @@ public class TutorialManager : MonoBehaviour
             onClick = () => ExecuteEvents.Execute(target, new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler);
 
         m_CurTutorial = Instantiate(TutorialPrefab, WindowManager.Instance.transform).GetComponent<Tutorial>();
-        m_CurTutorial.SetTutorial(config, target, onClick);
+        m_CurTutorial.SetTutorial(config, target, scale, onClick, onStart, onExit);
+    }*/
+
+    IEnumerator ICreateTutorial(string code, int progress, GameObject target = null, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
+    {
+        var config = ConfigsAsset.GetConfigList<TutorialConfig>().Find(e => e.Code == code && e.Progress == progress);
+        Debug.Log(config.Code);
+        if (onClick == null)
+            onClick = () => ExecuteEvents.Execute(target, new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler);
+
+        yield return new WaitForSeconds(delay);
+
+        m_CurTutorial = Instantiate(TutorialPrefab, WindowManager.Instance.transform).GetComponent<Tutorial>();
+        m_CurTutorial.SetTutorial(config, target, scale, onClick, onStart, onExit);
     }
+
+
 
     void UpdateData()
     {

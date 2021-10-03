@@ -8183,7 +8183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1acd27e44ef3cc64a9f17814ad865c44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnableDailyGoodies: 1
+  EnableDailyGoodies: 0
   MaxWeeks: 4
   MaxVersions: 2
   Data:
@@ -8318,6 +8318,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 290416168, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: EnableTutorial
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.CompleteLevel
       value: 10

@@ -25,6 +25,9 @@ public class Tutorial : MonoBehaviour
     [SerializeField] bool m_IsExiting = false;
     int m_ArrowIndex = 0;
     Vector2 m_ArrowOffset = Vector2.one;
+
+    UnityAction m_OnStart;
+    UnityAction m_OnExit;
     private void Awake()
     {
         m_CirclePanel.gameObject.SetActive(false);
@@ -34,7 +37,8 @@ public class Tutorial : MonoBehaviour
     void Start()
     {
         m_StartTime = Time.time;
-        m_Hand.transform.DOScale(Vector3.one * 1.1f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+        //m_Hand.transform.DOScale(Vector3.one * 1.1f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+        m_OnStart?.Invoke();
     }
 
     // Update is called once per frame
@@ -51,13 +55,17 @@ public class Tutorial : MonoBehaviour
             m_IsExiting = true;
             GetComponent<WindowAnimator>().Close();
             if (Time.time - m_StartTime > 1) TutorialManager.Instance.Finish(m_Config);
+            m_OnExit?.Invoke();
         }
     }
 
-    public void SetTutorial(TutorialConfig config, GameObject target, UnityAction onClickCircle = null)
+    public void SetTutorial(TutorialConfig config, GameObject target, float scale, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
         m_Target = target;
         m_Config = config;
+        m_OnStart = onStart;
+        m_OnExit = onExit;
+        transform.localScale = Vector3.one * scale;
 
         Vector2 targetPos = Camera.main.WorldToScreenPoint(target.transform.position);
 
@@ -73,7 +81,7 @@ public class Tutorial : MonoBehaviour
         if (config.Content != "")
         {
             m_Arrows[m_ArrowIndex].gameObject.SetActive(true);
-            m_Arrows[m_ArrowIndex].anchoredPosition = targetPos;
+            m_Arrows[m_ArrowIndex].transform.position = (Vector2)(Camera.main.ScreenToWorldPoint(targetPos));
             config.Content = config.Content.Replace("\\n", "\n");
             m_Arrows[m_ArrowIndex].GetComponentInChildren<TMP_Text>().text = config.Content;
             //m_Arrows[arrowIndex].GetComponentInChildren<TMP_Text>().GetRenderedValues();
@@ -83,14 +91,14 @@ public class Tutorial : MonoBehaviour
         {
             m_CirclePanel.gameObject.SetActive(true);
             m_CirclePanel.transform.position = m_Target.transform.position;
-            m_CirclePanel.onClick.AddListener(onClickCircle);
+            m_CirclePanel.onClick.AddListener(onClick);
             m_CirclePanel.onClick.AddListener(() => GetComponent<WindowAnimator>().Close());
             m_CirclePanel.onClick.AddListener(() => TutorialManager.Instance.Finish(config));
             m_CirclePanel.onClick.AddListener(() => m_CirclePanel.interactable = false);
 
             m_Hand.gameObject.SetActive(true);
             m_Hand.transform.position = m_Target.transform.position;
-            m_Hand.anchoredPosition += new Vector2(100, -100);// new Vector2(targetPos.x > Screen.width / 2f ? 100 : -100, -100);
+            m_Hand.anchoredPosition += new Vector2(50, -50);// new Vector2(targetPos.x > Screen.width / 2f ? 100 : -100, -100);
         }
         else if ((Type)(config.Type) == Type.Flat)
         {

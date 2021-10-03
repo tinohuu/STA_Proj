@@ -47,7 +47,7 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
 
     public void ShowTutorial()
     {
-        TutorialManager.Instance.Show("Harvest", 3, () => FindLevelButton(5).gameObject);
+        TutorialManager.Instance.Show("Harvest", 3, () => FindLevelButton(5).gameObject, 0.5f);
     }
 
     MapLevel FindLevelButton(int level)
