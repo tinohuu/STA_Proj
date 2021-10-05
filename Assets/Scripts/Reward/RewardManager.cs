@@ -10,6 +10,7 @@ public class RewardManager : MonoBehaviour
     public delegate void RewardHandler(bool add);
     public RewardHandler[] OnValueChanged = new RewardHandler[Enum.GetValues(typeof(RewardType)).Length];
 
+
     private void Awake()
     {
         if (!Instance) Instance = this;

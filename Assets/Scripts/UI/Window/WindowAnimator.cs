@@ -19,6 +19,8 @@ public class WindowAnimator : Window
     public delegate void WindowHandler();
     public event WindowHandler OnFadeIn = null;
     public static event WindowHandler OnQueueChanged = null;
+
+    bool m_IsDestroying = false;
     //Coroutine currentCoroutine = null;
     private void Awake()
     {
@@ -34,6 +36,19 @@ public class WindowAnimator : Window
     {
         CompleteWinodws();
         ResetWinodws();
+
+
+        if (m_IsDestroying)
+        {
+            if (InQueue)
+            {
+                if (WindowQueue.Contains(this)) WindowQueue.Remove(this);
+                OnQueueChanged?.Invoke();
+            }
+            //ResetWinodws();
+            Destroy(gameObject);
+            //gameObject.SetActive(false);
+        }
     }
 
     void OnDestroy()
@@ -46,7 +61,11 @@ public class WindowAnimator : Window
     [ContextMenu("Fade Out")] void FadeOut_Menu() { StopAllCoroutines(); StartCoroutine(IFadeOut(false)); }
     public void FadeOut(bool disable = false) { StopAllCoroutines(); StartCoroutine(IFadeOut(disable)); }
 
-    public void Close() => FadeOut(true);
+    public void Close()
+    {
+        m_IsDestroying = true;
+        FadeOut(true);
+    }
 
     IEnumerator IFadeIn()
     {
@@ -80,6 +99,7 @@ public class WindowAnimator : Window
 
     IEnumerator IFadeOut(bool destroy = false)
     {
+
         SoundManager.Instance.PlaySFX("uiPanelClose");
         CompleteWinodws();
         Tween tween = null;
@@ -109,7 +129,6 @@ public class WindowAnimator : Window
                     WindowQueue.Last().FadeIn();
                 }
             }
-
 
             yield return new WaitForSeconds(Elements.Count == 0 ? 0 : Elements[0].Duration);
             //ResetWinodws();

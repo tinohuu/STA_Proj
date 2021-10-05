@@ -8,20 +8,19 @@ using UnityEngine;
 public class CropManager : MonoBehaviour, IMapmakerModule
 {
     [Header("Ref")]
-    //[SerializeField] Transform LeftSide;
-    //[SerializeField] Transform RightSide;
-    [SerializeField] Transform CropGroup;
-    [SerializeField] GameObject CropGrowthWindow;
-    [SerializeField] GameObject m_HarvestButton;
+    [SerializeField] Transform m_CropGroup;
+    [SerializeField] public RectTransform HarvestButton;
     [SerializeField] GameObject m_CropPrefab;
+
     [Header("Config & Data")]
     [SavedData] public CropManagerData Data = new CropManagerData();
     public List<CropConfig> CropConfigs = new List<CropConfig>();
+
     public bool IsMature = false;
 
     public static CropManager Instance = null;
 
-    List<Transform> particles = new List<Transform>();
+    List<Transform> m_Particles = new List<Transform>();
 
     private void Awake()
     {
@@ -30,7 +29,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     }
     private void Start()
     {
-        m_HarvestButton.SetActive(MapManager.Instance.Data.CompleteLevel >= 4);
+        HarvestButton.gameObject.SetActive(MapManager.Instance.Data.CompleteLevel >= 4);
         /*var crop = CropConfigs.Find(e => e.ID > Data.LastCropGrowthID && e.Level <= MapManager.Instance.Data.CompleteLevel);
         if (crop != null)
         {
@@ -101,7 +100,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     public void UpdateCropsAnimator(bool includeState)
     {
         // todo: scroll rect opt
-        var crops = CropGroup.GetComponentsInChildren<Crop>();
+        var crops = m_CropGroup.GetComponentsInChildren<Crop>();
         foreach (Crop crop in crops)
         {
             if (!crop) continue;
@@ -118,7 +117,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 
     IEnumerator IPlayHarvestEffects()
     {
-        var crops = CropGroup.GetComponentsInChildren<Crop>();
+        var crops = m_CropGroup.GetComponentsInChildren<Crop>();
 
         List<string> shownCropNames = new List<string>();
         foreach (Crop crop in crops)
@@ -149,8 +148,8 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         }
 
         yield return new WaitForSeconds(5);
-        foreach (var paticle in particles) Destroy(paticle.gameObject);
-        particles.Clear();
+        foreach (var paticle in m_Particles) Destroy(paticle.gameObject);
+        m_Particles.Clear();
     }
 
     void CreateParticle(string cropName, Vector3 pos)
@@ -158,7 +157,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         GameObject prefab = Resources.Load<GameObject>("Prefabs/Crops/HarvestParticles/FXHarvest" + cropName);
         Debug.Log(cropName + prefab);
         GameObject obj = ParticleManager.Instance.CreateParticle(prefab, pos);
-        particles.Add(obj.transform);
+        m_Particles.Add(obj.transform);
     }
 
     #region Mapmaker
@@ -168,8 +167,8 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 
     public Transform Mapmaker_AddItem()
     {
-        GameObject obj = Instantiate(m_CropPrefab, CropGroup);
-        obj.transform.localPosition = CropGroup.InverseTransformPoint(Vector3.zero);
+        GameObject obj = Instantiate(m_CropPrefab, m_CropGroup);
+        obj.transform.localPosition = m_CropGroup.InverseTransformPoint(Vector3.zero);
         UpdateCropsView();
         obj.GetComponent<Crop>().UpdateView();
         return obj.transform;
@@ -179,12 +178,12 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     {
         if (json == null) return;
 
-        CropGroup.DestroyChildren();
+        m_CropGroup.DestroyChildren();
 
         var configs = JsonExtensions.JsonToList<Mapmaker_CropConfig>(json);
         foreach (var config in configs)
         {
-            var crop = Instantiate(m_CropPrefab, CropGroup).GetComponent<Crop>();
+            var crop = Instantiate(m_CropPrefab, m_CropGroup).GetComponent<Crop>();
             crop.CropName = config.Name;
             crop.SpineName = config.SpineName;
             crop.Variant = config.Variant;
@@ -225,7 +224,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 
     public string Mapmaker_ToConfig()
     {
-        var crops = CropGroup.GetComponentsInChildren<Crop>();
+        var crops = m_CropGroup.GetComponentsInChildren<Crop>();
         var configs = new List<Mapmaker_CropConfig>();
         foreach (var crop in crops)
         {
@@ -247,12 +246,15 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     }
 
     #endregion
+
+    public bool IsTimeBoosting => Data.TimeBoostUntil - TimeManager.Instance.RealNow > TimeSpan.Zero;
 }
 
 [Serializable]
 public class CropManagerData
 {
     public int LastCropGrowthID = 0;
+    public DateTime TimeBoostUntil = new DateTime();
 }
 
 namespace STA.Mapmaker

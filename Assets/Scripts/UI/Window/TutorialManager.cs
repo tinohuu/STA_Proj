@@ -7,22 +7,27 @@ using UnityEngine.EventSystems;
 
 public class TutorialManager : MonoBehaviour
 {
+    [Header("Setting")]
+    public bool EnableTutorial = true;
+
+    [Header("Ref")]
     public GameObject TutorialPrefab;
 
+    [Header("Debug")]
     [SerializeField] Tutorial m_CurTutorial;
-
-    public bool EnableTutorial = true;
-    public delegate GameObject Getter();
-
     [SavedData] [SerializeField]TutorialManagerData m_Data = new TutorialManagerData();
     Dictionary<string, TutorialData> m_DatasByCode = new Dictionary<string, TutorialData>();
 
     public static TutorialManager Instance;
+
+    public delegate GameObject Getter();
+    public delegate bool Checker();
+
     private void Awake()
     {
         if (!Instance) Instance = this;
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         UpdateData();
@@ -34,24 +39,28 @@ public class TutorialManager : MonoBehaviour
         return Mathf.Max(bounds.size.x, bounds.size.y);
     }
 
-    public void Show(string code, int progress, Getter getter, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
+    public bool Show(string code, int progress, Getter getter, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
         code = code.ToUpper();
 
-        if (!CheckTutorial(code, progress)) return;
+        if (!CheckTutorial(code, progress)) return false;
 
         GameObject target = getter();
-        if (!target) return;
+        if (!target) return false;
 
         StartCoroutine(ICreateTutorial(code, progress, target, scale, delay, onClick, onStart, onExit));
+
+        return true;
     }
 
-    public void Show(string code, int progress, GameObject target, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
+    public bool Show(string code, int progress, GameObject target, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
         code = code.ToUpper();
 
-        if (!CheckTutorial(code, progress)) return;
+        if (!CheckTutorial(code, progress)) return false;
         StartCoroutine(ICreateTutorial(code, progress, target, scale, delay, onClick, onStart, onExit));
+
+        return true;
     }
 
     bool CheckTutorial(string code, int progress)
@@ -89,15 +98,10 @@ public class TutorialManager : MonoBehaviour
         m_CurTutorial.SetTutorial(config, target, scale, onClick, onStart, onExit);
     }
 
-
-
     void UpdateData()
     {
-
         if (m_Data.TutorialDatas.Count == 0)
         {
-            //var configs = ConfigsAsset.GetConfigList<TutorialConfig>();
-            //foreach (var c in configs) c.Content = c.Content.Replace("\\n", "\n");
             var configsByCode = ConfigsAsset.GetConfigList<TutorialConfig>().GroupBy(e => e.Code).ToDictionary(e => e.Key, e => e.ToList());
 
             foreach (var code in configsByCode.Keys)

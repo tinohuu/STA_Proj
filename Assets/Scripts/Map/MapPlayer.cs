@@ -116,22 +116,9 @@ public class MapPlayer : MonoBehaviour
         //isRunning = false;
     }
 
-    [ContextMenu("Check")]
+
     public void OnClickRomote(float duration = 1)
     {
-        StartCoroutine(IOnClickRomote(duration));
-    }
-
-    IEnumerator IOnClickRomote(float duration)
-    {
-        yield return null;
-        Vector3[] corners = new Vector3[4];
-        MapScrollRect.content.GetWorldCorners(corners);
-        float width = corners[3].x - corners[0].x - 20; // Full screen width is 20 in world space
-        //var levels = FindObjectsOfType<MapLevel>();
-        //var curLevel = System.Array.Find(levels, e => e.Data.ID == levelID);
-        float levelWidth = transform.position.x - corners[0].x - 10;
-        if (duration == 0) MapScrollRect.normalizedPosition = new Vector3(levelWidth / width, MapScrollRect.normalizedPosition.y);
-        else MapScrollRect.DOHorizontalNormalizedPos(levelWidth / width, duration);
+        MapManager.Instance.MoveMap(transform.position, duration);
     }
 }

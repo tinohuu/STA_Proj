@@ -16,7 +16,7 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
     public static CrateManager Instance = null;
     CrateView m_CrateView;
     public bool EnableCrate = true;
-
+    public Crate CurrentCrate;
     public Type Mapmaker_ItemType => typeof(Crate);
     public string[] Mapmaker_InputInfos => new string[] { "Level ID" };
 
@@ -36,9 +36,9 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
             var crate = crates.Find(e => e.LevelID <= MapManager.Instance.Data.CompleteLevel);
             if (!m_CrateView && crate)
             {
-                Destroy(crate.gameObject);
                 m_CrateView = Instantiate(m_CrateViewPrefab, MapManager.Instance.UICanvas.transform).GetComponent<CrateView>();
                 m_CrateView.LevelID = crate.LevelID;
+                CurrentCrate = crate;
             }
         }
     }

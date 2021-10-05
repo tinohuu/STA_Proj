@@ -1622,6 +1622,7 @@ MonoBehaviour:
   - {fileID: 6000415815723976431}
   - {fileID: 6000415817163388936}
   m_CollectButton: {fileID: 6000415816711882338}
+  m_CrateRocketWindow: {fileID: 8883256271289068005, guid: 7413407cc8148ac4699de6d385fba35d, type: 3}
   LevelID: 0
 --- !u!114 &6000415817167348603
 MonoBehaviour:

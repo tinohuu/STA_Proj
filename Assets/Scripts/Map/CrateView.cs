@@ -16,6 +16,7 @@ public class CrateView : MonoBehaviour
     [SerializeField] GameObject m_BackgroundFront;
     [SerializeField] Transform[] m_CropGroups = new Transform[3];
     [SerializeField] ButtonAnimator m_CollectButton;
+    [SerializeField] GameObject m_CrateRocketWindow;
 
     int m_PickTimes = 10;
     List<CrateCrop> m_CrateCrops = new List<CrateCrop>();
@@ -150,6 +151,8 @@ public class CrateView : MonoBehaviour
         CrateManager.Instance.Collect(LevelID);
 
         GetComponent<WindowAnimator>().Close();
+
+        Window.CreateWindowPrefab(m_CrateRocketWindow);
         //m_CrateCrops.ForEach(x => x.transform.DOJump(m_CollectButton.transform.position, 1, 1, 1));
     }
 }

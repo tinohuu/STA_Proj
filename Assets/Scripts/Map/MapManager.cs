@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using STA.Mapmaker;
+using DG.Tweening;
 
 public class MapManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] GameObject m_MapmakerPrefab;
     [SerializeField] GameObject m_MapImagePrefab;
     [SerializeField] RectTransform m_MapImageGroup;
+    [SerializeField] ScrollRect m_ScrollRect;
     public Canvas UICanvas;
 
     [Header("Data")]
@@ -24,6 +26,7 @@ public class MapManager : MonoBehaviour
 
     public static MapManager Instance = null;
     public List<Image> mapImages = new List<Image>();
+
     GameObject mapMaker;
 
     private void Awake()
@@ -33,7 +36,6 @@ public class MapManager : MonoBehaviour
         StageConfigs = ConfigsAsset.GetConfigList<StageConfig>();
         CurMapStageConfigs = MapManager.Instance.StageConfigs.Where(e => e.ChapterNum == MapManager.Instance.MapID).ToList();
         FunctionConfigsByFuncID = ConfigsAsset.GetConfigList<FunctionConfig>().ToDictionary(p => p.FunctionID);
-
 
         UpdateView();
     }
@@ -62,17 +64,35 @@ public class MapManager : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(m_MapImageGroup);
     }
 
-
-
     public void SetProgress(float ratio)
     {
         Data.CompleteLevel = CurMapStageConfigs[0].LevelID + Mathf.CeilToInt(ratio * (CurMapStageConfigs.Last().LevelID - CurMapStageConfigs[0].LevelID));
     }
 
-    public static void SetRating(int level, int rating)
+    public void MoveMap(Vector3 target, float duration = 1)
     {
-
+        StartCoroutine(IMoveMap(target, duration));
     }
+    IEnumerator IMoveMap(Vector3 target, float duration)
+    {
+        yield return null;
+        Vector3[] corners = new Vector3[4];
+        m_ScrollRect.content.GetWorldCorners(corners);
+        float width = corners[3].x - corners[0].x - 20; // Full screen width is 20 in world space
+        //var levels = FindObjectsOfType<MapLevel>();
+        //var curLevel = System.Array.Find(levels, e => e.Data.ID == levelID);
+        float levelWidth = target.x - corners[0].x - 10;
+
+        if (duration == 0) m_ScrollRect.normalizedPosition = new Vector3(levelWidth / width, m_ScrollRect.normalizedPosition.y);
+        else
+        {
+            m_ScrollRect.DOKill();
+            m_ScrollRect.DOHorizontalNormalizedPos(levelWidth / width, duration)
+                .OnStart(() => { m_ScrollRect.horizontal = false; } )
+                .OnComplete(() => { m_ScrollRect.horizontal = true; } );
+        }
+    }
+
 }
 
 
