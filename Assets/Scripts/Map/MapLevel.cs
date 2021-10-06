@@ -33,7 +33,7 @@ public class MapLevel : MonoBehaviour, IPointerClickHandler
         //Data.Rating = IsOpen && Data.ID != MapManager.Instance.Data.CompleteLevel + 1 ? Random.Range(3, 4) : 0; // Test: temp rating
 
         foreach (SpriteRenderer star in StarSpriteRenderers) star.color = IsOpen ? new Color(1, 1, 1, 0.5f) : Color.clear;
-        for (int i = 0; i < Data.Rating; i++) StarSpriteRenderers[i].color = Color.white;
+        for (int i = 0; i < Mathf.Clamp(Data.Rating, 0, 3); i++) StarSpriteRenderers[i].color = Color.white;
         Frame.SetActive(Data.Rating >= 3);
     }
 

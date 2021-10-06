@@ -1615,7 +1615,9 @@ MonoBehaviour:
   m_FruitGroup: {fileID: 6000415815536042101}
   m_NumberText: {fileID: 6000415815720807647}
   m_Target: {fileID: 6000415815811182480}
-  m_Crate: {fileID: 6000415816258888858}
+  m_Crate: {fileID: 6000415816258888857}
+  m_Title: {fileID: 6000415816943061614}
+  m_Subtitle: {fileID: 6000415816492840978}
   m_BackgroundFront: {fileID: 6000415815536667022}
   m_CropGroups:
   - {fileID: 6000415816016844470}
@@ -1623,6 +1625,22 @@ MonoBehaviour:
   - {fileID: 6000415817163388936}
   m_CollectButton: {fileID: 6000415816711882338}
   m_CrateRocketWindow: {fileID: 8883256271289068005, guid: 7413407cc8148ac4699de6d385fba35d, type: 3}
+  BoxSprites:
+  - {fileID: 21300000, guid: 39962430aa8f6914487fa44ef54570b5, type: 3}
+  - {fileID: 21300000, guid: 3e2bacce67df3824eb683383a5889d33, type: 3}
+  - {fileID: 21300000, guid: 08cdda9ab08c0a64683e1fc53e430053, type: 3}
+  - {fileID: 21300000, guid: d77367b515240e04ea164bbaf3f6bac7, type: 3}
+  TitleSprite:
+  - {fileID: 21300000, guid: 88f142d5dfa5806438b031f94fb1a47b, type: 3}
+  - {fileID: 21300000, guid: 744a15502dfed1741b1a67e6111ad794, type: 3}
+  - {fileID: 21300000, guid: 31498a3afa85d1541bc73d94a5bef730, type: 3}
+  - {fileID: 21300000, guid: 2e5ad0a2bbc252841bca07804a0122e8, type: 3}
+  SubtitleSprite:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  Quality: 0
   LevelID: 0
 --- !u!114 &6000415817167348603
 MonoBehaviour:

@@ -90,6 +90,18 @@ public class SaveManager : MonoBehaviour
         SaveSystem.Save(Save);
     }
 
+    private void OnDisable()
+    {
+        if (StopSave) return;
+        SaveSystem.Save(Save);
+    }
+
+    [ContextMenu("Save")]
+    public void SaveData()
+    {
+        SaveSystem.Save(Save);
+    }
+
     void AttrBindAll()
     {
         MonoBehaviour[] monos = FindObjectsOfType<MonoBehaviour>();

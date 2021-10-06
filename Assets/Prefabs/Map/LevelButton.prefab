@@ -176,7 +176,7 @@ MonoBehaviour:
   Frame: {fileID: 7195397151336389696}
   LevelText: {fileID: 3710904890759868779}
   Data:
-    Order: 0
+    ID: 0
     Rating: 0
 --- !u!114 &1315074089132168761
 MonoBehaviour:
@@ -193,10 +193,12 @@ MonoBehaviour:
   Scale: 1.3
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
+  Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!61 &2337452778883529438
 BoxCollider2D:
   m_ObjectHideFlags: 0

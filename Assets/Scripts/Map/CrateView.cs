@@ -12,18 +12,28 @@ public class CrateView : MonoBehaviour
     [SerializeField] Transform m_FruitGroup;
     [SerializeField] TMP_Text m_NumberText;
     [SerializeField] Transform m_Target;
-    [SerializeField] Transform m_Crate;
+    [SerializeField] Image m_Crate;
+    [SerializeField] Image m_Title;
     [SerializeField] GameObject m_BackgroundFront;
     [SerializeField] Transform[] m_CropGroups = new Transform[3];
     [SerializeField] ButtonAnimator m_CollectButton;
     [SerializeField] GameObject m_CrateRocketWindow;
+    [SerializeField] Sprite[] BoxSprites = new Sprite[4];
+    [SerializeField] Sprite[] TitleSprite = new Sprite[4];
 
+    [HideInInspector] public Crate.Quality Quality = Crate.Quality.Wood;
     int m_PickTimes = 10;
     List<CrateCrop> m_CrateCrops = new List<CrateCrop>();
     public int LevelID = 1;
 
     void Start()
     {
+        m_PickTimes = (int)Mathf.Pow(2, (int)Quality);
+        m_NumberText.text = m_PickTimes.ToString();
+        m_Crate.sprite = BoxSprites[(int)Quality];
+        m_Title.sprite = TitleSprite[(int)Quality];
+
+
         if (CrateManager.Instance.Data.ResumedRewardTypes.Count == 0)
         {
             List<RewardType> rewardTypes = new List<RewardType>();
@@ -127,7 +137,7 @@ public class CrateView : MonoBehaviour
 
     public void ShakeCrate()
     {
-        m_Crate.DOShakeScale(0.2f, 0.2f, 2);
+        m_Crate.transform.DOShakeScale(0.2f, 0.2f, 2);
     }
 
     public void Collect()

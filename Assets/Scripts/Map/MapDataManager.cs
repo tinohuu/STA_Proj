@@ -8,6 +8,7 @@ public class MapDataManager : MonoBehaviour
     [SavedData] public MapManagerData Data = new MapManagerData();
     public static MapDataManager Instance;
     public int RetriedLevel = 0;
+    public int NewRatings = 0;
 
     private void Awake()
     {
@@ -33,6 +34,8 @@ public class MapDataManager : MonoBehaviour
                 Data.MapLevelDatas.Add(new MapLevelData(i + 1));
             }
         }
+
+        //Data.MapLevelDatas.Find(e => e.ID == 85).Rating = 63;
     }
 
     public static MapLevelData GetLevelData(int levelID)
@@ -58,7 +61,11 @@ public class MapDataManager : MonoBehaviour
     {
         Debug.Log("MapDataManager::SetLevelRating");
         if (levelID <= Instance.Data.MapLevelDatas.Count)
+        {
+            Instance.NewRatings = rating - Instance.Data.MapLevelDatas[levelID - 1].Rating;
             Instance.Data.MapLevelDatas[levelID - 1].Rating = rating;
+
+        }
 
         if (levelID > Instance.Data.CompleteLevel) Instance.Data.CompleteLevel = levelID;
     }

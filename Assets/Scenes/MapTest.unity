@@ -763,7 +763,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 1226231663
   m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingOrder: 4
 --- !u!95 &199755366
 Animator:
   serializedVersion: 3
@@ -820,8 +820,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -101233887
-  m_SortingLayer: 0
+  m_SortingLayerID: 1226231663
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 099dfa28969844f458a1030028bc64df, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -4843,6 +4843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c8b58a1d225184ca72886f49620b8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_CrateProgressBarPrefab: {fileID: 1200385885564321929, guid: d65ec560e4ce2e341a90d84475296765, type: 3}
   cratePrefab: {fileID: 7274402190528635073, guid: 8cb1269cfe99a7744b4b3d2eb79ab32a, type: 3}
   crateGroup: {fileID: 1436389699}
   m_CrateViewPrefab: {fileID: 6000415817167348606, guid: d9a3f1076129d844e92d37c34b30de94, type: 3}
@@ -4851,8 +4852,9 @@ MonoBehaviour:
     ResumedRewardTypes: 
     ResumedCounts: 
     ResumedIndexes: 
-  EnableCrate: 1
+  EnableCrate: 0
   CurrentCrate: {fileID: 0}
+  ForceShowLevelProgress: 0
 --- !u!1 &1322951875
 GameObject:
   m_ObjectHideFlags: 0
@@ -8630,12 +8632,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: NewRatings
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.CompleteLevel
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.SelectedLevel
-      value: 100
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: Data.MapLevelDatas.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1392232513, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_Camera
@@ -8691,7 +8701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2839194961365692647, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: ClearOnAwake
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2839194961471910075, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_IsActive

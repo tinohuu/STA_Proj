@@ -7,6 +7,7 @@ using System.Linq;
 
 public class CrateManager : MonoBehaviour, IMapmakerModule
 {
+    [SerializeField] public GameObject m_CrateProgressBarPrefab;
     [SerializeField] GameObject cratePrefab;
     [SerializeField] Transform crateGroup;
     [SerializeField] GameObject m_CrateViewPrefab;
@@ -17,6 +18,7 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
     CrateView m_CrateView;
     public bool EnableCrate = true;
     public Crate CurrentCrate;
+    public bool ForceShowLevelProgress = false;
     public Type Mapmaker_ItemType => typeof(Crate);
     public string[] Mapmaker_InputInfos => new string[] { "Level ID" };
 
@@ -25,7 +27,7 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
         if (!Instance) Instance = this;
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
 
-        ShowCrateView();
+        //ShowCrateView();
     }
 
     void ShowCrateView()
@@ -41,6 +43,14 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
                 CurrentCrate = crate;
             }
         }
+    }
+
+    public void ShowCrateView(Crate crate)
+    {
+        m_CrateView = Instantiate(m_CrateViewPrefab, MapManager.Instance.UICanvas.transform).GetComponent<CrateView>();
+        m_CrateView.LevelID = crate.LevelID;
+        m_CrateView.Quality = crate.CrateQuality;
+        CurrentCrate = crate;
     }
 
     public void Collect(int levelID)
