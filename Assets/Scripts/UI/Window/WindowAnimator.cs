@@ -59,7 +59,7 @@ public class WindowAnimator : Window
 
     [ContextMenu("Fade In")] public void FadeIn() { StopAllCoroutines(); StartCoroutine(IFadeIn()); }
     [ContextMenu("Fade Out")] void FadeOut_Menu() { StopAllCoroutines(); StartCoroutine(IFadeOut(false)); }
-    public void FadeOut(bool disable = false) { StopAllCoroutines(); StartCoroutine(IFadeOut(disable)); }
+    public void FadeOut(bool destroy = false, bool disable = true) { StopAllCoroutines(); StartCoroutine(IFadeOut(destroy, disable)); }
 
     public void Close()
     {
@@ -97,7 +97,7 @@ public class WindowAnimator : Window
         }
     }
 
-    IEnumerator IFadeOut(bool destroy = false)
+    IEnumerator IFadeOut(bool destroy = false, bool disable = true)
     {
 
         SoundManager.Instance.PlaySFX("uiPanelClose");
@@ -138,13 +138,8 @@ public class WindowAnimator : Window
         else
         {
             yield return new WaitForSeconds(tween.Duration());
-            gameObject.SetActive(false);
+            if (disable) gameObject.SetActive(false);
         }
-    }
-
-    void Exit()
-    {
-
     }
 
     

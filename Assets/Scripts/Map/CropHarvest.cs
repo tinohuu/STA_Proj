@@ -19,7 +19,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     [SerializeField] TMP_Text m_SecondaryText;
     [SerializeField] Transform m_TextGroup;
     [SerializeField] TMP_Text m_Summary;
-    [SerializeField] GameObject m_HarvestParticle;
+    [SerializeField] ParticleSystem m_HarvestParticle;
     [SerializeField] GameObject m_Rocket;
     [SerializeField] GameObject m_CoinBoost;
 
@@ -67,6 +67,9 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
             CropManager.Instance.IsMature = true;
             CropManager.Instance.UpdateCropsAnimator(true);
             m_TextGroupTween = m_TextGroup.DOScale(1.1f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+            var configs = CropManager.Instance.CropConfigs.FindAll(e => e.Level <= MapManager.Instance.Data.CompleteLevel);
+            var textureModule = m_HarvestParticle.textureSheetAnimation;
+            textureModule.startFrame = new ParticleSystem.MinMaxCurve(0, configs.Count * 3f / (textureModule.numTilesX * textureModule.numTilesY));
         }
         m_MainText.text = timeSpan.TotalSeconds > 0 ? "Next Harvest" : "Harvest";
         m_SecondaryText.text = timeSpan.TotalSeconds > 0 ? timeSpan.ToString(@"mm\:ss") : "Now";
@@ -75,7 +78,9 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
         //m_TextGroup.enabled = timeSpan.TotalSeconds <= 0;
         //m_TextGroup.transform.localScale = Vector3.one;
 
-        m_HarvestParticle.SetActive(timeSpan.TotalSeconds <= 0);
+        m_HarvestParticle.gameObject.SetActive(timeSpan.TotalSeconds <= 0);
+
+
 
         //Image.color = timeSpan.TotalSeconds > 0 ? Color.white : Color.white;
         m_Button.interactable = timeSpan.TotalSeconds <= 0;
@@ -96,7 +101,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     {
         if (Reward.Data[RewardType.Rocket] > 0)
         {
-            CropManager.Instance.Data.TimeBoostUntil = TimeManager.Instance.RealNow + TimeSpan.FromDays(Reward.Data[RewardType.Rocket]);
+            CropManager.Instance.Data.TimeBoostUntil = TimeManager.Instance.RealNow + TimeSpan.FromHours(Reward.Data[RewardType.Rocket]);
             Reward.Data[RewardType.Rocket] = 0;
         }
         
@@ -106,7 +111,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     {
         if (Reward.Data[RewardType.Clock] > 0)
         {
-            MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(59);
+            MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(59 + 3);
             Reward.Data[RewardType.Rocket] = 0;
         }
     }

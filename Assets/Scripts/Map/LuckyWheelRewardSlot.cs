@@ -23,7 +23,7 @@ public class LuckyWheelRewardSlot : MonoBehaviour
 
         text.gameObject.SetActive(true);
 
-        if (type == RewardType.Rocket) text.text = string.Format(text.text, (count * 24).ToString());
+        if (type == RewardType.Rocket) text.text = string.Format(text.text, count.ToString());
         else text.text = string.Format(text.text, count.ToString("N0"));
 
         RewardText = text.text;

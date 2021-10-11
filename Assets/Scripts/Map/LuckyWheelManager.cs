@@ -33,6 +33,16 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
         }
     }
 
+    public void ShowView(LuckyWheel wheel)
+    {
+        if (wheel && EnableWheel)
+        {
+            var view = Instantiate(m_WheelViewPrefab, MapManager.Instance.UICanvas.transform).GetComponent<LuckyWheelView>();
+            //var view = WindowManager.Instance.OpenView(m_WheelViewPrefab).GetComponent<LuckyWheelView>();
+            view.SetWheel(wheel);
+        }
+    }
+
     LuckyWheel GetAvailableWheel()
     {
         var wheels = m_WheelGroup.GetComponentsInChildren<LuckyWheel>();
@@ -101,6 +111,11 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
             }
         }
         throw new Exception();
+    }
+
+    public void ParentInGroup(LuckyWheel luckyWheel)
+    {
+        luckyWheel.transform.SetParent(m_WheelGroup);
     }
 
     #region Mapmaker

@@ -1,0 +1,13 @@
+[
+  {
+    "StepsTotal": 300,
+    "StepWood": 40,
+    "StepSliver": 160,
+    "StepGold": 200,
+    "StepDiamond": 240,
+    "PicksWood": 1,
+    "PicksSliver": 2,
+    "PicksGold": 4,
+    "PicksDiamond": 10
+  }
+]

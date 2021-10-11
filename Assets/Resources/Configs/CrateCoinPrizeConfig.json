@@ -1,0 +1,29 @@
+[
+  {
+    "ID": 1,
+    "Base": 500,
+    "MultiplierMin": 2,
+    "MultiplierMax": 6,
+    "Weight": 35,
+    "StepMultiplierMin": 0,
+    "StepMultiplierMax": 1
+  },
+  {
+    "ID": 2,
+    "Coin": 500,
+    "BaseMin": 7,
+    "BaseMax": 12,
+    "Weight": 55,
+    "RangeMin": 1,
+    "RangeMax": 1
+  },
+  {
+    "ID": 3,
+    "Coin": 500,
+    "BaseMin": 13,
+    "BaseMax": 20,
+    "Weight": 10,
+    "RangeMin": 1,
+    "RangeMax": 1
+  }
+]

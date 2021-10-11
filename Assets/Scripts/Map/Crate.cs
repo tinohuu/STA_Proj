@@ -13,11 +13,12 @@ public class Crate : MonoBehaviour
 
     [Header("Ref")]
     public GameObject Box;
-    public GameObject Rocket;
+    public GameObject Reward;
 
     [SerializeField] Sprite[] BoxSprites = new Sprite[4];
     [SerializeField] SpriteRenderer BoxRenderer;
     [SerializeField] GameObject Bar;
+    [SerializeField] GameObject m_CrateProgressWindow;
 
     [Header("Debug")]
     public int LevelID = 1;
@@ -25,96 +26,29 @@ public class Crate : MonoBehaviour
 
     TMP_Text m_Text;
     ButtonAnimator m_ButtonAnimator;
+
+    public int RatingCount { get; private set; }
     private void Start()
     {
         m_Text = GetComponentInChildren<TMP_Text>(true);
         m_ButtonAnimator = GetComponent<ButtonAnimator>();
 
-        ShowProgressCoroutine();
-
-        var cropConfig = CropManager.Instance.LevelToCropConfig(LevelID);
-        m_ButtonAnimator.Interactable = cropConfig.Level <= MapManager.Instance.Data.CompleteLevel;
-        m_ButtonAnimator.OnClick.AddListener(() => CrateManager.Instance.ShowCrateView(this));
+        UpdateView();
     }
 
 
-    void ShowProgress()
+    public void UpdateView()
     {
-        var cropConfig = CropManager.Instance.LevelToCropConfig(LevelID);
-
-        if (MapManager.Instance.Data.CompleteLevel >= cropConfig.MinLevel)
-        {
-            int curRatingCount = 0;
-            for (int i = cropConfig.MinLevel - 1; i < cropConfig.Level; i++)
-            {
-                var data = MapDataManager.Instance.Data.MapLevelDatas[i];
-                curRatingCount += data.Rating;
-                if (data.Rating == 0) break;
-            }
-            int oldRatingCount = curRatingCount - MapDataManager.Instance.NewRatings;
-
-            // todo: test crate quality solution
-            int levelCount = cropConfig.Level - cropConfig.MinLevel + 1;
-            int totalRating = levelCount * 3;
-
-            int oldQuality = 0;
-            int curQuality = 0;
-            int oldQualityPoint = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                //int lastQualityPoint = Mathf.RoundToInt(totalRating * i / 4f);
-                int qualityPoint = Mathf.RoundToInt(totalRating * i / 4f);
-
-                if (oldRatingCount >= qualityPoint) oldQuality = i;
-                if (curRatingCount >= qualityPoint)
-                {
-                    oldQualityPoint = qualityPoint;
-                    curQuality = i;
-                }
-            }
-
-            var levelButton = MapLevelManager.Instance.GetLevelButton(MapManager.Instance.Data.CompleteLevel);
-            var bar = Instantiate(CrateManager.Instance.m_CrateProgressBarPrefab, levelButton.transform).GetComponent<CrateProgressBar>();
-
-            bar.Set(oldRatingCount, curRatingCount, (Quality)oldQuality, false);
-            m_Text.text = oldRatingCount.ToString();
-            BoxRenderer.sprite = BoxSprites[oldQuality];
-
-            if (MapDataManager.Instance.NewRatings > 0 || true)
-            {
-                Sequence sequence = DOTween.Sequence();
-                sequence.AppendInterval(1);
-
-                for (int i = oldRatingCount; i <= curRatingCount; i++)
-                {
-                    Quality quality = oldQualityPoint - i >= 0 ? (Quality)curQuality : (Quality)oldQuality;
-                    string text = i.ToString();
-                    sequence.AppendCallback(() =>
-                    {
-                        bar.Set(i, curRatingCount, quality);
-                        m_Text.text = text;
-                        BoxRenderer.sprite = BoxSprites[(int)quality];
-                    });
-                    sequence.AppendInterval(0.25f);
-                }
-                sequence.AppendInterval(2);
-                sequence.AppendCallback(() => bar.Close());
-                sequence.Play();
-            }
-        }
+        StartCoroutine(IUpdateView());
     }
 
-    [ContextMenu("Test")]
-    void ShowProgressCoroutine()
-    {
-        StartCoroutine(IShowProgress());
-    }
-
-    IEnumerator IShowProgress()
+    IEnumerator IUpdateView()
     {
         var cropConfig = CropManager.Instance.LevelToCropConfig(LevelID);
+        m_ButtonAnimator.Interactable = LevelID > CrateManager.Instance.Data.CollectedCrateLevel;
+        m_ButtonAnimator.OnClick.AddListener(() => OnClickCrate());
 
-        if (MapManager.Instance.Data.CompleteLevel >= cropConfig.MinLevel)
+        if (LevelID > CrateManager.Instance.Data.CollectedCrateLevel && MapManager.Instance.Data.CompleteLevel >= cropConfig.MinLevel)
         {
 
             int curRatingCount = 0;
@@ -125,6 +59,8 @@ public class Crate : MonoBehaviour
                 Debug.Log(data.ID+":"+data.Rating);
                 //if (data.Rating == 0) break;
             }
+            RatingCount = curRatingCount;
+
             int oldRatingCount = curRatingCount - MapDataManager.Instance.NewRatings;
 
             // todo: test crate quality solution
@@ -134,10 +70,16 @@ public class Crate : MonoBehaviour
             int oldQuality = 0;
             int curQuality = 0;
             int oldQualityPoint = 0;
+
+            var publicConfig = ConfigsAsset.GetConfigList<CratePublicConfig>()[0];
+            float[] qualitySteps = new float[] { publicConfig.StepWood, publicConfig.StepSliver, publicConfig.StepGold, publicConfig.PicksDiamond };
+            System.Array.ForEach(qualitySteps, e => e /= publicConfig.StepsTotal);
+
             for (int i = 0; i < 4; i++)
             {
                 //int lastQualityPoint = Mathf.RoundToInt(totalRating * i / 4f);
-                int qualityPoint = Mathf.RoundToInt(totalRating * i / 4f);
+                int qualityPoint = Mathf.RoundToInt(totalRating * qualitySteps[i]);
+                if (qualityPoint == oldQualityPoint) qualityPoint++;
 
                 if (oldRatingCount >= qualityPoint) oldQuality = i;
                 if (curRatingCount >= qualityPoint)
@@ -188,6 +130,21 @@ public class Crate : MonoBehaviour
         else
         {
             BoxRenderer.color = new Color(1, 1, 1, 0.5f);
+            Bar.gameObject.SetActive(false);
+        }
+    }
+
+    void OnClickCrate()
+    {
+        var cropConfig = CropManager.Instance.LevelToCropConfig(LevelID);
+        if (cropConfig.Level <= MapManager.Instance.Data.CompleteLevel)
+        {
+            CrateManager.Instance.ShowCrateView(this);
+        }
+        else if (cropConfig.MinLevel <= MapManager.Instance.Data.CompleteLevel)
+        {
+            var window = Window.CreateWindowPrefab(m_CrateProgressWindow).GetComponent<CrateProgressWindow>();
+            window.Initialize(this);
         }
     }
 }

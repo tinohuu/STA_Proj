@@ -468,7 +468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MaxBarWidth: 4
   Box: {fileID: 7274402191585770952}
-  Rocket: {fileID: 7664991996936657812}
+  Reward: {fileID: 7664991996936657812}
   BoxSprites:
   - {fileID: 21300000, guid: 99c40609b49ca774b82875485fd5559a, type: 3}
   - {fileID: 21300000, guid: d6adc8d7a684d294d8d421fe15273172, type: 3}
@@ -476,6 +476,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e34b745861696af43b173d361fd3baeb, type: 3}
   BoxRenderer: {fileID: 7274402191585770954}
   Bar: {fileID: 277812994167825812}
+  m_CrateProgressWindow: {fileID: 1171979147239460510, guid: b018dd631fb14bb4fa3384fb5a5b558d, type: 3}
   LevelID: 1
   CrateQuality: 0
 --- !u!210 &3962377559071694414
@@ -681,7 +682,7 @@ SpriteRenderer:
   m_SortingLayerID: 1226231663
   m_SortingLayer: 1
   m_SortingOrder: 3
-  m_Sprite: {fileID: 59762828546937834, guid: f3ba9d9a9f0ec4142b5f0ad452bff20f, type: 3}
+  m_Sprite: {fileID: 5412631424334258285, guid: f3ba9d9a9f0ec4142b5f0ad452bff20f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

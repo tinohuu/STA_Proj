@@ -271,7 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -315,14 +315,14 @@ MonoBehaviour:
   m_PartOfParent: 0
   m_IgnoreSelfGraphic: 0
   m_IgnoreSelfStencil: 0
---- !u!1 &63680499 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5847001935950742583, guid: 6ca5d66e8fa9f1441a60ad6b381e61be, type: 3}
-  m_PrefabInstance: {fileID: 1082743604}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &63680500 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5847001935950742986, guid: 6ca5d66e8fa9f1441a60ad6b381e61be, type: 3}
+  m_PrefabInstance: {fileID: 1082743604}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &63680502 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5847001935950742581, guid: 6ca5d66e8fa9f1441a60ad6b381e61be, type: 3}
   m_PrefabInstance: {fileID: 1082743604}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &65151445
@@ -3755,6 +3755,10 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 1975833679
       objectReference: {fileID: 0}
+    - target: {fileID: 5847001935950742581, guid: 6ca5d66e8fa9f1441a60ad6b381e61be, type: 3}
+      propertyPath: prewarm
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5847001935950742583, guid: 6ca5d66e8fa9f1441a60ad6b381e61be, type: 3}
       propertyPath: m_Name
       value: FXHarvestButton
@@ -3781,7 +3785,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5847001935950742986, guid: 6ca5d66e8fa9f1441a60ad6b381e61be, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -100
+      value: -271
       objectReference: {fileID: 0}
     - target: {fileID: 5847001935950742986, guid: 6ca5d66e8fa9f1441a60ad6b381e61be, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4166,7 +4170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5065,7 +5069,7 @@ MonoBehaviour:
   m_SecondaryText: {fileID: 1798049273}
   m_TextGroup: {fileID: 685867973}
   m_Summary: {fileID: 1135818865}
-  m_HarvestParticle: {fileID: 63680499}
+  m_HarvestParticle: {fileID: 63680502}
   m_Rocket: {fileID: 1759552700}
   m_CoinBoost: {fileID: 304722659}
   _harvestTime: 
@@ -6695,7 +6699,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -6772,7 +6776,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -7708,7 +7712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -8637,11 +8641,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.CompleteLevel
-      value: 0
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.SelectedLevel
-      value: 1
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.MapLevelDatas.Array.size
@@ -8701,7 +8705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2839194961365692647, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: ClearOnAwake
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2839194961471910075, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_IsActive
@@ -8742,6 +8746,18 @@ PrefabInstance:
     - target: {fileID: 4958890202680649138, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6409090549313068878, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6409090549313068878, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6409090549313068878, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}

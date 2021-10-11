@@ -28,7 +28,24 @@ public class CrateView : MonoBehaviour
 
     void Start()
     {
-        m_PickTimes = (int)Mathf.Pow(2, (int)Quality);
+        //m_PickTimes = (int)Mathf.Pow(2, (int)Quality);
+        var publicConfig = ConfigsAsset.GetConfigList<CratePublicConfig>()[0];
+        switch (Quality)
+        {
+            case Crate.Quality.Wood:
+                m_PickTimes = publicConfig.PicksWood;
+                break;
+            case Crate.Quality.Silver:
+                m_PickTimes = publicConfig.PicksSliver;
+                break;
+            case Crate.Quality.Gold:
+                m_PickTimes = publicConfig.PicksGold;
+                break;
+            case Crate.Quality.Diamond:
+                m_PickTimes = publicConfig.PicksDiamond;
+                break;
+        }
+
         m_NumberText.text = m_PickTimes.ToString();
         m_Crate.sprite = BoxSprites[(int)Quality];
         m_Title.sprite = TitleSprite[(int)Quality];
@@ -160,9 +177,21 @@ public class CrateView : MonoBehaviour
 
         CrateManager.Instance.Collect(LevelID);
 
-        GetComponent<WindowAnimator>().Close();
+        var window = GetComponent<WindowAnimator>();
 
-        Window.CreateWindowPrefab(m_CrateRocketWindow);
-        //m_CrateCrops.ForEach(x => x.transform.DOJump(m_CollectButton.transform.position, 1, 1, 1));
+
+        window.FadeOut(false, false);
+
+        MapManager.Instance.MoveMap(CrateManager.Instance.CurrentCrate.transform.position);
+
+        //CrateManager.Instance.CurrentCrate.Box.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+
+        CrateManager.Instance.CurrentCrate.Reward.SetActive(true);
+
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(CropManager.Instance.HarvestButton.position);
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+
+        CrateManager.Instance.CurrentCrate.Reward.transform.DOJump(worldPos, 5, 1, 1).SetDelay(1)
+            .OnComplete(() => { CrateManager.Instance.CurrentCrate.UpdateView(); Reward.Data[RewardType.Clock]++; window.Close(); });
     }
 }

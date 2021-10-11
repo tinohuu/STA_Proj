@@ -84,7 +84,7 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
         var configs = JsonExtensions.JsonToList<Mapmaker_CrateConfig>(json);
         foreach (var config in configs)
         {
-            if (config.LevelID <= Data.CollectedCrateLevel) continue;
+            //if (config.LevelID <= Data.CollectedCrateLevel) continue;
             var crate = Instantiate(cratePrefab, crateGroup).GetComponent<Crate>();
             crate.transform.localPosition = config.LocPos;
             crate.LevelID = config.LevelID;
