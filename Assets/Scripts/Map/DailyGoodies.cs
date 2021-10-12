@@ -78,7 +78,8 @@ public class DailyGoodies : MonoBehaviour
         // Then box jump
         var box = boxGroup.GetChild(curStkDays - 1).GetComponent<DailyGoodiesBox>();
         //sequence.Append(box.Box.transform.DOScale(box.Box.transform.localScale * 1.5f, 1.25f)).SetEase(Ease.InSine);
-        sequence.Append(box.BoxParent.transform.DOJump(Vector3.back * 5 + Vector3.down * 2, 3, 1, 1.25f).OnStart(() => box.SetState("Ready"))).OnComplete(() => box.SetState("Idle"));
+        sequence.AppendCallback(() => box.SetState("Ready"));
+        sequence.Append(box.BoxParent.transform.DOJump(Vector3.back * 5 + Vector3.down * 2, 3, 1, 1f).SetDelay(0.2f).OnComplete(() => box.SetState("Idle")));
         sequence.AppendCallback(() => OpenBoxButton.gameObject.SetActive(true));
         OpenBoxButton.onClick.AddListener(() => StartCoroutine(ShowBox(box)));
 

@@ -35,7 +35,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
     // Update is called once per frame
     void Update()
     {
-        if (TimeManager.Instance.RealNow.Date != Data.LastGoodyTime.Date && !view && !IsSuspended && !TimeManager.Instance.IsGettingTime && EnableDailyGoodies) // for local time specific + Data.CheckedSystemOffset.ToTimeSpan();
+        if (TimeManager.Instance.RealNow.Date > Data.LastGoodyTime.Date && !view && !IsSuspended && !TimeManager.Instance.IsGettingTime && EnableDailyGoodies) // for local time specific + Data.CheckedSystemOffset.ToTimeSpan();
         {
             view = Instantiate(viewPrefab, MapManager.Instance.UICanvas.transform);
             //view = WindowManager.Instance.OpenView(viewPrefab);
@@ -149,7 +149,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
     public void ResetTime(DateTime now)
     {
         TimeDebugText.Log("Reset goodies time");
-        Data.LastGoodyTime = now;
+        Data.LastGoodyTime = now.Date;
     }
 
     public void BindSavedData()

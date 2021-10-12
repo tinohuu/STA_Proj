@@ -24,8 +24,6 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
     private void Awake()
     {
         if (!Instance) Instance = this;
-        
-
     }
 
     void Start()

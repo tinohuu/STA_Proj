@@ -52,7 +52,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     private void OnDisable()
     {
         RewardManager.Instance.OnValueChanged[(int)RewardType.Clock] -= (bool b) => CheckClock();
-        RewardManager.Instance.OnValueChanged[(int)RewardType.Rocket] = (bool b) => CheckRocket();
+        RewardManager.Instance.OnValueChanged[(int)RewardType.Rocket] -= (bool b) => CheckRocket();
     }
     
 
@@ -64,7 +64,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
         // Play mature animation in advance
         if (timeSpan.TotalSeconds <= 3 && !CropManager.Instance.IsMature && TimeManager.Instance.Data.CheckedAuthenticity == TimeAuthenticity.Authentic && !TimeManager.Instance.IsGettingTime)
         {
-            CropManager.Instance.IsMature = true;
+            CropManager.Instance.SetMature(true);
             CropManager.Instance.UpdateCropsAnimator(true);
             m_TextGroupTween = m_TextGroup.DOScale(1.1f, 0.5f).SetLoops(-1, LoopType.Yoyo);
             var configs = CropManager.Instance.CropConfigs.FindAll(e => e.Level <= MapManager.Instance.Data.CompleteLevel);
@@ -118,7 +118,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
 
     public void Harvest()
     {
-        CropManager.Instance.IsMature = false;
+        CropManager.Instance.SetMature(false);
 
         ResetTime(TimeManager.Instance.RealNow);
 

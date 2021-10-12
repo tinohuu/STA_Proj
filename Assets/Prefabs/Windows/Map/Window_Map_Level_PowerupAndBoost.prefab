@@ -1007,9 +1007,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2848093792817402436}
-        m_TargetAssemblyTypeName: CanvasGroupAnimator, Assembly-CSharp
-        m_MethodName: FadeOut
-        m_Mode: 6
+        m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
+        m_MethodName: Close
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1186,8 +1186,15 @@ MonoBehaviour:
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
   InverseOnFadeOut: 1
+  ShowPanel: 1
   CanCloseByPanel: 1
+  InQueue: 1
   IntervalMultiplerOnFadeOut: 0.01
+  FadeInOnEnable: 1
+  OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  FadeInDelay: 0
 --- !u!114 &2848093792817402438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1200,6 +1207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236eaab89c73e024ca56d868700d4514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_PlayButton: {fileID: 9046158046366849516}
   OrderText: {fileID: 1660451883733465662}
   StarGroup: {fileID: 3672022069859261651}
   CostText: {fileID: 4843890969251762360}
@@ -1733,31 +1741,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2155601411283606830}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2848093792817402438}
-        m_TargetAssemblyTypeName: MapLevelWindow, Assembly-CSharp
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2848093792817402436}
-        m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
-        m_MethodName: FadeOut
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!225 &5393408071806583496
 CanvasGroup:
   m_ObjectHideFlags: 0

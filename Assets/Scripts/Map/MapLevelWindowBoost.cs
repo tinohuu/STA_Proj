@@ -34,9 +34,9 @@ public class MapLevelWindowBoost : MonoBehaviour
     void UpdateMaxIndex()
     {
         int unlockedLevel = MapManager.Instance.Data.CompleteLevel + 1;
-        if (unlockedLevel >= MapManager.Instance.FunctionConfigsByFuncID[1022].FunctionParams)
+        if (unlockedLevel >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == 1022).FunctionParams)
             maxIndex = 2;
-        else if (unlockedLevel >= MapManager.Instance.FunctionConfigsByFuncID[1021].FunctionParams)
+        else if (unlockedLevel >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == 1021).FunctionParams)
             maxIndex = 1;
     }
 
@@ -74,10 +74,10 @@ public class MapLevelWindowBoost : MonoBehaviour
         GetComponentInParent<MapLevelWindow>().UpdateView();
     }
 
-    public int GetBoostModifer()
+    public int GetBoostModifer(bool hasFreeRound = false)
     {
-        if (BoostIndex == 0) return 1;
-        else if (BoostIndex == 1) return 2;
-        else return 4;
+        if (BoostIndex == 0) return hasFreeRound ? 0 : 1;
+        else if (BoostIndex == 1) return hasFreeRound ? 1 : 2;
+        else return hasFreeRound ? 2 : 4;
     }
 }

@@ -199,7 +199,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <sprite name="Back"> Quit App
+  m_text: <sprite name="Back"> Quit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 66f6d64e9cc1d2d47be11fffd522d955, type: 2}
@@ -759,7 +759,19 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2053610071}
         m_TargetAssemblyTypeName: ButtonAnimator, Assembly-CSharp
-        m_MethodName: QuitApp
+        m_MethodName: LoadScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: MapTest
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2712256434045723648}
+        m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
+        m_MethodName: Close
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -801,7 +813,7 @@ GameObject:
   - component: {fileID: 2712256434045723679}
   - component: {fileID: 2712256434045723648}
   m_Layer: 5
-  m_Name: Window_Menu
+  m_Name: Window_MenuGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

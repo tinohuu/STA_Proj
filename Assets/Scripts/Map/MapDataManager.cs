@@ -20,7 +20,7 @@ public class MapDataManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            SetLevelRating(1, 3);
+            SetLevelRating(STAGameManager.Instance.nLevelID, 3);
         }
     }
     public void UpdateLevelData()

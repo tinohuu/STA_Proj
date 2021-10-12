@@ -34,11 +34,12 @@ public class MapPlayer : MonoBehaviour
         MoveToLevel(curLevel, false);
 
         OnClickRomote(0);*/
+        //OnClickRomote(0);
     }
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.R)) StartCoroutine(IOnClickRomote()); 
+        if (Input.GetKeyDown(KeyCode.R)) OnClickRomote(0); 
     }
 
     void UpdaterRemoteView(Vector2 scrollRect = new Vector2())
@@ -105,9 +106,9 @@ public class MapPlayer : MonoBehaviour
         }
 
         int windowIndex = 0;
-        if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigsByFuncID[1021].FunctionParams)
+        if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == 1021).FunctionParams)
             windowIndex = 2;
-        else if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigsByFuncID[1012].FunctionParams)
+        else if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == 1012).FunctionParams)
             windowIndex = 1;
 
         MapLevelWindow panel = Window.CreateWindowPrefab(LevelWindowPrefabs[windowIndex]).GetComponent<MapLevelWindow>();
@@ -119,6 +120,12 @@ public class MapPlayer : MonoBehaviour
 
     public void OnClickRomote(float duration = 1)
     {
+        StartCoroutine(IOnClickRemote(duration));
+    }
+
+    IEnumerator IOnClickRemote(float duration)
+    {
+        yield return null;
         MapManager.Instance.MoveMap(transform.position, duration);
     }
 }

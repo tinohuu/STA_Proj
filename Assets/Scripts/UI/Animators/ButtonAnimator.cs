@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerClickHandler
@@ -71,4 +72,9 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         ShopManager.Instance.Open();
     }
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);//Instance.Open();
+    }
+
 }

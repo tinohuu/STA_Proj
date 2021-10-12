@@ -514,8 +514,15 @@ MonoBehaviour:
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
   InverseOnFadeOut: 1
+  ShowPanel: 1
   CanCloseByPanel: 1
+  InQueue: 1
   IntervalMultiplerOnFadeOut: 0
+  FadeInOnEnable: 1
+  OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  FadeInDelay: 0
 --- !u!114 &550030677977941861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -654,9 +661,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 550162522465760054}
-        m_TargetAssemblyTypeName: CanvasGroupAnimator, Assembly-CSharp
-        m_MethodName: FadeOut
-        m_Mode: 6
+        m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
+        m_MethodName: Close
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -693,10 +700,11 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!1 &550162523276661639
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,10 +963,11 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!1 &2450210034480771206
 GameObject:
   m_ObjectHideFlags: 0
@@ -1052,10 +1061,11 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!1 &4914952408228837358
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,10 +1159,11 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!1 &5109804908223236198
 GameObject:
   m_ObjectHideFlags: 0
@@ -1701,10 +1712,11 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls: []
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!1 &7189661939938930209
 GameObject:
   m_ObjectHideFlags: 0
@@ -2413,7 +2425,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4753587704867227723, guid: bca44753e71aa9544a8f1d1c0997fe5b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.0010757
+      value: -0.0010681152
       objectReference: {fileID: 0}
     - target: {fileID: 8787349568240100240, guid: bca44753e71aa9544a8f1d1c0997fe5b, type: 3}
       propertyPath: m_SizeDelta.x

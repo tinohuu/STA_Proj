@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class WindowAnimator : Window
@@ -14,11 +15,15 @@ public class WindowAnimator : Window
     public bool CanCloseByPanel = true;
     public bool InQueue = true;
     public float IntervalMultiplerOnFadeOut = 1;
+    public bool FadeInOnEnable = true;
 
     public static List<WindowAnimator> WindowQueue = new List<WindowAnimator>();
     public delegate void WindowHandler();
     public event WindowHandler OnFadeIn = null;
     public static event WindowHandler OnQueueChanged = null;
+
+    public UnityEvent OnWindowEnable;
+    public float FadeInDelay = 0;
 
     bool m_IsDestroying = false;
     //Coroutine currentCoroutine = null;
@@ -30,7 +35,10 @@ public class WindowAnimator : Window
     {
         ResetWinodws();
         //ResetWinodws();
-        FadeIn();
+
+        OnWindowEnable?.Invoke();
+
+        FadeIn(true);
     }
     private void OnDisable()
     {
@@ -57,7 +65,7 @@ public class WindowAnimator : Window
     }
 
 
-    [ContextMenu("Fade In")] public void FadeIn() { StopAllCoroutines(); StartCoroutine(IFadeIn()); }
+    [ContextMenu("Fade In")] public void FadeIn(bool onEnable = false) { StopAllCoroutines(); StartCoroutine(IFadeIn(onEnable)); }
     [ContextMenu("Fade Out")] void FadeOut_Menu() { StopAllCoroutines(); StartCoroutine(IFadeOut(false)); }
     public void FadeOut(bool destroy = false, bool disable = true) { StopAllCoroutines(); StartCoroutine(IFadeOut(destroy, disable)); }
 
@@ -67,7 +75,7 @@ public class WindowAnimator : Window
         FadeOut(true);
     }
 
-    IEnumerator IFadeIn()
+    IEnumerator IFadeIn(bool onEnable = false)
     {
         //SoundManager.Instance.PlaySFX("uiPanelOpen");
         CompleteWinodws();
@@ -81,9 +89,13 @@ public class WindowAnimator : Window
             }
             if (!WindowQueue.Contains(this)) WindowQueue.Add(this);
         }
+        OnQueueChanged?.Invoke();
+
+        if (onEnable && !FadeInOnEnable) yield break;
+        yield return new WaitForSeconds(FadeInDelay);
 
         OnFadeIn?.Invoke();
-        OnQueueChanged?.Invoke();
+
 
         foreach (WindowAnimatorElement window in Elements)
         {

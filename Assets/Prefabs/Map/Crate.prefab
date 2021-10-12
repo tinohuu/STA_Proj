@@ -31,7 +31,7 @@ Transform:
   - {fileID: 607393226558294557}
   - {fileID: 2180737438103228860}
   m_Father: {fileID: 7274402191585770955}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8871228880102376856
 SpriteRenderer:
@@ -265,12 +265,12 @@ GameObject:
   - component: {fileID: 1934989349634968200}
   - component: {fileID: 2191625998748581237}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Tick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1934989349634968200
 Transform:
   m_ObjectHideFlags: 0
@@ -278,12 +278,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4450634307530231333}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.086, y: -0.039, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 7274402191585770955}
-  m_RootOrder: 0
+  m_Father: {fileID: 7274402190528635072}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2191625998748581237
 SpriteRenderer:
@@ -324,8 +324,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1226231663
   m_SortingLayer: 1
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  m_SortingOrder: 122
+  m_Sprite: {fileID: 21300000, guid: 1941fdd26faf34d4ab83105c8e893d04, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -450,6 +450,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8029260603463930268}
+  - {fileID: 1934989349634968200}
   - {fileID: 7274402191585770955}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -468,7 +469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MaxBarWidth: 4
   Box: {fileID: 7274402191585770952}
-  Reward: {fileID: 7664991996936657812}
+  Tick: {fileID: 4450634307530231333}
   BoxSprites:
   - {fileID: 21300000, guid: 99c40609b49ca774b82875485fd5559a, type: 3}
   - {fileID: 21300000, guid: d6adc8d7a684d294d8d421fe15273172, type: 3}
@@ -477,6 +478,7 @@ MonoBehaviour:
   BoxRenderer: {fileID: 7274402191585770954}
   Bar: {fileID: 277812994167825812}
   m_CrateProgressWindow: {fileID: 1171979147239460510, guid: b018dd631fb14bb4fa3384fb5a5b558d, type: 3}
+  m_CrateProgressBarPrefab: {fileID: 1200385885564321929, guid: d65ec560e4ce2e341a90d84475296765, type: 3}
   LevelID: 1
   CrateQuality: 0
 --- !u!210 &3962377559071694414
@@ -555,10 +557,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1934989349634968200}
   - {fileID: 5395679896221103690}
   m_Father: {fileID: 7274402190528635072}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7274402191585770954
 SpriteRenderer:

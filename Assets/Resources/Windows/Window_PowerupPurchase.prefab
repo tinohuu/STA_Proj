@@ -300,8 +300,15 @@ MonoBehaviour:
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
   InverseOnFadeOut: 1
+  ShowPanel: 1
   CanCloseByPanel: 1
+  InQueue: 1
   IntervalMultiplerOnFadeOut: 0
+  FadeInOnEnable: 1
+  OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  FadeInDelay: 0
 --- !u!114 &2749480515694025565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -429,19 +436,7 @@ MonoBehaviour:
   OnceOnly: 0
   OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1853325047715122438}
-        m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
-        m_MethodName: FadeOut
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   TargetTransform: {fileID: 0}
 --- !u!1 &4948217112532022772
 GameObject:
@@ -1000,8 +995,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1853325047715122438}
         m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
-        m_MethodName: FadeOut
-        m_Mode: 6
+        m_MethodName: Close
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

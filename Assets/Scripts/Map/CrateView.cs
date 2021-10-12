@@ -179,19 +179,20 @@ public class CrateView : MonoBehaviour
 
         var window = GetComponent<WindowAnimator>();
 
+        CrateManager.Instance.CurrentCrate.UpdateView();
 
-        window.FadeOut(false, false);
+        window.Close();
 
-        MapManager.Instance.MoveMap(CrateManager.Instance.CurrentCrate.transform.position);
+        //MapManager.Instance.MoveMap(CrateManager.Instance.CurrentCrate.transform.position);
 
         //CrateManager.Instance.CurrentCrate.Box.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
 
-        CrateManager.Instance.CurrentCrate.Reward.SetActive(true);
+        //CrateManager.Instance.CurrentCrate.Reward.SetActive(true);
 
-        Vector2 screenPos = Camera.main.WorldToScreenPoint(CropManager.Instance.HarvestButton.position);
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        //Vector2 screenPos = Camera.main.WorldToScreenPoint(CropManager.Instance.HarvestButton.position);
+        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
 
-        CrateManager.Instance.CurrentCrate.Reward.transform.DOJump(worldPos, 5, 1, 1).SetDelay(1)
-            .OnComplete(() => { CrateManager.Instance.CurrentCrate.UpdateView(); Reward.Data[RewardType.Clock]++; window.Close(); });
+        //CrateManager.Instance.CurrentCrate.Reward.transform.DOJump(worldPos, 5, 1, 1).SetDelay(1)
+        //    .OnComplete(() => { CrateManager.Instance.CurrentCrate.UpdateView(); Reward.Data[RewardType.Clock]++; window.Close(); });
     }
 }

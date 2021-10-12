@@ -7,20 +7,24 @@ using System.Linq;
 
 public class CrateManager : MonoBehaviour, IMapmakerModule
 {
-    [SerializeField] public GameObject m_CrateProgressBarPrefab;
-    [SerializeField] GameObject cratePrefab;
-    [SerializeField] Transform crateGroup;
+    [Header("Ref")]
+    //[SerializeField] public GameObject CrateProgressBarPrefab;
+    [SerializeField] GameObject m_CratePrefab;
+    [SerializeField] Transform m_CrateGroup;
     [SerializeField] GameObject m_CrateViewPrefab;
 
+    [Header("Setting")]
+    public bool EnableCrate = true;
+    public bool ForceShowLevelProgress = false;
+
+    [Header("Data")]
     [SavedData] public CrateManagerData Data = new CrateManagerData();
+    public Crate CurrentCrate { get; private set; }
+    public Type Mapmaker_ItemType => typeof(Crate);
+    public string[] Mapmaker_InputInfos => new string[] { "Level ID" };
 
     public static CrateManager Instance = null;
     CrateView m_CrateView;
-    public bool EnableCrate = true;
-    public Crate CurrentCrate;
-    public bool ForceShowLevelProgress = false;
-    public Type Mapmaker_ItemType => typeof(Crate);
-    public string[] Mapmaker_InputInfos => new string[] { "Level ID" };
 
     void Start()
     {
@@ -34,7 +38,7 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
     {
         if (EnableCrate)
         {
-            var crates = crateGroup.GetComponentsInChildren<Crate>().ToList();
+            var crates = m_CrateGroup.GetComponentsInChildren<Crate>().ToList();
             var crate = crates.Find(e => e.LevelID <= MapManager.Instance.Data.CompleteLevel);
             if (!m_CrateView && crate)
             {
@@ -55,11 +59,13 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
 
     public void Collect(int levelID)
     {
-        for (int i = 0; i < Data.ResumedRewardTypes.Count; i++)
+        for (int i = 0; i < Data.ResumedIndexes.Count; i++)
         {
-            RewardType rewardType = Data.ResumedRewardTypes[i];
-            int count = Data.ResumedCounts[i];
+            RewardType rewardType = Data.ResumedRewardTypes[Data.ResumedIndexes[i]];
+            int count = Data.ResumedCounts[Data.ResumedIndexes[i]];
             Reward.Data[rewardType] += count;
+
+            Debug.LogWarning(rewardType.ToString() + ":" + count);
         }
         Data.ResumedRewardTypes.Clear();
         Data.ResumedCounts.Clear();
@@ -67,11 +73,20 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
         Data.CollectedCrateLevel = levelID;
     }
 
+    public void UpdateCratesView()
+    {
+        var crates = m_CrateGroup.GetComponentsInChildren<Crate>();
+        foreach (var crate in crates)
+        {
+            crate.UpdateView();
+        }
+    }
+
     #region Mapmaker
     public Transform Mapmaker_AddItem()
     {
-        GameObject obj = Instantiate(cratePrefab, crateGroup);
-        obj.transform.localPosition = crateGroup.InverseTransformPoint(Vector3.zero);
+        GameObject obj = Instantiate(m_CratePrefab, m_CrateGroup);
+        obj.transform.localPosition = m_CrateGroup.InverseTransformPoint(Vector3.zero);
         return obj.transform;
     }
 
@@ -79,13 +94,13 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
     {
         if (json == null) return;
 
-        crateGroup.DestroyChildren();
+        m_CrateGroup.DestroyChildren();
 
         var configs = JsonExtensions.JsonToList<Mapmaker_CrateConfig>(json);
         foreach (var config in configs)
         {
             //if (config.LevelID <= Data.CollectedCrateLevel) continue;
-            var crate = Instantiate(cratePrefab, crateGroup).GetComponent<Crate>();
+            var crate = Instantiate(m_CratePrefab, m_CrateGroup).GetComponent<Crate>();
             crate.transform.localPosition = config.LocPos;
             crate.LevelID = config.LevelID;
         }
@@ -106,7 +121,7 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
 
     public string Mapmaker_ToConfig()
     {
-        var crates = crateGroup.GetComponentsInChildren<Crate>();
+        var crates = m_CrateGroup.GetComponentsInChildren<Crate>();
         var configs = new List<Mapmaker_CrateConfig>();
         foreach (var crate in crates)
         {

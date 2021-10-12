@@ -14,8 +14,7 @@ public class MapLevelWindowPowerup : MonoBehaviour
     public GameObject TextImage;
     [SerializeField] RewardNumber rewardNumber;
 
-    [Header("Settings")]
-    [HideInInspector] public RewardType RewardType;
+    public RewardType RewardType { get; private set; }
 
     [Header("Data")]
     public bool InUse = false;
@@ -32,11 +31,23 @@ public class MapLevelWindowPowerup : MonoBehaviour
         image = GetComponent<Image>();
         windowAnimator = GetComponentInParent<WindowAnimator>();
 
+
+    }
+
+    public void Initialise(RewardType rewardType)
+    {
+        RewardType = rewardType;
+        UpdateView();
+    }
+
+    public void UpdateView()
+    {
         var icons = Resources.LoadAll<Sprite>("Sprites/IconAtlas");
         Sprite sprite = Array.Find(icons, e => e.name == RewardType.ToString());
         image.sprite = sprite;
         rewardNumber.Type = RewardType;
-        Interactable = MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigsByFuncID[(int)RewardType + 1012 - 8].FunctionParams;
+        
+        Interactable = MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == (int)RewardType + 1012 - 8).FunctionParams;
         canvasGroup.alpha = Interactable ? 1 : 0.5f;
     }
 
@@ -64,7 +75,7 @@ public class MapLevelWindowPowerup : MonoBehaviour
         {
             TMP_Text text = Window.CreateWindowPrefab(PromptWindowPrefab).GetComponentInChildren<TMP_Text>();
             string rawString = text.text;
-            rawString = string.Format(text.text, RewardType.ToString(), MapManager.Instance.FunctionConfigsByFuncID[(int)RewardType + 1012 - 8].FunctionParams);
+            rawString = string.Format(text.text, RewardType.ToString(), MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == (int)RewardType + 1012 - 8).FunctionParams);
             rawString = System.Text.RegularExpressions.Regex.Replace(rawString, "([a-z])_?([A-Z])", "$1 $2");
             text.text = rawString;
         }

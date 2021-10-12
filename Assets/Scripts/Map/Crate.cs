@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using System.Linq;
 
 public class Crate : MonoBehaviour
 {
@@ -13,12 +14,15 @@ public class Crate : MonoBehaviour
 
     [Header("Ref")]
     public GameObject Box;
-    public GameObject Reward;
+    //public GameObject Reward;
+    [SerializeField] GameObject Tick;
 
     [SerializeField] Sprite[] BoxSprites = new Sprite[4];
     [SerializeField] SpriteRenderer BoxRenderer;
     [SerializeField] GameObject Bar;
+    [SerializeField] GameObject m_CrateBarWindow;
     [SerializeField] GameObject m_CrateProgressWindow;
+    [SerializeField] GameObject m_CrateProgressBarPrefab;
 
     [Header("Debug")]
     public int LevelID = 1;
@@ -28,10 +32,12 @@ public class Crate : MonoBehaviour
     ButtonAnimator m_ButtonAnimator;
 
     public int RatingCount { get; private set; }
+    public int[] QualityRatings { get; private set; }
     private void Start()
     {
         m_Text = GetComponentInChildren<TMP_Text>(true);
         m_ButtonAnimator = GetComponent<ButtonAnimator>();
+        Tick.gameObject.SetActive(false);
 
         UpdateView();
     }
@@ -44,6 +50,7 @@ public class Crate : MonoBehaviour
 
     IEnumerator IUpdateView()
     {
+
         var cropConfig = CropManager.Instance.LevelToCropConfig(LevelID);
         m_ButtonAnimator.Interactable = LevelID > CrateManager.Instance.Data.CollectedCrateLevel;
         m_ButtonAnimator.OnClick.AddListener(() => OnClickCrate());
@@ -72,14 +79,17 @@ public class Crate : MonoBehaviour
             int oldQualityPoint = 0;
 
             var publicConfig = ConfigsAsset.GetConfigList<CratePublicConfig>()[0];
-            float[] qualitySteps = new float[] { publicConfig.StepWood, publicConfig.StepSliver, publicConfig.StepGold, publicConfig.PicksDiamond };
-            System.Array.ForEach(qualitySteps, e => e /= publicConfig.StepsTotal);
+            float[] qualitySteps = new float[] { publicConfig.StepWood, publicConfig.StepSliver, publicConfig.StepGold, publicConfig.StepDiamond };
+            for (int i = 0; i < qualitySteps.Length; i++) qualitySteps[i] /= publicConfig.StepsTotal;
 
+            QualityRatings = new int[4];
             for (int i = 0; i < 4; i++)
             {
                 //int lastQualityPoint = Mathf.RoundToInt(totalRating * i / 4f);
                 int qualityPoint = Mathf.RoundToInt(totalRating * qualitySteps[i]);
                 if (qualityPoint == oldQualityPoint) qualityPoint++;
+                Debug.Log(qualitySteps[i]);
+                QualityRatings[i] = qualityPoint;
 
                 if (oldRatingCount >= qualityPoint) oldQuality = i;
                 if (curRatingCount >= qualityPoint)
@@ -95,23 +105,29 @@ public class Crate : MonoBehaviour
             Bar.gameObject.SetActive(true);
             CrateQuality = (Quality)curQuality;
 
-            if ((MapDataManager.Instance.NewRatings > 0 || CrateManager.Instance.ForceShowLevelProgress) && MapManager.Instance.Data.CompleteLevel <= cropConfig.Level)
+            if ((MapDataManager.Instance.NewRatings > 0 || CrateManager.Instance.ForceShowLevelProgress) && MapManager.Instance.Data.SelectedLevel <= cropConfig.Level && MapManager.Instance.Data.SelectedLevel >= cropConfig.MinLevel)
             {
                 yield return null;
-                MapManager.Instance.MoveMap(transform.position);
+                do
+                {
+                    yield return null;
+                }
+                while (WindowAnimator.WindowQueue.Count != 0);
+                Debug.LogWarning("ShowProgress");
+                yield return new WaitForSeconds(0.25f);
+                MapManager.Instance.MoveMap(MapPlayer.Instance.transform.position, 0.25f);
                 //Sequence sequence = DOTween.Sequence();
                 //sequence.AppendInterval(1);
-                yield return new WaitForSeconds(2);
-
-                var levelButton = MapLevelManager.Instance.GetLevelButton(MapManager.Instance.Data.CompleteLevel);
-                var bar = Instantiate(CrateManager.Instance.m_CrateProgressBarPrefab, levelButton.transform).GetComponent<CrateProgressBar>();
-                bar.Set(oldRatingCount, curRatingCount, (Quality)oldQuality, false);
+                yield return new WaitForSeconds(0.5f);
+                var levelButton = MapLevelManager.Instance.GetLevelButton(MapManager.Instance.Data.SelectedLevel);
+                var bar = Instantiate(m_CrateProgressBarPrefab, levelButton.transform).GetComponent<CrateProgressBar>();
+                bar.Set(oldRatingCount, QualityRatings[curQuality + 1], (Quality)oldQuality, false);
 
                 for (int i = oldRatingCount; i <= curRatingCount; i++)
                 {
                     Quality quality = oldQualityPoint - i >= 0 ? (Quality)oldQuality : (Quality)curQuality;
 
-                    bar.Set(i, oldQualityPoint, quality);
+                    bar.Set(i, QualityRatings[curQuality + 1], quality);
                     m_Text.text = i.ToString();
                     BoxRenderer.sprite = BoxSprites[(int)quality];
 
@@ -130,6 +146,7 @@ public class Crate : MonoBehaviour
         else
         {
             BoxRenderer.color = new Color(1, 1, 1, 0.5f);
+            Tick.SetActive(LevelID <= CrateManager.Instance.Data.CollectedCrateLevel);
             Bar.gameObject.SetActive(false);
         }
     }

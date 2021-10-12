@@ -19,6 +19,7 @@ public class RewardPurchaseWindow : MonoBehaviour
     void Start()
     {
         purchaseButton.OnClick.AddListener(() => Purcahse());
+        purchaseButton.OnClick.AddListener(() => GetComponent<WindowAnimator>().Close());
         UpdateView();
     }
 
@@ -43,7 +44,7 @@ public class RewardPurchaseWindow : MonoBehaviour
         int cost = RewardManager.GetRewardCost(Type);
         if (Reward.Coin < cost)
         {
-            return;
+            ShopManager.Instance.Open();
         }
         else
         {

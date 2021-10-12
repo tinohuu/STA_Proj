@@ -36,8 +36,6 @@ public class LuckyWheelView : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-
         Vector3 firstSlotLocPos = m_InitPoint.localPosition;
 
         var rewards = LuckyWheelManager.GetRewards(m_Wheel.WheelID);
@@ -52,6 +50,23 @@ public class LuckyWheelView : MonoBehaviour
 
         m_ButtonAnimator.OnClick.AddListener(() => Spin());
         m_LuckyWheelButton.onClick.AddListener(() => Spin());
+
+        FadeIn();
+    }
+
+    void FadeIn()
+    {
+        var window = GetComponent<WindowAnimator>();
+        window.OnWindowEnable.AddListener(() => StartCoroutine(IAnimateWheelIcon()));
+        window.FadeInDelay = 3;
+    }
+    
+    IEnumerator IAnimateWheelIcon()
+    {
+        yield return null;
+        MapManager.Instance.MoveMap(m_Wheel.transform.position);
+        yield return new WaitForSeconds(1.5f);
+        m_Wheel.ToBig();
     }
 
     private void OnEnable()
@@ -95,7 +110,7 @@ public class LuckyWheelView : MonoBehaviour
     {
         m_Slots[m_SlotIndex].transform.SetAsLastSibling();
         m_Slots[m_SlotIndex].transform.DOJump(m_ButtonAnimator.transform.position, 1, 1, 1)
-            .OnComplete(() => GetComponent<CanvasGroup>().DOFade(0, 0.5f).OnComplete(() => GetComponent<WindowAnimator>().FadeOut(true)));
+            .OnComplete(() => GetComponent<CanvasGroup>().DOFade(0, 0.5f).OnComplete(() => GetComponent<WindowAnimator>().Close()));
         m_Slots[m_SlotIndex].transform.DOScale(Vector3.zero, 1).SetEase(Ease.InSine);
     }
 

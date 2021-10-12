@@ -9,17 +9,19 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 {
     [Header("Ref")]
     [SerializeField] Transform m_CropGroup;
-    [SerializeField] public RectTransform HarvestButton;
+    [SerializeField] RectTransform HarvestButton;
     [SerializeField] GameObject m_CropPrefab;
+    [SerializeField] GameObject m_CropEndpointPrefab;
 
-    [Header("Config & Data")]
+    [Header("Setting")]
+    public bool EnableEndpoint = true;
+
+    [Header("Data")]
     [SavedData] public CropManagerData Data = new CropManagerData();
-    public List<CropConfig> CropConfigs = new List<CropConfig>();
-
-    public bool IsMature = false;
+    public List<CropConfig> CropConfigs { get; private set; }
+    public bool IsMature { get; private set; }
 
     public static CropManager Instance = null;
-
     List<Transform> m_Particles = new List<Transform>();
 
     private void Awake()
@@ -43,9 +45,27 @@ public class CropManager : MonoBehaviour, IMapmakerModule
             Window.CreateWindowPrefab(CropGrowthWindow).GetComponent<CropGrowthWindow>().SetCrop(c.Name);
             Data.LastCropGrowthID = c.ID;
         }*/
-
+        CreateEndpoints();
 
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
+    }
+
+    public void SetMature(bool isMature)
+    {
+        IsMature = isMature;
+    }
+
+    void CreateEndpoints()
+    {
+        var configs = CropConfigs.FindAll(e => e.Level > Data.CollectedClockLevelID); // todo: 2nd map check
+        foreach (var config in configs)
+        {
+            var levelButton = MapLevelManager.Instance.GetLevelButton(config.Level);
+            if (!levelButton) continue;
+            var endpoint = Instantiate(m_CropEndpointPrefab, transform);
+            endpoint.GetComponent<CropEndpoint>().Initialise(config.Level, config.Name);
+            levelButton.SetAsIcon(endpoint.transform, false);
+        }
     }
 
     public CropConfig LevelToCropConfig(int level) => CropConfigs.Find(e => level >= e.MinLevel && level <= e.Level);
@@ -254,6 +274,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 public class CropManagerData
 {
     public int LastCropGrowthID = 0;
+    public int CollectedClockLevelID = 0;
     public DateTime TimeBoostUntil = new DateTime();
 }
 

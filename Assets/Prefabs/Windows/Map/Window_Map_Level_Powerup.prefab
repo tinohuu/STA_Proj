@@ -197,31 +197,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8442961151888750952}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2848093792817402438}
-        m_TargetAssemblyTypeName: MapLevelWindow, Assembly-CSharp
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2848093792817402436}
-        m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
-        m_MethodName: FadeOut
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!225 &8234941797451063287
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -757,8 +733,15 @@ MonoBehaviour:
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
   InverseOnFadeOut: 1
+  ShowPanel: 1
   CanCloseByPanel: 1
+  InQueue: 1
   IntervalMultiplerOnFadeOut: 0.01
+  FadeInOnEnable: 1
+  OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  FadeInDelay: 0
 --- !u!114 &2848093792817402438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -771,9 +754,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236eaab89c73e024ca56d868700d4514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_PlayButton: {fileID: 0}
   OrderText: {fileID: 1635619637353544861}
   StarGroup: {fileID: 2485018733449926882}
   CostText: {fileID: 4767464688409341194}
+  LevelData:
+    ID: 0
+    Rating: 0
 --- !u!1 &3072637639230545370
 GameObject:
   m_ObjectHideFlags: 0
@@ -1393,9 +1380,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2848093792817402436}
-        m_TargetAssemblyTypeName: CanvasGroupAnimator, Assembly-CSharp
-        m_MethodName: FadeOut
-        m_Mode: 6
+        m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
+        m_MethodName: Close
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

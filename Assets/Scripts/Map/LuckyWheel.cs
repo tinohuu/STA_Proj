@@ -26,18 +26,25 @@ public class LuckyWheel : MonoBehaviour
     {
         IconRenderer.color = MapManager.Instance.Data.CompleteLevel >= LevelID ? Color.white : new Color(1, 1, 1, 0.5f);
         IconRenderer.sprite = CropManager.Instance.LevelToCropConfig(LevelID).ID % 2 == 1 ? IconSprites[0] : IconSprites[1];
-        var levelButton = MapLevelManager.Instance.GetLevelButton(LevelID).transform;
-        transform.SetParent(levelButton);
-        transform.localPosition = Vector3.zero;
-        transform.localScale = Vector3.one;
 
-        if (MapManager.Instance.Data.WheelCollectedLevel < LevelID && MapManager.Instance.Data.CompleteLevel >= LevelID)
+        var levelButton = MapLevelManager.Instance.GetLevelButton(LevelID);
+        levelButton.SetAsIcon(transform, false);
+
+
+    }
+
+    public void ToBig()
+    {
+        //if (MapManager.Instance.Data.WheelCollectedLevel < LevelID && MapManager.Instance.Data.CompleteLevel >= LevelID)
         {
-            m_SmallWheel.transform.DOScale(Vector3.zero, 0.5f);
-            m_BigWheel.transform.DOScale(Vector3.one, 0.75f).SetDelay(0.5f).SetEase(Ease.OutBack);
-            LuckyWheelManager.Instance.ParentInGroup(this);
-            m_Collider2D.enabled = true;
-            m_ButtonAnimator.OnClick.AddListener(() => LuckyWheelManager.Instance.ShowView(this));
+
+
         }
+
+        m_SmallWheel.transform.DOScale(Vector3.zero, 0.5f);
+        m_BigWheel.transform.DOScale(Vector3.one, 0.75f).SetDelay(0.5f).SetEase(Ease.OutBack);
+        LuckyWheelManager.Instance.ParentInGroup(this);
+        m_Collider2D.enabled = true;
+        m_ButtonAnimator.OnClick.AddListener(() => LuckyWheelManager.Instance.ShowView(this));
     }
 }
