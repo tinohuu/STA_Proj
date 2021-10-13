@@ -933,8 +933,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1451562805639286462}
         m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
-        m_MethodName: FadeOut
-        m_Mode: 6
+        m_MethodName: Close
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1278,6 +1278,14 @@ MonoBehaviour:
   CanCloseByPanel: 1
   InQueue: 1
   IntervalMultiplerOnFadeOut: 0
+  FadeInOnEnable: 1
+  OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowFadeIn:
+    m_PersistentCalls:
+      m_Calls: []
+  FadeInDelay: 0
 --- !u!1 &1451562805985723673
 GameObject:
   m_ObjectHideFlags: 0
@@ -2356,7 +2364,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: Test
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 06785ee8df7295f459dd57b23050e7c2, type: 2}

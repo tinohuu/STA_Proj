@@ -57,12 +57,14 @@ public class DailyGoodies : MonoBehaviour
         Tween tween = rt.DOScale(Vector3.zero, 0.1f).From().SetEase(Ease.OutBack)
             .OnComplete(() => UpdateBoxeseView(oldStkDays));
         sequence = DOTween.Sequence();
-        OpenBoxButton.onClick.AddListener(() => ForceCompleteBoxSequence());
+
         sequence.Append(tween);
         sequence.AppendInterval(1);
 
         // Then scroll boxes by week
         int curStkDays = DailyGoodiesManager.Instance.CheckDate(false);
+        OpenBoxButton.onClick.AddListener(() => ForceCompleteBoxSequence(curStkDays));
+
         for (int i = 21; i > curStkDays - 7; i -= 7)
         {
             //Debug.Log(boxGroup.childCount + ":" + i);
@@ -75,9 +77,13 @@ public class DailyGoodies : MonoBehaviour
         sequence.AppendCallback(() => UpdateBoxeseView(curStkDays - 1));
         sequence.AppendInterval(1f);
 
+
         // Then box jump
+        sequence.Append(calendar.GetComponent<CanvasGroup>().DOFade(0, 0.25f));
         var box = boxGroup.GetChild(curStkDays - 1).GetComponent<DailyGoodiesBox>();
         //sequence.Append(box.Box.transform.DOScale(box.Box.transform.localScale * 1.5f, 1.25f)).SetEase(Ease.InSine);
+        //sequence.AppendCallback(() => box.gameObject.SetActive(true));
+        //sequence.AppendCallback(() => box.transform.localScale = Vector3.one);
         sequence.AppendCallback(() => box.SetState("Ready"));
         sequence.Append(box.BoxParent.transform.DOJump(Vector3.back * 5 + Vector3.down * 2, 3, 1, 1f).SetDelay(0.2f).OnComplete(() => box.SetState("Idle")));
         sequence.AppendCallback(() => OpenBoxButton.gameObject.SetActive(true));
@@ -90,10 +96,11 @@ public class DailyGoodies : MonoBehaviour
         sequence.PlayForward();
     }
 
-    public void ForceCompleteBoxSequence()
+    public void ForceCompleteBoxSequence(int curStkDays)
     {
         if (sequence != null)
         {
+            UpdateBoxeseView(curStkDays - 1);
             sequence.Complete();
         }
     }

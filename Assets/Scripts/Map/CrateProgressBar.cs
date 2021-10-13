@@ -50,12 +50,12 @@ public class CrateProgressBar : MonoBehaviour
         {
             ProgressBarFill.DOSizeDelta(new Vector2(targetWidth, m_OriFillSize.y), 0.25f);
             Box.rectTransform.DOScale(Vector3.one * 1.2f, 0.25f).SetEase(Ease.Flash, 2);
-            Box.sprite = BoxSprites[Mathf.Clamp((int)quality + 1, 0, 3)];
+            Box.sprite = BoxSprites[Mathf.Clamp((int)quality, 0, 3)];
         }
         else
         {
             ProgressBarFill.sizeDelta = new Vector2(targetWidth, m_OriFillSize.y);
-            Box.sprite = BoxSprites[Mathf.Clamp((int)quality + 1, 0, 3)];
+            Box.sprite = BoxSprites[Mathf.Clamp((int)quality, 0, 3)];
         }
     }
 

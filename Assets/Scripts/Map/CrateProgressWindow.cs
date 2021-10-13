@@ -26,7 +26,7 @@ public class CrateProgressWindow : MonoBehaviour
 
     public void Initialize(Crate crate)
     {
-        m_RatingText.text = crate.RatingCount.ToString();
+        m_RatingText.text = crate.CurRatingCount.ToString();
         m_Player.transform.position = m_PlayerPointGroup.GetChild((int)crate.CrateQuality).position;
         for (int i = 0; i < m_QualityRatingGroup.childCount; i++)
         {

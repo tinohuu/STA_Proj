@@ -26,18 +26,19 @@ public class RewardNumber : MonoBehaviour
             m_switches = new bool[System.Enum.GetValues(typeof(RewardType)).Length];
             for (int i = 0; i < m_switches.Length; i++) m_switches[i] = true;
         }
-
+        RewardManager.Instance.OnValueChanged[(int)Type] += new RewardManager.RewardHandler(Animate);
     }
 
 
     private void Start()
     {
-        RewardManager.Instance.OnValueChanged[(int)Type] += new RewardManager.RewardHandler(Animate);
+
         text = GetComponent<TMP_Text>();
         oriScale = transform.localScale;
-        Animate();
+
         current = Reward.Data[Type];
-        text.text = Reward.Data[Type].ToString();
+        text.text = Reward.Data[Type].ToString("N0");
+        Animate();
     }
     private void Update()
     {
@@ -71,9 +72,10 @@ public class RewardNumber : MonoBehaviour
 
     IEnumerator IAnimate()
     {
-        AnimateScale(true);
-        while (current < Reward.Data[Type])
+
+        while (current < Reward.Data[Type] - 1)
         {
+            AnimateScale(true);
             yield return new WaitForSeconds(1);
             int diff = Reward.Data[Type] - current;
             int target = current + (ParticleManager.Instance.ParticleGroup.childCount > 0 ? (int)(diff * 0.5f) : diff);

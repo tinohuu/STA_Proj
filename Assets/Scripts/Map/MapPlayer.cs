@@ -16,6 +16,7 @@ public class MapPlayer : MonoBehaviour
 
     public static MapPlayer Instance = null;
 
+    bool m_IsMovingToLevel = false;
     //bool isRunning = false;
     private void Awake()
     {
@@ -65,9 +66,9 @@ public class MapPlayer : MonoBehaviour
     public void MoveToLevel(MapLevel mapLevel, bool showPanel = true, bool animate = true)
     {
         //if (isRunning) return;
-
+        //m_IsMovingToLevel = true;
         StopAllCoroutines();
-
+        transform.DOKill();
         // Move to the screen edge when far from the screen area
         screenPoint = Camera.main.WorldToScreenPoint(transform.position);
         if (screenPoint.x < 0 - EdgeOffset || screenPoint.x > Screen.width + EdgeOffset)
@@ -111,9 +112,13 @@ public class MapPlayer : MonoBehaviour
         else if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == 1012).FunctionParams)
             windowIndex = 1;
 
-        MapLevelWindow panel = Window.CreateWindowPrefab(LevelWindowPrefabs[windowIndex]).GetComponent<MapLevelWindow>();
-        panel.LevelData = mapLevel.Data;
-        
+        if (WindowAnimator.WindowQueue.Count == 0)
+        {
+            MapLevelWindow panel = Window.CreateWindowPrefab(LevelWindowPrefabs[windowIndex]).GetComponent<MapLevelWindow>();
+            panel.LevelData = mapLevel.Data;
+        }
+
+        //m_IsMovingToLevel = false;
         //isRunning = false;
     }
 

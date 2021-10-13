@@ -10,6 +10,7 @@ public class WindowManager : MonoBehaviour
     public List<GameObject> Views = new List<GameObject>();
     public WindowAnimator CurView;
     [SerializeField] Image m_SceneFade;
+    [SerializeField] Transform m_ButtonGroup;
     [SerializeField] GameObject[] m_MapButtons;
     [SerializeField] GameObject[] m_GameButtons;
 
@@ -28,10 +29,42 @@ public class WindowManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnLoadScene;
     }
 
+    public void LoadSceneWithFade(string sceneName, float durtaion = 0.5f)
+    {
+        StartCoroutine(ILoadSceneWithFade(sceneName, durtaion));
+    }
+    IEnumerator ILoadSceneWithFade(string sceneName, float durtaion = 0.5f)
+    {
+        BlackFadeIn(durtaion);
+        yield return new WaitForSeconds(durtaion);
+        SceneManager.LoadScene(sceneName);
+
+    }
+
+    public void BlackFadeIn(float duration = 0.5f)
+    {
+        m_SceneFade.gameObject.SetActive(true);
+        m_SceneFade.DOFade(1f, duration);
+    }
+
     void OnLoadScene(Scene scene, LoadSceneMode mode)
     {
-        foreach (var button in m_MapButtons) button.gameObject.SetActive(scene.name == "MapTest");
-        foreach (var button in m_GameButtons) button.gameObject.SetActive(scene.name != "MapTest");
+        for (int i = 0; i < m_ButtonGroup.childCount; i++)
+        {
+            m_ButtonGroup.GetChild(i).gameObject.SetActive(false);
+        }
+
+        GameObject[] buttons = new GameObject[0];
+        switch (scene.name)
+        {
+            case "MapTest":
+                buttons = m_MapButtons;
+                break;
+            case "GameScene":
+                buttons = m_GameButtons;
+                break;
+        }
+        foreach (var button in buttons) button.gameObject.SetActive(true);
 
 
         float delay = 0;
@@ -42,10 +75,10 @@ public class WindowManager : MonoBehaviour
             m_SceneFade.DOFade(1, 0.25f);
             delay = 0.25f;
         }*/
-        if (scene.name == "MapTest") delay = 0.5f;
+        if (scene.name == "MapTest") delay = 0.1f;
 
         m_SceneFade.gameObject.SetActive(true);
         m_SceneFade.color = Color.black;
-        m_SceneFade.DOFade(0, 0.5f).SetDelay(delay).OnComplete(() => m_SceneFade.gameObject.SetActive(false));
+        m_SceneFade.DOFade(0, 0.25f).SetDelay(delay).OnComplete(() => m_SceneFade.gameObject.SetActive(false));
     }
 }

@@ -18,7 +18,7 @@ public class RewardManager : MonoBehaviour
 
         for (int i = 0; i < OnValueChanged.Length; i++) OnValueChanged[i] = null;
 
-        Data = SaveManager.Bind(InitialData);
+        Data = SaveManager.Instance.Bind(InitialData);
     }
     RewardManagerData InitialData
     {

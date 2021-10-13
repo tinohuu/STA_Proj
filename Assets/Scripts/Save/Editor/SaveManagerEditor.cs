@@ -10,11 +10,12 @@ public class SaveManagerEditor : Editor
     {
         DrawDefaultInspector();
         //SaveManager saveManager = target as SaveManager;
-        if (SaveManager.Save != null)
-        foreach (object data in SaveManager.Save.Datas)
+        if (SaveManager.Instance.Save != null)
+        foreach (object data in SaveManager.Instance.Save.Datas)
         {
             EditorGUILayout.LabelField(" - " + data.GetType().ToString());
             //GUI.Label(data.GetType().ToString());
         }
+        Repaint();
     }
 }

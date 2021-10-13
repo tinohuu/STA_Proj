@@ -6,9 +6,16 @@ public static class TransformExtension
 {
     public static void DestroyChildren(this Transform transform)
     {
-        var children = new List<GameObject>();
-        foreach (Transform child in transform) children.Add(child.gameObject);
-        children.ForEach(child => Object.Destroy(child));
+        try
+        {
+            var children = new List<GameObject>();
+            foreach (Transform child in transform) children.Add(child.gameObject);
+            children.ForEach(child => Object.Destroy(child));
+        }
+        catch
+        {
+
+        }
     }
 
     public static void DestroyChildrenImmediate(this Transform transform)

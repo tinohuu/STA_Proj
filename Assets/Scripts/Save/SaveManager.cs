@@ -6,51 +6,43 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[ExecuteAlways]
 public class SaveManager : MonoBehaviour
 {
-    public static Save Save = null;
+    public Save Save = null;
     public bool ClearOnAwake = false;
     bool StopSave = false;
     public static SaveManager Instance;
     private void Awake()
     {
-        if (!Instance)
-        {
-            Instance = this;
-            if (ClearOnAwake) Clear();
-
-
-
-            /*var savables = FindObjectsOfType<MonoBehaviour>().OfType<IDataSavable>();
-            foreach (var savable in savables)
-            {
-                savable.BindSavedData();
-            }
-            Debug.Log("Save::Awake");*/
-        }
-
-        if (Save == null) Save = new Save();
-        else SaveSystem.Save(Save);
         Save = SaveSystem.Load();
+        if (!Instance) Instance = this;
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+        //if (Save == null) Save = new Save();
+
         AttrBindAll();
     }
 
-    private void Update()
+    void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-
+        //Save = SaveSystem.Load();
+        if (Save != null) AttrBindAll();
     }
 
-   public void ClearAndRestart(string sceneName = "")
+    void OnSceneUnloaded(UnityEngine.SceneManagement.Scene scene)
     {
-        Clear();
-        StopSave = true;
-        if (sceneName == "")
-            Application.Quit();
-        else
-            SceneManager.LoadScene(sceneName);
+        SaveSystem.Save(Save);
     }
 
-    public static T Bind<T>(T initial)
+    private void OnDestroy()
+    {
+        SaveSystem.Save(Save);
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    public T Bind<T>(T initial)
     {
         T data = Save.Get<T>();
         if (data == null)
@@ -61,7 +53,7 @@ public class SaveManager : MonoBehaviour
         return data;
     }
 
-    public static object AttrBind(Type type, object initial = default)
+    public object AttrBind(Type type, object initial = default)
     {
         object data = Save.AttrGet(type, initial);
         if (data == null)
@@ -72,7 +64,8 @@ public class SaveManager : MonoBehaviour
         return data;
     }
 
-    public static void Clear()
+    [ContextMenu("Clear")]
+    public void Clear()
     {
         SaveSystem.Clear();
         Save = new Save();
@@ -80,19 +73,16 @@ public class SaveManager : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-        if (StopSave) return;
         if (pause) SaveSystem.Save(Save);
     }
 
     private void OnApplicationQuit()
     {
-        if (StopSave) return;
         SaveSystem.Save(Save);
     }
 
     private void OnDisable()
     {
-        if (StopSave) return;
         SaveSystem.Save(Save);
     }
 
@@ -120,6 +110,7 @@ public class SaveManager : MonoBehaviour
                     if (attr.InitialData != null) field = attr.InitialData;
                     object data = AttrBind(objectFields[i].FieldType, field);
                     objectFields[i].SetValue(mono, data);
+                    //Debug.LogWarning("Bind " + objectFields[i].FieldType);
                 }
             }
         }

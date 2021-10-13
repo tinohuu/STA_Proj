@@ -157,7 +157,7 @@ public class MapLevelWindow : Window
 
         STAGameManager.Instance.InUseItems = inUseItems;
         STAGameManager.Instance.nLevelID = MapManager.Instance.Data.SelectedLevel;
-        MapDataManager.Instance.NewRatings = 0;
-        SceneManager.LoadScene("GameScene");
+        //MapDataManager.Instance.NewRatings = 0;
+        WindowManager.Instance.LoadSceneWithFade("GameScene");
     }
 }

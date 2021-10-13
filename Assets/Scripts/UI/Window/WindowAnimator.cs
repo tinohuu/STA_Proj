@@ -18,11 +18,10 @@ public class WindowAnimator : Window
     public bool FadeInOnEnable = true;
 
     public static List<WindowAnimator> WindowQueue = new List<WindowAnimator>();
-    public delegate void WindowHandler();
-    public event WindowHandler OnFadeIn = null;
-    public static event WindowHandler OnQueueChanged = null;
 
-    public UnityEvent OnWindowEnable;
+    public UnityEvent OnWindowEnable = new UnityEvent();
+    public UnityEvent OnWindowFadeIn = new UnityEvent();
+    public static UnityEvent OnQueueChanged = new UnityEvent();
     public float FadeInDelay = 0;
 
     bool m_IsDestroying = false;
@@ -90,11 +89,10 @@ public class WindowAnimator : Window
             if (!WindowQueue.Contains(this)) WindowQueue.Add(this);
         }
         OnQueueChanged?.Invoke();
+        OnWindowFadeIn?.Invoke();
 
         if (onEnable && !FadeInOnEnable) yield break;
         yield return new WaitForSeconds(FadeInDelay);
-
-        OnFadeIn?.Invoke();
 
 
         foreach (WindowAnimatorElement window in Elements)

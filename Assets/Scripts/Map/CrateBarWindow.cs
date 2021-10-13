@@ -4,28 +4,61 @@ using UnityEngine;
 
 public class CrateBarWindow : MonoBehaviour
 {
-    Transform m_Crate;
     [SerializeField] GameObject m_CrateProgressBarPrefab;
-    public void Initialise(Transform crate)
+
+    WindowAnimator m_WindowAnimator;
+    Crate m_Crate;
+
+    public void Initialise(Crate crate)
     {
         m_Crate = crate;
     }
 
-    void Start()
+    private void Awake()
     {
-        FadeIn();
+        m_WindowAnimator = GetComponent<WindowAnimator>();
+
+        m_WindowAnimator.FadeInDelay = 1;
     }
 
-    void FadeIn()
+    private void Start()
     {
-        var window = GetComponent<WindowAnimator>();
-        window.OnWindowEnable.AddListener(() => StartCoroutine(IAnimateWheelIcon()));
-        //window.FadeInDelay = 3;
+        var levelButton = MapLevelManager.Instance.GetLevelButton(MapManager.Instance.Data.SelectedLevel);
+        m_WindowAnimator.OnWindowFadeIn.AddListener(() => MapManager.Instance.MoveMap(levelButton.transform.position));
+        StartCoroutine(IPlay());
     }
 
-    IEnumerator IAnimateWheelIcon()
+    IEnumerator IPlay()
     {
-        yield return null;
-        MapManager.Instance.MoveMap(m_Crate.transform.position);
+        // Get old quality
+        int oldRatingCount = m_Crate.CurRatingCount - MapDataManager.Instance.NewRatings;
+        Crate.Quality oldQuality = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            if (oldRatingCount >= m_Crate.QualityRatings[i])
+            {
+                oldQuality = (Crate.Quality)i;
+            }
+        }
+        m_Crate.SetView(oldQuality, oldRatingCount);
+
+        var levelButton = MapLevelManager.Instance.GetLevelButton(MapManager.Instance.Data.SelectedLevel);
+        var bar = Instantiate(m_CrateProgressBarPrefab, levelButton.transform).GetComponent<CrateProgressBar>();
+        bar.Set(oldRatingCount, m_Crate.QualityRatings[(int)oldQuality + 1], (Crate.Quality)((int)oldQuality + 1));
+
+        yield return new WaitForSeconds(0.5f);
+        for (int i = oldRatingCount; i <= m_Crate.CurRatingCount; i++)
+        {
+            Crate.Quality quality = m_Crate.QualityRatings[(int)m_Crate.CrateQuality] > i ? oldQuality : m_Crate.CrateQuality;
+
+            bar.Set(i, m_Crate.QualityRatings[(int)quality + 1], (Crate.Quality)((int)quality + 1));
+            m_Crate.SetView(quality, oldRatingCount);
+            yield return new WaitForSeconds(0.25f);
+        }
+        m_Crate.SetView(m_Crate.CrateQuality, m_Crate.CurRatingCount);
+        MapDataManager.Instance.NewRatings = 0;
+        yield return new WaitForSeconds(2);
+        bar.Close();
+        m_WindowAnimator.Close();
     }
 }

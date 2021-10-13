@@ -13,7 +13,7 @@ public class BackWindow : Window
         image = GetComponent<Image>();
         button = GetComponent<Button>();
 
-        WindowAnimator.OnQueueChanged += () => SetButton();
+        WindowAnimator.OnQueueChanged.AddListener(() => SetButton());
         button.onClick.AddListener(() => CloseLastWindow());
     }
 
@@ -28,7 +28,6 @@ public class BackWindow : Window
 
     void CloseLastWindow()
     {
-
         if (WindowAnimator.WindowQueue.Count > 0 && WindowAnimator.WindowQueue.Last().CanCloseByPanel) WindowAnimator.WindowQueue.Last().FadeOut(true);
     }
 }

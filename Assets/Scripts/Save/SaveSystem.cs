@@ -6,14 +6,15 @@ using System;
 
 public static class SaveSystem
 {
-    public static string Path = "/STA_Games";
+    public  const string Path = "/STA_Games";
     public static string FileName = "/Save.carta";
     public static string Root = Application.persistentDataPath;
 
     public static bool Save(string root, string path, string fileName, Save save = null)
     {
-        if (save == null)
+        if (save == null || save.Datas.Count == 0)
         {
+            return false;
             save = new Save();
             // Config your data here:
         }
@@ -36,6 +37,9 @@ public static class SaveSystem
         FileStream fileStream = File.Create(root + path + fileName);
         bf.Serialize(fileStream, encryptedByte);
         fileStream.Close();
+
+        Debug.LogWarning((save.Datas.Count == 0).ToString() + root + path + fileName + encryptedByte.Length + "Save save count: " + save.Datas.Count);
+
         return File.Exists(root + path + fileName);
     }
     public static bool Save(Save save = null)
@@ -58,11 +62,13 @@ public static class SaveSystem
             // Convert bytes to class
             MemoryStream ms = new MemoryStream(byteSave);
             Save save = (Save)bf.Deserialize(ms);
+            Debug.LogWarning(root + path + fileName + encryptedByte.Length + "Load save count: " + save.Datas.Count);
             ms.Close();
 
             return save;
         }
-        return null;
+        Debug.LogWarning("Can't find any save and then create a empty one.");
+        return new Save();
     }
     public static Save Load()
     {

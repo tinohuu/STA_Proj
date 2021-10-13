@@ -2551,6 +2551,14 @@ MonoBehaviour:
   CanCloseByPanel: 0
   InQueue: 1
   IntervalMultiplerOnFadeOut: 1
+  FadeInOnEnable: 1
+  OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowFadeIn:
+    m_PersistentCalls:
+      m_Calls: []
+  FadeInDelay: 0
 --- !u!1 &5668969312869739888
 GameObject:
   m_ObjectHideFlags: 0
@@ -2561,6 +2569,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5668969312869739895}
   - component: {fileID: 5668969312869739894}
+  - component: {fileID: 7057907466486051654}
   m_Layer: 5
   m_Name: Calendar
   m_TagString: Untagged
@@ -2604,6 +2613,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weekGroup: {fileID: 5668969311753394598}
+--- !u!225 &7057907466486051654
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5668969312869739888}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8940239175833405546
 GameObject:
   m_ObjectHideFlags: 0

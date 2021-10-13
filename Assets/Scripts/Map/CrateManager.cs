@@ -28,6 +28,7 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
 
     void Start()
     {
+
         if (!Instance) Instance = this;
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
 
@@ -65,12 +66,12 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
             int count = Data.ResumedCounts[Data.ResumedIndexes[i]];
             Reward.Data[rewardType] += count;
 
-            Debug.LogWarning(rewardType.ToString() + ":" + count);
+            Debug.LogWarning("Collected from the crate: " + rewardType.ToString() + ":" + count);
         }
         Data.ResumedRewardTypes.Clear();
         Data.ResumedCounts.Clear();
         Data.ResumedIndexes.Clear();
-        Data.CollectedCrateLevel = levelID;
+        Data.CollectedCrateLevels.Add(levelID);
     }
 
     public void UpdateCratesView()
@@ -143,7 +144,7 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
 [System.Serializable]
 public class CrateManagerData
 {
-    public int CollectedCrateLevel = 0;
+    public List<int> CollectedCrateLevels = new List<int>();
     public List<RewardType> ResumedRewardTypes = new List<RewardType>();
     public List<int> ResumedCounts = new List<int>();
     public List<int> ResumedIndexes = new List<int>();

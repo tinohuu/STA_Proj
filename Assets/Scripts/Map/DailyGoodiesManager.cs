@@ -22,7 +22,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
         if (!Instance) Instance = this;
         UpdateConfig();
         //Data = SaveManager.Bind(InitializeData());
-        Debug.Log("CollectedTime::" + Data.LastGoodyTime.ToString());
+        Debug.Log("CollectedTime:::::" + Data.LastGoodyTime.ToString());
     }
 
     DailyGoodyData InitializeData()
@@ -37,6 +37,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
     {
         if (TimeManager.Instance.RealNow.Date > Data.LastGoodyTime.Date && !view && !IsSuspended && !TimeManager.Instance.IsGettingTime && EnableDailyGoodies) // for local time specific + Data.CheckedSystemOffset.ToTimeSpan();
         {
+            TimeDebugText.Log("Last Goody Time: " + Data.LastGoodyTime.Date.ToString());
             view = Instantiate(viewPrefab, MapManager.Instance.UICanvas.transform);
             //view = WindowManager.Instance.OpenView(viewPrefab);
         }
@@ -150,11 +151,6 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
     {
         TimeDebugText.Log("Reset goodies time");
         Data.LastGoodyTime = now.Date;
-    }
-
-    public void BindSavedData()
-    {
-        Data = SaveManager.Bind(InitializeData());
     }
 }
 

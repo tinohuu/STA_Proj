@@ -70,6 +70,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
             var configs = CropManager.Instance.CropConfigs.FindAll(e => e.Level <= MapManager.Instance.Data.CompleteLevel);
             var textureModule = m_HarvestParticle.textureSheetAnimation;
             textureModule.startFrame = new ParticleSystem.MinMaxCurve(0, configs.Count * 3f / (textureModule.numTilesX * textureModule.numTilesY));
+            SoundManager.Instance.PlaySFX("CropGrowup");
         }
         m_MainText.text = timeSpan.TotalSeconds > 0 ? "Next Harvest" : "Harvest";
         m_SecondaryText.text = timeSpan.TotalSeconds > 0 ? timeSpan.ToString(@"mm\:ss") : "Now";
@@ -131,6 +132,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
         CropManager.Instance.PlayHarvestEffects();
         Reward.Coin += UpdateHarvestText();
         CropManager.Instance.UpdateCropsAnimator(true);
+
     }
 
     public void Cheat()

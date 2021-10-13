@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    AudioSource audioSource;
-    Dictionary<string, AudioClip> clipsByName;
+    AudioSource m_AudioSource;
+    //Dictionary<string, AudioClip> clipsByName;
 
     public static SoundManager Instance;
     public List<AudioClip> Clips = new List<AudioClip>();
@@ -14,32 +14,32 @@ public class SoundManager : MonoBehaviour
     {
         if (!Instance) Instance = this;
 
-        audioSource = GetComponent<AudioSource>();
+        m_AudioSource = GetComponent<AudioSource>();
 
-        AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
-        clipsByName = clips.ToDictionary(p => p.name.ToUpper());
+        //AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
+        //clipsByName = clips.ToDictionary(p => p.name.ToUpper());
     }
     // Start is called before the first frame update
     void Start()
     {
         PlayBGM("main");
-        StartCoroutine(ITest());
-        StartCoroutine(ITest());
+        //StartCoroutine(ITest());
+        //StartCoroutine(ITest());
         UpdateMusicVolume();
     }
 
-    public void PlaySFX(string name, bool isSingle = false)
+    public void PlaySFX(string name, bool isSingleTrack = false, bool isLoop = false)
     {
         // Return if muted
         if (!MenuManager.Instance.Data.SoundEffects) return;
 
         // Get clip by name
-        string fileName = "SFX_" + name.ToUpper();
-        if (!clipsByName.ContainsKey(fileName)) return;
-        AudioClip clip = clipsByName[fileName];
+        string fileName = "Sounds/SFX_" + name.ToUpper();
+        var clip = Resources.Load<AudioClip>(fileName);
+        if (clip == null) return;
 
         // return if unique but playing already 
-        if (isSingle && Clips.Contains(clip)) return;
+        if (isSingleTrack && Clips.Contains(clip)) return;
 
         // Create game object
         GameObject audioObj = new GameObject(fileName);
@@ -50,7 +50,25 @@ public class SoundManager : MonoBehaviour
         audioSource.volume = 0.5f;
         audioSource.clip = clip;
         Clips.Add(clip);
-        audioObj.AddComponent<SoundEffect>();
+        var sfx = audioObj.AddComponent<SoundEffect>();
+        sfx.IsLoop = isLoop;
+    }
+
+    public void StopSFX(string name)
+    {
+        string fileName = "Sounds/SFX_" + name.ToUpper();
+        var clip = Resources.Load<AudioClip>(fileName);
+        if (clip == null || !Clips.Contains(clip)) return;
+
+        var sounds = GetComponentsInChildren<AudioSource>();
+        foreach (var sound in sounds)
+        {
+            if (sound.clip == clip)
+            {
+                sound.GetComponent<SoundEffect>().FadeOut();
+                return;
+            }
+        }
     }
 
     public void PlayBGM(string name)
@@ -59,13 +77,13 @@ public class SoundManager : MonoBehaviour
         if (!MenuManager.Instance.Data.Music) return;
 
         // Get clip by name
-        string fileName = "BGM_" + name.ToUpper();
-        if (!clipsByName.ContainsKey(fileName)) return;
-        AudioClip clip = clipsByName[fileName];
+        string fileName = "Sounds/BGM_" + name.ToUpper();
+        var clip = Resources.Load<AudioClip>(fileName);
+        if (clip == null) return;
 
         // Play
-        audioSource.clip = clip;
-        audioSource.Play();
+        m_AudioSource.clip = clip;
+        m_AudioSource.Play();
     }
 
     IEnumerator ITest()

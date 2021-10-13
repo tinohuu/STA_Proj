@@ -74,7 +74,8 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     }
     public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName);//Instance.Open();
+        WindowManager.Instance.LoadSceneWithFade(sceneName);
+        //SceneManager.LoadScene(sceneName);//Instance.Open();
     }
 
 }

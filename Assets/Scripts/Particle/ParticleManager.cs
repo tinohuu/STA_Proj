@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ParticleManager : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class ParticleManager : MonoBehaviour
     void Awake()
     {
         if (!Instance) Instance = this;
+        SceneManager.sceneUnloaded += (Scene scene) => ParticleGroup.DestroyChildren();
     }
 
     void Start()
