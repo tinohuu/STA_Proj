@@ -18,6 +18,8 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 
     [Header("Data")]
     [SavedData] public CropManagerData Data = new CropManagerData();
+    //public CropManagerData Data => m_Data;
+
     public List<CropConfig> CropConfigs { get; private set; }
     public bool IsMature { get; private set; }
 
@@ -28,10 +30,12 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     {
         if (!Instance) Instance = this;
         CropConfigs = GetCropConfigs();
+
+        //Data = SaveManager.Instance.Bind(InitialiseData());
     }
     private void Start()
     {
-        HarvestButton.gameObject.SetActive(MapManager.Instance.Data.CompleteLevel >= 4);
+        HarvestButton.gameObject.SetActive(MapManager.Instance.Data.CompleteLevel >= CropConfigs[0].Level);
         /*var crop = CropConfigs.Find(e => e.ID > Data.LastCropGrowthID && e.Level <= MapManager.Instance.Data.CompleteLevel);
         if (crop != null)
         {
@@ -48,6 +52,8 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         CreateEndpoints();
 
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
+
+
     }
 
     public void SetMature(bool isMature)
@@ -57,6 +63,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 
     void CreateEndpoints()
     {
+        if (Data.CollectedClockLevelID == 0) Data.LastHarvestTime = TimeManager.Instance.RealNow;
         var configs = CropConfigs.FindAll(e => e.Level > Data.CollectedClockLevelID); // todo: 2nd map check
         foreach (var config in configs)
         {
@@ -275,8 +282,9 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 [Serializable]
 public class CropManagerData
 {
-    public int LastCropGrowthID = 0;
+    //public int LastCropGrowthID = 0;
     public int CollectedClockLevelID = 0;
+    public DateTime LastHarvestTime = new DateTime();
     public DateTime TimeBoostUntil = new DateTime();
 }
 

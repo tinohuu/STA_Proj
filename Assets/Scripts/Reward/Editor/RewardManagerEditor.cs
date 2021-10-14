@@ -17,7 +17,8 @@ public class RewardManagerEditor : Editor
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        for (int i = 1; i < RewardManager.Instance.Data.Rewards.Count; i++)
+        if (rewardManager.Data == null) return;
+        for (int i = 1; i < rewardManager.Data.Rewards.Count; i++)
         {
             string name = ((RewardType)i).ToString();
             EditorGUILayout.LabelField(name + ": " + rewardManager.Data.Rewards[i]);

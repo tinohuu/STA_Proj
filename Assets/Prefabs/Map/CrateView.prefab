@@ -1626,10 +1626,12 @@ MonoBehaviour:
   m_CrateRocketWindow: {fileID: 8883256271289068005, guid: 7413407cc8148ac4699de6d385fba35d, type: 3}
   BoxSprites:
   - {fileID: 21300000, guid: 39962430aa8f6914487fa44ef54570b5, type: 3}
+  - {fileID: 21300000, guid: 39962430aa8f6914487fa44ef54570b5, type: 3}
   - {fileID: 21300000, guid: 3e2bacce67df3824eb683383a5889d33, type: 3}
   - {fileID: 21300000, guid: 08cdda9ab08c0a64683e1fc53e430053, type: 3}
   - {fileID: 21300000, guid: d77367b515240e04ea164bbaf3f6bac7, type: 3}
   TitleSprite:
+  - {fileID: 21300000, guid: 88f142d5dfa5806438b031f94fb1a47b, type: 3}
   - {fileID: 21300000, guid: 88f142d5dfa5806438b031f94fb1a47b, type: 3}
   - {fileID: 21300000, guid: 744a15502dfed1741b1a67e6111ad794, type: 3}
   - {fileID: 21300000, guid: 31498a3afa85d1541bc73d94a5bef730, type: 3}
@@ -1696,6 +1698,14 @@ MonoBehaviour:
   CanCloseByPanel: 0
   InQueue: 1
   IntervalMultiplerOnFadeOut: 0.01
+  FadeInOnEnable: 1
+  OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowFadeIn:
+    m_PersistentCalls:
+      m_Calls: []
+  FadeInDelay: 0
 --- !u!1 &9109872357640011212
 GameObject:
   m_ObjectHideFlags: 0

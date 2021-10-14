@@ -31,7 +31,7 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (!Interactable) return;
         Animate(true);
-        //SoundManager.Instance.PlaySFX("uiCommonClick");
+        SoundManager.Instance.PlaySFX("uiCommonClick");
     }
     public void OnPointerUp(PointerEventData eventData)
     {
@@ -55,6 +55,9 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (TargetTransform.transform.DOPlay() > 0) return;
         //transform.DOPause();
+
+        //var tempOriPos = transform.localPosition.x > 0 ? oriLocalScale : new Vector3(-oriLocalScale.x, oriLocalScale.y, oriLocalScale.z);
+
         TargetTransform.transform.DOScale(oriLocalScale * (isUp ? Scale : 1), ScaleUpDuration).SetEase(Ease.OutSine);
     }
 
@@ -78,4 +81,8 @@ public class ButtonAnimator : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         //SceneManager.LoadScene(sceneName);//Instance.Open();
     }
 
+    public void PlaySFX(string soundName)
+    {
+        SoundManager.Instance.PlaySFX(soundName);
+    }
 }

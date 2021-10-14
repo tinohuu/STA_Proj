@@ -9,9 +9,9 @@ public class SaveManagerEditor : Editor
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        //SaveManager saveManager = target as SaveManager;
-        if (SaveManager.Instance.Save != null)
-        foreach (object data in SaveManager.Instance.Save.Datas)
+        SaveManager saveManager = target as SaveManager;
+        if (saveManager.Save == null) return;
+        foreach (object data in saveManager.Save.Datas)
         {
             EditorGUILayout.LabelField(" - " + data.GetType().ToString());
             //GUI.Label(data.GetType().ToString());

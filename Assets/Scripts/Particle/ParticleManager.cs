@@ -71,4 +71,9 @@ public class ParticleManager : MonoBehaviour
 
         return obj;
     }
+
+    public void DestroyAll()
+    {
+        ParticleGroup.DestroyChildren();
+    }
 }

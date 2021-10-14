@@ -6,7 +6,6 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[ExecuteAlways]
 public class SaveManager : MonoBehaviour
 {
     public Save Save = null;

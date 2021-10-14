@@ -41,10 +41,11 @@ public class LuckyWheel : MonoBehaviour
 
         }
 
+        SoundManager.Instance.PlaySFX("wheelAvatar");
         m_SmallWheel.transform.DOScale(Vector3.zero, 0.5f);
         m_BigWheel.transform.DOScale(Vector3.one, 0.75f).SetDelay(0.5f).SetEase(Ease.OutBack);
         LuckyWheelManager.Instance.ParentInGroup(this);
         m_Collider2D.enabled = true;
-        m_ButtonAnimator.OnClick.AddListener(() => LuckyWheelManager.Instance.ShowView(this));
+        //m_ButtonAnimator.OnClick.AddListener(() => LuckyWheelManager.Instance.ShowView(this));
     }
 }

@@ -10,7 +10,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
     [SerializeField] int MaxWeeks = 4;
     [SerializeField] int MaxVersions = 2;
 
-    [SavedData] public DailyGoodyData Data = new DailyGoodyData();
+    public DailyGoodyData Data = new DailyGoodyData();
     public static DailyGoodiesManager Instance = null;
     public Dictionary<int, DailyGoodiesConfig> ConfigsByDay;
 
@@ -21,14 +21,13 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
     {
         if (!Instance) Instance = this;
         UpdateConfig();
-        //Data = SaveManager.Bind(InitializeData());
-        Debug.Log("CollectedTime:::::" + Data.LastGoodyTime.ToString());
+        Data = SaveManager.Instance.Bind(InitializeData());
     }
 
     DailyGoodyData InitializeData()
     {
         var data = Data;
-        //data.LastGoodyTime = TimeManager.Instance.RealNow.Date - TimeSpan.FromDays(1);
+        data.LastGoodyTime = TimeManager.Instance.RealNow.Date;
         return data;
     }
 

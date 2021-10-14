@@ -11,7 +11,8 @@ public class TimeManager : MonoBehaviour
 {
 	[Header("Config")]
 	public int ThresholdMinutes = 30;
-	[SavedData] public TimeData Data = new TimeData();
+
+	public TimeData Data = new TimeData();
 
 	[Header("Debug")]
 	public bool IsChecking = false;
@@ -96,7 +97,7 @@ public class TimeManager : MonoBehaviour
 	IEnumerator IGetTime(TimeAuthenticity firstStepAuth)
 	{
 		IsGettingTime = true;
-		LoadingWindow.Play(true);
+		LoadingWindow.Instance.Play(true);
 
 		// Getting internet time
 		foreach (string url in sites)
@@ -136,7 +137,7 @@ public class TimeManager : MonoBehaviour
 				RefreshTime();
 
 				IsGettingTime = false;
-				LoadingWindow.Play(false);
+				LoadingWindow.Instance.Play(false);
 
 				yield break;
 			}
@@ -155,7 +156,7 @@ public class TimeManager : MonoBehaviour
 		RefreshTime();
 
 		IsGettingTime = false;
-		LoadingWindow.Play(false);
+		LoadingWindow.Instance.Play(false);
 	}
 
 	void RecordTime(TimeSource source, DateTime time)

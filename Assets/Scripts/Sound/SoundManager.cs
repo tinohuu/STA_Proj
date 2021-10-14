@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class SoundManager : MonoBehaviour
 
         m_AudioSource = GetComponent<AudioSource>();
 
+        SceneManager.sceneUnloaded += (Scene scene) => CleanClips();
         //AudioClip[] clips = Resources.LoadAll<AudioClip>("Sounds");
         //clipsByName = clips.ToDictionary(p => p.name.ToUpper());
     }
@@ -26,6 +28,24 @@ public class SoundManager : MonoBehaviour
         //StartCoroutine(ITest());
         //StartCoroutine(ITest());
         UpdateMusicVolume();
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneUnloaded -= (Scene scene) => CleanClips();
+    }
+
+    void CleanClips()
+    {
+        if (!this) return;
+        var sources = GetComponentsInChildren<AudioSource>().ToList();
+        sources.RemoveAt(0);
+        var loopSources = sources.FindAll(e => e.loop = true);
+        foreach (var source in loopSources)
+        {
+            Clips.Remove(source.clip);
+            Destroy(source.gameObject);
+        }
     }
 
     public void PlaySFX(string name, bool isSingleTrack = false, bool isLoop = false)
@@ -43,7 +63,7 @@ public class SoundManager : MonoBehaviour
 
         // Create game object
         GameObject audioObj = new GameObject(fileName);
-        audioObj.transform.SetParent(Instance.transform);
+        audioObj.transform.SetParent(transform);
 
         // Create audio source
         AudioSource audioSource = audioObj.AddComponent<AudioSource>();

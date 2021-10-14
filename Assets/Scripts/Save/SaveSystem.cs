@@ -38,7 +38,7 @@ public static class SaveSystem
         bf.Serialize(fileStream, encryptedByte);
         fileStream.Close();
 
-        Debug.LogWarning((save.Datas.Count == 0).ToString() + root + path + fileName + encryptedByte.Length + "Save save count: " + save.Datas.Count);
+        Debug.LogWarning("Saved to " + root + path + fileName + " with " + save.Datas.Count + " datas.");
 
         return File.Exists(root + path + fileName);
     }
@@ -62,7 +62,7 @@ public static class SaveSystem
             // Convert bytes to class
             MemoryStream ms = new MemoryStream(byteSave);
             Save save = (Save)bf.Deserialize(ms);
-            Debug.LogWarning(root + path + fileName + encryptedByte.Length + "Load save count: " + save.Datas.Count);
+            Debug.LogWarning("Loaded from " + root + path + fileName + " with " + save.Datas.Count + " datas.");
             ms.Close();
 
             return save;

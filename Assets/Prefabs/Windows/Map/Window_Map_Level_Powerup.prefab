@@ -757,7 +757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236eaab89c73e024ca56d868700d4514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayButton: {fileID: 0}
+  m_PlayButton: {fileID: 5697702497682056692}
   OrderText: {fileID: 1635619637353544861}
   StarGroup: {fileID: 2485018733449926882}
   CostText: {fileID: 4767464688409341194}

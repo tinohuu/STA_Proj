@@ -51,7 +51,15 @@ public class RewardNumber : MonoBehaviour
 
     public void Animate()
     {
-        if (!Switches[Type]) return;
+        if (!Switches[Type])
+        {
+            //if (animCoroutine != null) StopCoroutine(animCoroutine);
+            //current = Reward.Data[Type];
+            //text.text = Reward.Data[Type].ToString("N0");
+            //AnimateScale(false);
+            //animCoroutine = null;
+            return;
+        }
 
         if (BlockAnimation)
         {
@@ -72,11 +80,10 @@ public class RewardNumber : MonoBehaviour
 
     IEnumerator IAnimate()
     {
-
         while (current < Reward.Data[Type] - 1)
         {
             AnimateScale(true);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
             int diff = Reward.Data[Type] - current;
             int target = current + (ParticleManager.Instance.ParticleGroup.childCount > 0 ? (int)(diff * 0.5f) : diff);
             DOTween.To(() => current, x => current = x, target, 1)
@@ -93,7 +100,7 @@ public class RewardNumber : MonoBehaviour
         {
             transform.DOKill();
             transform.localScale = oriScale;
-            transform.DOScale(1.2f, 0.25f).SetLoops(-1, LoopType.Yoyo);
+            transform.DOScale(oriScale * 1.1f, 0.25f).SetLoops(-1, LoopType.Yoyo);
         }
         else
         {

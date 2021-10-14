@@ -26,6 +26,7 @@ public class CropEndpoint : MonoBehaviour
 
         if (CropManager.Instance.EnableEndpoint && MapManager.Instance.Data.CompleteLevel >= m_LevelID && !m_GrowthWindow)
         {
+            SoundManager.Instance.PlaySFX("cropNewCropUnlocked");
             m_GrowthWindow = Window.CreateWindowPrefab(m_CropGrowthPrefab).GetComponent<CropGrowthWindow>();
             m_GrowthWindow.Initialize(m_CropName, this);
         }
@@ -43,6 +44,7 @@ public class CropEndpoint : MonoBehaviour
         levelButton.UnsetAsIcon(transform, CropManager.Instance.transform);
         m_RewardIcon.DOScale(Vector3.zero, 0.25f);
         yield return new WaitForSeconds(0.25f);
+        SoundManager.Instance.PlaySFX("itemClockGet");
         transform.position = levelButton.transform.position;
         m_RewardBig.DOScale(Vector3.one, 0.5f);
         m_RewardBig.DOJump(CropHarvest.Instance.transform.position, 3, 1, 0.75f).SetDelay(1.5f).OnComplete(() => Finish());
@@ -53,5 +55,6 @@ public class CropEndpoint : MonoBehaviour
         Reward.Data[RewardType.Clock]++;
         CropManager.Instance.Data.CollectedClockLevelID = m_LevelID;
         Destroy(gameObject);
+        TutorialManager.Instance.Show("Harvest", 1, CropHarvest.Instance.gameObject);
     }
 }

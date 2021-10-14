@@ -62,21 +62,33 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
         LevelGroup.DestroyChildren();
 
         var configs = JsonExtensions.JsonToList<Mapmaker_BaseConfig>(json);
+        MapLevel curLevel = null;
+        MapLevel retriedLevel = null;
         for (int i = 0; i < configs.Count; i++)
         {
             var level = Instantiate(LevelPrefab, LevelGroup).GetComponent<MapLevel>();
             level.transform.localPosition = configs[i].LocPos;
             level.Data = MapManager.Instance.Data.MapLevelDatas[i + MapManager.Instance.CurMapStageConfigs[0].LevelID - 1];
-            if (MapDataManager.Instance.RetriedLevel > 0)
-            {
-                if (level.Data.ID == MapDataManager.Instance.RetriedLevel)
-                MapPlayer.Instance.MoveToLevel(level, true, false);
-            }
-            else if (level.Data.ID == MapManager.Instance.Data.SelectedLevel)
-                MapPlayer.Instance.MoveToLevel(level, false, false);
+            if (MapDataManager.Instance.RetriedLevel > 0 && level.Data.ID == MapDataManager.Instance.RetriedLevel) retriedLevel = level;
+            if (MapManager.Instance.Data.SelectedLevel == level.Data.ID) curLevel = level;
         }
+
+
+        if (MapDataManager.Instance.RetriedLevel > 0 && retriedLevel)
+        {
+
+            MapPlayer.Instance.MoveToLevel(curLevel, false, false);
+            //MapPlayer.Instance.OnClickRomote(0);
+            MapPlayer.Instance.MoveToLevel(retriedLevel, true, true);
+            MapDataManager.Instance.RetriedLevel = 0;
+        }
+        else if (curLevel)
+        {
+            MapPlayer.Instance.MoveToLevel(curLevel, false, false);
+        }
+
         MapPlayer.Instance.OnClickRomote(0);
-        MapDataManager.Instance.RetriedLevel = 0;
+        //MapManager.Instance.MoveMap(curLevel.transform.position, 0);
     }
 
     public Transform Mapmaker_AddItem()

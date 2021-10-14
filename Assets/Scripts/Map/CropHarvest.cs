@@ -40,7 +40,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
 
     private void Start()
     {
-        TutorialManager.Instance.Show("Harvest", 1, m_ButtonAnimator.gameObject);
+
     }
 
     private void OnEnable()
@@ -112,8 +112,9 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     {
         if (Reward.Data[RewardType.Clock] > 0)
         {
-            MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(59 + 3);
+            CropManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(59 + 3);
             Reward.Data[RewardType.Rocket] = 0;
+            SoundManager.Instance.PlaySFX("itemClockUse");
         }
     }
 
@@ -132,13 +133,12 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
         CropManager.Instance.PlayHarvestEffects();
         Reward.Coin += UpdateHarvestText();
         CropManager.Instance.UpdateCropsAnimator(true);
-
     }
 
     public void Cheat()
     {
         if (!Debug.isDebugBuild) return;
-        MapManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(55);
+        CropManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(55);
     }
 
     public int GetHarvestCoin()
@@ -211,7 +211,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
             if (clamp)
             {
                 TimeDebugText.Log("Clamped the harvest time.");
-                data.LastHarvestTime = now;
+                CropManager.Instance.Data.LastHarvestTime = now;
             }
             //CropManager.Instance.UpdateCropsAnimator(true);
         }
@@ -219,7 +219,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     }
     public void ResetTime(DateTime now)
     {
-        MapManagerData data = MapManager.Instance.Data;
-        data.LastHarvestTime = now;
+        //MapManagerData data = MapManager.Instance.Data;
+        CropManager.Instance.Data.LastHarvestTime = now;
     }
 }

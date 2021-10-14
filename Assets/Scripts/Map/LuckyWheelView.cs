@@ -33,6 +33,13 @@ public class LuckyWheelView : MonoBehaviour
     List<LuckyWheelRewardSlot> m_Slots = new List<LuckyWheelRewardSlot>();
     LuckyWheel m_Wheel;
 
+    private void Awake()
+    {
+
+        var window = GetComponent<WindowAnimator>();
+        window.OnWindowEnable.AddListener(() => StartCoroutine(IAnimateWheelIcon()));
+        window.FadeInDelay = 3;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -51,14 +58,6 @@ public class LuckyWheelView : MonoBehaviour
         m_ButtonAnimator.OnClick.AddListener(() => Spin());
         m_LuckyWheelButton.onClick.AddListener(() => Spin());
 
-        FadeIn();
-    }
-
-    void FadeIn()
-    {
-        var window = GetComponent<WindowAnimator>();
-        window.OnWindowEnable.AddListener(() => StartCoroutine(IAnimateWheelIcon()));
-        window.FadeInDelay = 3;
     }
     
     IEnumerator IAnimateWheelIcon()
@@ -82,6 +81,8 @@ public class LuckyWheelView : MonoBehaviour
 
     void Spin()
     {
+        StartCoroutine(IWheelSound());
+
         m_ButtonAnimator.Interactable = false;
         m_LuckyWheelButton.interactable = false;
         m_SpinText.DOFade(0.5f, 0.25f);
@@ -106,6 +107,18 @@ public class LuckyWheelView : MonoBehaviour
         }
     }
 
+    IEnumerator IWheelSound()
+    {
+        SoundManager.Instance.PlaySFX("wheelRollingDrumLoop", isLoop: true);
+        SoundManager.Instance.PlaySFX("wheelRollingPointerLoop", isLoop:true);
+        yield return new WaitForSeconds(5 - 1.5f);
+        SoundManager.Instance.StopSFX("wheelRollingPointerLoop");
+        SoundManager.Instance.PlaySFX("wheelRollingPointerEnd");
+        yield return new WaitForSeconds(1);
+        SoundManager.Instance.StopSFX("wheelRollingDrumLoop");
+        SoundManager.Instance.PlaySFX("wheelRollingDrumEnd");
+    }
+
     void Exit()
     {
         m_Slots[m_SlotIndex].transform.SetAsLastSibling();
@@ -116,6 +129,9 @@ public class LuckyWheelView : MonoBehaviour
 
     void Shine()
     {
+        SoundManager.Instance.PlaySFX("wheelRollingShining");
+        SoundManager.Instance.PlaySFX("wheelPrizeGet");
+
         m_OuterLightImage.DOFade(0, 3).SetEase(Ease.Flash, 8, 0);
         m_InnerLightImage.DOFade(0, 3).SetEase(Ease.Flash, 8, 0);
         m_SectorImage.DOFade(0, 3).SetEase(Ease.Flash, 8, 0);

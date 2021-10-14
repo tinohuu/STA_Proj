@@ -15,7 +15,7 @@ public class TutorialManager : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] Tutorial m_CurTutorial;
-    [SavedData] [SerializeField]TutorialManagerData m_Data = new TutorialManagerData();
+    [SavedData] public TutorialManagerData Data = new TutorialManagerData();
     Dictionary<string, TutorialData> m_DatasByCode = new Dictionary<string, TutorialData>();
 
     public static TutorialManager Instance;
@@ -100,7 +100,7 @@ public class TutorialManager : MonoBehaviour
 
     void UpdateData()
     {
-        if (m_Data.TutorialDatas.Count == 0)
+        if (Data.TutorialDatas.Count == 0)
         {
             var configsByCode = ConfigsAsset.GetConfigList<TutorialConfig>().GroupBy(e => e.Code).ToDictionary(e => e.Key, e => e.ToList());
 
@@ -109,7 +109,7 @@ public class TutorialManager : MonoBehaviour
                 TutorialData data = new TutorialData();
                 data.Code = code;
                 data.MaxProgress = data.MaxProgress = configsByCode[code].Count;
-                m_Data.TutorialDatas.Add(data);
+                Data.TutorialDatas.Add(data);
             }
         }
         else
@@ -118,11 +118,11 @@ public class TutorialManager : MonoBehaviour
 
             foreach (var code in configsByCode.Keys)
             {
-                TutorialData data = m_Data.TutorialDatas.Find(e => e.Code == code);
+                TutorialData data = Data.TutorialDatas.Find(e => e.Code == code);
                 data.MaxProgress = data.MaxProgress = configsByCode[code].Count;
             }
         }
-        m_DatasByCode = m_Data.TutorialDatas.ToDictionary(e => e.Code);
+        m_DatasByCode = Data.TutorialDatas.ToDictionary(e => e.Code);
     }
 
     public void Finish(TutorialConfig config)

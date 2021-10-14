@@ -8,20 +8,29 @@ public class LoadingWindow : Window
 {
     public GameObject Item;
     CanvasGroup canvasGroup;
-    static LoadingWindow instance;
+    public static LoadingWindow Instance;
     private void Awake()
     {
-        if (!instance) instance = this;
+        if (!Instance) Instance = this;
 
         canvasGroup = GetComponent<CanvasGroup>();
         //TimeManager.Instance.OnGetTime += new TimeManager.TimeHandler(Fade);
     }
 
-    public static void Play(bool fadeIn)
+    public void Play(bool fadeIn)
     {
-        instance.canvasGroup.DOKill();
-        instance.Item.gameObject.SetActive(fadeIn);
-        instance.canvasGroup.blocksRaycasts = fadeIn;
-        instance.canvasGroup.DOFade(fadeIn ? 1 : 0, 1);
+        StopAllCoroutines();
+        StartCoroutine(IPlay(fadeIn));
+    }
+
+    IEnumerator IPlay(bool fadeIn)
+    {
+        yield return null;
+        Instance.canvasGroup.DOKill(true);
+
+        Instance.Item.gameObject.SetActive(fadeIn);
+
+        Instance.canvasGroup.blocksRaycasts = fadeIn;
+        Instance.canvasGroup.DOFade(fadeIn ? 1 : 0, 1);
     }
 }

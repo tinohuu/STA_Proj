@@ -18,9 +18,10 @@ public class MapDataManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.P))
         {
             SetLevelRating(STAGameManager.Instance.nLevelID, 3);
+            SetRetry(STAGameManager.Instance.nLevelID + 1);
         }
     }
     public void UpdateLevelData()
@@ -76,7 +77,8 @@ public class MapManagerData
 {
     public int CompleteLevel = 0;
     public int SelectedLevel = 1;
-    public DateTime LastHarvestTime = new DateTime();
+    public DateTime LastHarvestTime => CropManager.Instance.Data.LastHarvestTime;
+
     public int WheelCollectedLevel = 0;
     public int WheelTimesSinceGrand = 0;
     public List<MapLevelData> MapLevelDatas = new List<MapLevelData>();

@@ -49,7 +49,8 @@ public class WindowManager : MonoBehaviour
 
     void OnLoadScene(Scene scene, LoadSceneMode mode)
     {
-        for (int i = 0; i < m_ButtonGroup.childCount; i++)
+        m_ButtonGroup.gameObject.SetActive(!scene.name.Contains("Map"));
+        /*for (int i = 0; i < m_ButtonGroup.childCount; i++)
         {
             m_ButtonGroup.GetChild(i).gameObject.SetActive(false);
         }
@@ -64,7 +65,7 @@ public class WindowManager : MonoBehaviour
                 buttons = m_GameButtons;
                 break;
         }
-        foreach (var button in buttons) button.gameObject.SetActive(true);
+        foreach (var button in buttons) button.gameObject.SetActive(true);*/
 
 
         float delay = 0;

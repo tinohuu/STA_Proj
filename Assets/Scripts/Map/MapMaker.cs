@@ -219,6 +219,11 @@ public class Mapmaker : MonoBehaviour
         }
         Log(logText);
     }
+
+    public void ClearSave()
+    {
+        SaveManager.Instance.Clear();
+    }
     #endregion
 }
 

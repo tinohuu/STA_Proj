@@ -5,7 +5,8 @@ using UnityEngine;
 public class ShopManager : MonoBehaviour
 {
     [SerializeField] GameObject m_ShopViewPrefab;
-    [SavedData] public ShopData Data = new ShopData();
+
+     [SavedData] public ShopData Data = new ShopData();
     public static ShopManager Instance;
 
     ShopView m_ShopView;
@@ -36,7 +37,11 @@ public class ShopManager : MonoBehaviour
 
     public void Open()
     {
-        if (!m_ShopView) m_ShopView = Instantiate(m_ShopViewPrefab, WindowManager.Instance.transform).GetComponent<ShopView>();
+        if (!m_ShopView)
+        {
+            SoundManager.Instance.PlaySFX("uiShopOpen");
+            m_ShopView = Instantiate(m_ShopViewPrefab, WindowManager.Instance.transform).GetComponent<ShopView>();
+        }
     }
 }
 

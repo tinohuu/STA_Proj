@@ -30,32 +30,40 @@ public class CrateBarWindow : MonoBehaviour
 
     IEnumerator IPlay()
     {
+
         // Get old quality
         int oldRatingCount = m_Crate.CurRatingCount - MapDataManager.Instance.NewRatings;
-        Crate.Quality oldQuality = 0;
-        for (int i = 0; i < 4; i++)
-        {
-            if (oldRatingCount >= m_Crate.QualityRatings[i])
-            {
-                oldQuality = (Crate.Quality)i;
-            }
-        }
-        m_Crate.SetView(oldQuality, oldRatingCount);
+        oldRatingCount = Mathf.Clamp(oldRatingCount, 0, 99);
+        int oldQuality = (int)m_Crate.GetQuality(oldRatingCount);
+
+        m_Crate.SetView((Crate.Quality)oldQuality, oldRatingCount);
 
         var levelButton = MapLevelManager.Instance.GetLevelButton(MapManager.Instance.Data.SelectedLevel);
         var bar = Instantiate(m_CrateProgressBarPrefab, levelButton.transform).GetComponent<CrateProgressBar>();
-        bar.Set(oldRatingCount, m_Crate.QualityRatings[(int)oldQuality + 1], (Crate.Quality)((int)oldQuality + 1));
+
+        //quality = Mathf.Clamp(quality, 0, 3);
+
+        int nextQuality = Mathf.Clamp(oldQuality + 1, 0, 4);
+        bar.Set(oldRatingCount, m_Crate.QualityRatings[nextQuality], (Crate.Quality)nextQuality);
 
         yield return new WaitForSeconds(0.5f);
+
+        int curQuality = 0;
         for (int i = oldRatingCount; i <= m_Crate.CurRatingCount; i++)
         {
-            Crate.Quality quality = m_Crate.QualityRatings[(int)m_Crate.CrateQuality] > i ? oldQuality : m_Crate.CrateQuality;
+            curQuality = (int)m_Crate.GetQuality(i);
 
-            bar.Set(i, m_Crate.QualityRatings[(int)quality + 1], (Crate.Quality)((int)quality + 1));
-            m_Crate.SetView(quality, oldRatingCount);
+            //quality = i >= m_Crate.QualityRatings[(int)oldQuality] ? oldQuality : oldQuality + 1;
+            //quality = Mathf.Clamp(quality, 0, 3);
+
+            nextQuality = Mathf.Clamp(curQuality + 1, 0, 4);
+            bar.Set(i, m_Crate.QualityRatings[nextQuality], (Crate.Quality)nextQuality);
+            m_Crate.SetView((Crate.Quality)curQuality, i);
+
             yield return new WaitForSeconds(0.25f);
         }
-        m_Crate.SetView(m_Crate.CrateQuality, m_Crate.CurRatingCount);
+
+        m_Crate.SetView((Crate.Quality)curQuality, m_Crate.CurRatingCount);
         MapDataManager.Instance.NewRatings = 0;
         yield return new WaitForSeconds(2);
         bar.Close();

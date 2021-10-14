@@ -13,13 +13,16 @@ public class ShopView : MonoBehaviour
     [SerializeField] Transform m_ShopItemGroup;
     [SerializeField] WindowAnimator m_PurchaseSucceedWindow;
     [SerializeField] Transform m_PurchaseSuccessWindowRewardGroup;
-    [SerializeField] GameObject m_ShopItemRewardPrefab;
+    //[SerializeField] GameObject m_ShopItemRewardPrefab;
     [SerializeField] ButtonAnimator m_PurchaseSuccessWindowButton;
+    //[SerializeField] ScrollRect m_SrollRect;
+    [SerializeField] Image m_BlackFront;
 
+    [SerializeField] GameObject m_CoinWindowPrefab;
     // Start is called before the first frame update
     void Start()
     {
-        UpdateView();
+        UpdateView(); 
     }
 
     // Update is called once per frame
@@ -30,6 +33,9 @@ public class ShopView : MonoBehaviour
 
     public void UpdateView()
     {
+        m_BlackFront.DOKill(true);
+        m_BlackFront.DOFade(0, 1f).SetDelay(0.25f).OnComplete(() => m_BlackFront.gameObject.SetActive(false));
+
         m_ShopItemGroup.DestroyChildren();
         var configs = ConfigsAsset.GetConfigList<ShopConfig>();
         Transform group = null;
@@ -53,7 +59,13 @@ public class ShopView : MonoBehaviour
 
     public void Purchase(int id)
     {
-        m_PurchaseSucceedWindow.gameObject.SetActiveImmediately(true);
+
+        RewardNumber.Switches[RewardType.Coin] = false;
+        //ParticleManager.Instance.DestroyAll();
+        m_BlackFront.DOKill(true);
+        m_BlackFront.gameObject.SetActive(true);
+        m_BlackFront.DOFade(0.9f, 0.5f);
+        //m_PurchaseSucceedWindow.gameObject.SetActiveImmediately(true);
 
         // todo: check
         var configs = ConfigsAsset.GetConfigList<ShopConfig>();
@@ -65,22 +77,23 @@ public class ShopView : MonoBehaviour
 
         Reward.Coin += rewardConfig.CoinReward;
 
-        m_PurchaseSuccessWindowRewardGroup.DestroyChildrenImmediate();
-        var coin = Instantiate(m_ShopItemRewardPrefab, m_PurchaseSuccessWindowRewardGroup);
-        coin.GetComponentInChildren<TMP_Text>().text = rewardConfig.CoinReward.ToString("N0");
+        //m_PurchaseSuccessWindowRewardGroup.DestroyChildrenImmediate();
+        SoundManager.Instance.PlaySFX("uiShopChargeSucceed");
+        //var coin = Instantiate(m_ShopItemRewardPrefab, m_PurchaseSuccessWindowRewardGroup);
+        //coin.GetComponentInChildren<TMP_Text>().text = rewardConfig.CoinReward.ToString("N0");
 
         var rewards = rewardConfig.ItemReward.ToRewards();
         foreach (var reward in rewards)
         {
             Reward.Data[reward.Item1] += reward.Item2;
 
-            var item = Instantiate(m_ShopItemRewardPrefab, m_PurchaseSuccessWindowRewardGroup);
-            item.GetComponentInChildren<Image>().sprite = reward.Item1.ToSprite();
-            item.GetComponentInChildren<TMP_Text>().text = "x" + reward.Item2.ToString();
+            //var item = Instantiate(m_ShopItemRewardPrefab, m_PurchaseSuccessWindowRewardGroup);
+            //item.GetComponentInChildren<Image>().sprite = reward.Item1.ToSprite();
+            //item.GetComponentInChildren<TMP_Text>().text = "x" + reward.Item2.ToString();
         }
 
         ShopManager.Instance.Data.PurchaseTimes[id - 1]++;
-        UpdateView();
+        //UpdateView();
     }
 
     public void ClosePurchaseSuccessWindow()
@@ -98,5 +111,11 @@ public class ShopView : MonoBehaviour
         }
         yield return new WaitForSeconds(0.5f);
         m_PurchaseSucceedWindow.FadeOut();
+    }
+
+    public void CreateCoinWindow(Vector3 startPos)
+    {
+        GetComponent<WindowAnimator>().Close();
+        Window.CreateWindowPrefab(m_CoinWindowPrefab).GetComponent<ShopCoinWindow>().Initialise(startPos);
     }
 }

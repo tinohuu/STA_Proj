@@ -40,7 +40,7 @@ public class MapPlayer : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) OnClickRomote(0); 
+        //if (Input.GetKeyDown(KeyCode.R)) OnClickRomote(0); 
     }
 
     void UpdaterRemoteView(Vector2 scrollRect = new Vector2())
@@ -68,35 +68,35 @@ public class MapPlayer : MonoBehaviour
         //if (isRunning) return;
         //m_IsMovingToLevel = true;
         StopAllCoroutines();
-        transform.DOKill();
+        transform.DOKill(true);
         // Move to the screen edge when far from the screen area
         screenPoint = Camera.main.WorldToScreenPoint(transform.position);
         if (screenPoint.x < 0 - EdgeOffset || screenPoint.x > Screen.width + EdgeOffset)
         {
             RemoteImage.gameObject.SetActive(false);
             screenPoint.x = screenPoint.x < 0 ? 0 - EdgeOffset : Screen.width + EdgeOffset;
-            transform.position = Camera.main.ScreenToWorldPoint(screenPoint);
+            //transform.position = Camera.main.ScreenToWorldPoint(screenPoint);
         }
 
         // Animate
-        if (!showPanel)
+        if (!animate)
         {
             transform.position = mapLevel.transform.position;
             return;
         }
 
 
-        StartCoroutine(IMoveToLevel(mapLevel, animate && mapLevel.Data.ID != MapManager.Instance.Data.SelectedLevel));
+        StartCoroutine(IMoveToLevel(mapLevel, showPanel, animate && mapLevel.Data.ID != MapManager.Instance.Data.SelectedLevel));
         MapManager.Instance.Data.SelectedLevel = mapLevel.Data.ID;
     }
 
-    IEnumerator IMoveToLevel(MapLevel mapLevel, bool animate)
+    IEnumerator IMoveToLevel(MapLevel mapLevel, bool showpanel, bool animate)
     {
         //isRunning = true;
         yield return null;
         if  (animate)
         {
-            SoundManager.Instance.PlaySFX("uiAvatarLanding");
+            SoundManager.Instance.PlaySFX("uiAvatarFly");
             Tween tween = transform.DOLocalJump(mapLevel.transform.localPosition, 1, 1, 1.5f);
             yield return tween.WaitForCompletion();
             SoundManager.Instance.PlaySFX("uiAvatarLanding");
@@ -105,6 +105,8 @@ public class MapPlayer : MonoBehaviour
         {
             transform.localPosition = mapLevel.transform.localPosition;
         }
+
+        if (!showpanel) yield break;
 
         int windowIndex = 0;
         if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == 1021).FunctionParams)

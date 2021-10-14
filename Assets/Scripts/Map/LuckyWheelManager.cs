@@ -28,7 +28,6 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
         if (wheel && EnableWheel)
         {
             var view = Instantiate(m_WheelViewPrefab, MapManager.Instance.UICanvas.transform).GetComponent<LuckyWheelView>();
-            //var view = WindowManager.Instance.OpenView(m_WheelViewPrefab).GetComponent<LuckyWheelView>();
             view.SetWheel(wheel);
         }
     }

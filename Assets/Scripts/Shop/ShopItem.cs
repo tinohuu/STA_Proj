@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class ShopItem : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class ShopItem : MonoBehaviour
     [SerializeField] TMP_Text m_TagTextA;
     [SerializeField] TMP_Text m_TagTextB;
 
+    [Header("Purcashe Successful")]
+    [SerializeField] RectTransform m_PurchaseSuccessful;
+
     [Header("Other Ref")]
     [SerializeField] Image m_BackgroundImage;
     [SerializeField] TMP_Text m_BackgroundText;
@@ -27,6 +31,7 @@ public class ShopItem : MonoBehaviour
     int m_ItemID = 1;
     void Start()
     {
+        //m_PurchaseSuccessful.gameObject.SetActive(false);
         var configs = ConfigsAsset.GetConfigList<ShopConfig>();
         var config = configs[m_ItemID - 1];
 
@@ -94,5 +99,37 @@ public class ShopItem : MonoBehaviour
     {
         GetComponentInParent<ShopView>().Purchase(m_ItemID);
         //ShopManager.Instance.Purchase(m_ItemID);
+        StartCoroutine(IPurchaseSucessful());
+    }
+
+    IEnumerator IPurchaseSucessful()
+    {
+        var canvas = gameObject.AddComponent<Canvas>();
+        canvas.overrideSorting = true;
+        canvas.sortingLayerName = "UI";
+        canvas.sortingOrder = 50;
+        gameObject.AddComponent<GraphicRaycaster>();
+
+        m_PurchaseButton.Interactable = false;
+        m_PurchaseButton.transform.DOKill(true);
+
+        m_PurchaseButton.transform.DOScale(Vector3.zero, 0.25f);
+        yield return new WaitForSeconds(0.25f);
+        var size = m_BackgroundImage.rectTransform.sizeDelta;
+        size.y *= 0.95f;
+        //size = new Vector2(size.x, size.y * 0.8f);
+        m_BackgroundImage.rectTransform.DOSizeDelta(size, 0.5f);
+        yield return new WaitForSeconds(0.75f);
+        transform.DOJump(GetComponentInParent<ShopView>().transform.position - Vector3.right * 250, -100, 1, 0.75f);
+        yield return new WaitForSeconds(0.5f);
+        m_PurchaseSuccessful.DOAnchorPosX(0, 0.5f);
+        //m_PurchaseSuccessful.GetComponentInChildren<ButtonAnimator>().OnClick.AddListener(() => GetComponentInParent<ShopView>().UpdateView());
+        var startPos = Camera.main.ScreenToWorldPoint(m_MainRewardImage.transform.position);
+        startPos.z = 0;
+        m_PurchaseSuccessful.GetComponentInChildren<ButtonAnimator>().OnceOnly = true;
+        m_PurchaseSuccessful.GetComponentInChildren<ButtonAnimator>().OnClick.AddListener(() => GetComponentInParent<ShopView>().CreateCoinWindow(startPos));
+        
+
+        m_PurchaseSuccessful.gameObject.SetActive(true);
     }
 }

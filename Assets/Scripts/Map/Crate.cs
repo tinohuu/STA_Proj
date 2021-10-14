@@ -7,7 +7,7 @@ using System.Linq;
 
 public class Crate : MonoBehaviour
 {
-    public enum Quality { Wood, Silver, Gold, Diamond }
+    public enum Quality { None, Wood, Silver, Gold, Diamond }
 
     [Header("Setting")]
     [SerializeField] float m_MaxBarWidth = 4;
@@ -17,7 +17,7 @@ public class Crate : MonoBehaviour
     [SerializeField] GameObject m_Rating;
     [SerializeField] GameObject m_Tick;
 
-    [SerializeField] Sprite[] BoxSprites = new Sprite[4];
+    [SerializeField] Sprite[] BoxSprites = new Sprite[5];
     [SerializeField] SpriteRenderer BoxRenderer;
     [SerializeField] GameObject m_CrateBarWindow;
     [SerializeField] GameObject m_CrateProgressWindow;
@@ -39,9 +39,9 @@ public class Crate : MonoBehaviour
         m_Text = GetComponentInChildren<TMP_Text>(true);
         m_ButtonAnimator = GetComponent<ButtonAnimator>();
 
-
-        UpdateView();
         UpdateData();
+        UpdateView();
+
     }
 
     void UpdateData()
@@ -64,22 +64,26 @@ public class Crate : MonoBehaviour
 
         // Get quality points
         var publicConfig = ConfigsAsset.GetConfigList<CratePublicConfig>()[0];
-        float[] qualitySteps = new float[] { publicConfig.StepWood, publicConfig.StepSliver, publicConfig.StepGold, publicConfig.StepDiamond };
+        float[] qualitySteps = new float[] { 0, publicConfig.StepWood, publicConfig.StepSliver, publicConfig.StepGold, publicConfig.StepDiamond };
         for (int i = 0; i < qualitySteps.Length; i++) qualitySteps[i] /= publicConfig.StepsTotal;
 
-        int[] _qualityRatings = new int[4];
+        int[] _qualityRatings = new int[5];
         int lastQualityPoint = 0;
-        for (int i = 0; i < 4; i++)
+
+        _qualityRatings[0] = 0;
+        for (int i = 1; i < 5; i++)
         {
             //int lastQualityPoint = Mathf.RoundToInt(totalRating * i / 4f);
             int qualityPoint = Mathf.RoundToInt(TotalRatingCount * qualitySteps[i]);
             if (qualityPoint == lastQualityPoint) qualityPoint++;
             lastQualityPoint = qualityPoint;
             _qualityRatings[i] = qualityPoint;
-
-            if (CurRatingCount > lastQualityPoint && CurRatingCount <= qualityPoint) CrateQuality = (Quality)i;
+            //if (CurRatingCount > lastQualityPoint && CurRatingCount <= qualityPoint) CrateQuality = (Quality)i;
         }
+
         QualityRatings = _qualityRatings;
+
+        CrateQuality = GetQuality(CurRatingCount);
     }
 
     public void UpdateView()
@@ -125,5 +129,18 @@ public class Crate : MonoBehaviour
             var window = Window.CreateWindowPrefab(m_CrateProgressWindow).GetComponent<CrateProgressWindow>();
             window.Initialize(this);
         }
+    }
+
+    public Quality GetQuality(int rating)
+    {
+        int quality = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (rating >= QualityRatings[i])
+                quality = i;
+            else
+                break;
+        }
+        return (Quality)quality;
     }
 }

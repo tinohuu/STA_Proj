@@ -94,7 +94,7 @@ public class WindowAnimator : Window
         if (onEnable && !FadeInOnEnable) yield break;
         yield return new WaitForSeconds(FadeInDelay);
 
-
+        SoundManager.Instance.PlaySFX("uiPanelOpen");
         foreach (WindowAnimatorElement window in Elements)
         {
             window.CanvasGroup.DOFade(1, window.Duration);
@@ -147,7 +147,7 @@ public class WindowAnimator : Window
         }
         else
         {
-            yield return new WaitForSeconds(tween.Duration());
+            if (tween != null) yield return new WaitForSeconds(tween.Duration());
             if (disable) gameObject.SetActive(false);
         }
     }
