@@ -121,8 +121,37 @@ public class GoldAndScoreUI : MonoBehaviour
 
     public void AddGold(int nAddValue)
     {
-        nGold += nAddValue;
-        goldDisplay.text = nGold.ToString("N0");
+        //nGold += nAddValue;
+        //goldDisplay.text = nGold.ToString("N0");
+
+        StartCoroutine(AddGoldEffect(nAddValue));
+    }
+
+    IEnumerator AddGoldEffect(int nAddValue)
+    {
+        int nStepCount = 20;
+        int nStep = nAddValue / nStepCount;
+
+        if(nAddValue > 0)
+        {
+            nStep = nStep >= 1 ? nStep : 1;
+            nStepCount = nStep >= 1 ? nStepCount : nAddValue;
+        }
+        else
+        {
+            nStep = Mathf.Abs(nStep) >= 1 ? nStep : -1;
+            nStepCount = Mathf.Abs(nStep) >= 1 ? nStepCount : Mathf.Abs(nAddValue);
+        }
+
+        for(int i = 0; i < nStepCount; ++i)
+        {
+            nGold += nStep;
+            goldDisplay.text = nGold.ToString("N0");
+
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        StopCoroutine(AddGoldEffect(nAddValue));
     }
 
     public void SetGold(int nValue)
@@ -162,5 +191,22 @@ public class GoldAndScoreUI : MonoBehaviour
 
         //star
         
+    }
+
+    public void ShowCoinEffectTest()
+    {
+        Vector3 newPos = gameplayUI.goldAndScoreUI.transform.position - Vector3.forward * 2.0f;
+
+        //GameObject streakCoin = Instantiate(GameplayMgr.Instance.FXCoin, newPos, Quaternion.identity);
+
+
+        //GameObject streakCoin = Instantiate(GameplayMgr.Instance.FXCoin, streakBonusBG.transform);
+        GameObject streakCoin = Instantiate(GameplayMgr.Instance.ParticleTest, scoreBG.transform);
+
+
+        //Vector3 newPos = gameplayUI.streakBonusUI.transform.position - Vector3.forward * 2.0f;
+        //streakCoin.transform.SetParent(streakBonusBG.transform);
+        streakCoin.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        streakCoin.transform.localScale = new Vector3(100.0f, 100.0f, 1.0f);
     }
 }

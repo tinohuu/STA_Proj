@@ -29,7 +29,50 @@ public class GamePlayUI : MonoBehaviour
 
     public BombEndGameUI bombEndGameUI;
 
+    public CongratulationUI congratulateUI;
+
     bool bIsHidingAdd5Btn = false;
+
+    //Image imgCongratulation;// = new Image();
+
+    private void Awake()
+    {
+        float aspectRatio = Screen.width * 1.0f / Screen.height;
+
+        if (aspectRatio > 1.78f)
+        {
+            //GetComponent<Transform>().localScale = new Vector3(Screen.width / 1920.0f, 1.0f, 1.0f);
+
+            //Screen.SetResolution(Screen.width, 1080, true);
+        }
+        else
+        {
+            //GetComponent<Transform>().localScale = new Vector3(Screen.width / 1920.0f, Screen.height / 1080.0f, 1.0f);
+            //Screen.SetResolution(Screen.width, Screen.height, true);
+        }
+
+        /*Sprite congSprite = Resources.Load<Sprite>("UI/SettleCongratulations");
+        if (congSprite == null)
+            Debug.Log("GamePlayUI::Start... Init congSprite error!!!");
+        imgCongratulation.sprite = congSprite;
+        imgCongratulation.enabled = false;*/
+
+    }
+
+    public float GetOffsetX()
+    {
+        switch(Screen.width)
+        {
+            case 1920:
+                return -0.3f;
+            case 2340:
+                return -2.2f;
+            case 2560:
+                return -0.3f;
+            default:
+                return -0.3f;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()    
@@ -75,10 +118,6 @@ public class GamePlayUI : MonoBehaviour
             Debug.Log("game ui init error! we can not find wildcardBtn Button! ");
 
         newPos = wildcardBtn.GetComponent<Transform>().position;
-        //newPos.x = Screen.width * 0.005f;
-        //newPos.y = Screen.height * 0.001f;
-        //wildcardBtn.GetComponent<Transform>().position = newPos;
-
         Debug.Log("the wild card btn's new pos is: " + newPos + "  the screen width is: " + Screen.width);
 
         wildcardBtn.onClick.AddListener(delegate { this.OnClickWildCardBtn(); });
@@ -96,6 +135,12 @@ public class GamePlayUI : MonoBehaviour
         goldAndScoreUI = Object.FindObjectOfType<GoldAndScoreUI>();
         if (goldAndScoreUI == null)
             Debug.Log("GamePlayUI::Start()... goldAndScoreUI is null....");
+
+        newPos = goldAndScoreUI.GetComponent<RectTransform>().position;
+        Debug.Log("the origin pos x is: " + newPos.x);
+        newPos.x += GetOffsetX();
+        Debug.Log("the new pos x is: " + newPos.x);
+        goldAndScoreUI.GetComponent<RectTransform>().position = newPos;
 
         settlementUI = Object.FindObjectOfType<SettlementUI>();
         if (settlementUI == null)
@@ -119,6 +164,11 @@ public class GamePlayUI : MonoBehaviour
             Debug.Log("GamePlayUI::Start()... bombEndGameUI is null....");
         HideBombEndGameUI();
         //DisableBombEndGameUI();
+
+        congratulateUI = Object.FindObjectOfType<CongratulationUI>();
+        if (congratulateUI == null)
+            Debug.Log("GamePlayUI::Start()... congratulateUI is null....");
+        HideCongratulationUI();
 
     }
 
@@ -317,13 +367,18 @@ public class GamePlayUI : MonoBehaviour
         wildcardBtn.gameObject.SetActive(true);
     }
 
-    public void WinGame(int nCollect, int nClear)
+    public void WinGame(int nCollect, int nClear, int nScoreStar)
     {
         HideAllGameUI();
 
-        ShowCongratulationUI();
+        settlementUI.SetSettlementData(nCollect, nClear, nScoreStar);
 
-        ShowSettlementUI(nCollect, nClear);
+        ShowCongratulationUI(nScoreStar);
+        //ShowCongratulationsToPlayer();
+
+        //ShowSettlementUI(nCollect, nClear);
+
+        //FadeInSettlementUI(nCollect, nClear);
     }
 
     public void LoseGame(int nCollect, int nClear)
@@ -333,13 +388,24 @@ public class GamePlayUI : MonoBehaviour
         ShowLoseGameUI(nCollect, nClear);
     }
 
-    public void ShowCongratulationUI()
+
+    /*public void ShowCongratulationsToPlayer()
     {
+        StartCoroutine(CongratulateToPlayer());
     }
+
+    IEnumerator CongratulateToPlayer()
+    {
+        imgCongratulation.enabled = true;
+        imgCongratulation.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+        //imgCongratulation.do
+
+        yield return null;
+    }*/
 
     public void ShowStreakBonusUI()
     {
-        Debug.Log("GamePlayUI... ShowSettlementUI...");
+        Debug.Log("GamePlayUI... ShowStreakBonusUI...");
         streakBonusUI.GetComponent<CanvasGroup>().alpha = 1;
         streakBonusUI.GetComponent<CanvasGroup>().interactable = true;
         streakBonusUI.GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -373,7 +439,19 @@ public class GamePlayUI : MonoBehaviour
         settlementUI.GetComponent<CanvasGroup>().interactable = true;
         settlementUI.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-        settlementUI.SetSettlementData(nCollect, nClear);
+        //settlementUI.SetSettlementData(nCollect, nClear);
+    }
+
+    public void FadeInSettlementUI(int nCollect, int nClear)
+    {
+        Debug.Log("GamePlayUI... FadeInSettlementUI...");
+        settlementUI.GetComponent<CanvasGroup>().alpha = 1;
+        settlementUI.GetComponent<CanvasGroup>().interactable = true;
+        settlementUI.GetComponent<CanvasGroup>().blocksRaycasts = true;
+
+        //settlementUI.SetSettlementData(nCollect, nClear);
+
+        settlementUI.FadeIn();
     }
 
     public void HideSettlementUI()
@@ -449,6 +527,23 @@ public class GamePlayUI : MonoBehaviour
     public void DisableBombEndGameUI()
     {
         bombEndGameUI.gameObject.SetActive(false);
+    }
+
+    public void ShowCongratulationUI(int nScoreStar)
+    {
+        congratulateUI.GetComponent<CanvasGroup>().alpha = 1;
+        congratulateUI.GetComponent<CanvasGroup>().interactable = true;
+        congratulateUI.GetComponent<CanvasGroup>().blocksRaycasts = true;
+
+        //here we call the congratulateUI's method to show each image and do the scale and fade.
+        congratulateUI.FadeIn(nScoreStar);
+    }
+
+    public void HideCongratulationUI()
+    {
+        congratulateUI.GetComponent<CanvasGroup>().alpha = 0;
+        congratulateUI.GetComponent<CanvasGroup>().interactable = false;
+        congratulateUI.GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
 
     public void EnableWildCardBtn()
@@ -551,5 +646,29 @@ public class GamePlayUI : MonoBehaviour
         WildCardButton wildCardScript = wildcardBtn.GetComponent<WildCardButton>();
 
         wildCardScript.SetWildItemCount(nCount);
+    }
+
+    public void ShowCoinEffect()
+    {
+        Vector3 newPos = streakBonusUI.transform.position - Vector3.forward * 2.0f;
+        //GameObject streakCoin = Instantiate(GameplayMgr.Instance.FXCoin, newPos, Quaternion.identity);
+        GameObject streakCoin = Instantiate(GameplayMgr.Instance.FXCoin, GetComponent<Transform>());
+        
+        streakCoin.transform.position = newPos;
+        streakCoin.transform.localScale = new Vector3(100.0f, 100.0f, 1.0f);
+        //streakCoin.GetComponent<Renderer>().sortingLayerName = "UI";
+        //streakCoin.GetComponent<Renderer>().sortingOrder = 1;
+
+        ParticleSystem particleSystem;
+        particleSystem = streakCoin.transform.GetComponentInChildren<ParticleSystem>();
+        ParticleSystemRenderer particleRenderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+        //particleRenderer.sortingLayerName = "Default";
+        //particleRenderer.sortingOrder = -1;
+
+        Debug.Log(GetComponent<Canvas>().sortingLayerName);
+        Debug.Log(GetComponent<Canvas>().sortingOrder);
+
+        Debug.Log(streakCoin.GetComponent<Renderer>().sortingLayerName);
+        Debug.Log(streakCoin.GetComponent<Renderer>().sortingOrder);
     }
 }

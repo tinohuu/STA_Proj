@@ -151,7 +151,6 @@ public class GamePoker : MonoBehaviour
 
         if (curveHelper == null)
             Debug.Log("@@@@ we init curveHelper error!!! please check your code!");*/
-
         //trans = GetComponent<MeshFilter>().transform;
     }
 
@@ -783,7 +782,7 @@ public class GamePoker : MonoBehaviour
             return;
         }
 
-        //Debug.Log("here we flip the poker, name is: " + gameObject.name + "  depth is: " + transform.position.z);
+        Debug.Log("here we flip the poker, name is: " + gameObject.name + "  depth is: " + transform.position.z + " time is : " + Time.time);
         
         bFlip = true;
         bUnFlip = false;

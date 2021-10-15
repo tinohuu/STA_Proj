@@ -68,7 +68,7 @@ MonoBehaviour:
   m_text: The {0} Power Up is not yet available. It will be unlocked at Level {1}.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 1c294fb6970908140a0c431f91a16fc8, type: 2}
+  m_sharedMaterial: {fileID: -4732027964359432133, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -208,8 +208,18 @@ MonoBehaviour:
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
   InverseOnFadeOut: 1
+  ShowPanel: 1
   CanCloseByPanel: 1
+  InQueue: 1
   IntervalMultiplerOnFadeOut: 0
+  FadeInOnEnable: 1
+  OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowFadeIn:
+    m_PersistentCalls:
+      m_Calls: []
+  FadeInDelay: 0
 --- !u!1 &3349400610799814167
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,13 +326,14 @@ MonoBehaviour:
   ScaleUpDuration: 0.3
   ScaleDownDuration: 0.2
   Interactable: 1
+  OnceOnly: 0
   OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1853325047715122438}
         m_TargetAssemblyTypeName: WindowAnimator, Assembly-CSharp
-        m_MethodName: FadeOut
-        m_Mode: 6
+        m_MethodName: Close
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -331,7 +342,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  targetTransform: {fileID: 0}
+  TargetTransform: {fileID: 0}
 --- !u!1 &5129674219142125278
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,7 +683,7 @@ MonoBehaviour:
   m_text: Power Up is not yet available!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 1c294fb6970908140a0c431f91a16fc8, type: 2}
+  m_sharedMaterial: {fileID: -4732027964359432133, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

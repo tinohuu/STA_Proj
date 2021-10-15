@@ -103,7 +103,9 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
         if (Reward.Data[RewardType.Rocket] > 0)
         {
             CropManager.Instance.Data.TimeBoostUntil = TimeManager.Instance.RealNow + TimeSpan.FromHours(Reward.Data[RewardType.Rocket]);
+            CropManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(59 + 3);
             Reward.Data[RewardType.Rocket] = 0;
+            SoundManager.Instance.PlaySFX("itemClockUse");
         }
         
     }
@@ -113,7 +115,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
         if (Reward.Data[RewardType.Clock] > 0)
         {
             CropManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow - TimeSpan.FromMinutes(59) - TimeSpan.FromSeconds(59 + 3);
-            Reward.Data[RewardType.Rocket] = 0;
+            Reward.Data[RewardType.Clock] = 0;
             SoundManager.Instance.PlaySFX("itemClockUse");
         }
     }

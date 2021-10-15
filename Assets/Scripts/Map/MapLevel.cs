@@ -90,8 +90,45 @@ public class MapLevel : MonoBehaviour, IPointerClickHandler
         //Data.Rating = IsOpen && Data.ID != MapManager.Instance.Data.CompleteLevel + 1 ? Random.Range(3, 4) : 0; // Test: temp rating
 
         foreach (SpriteRenderer star in StarSpriteRenderers) star.color = IsOpen ? new Color(1, 1, 1, 0.5f) : Color.clear;
-        for (int i = 0; i < Mathf.Clamp(Data.Rating, 0, 3); i++) StarSpriteRenderers[i].color = Color.white;
-        Frame.SetActive(Data.Rating >= 3);
+
+        if (MapDataManager.Instance.NewRatingLevel == Data.ID && MapDataManager.Instance.NewRating > 0)
+        {
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendInterval(0.5f);
+            int oldRating = Data.Rating - MapDataManager.Instance.NewRating;
+            for (int i = 0; i < Mathf.Clamp(Data.Rating, 0, 3); i++)
+            {
+                if (i + 1 > oldRating)
+                {
+                    string sfxName = "uiLevelButtonStar" + (i + 1).ToString();
+                    sequence.AppendCallback(() => SoundManager.Instance.PlaySFX(sfxName));
+                    sequence.Append(StarSpriteRenderers[i].transform.DOScale(Vector3.one * 2, 0.4f).From(true));
+                    StarSpriteRenderers[i].color = Color.white;
+                    sequence.Join(StarSpriteRenderers[i].DOFade(0, 0.4f).From());
+                }
+                else
+                StarSpriteRenderers[i].color = Color.white;
+            }
+            if (Data.Rating >= 3)
+                sequence.AppendCallback(() => { Frame.SetActive(true); Frame.transform.DOScale(Vector3.one * 0.5f, 0.1f).From(); });
+            sequence.PlayForward();
+            StartCoroutine(ResetNewRating());
+        }
+        else
+        {
+            for (int i = 0; i < Mathf.Clamp(Data.Rating, 0, 3); i++) StarSpriteRenderers[i].color = Color.white;
+            Frame.SetActive(Data.Rating >= 3);
+        }
+
+
+
+
+    }
+
+    IEnumerator ResetNewRating()
+    {
+        yield return new WaitForSeconds(1);
+        MapDataManager.Instance.NewRating = 0;
     }
 
     internal object Find()

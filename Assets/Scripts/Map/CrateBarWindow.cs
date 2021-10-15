@@ -23,7 +23,7 @@ public class CrateBarWindow : MonoBehaviour
 
     private void Start()
     {
-        var levelButton = MapLevelManager.Instance.GetLevelButton(MapManager.Instance.Data.SelectedLevel);
+        var levelButton = MapLevelManager.Instance.GetLevelButton(MapDataManager.Instance.NewRatingLevel);
         m_WindowAnimator.OnWindowFadeIn.AddListener(() => MapManager.Instance.MoveMap(levelButton.transform.position));
         StartCoroutine(IPlay());
     }
@@ -32,13 +32,13 @@ public class CrateBarWindow : MonoBehaviour
     {
 
         // Get old quality
-        int oldRatingCount = m_Crate.CurRatingCount - MapDataManager.Instance.NewRatings;
+        int oldRatingCount = m_Crate.CurRatingCount - MapDataManager.Instance.NewRating;
         oldRatingCount = Mathf.Clamp(oldRatingCount, 0, 99);
         int oldQuality = (int)m_Crate.GetQuality(oldRatingCount);
 
         m_Crate.SetView((Crate.Quality)oldQuality, oldRatingCount);
 
-        var levelButton = MapLevelManager.Instance.GetLevelButton(MapManager.Instance.Data.SelectedLevel);
+        var levelButton = MapLevelManager.Instance.GetLevelButton(MapDataManager.Instance.NewRatingLevel);
         var bar = Instantiate(m_CrateProgressBarPrefab, levelButton.transform).GetComponent<CrateProgressBar>();
 
         //quality = Mathf.Clamp(quality, 0, 3);
@@ -64,7 +64,7 @@ public class CrateBarWindow : MonoBehaviour
         }
 
         m_Crate.SetView((Crate.Quality)curQuality, m_Crate.CurRatingCount);
-        MapDataManager.Instance.NewRatings = 0;
+        MapDataManager.Instance.NewRating = 0;
         yield return new WaitForSeconds(2);
         bar.Close();
         m_WindowAnimator.Close();

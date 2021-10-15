@@ -9,13 +9,12 @@
     "SuperWheelRate": "1_100;2_200;3_300",
     "LuckyWheelPeriod": "20_300_25",
     "QuestTime": 86400,
-    "FarmReward": 2000,
-    "HarvestTime": 3600,
     "CardCoinFunctionParm": "1.667_0.85_0.95",
     "StartCoin": 20000,
     "Prefix": "timber_0_bronze_75_sliver_240_gold_300_diamond_420",
     "Suffix": "apprentice_0_master_50_champion_100_emperor_150",
     "DailyCoins": "2500_50_500_-500_1000",
-    "DailyCoinsCoefficient": "1.4_2"
+    "DailyCoinsCoefficient": "1.4_2",
+    "CrateRankCondition": "2/15_8/15_2/3_4/5"
   }
 ]

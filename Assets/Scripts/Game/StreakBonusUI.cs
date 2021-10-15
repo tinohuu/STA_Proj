@@ -96,8 +96,6 @@ public class StreakBonusUI : MonoBehaviour
             streakSprites[i].SetActive(false);
         }
 
-        
-
     }
 
     // Update is called once per frame
@@ -193,6 +191,24 @@ public class StreakBonusUI : MonoBehaviour
         {
             streakSprites[i].SetActive(false);
         }*/
+    }
+
+    public void ShowCoinEffect()
+    {
+        Vector3 newPos = gameplayUI.streakBonusUI.transform.position + Vector3.forward * 2.0f;
+        GameObject streakCoin = Instantiate(GameplayMgr.Instance.FXCoin, gameplayUI.streakBonusUI.transform);
+        streakCoin.transform.localScale = new Vector3(100.0f, 100.0f, 1.0f);
+
+        /*ParticleSystem particleSystem;
+        particleSystem = streakCoin.transform.GetComponentInChildren<ParticleSystem>();
+        ParticleSystemRenderer particleRenderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+        
+        Debug.Log(GetComponent<Canvas>().sortingLayerName);
+        Debug.Log(GetComponent<Canvas>().sortingOrder);
+
+        Debug.Log(streakCoin.GetComponent<Renderer>().sortingLayerName);
+        Debug.Log(streakCoin.GetComponent<Renderer>().sortingOrder);
+        */
     }
 
     public void SetClearAllStreakBonus(List<GameplayMgr.StreakBonusInfo> bonusInfos)

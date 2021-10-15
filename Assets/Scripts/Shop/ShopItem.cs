@@ -31,7 +31,7 @@ public class ShopItem : MonoBehaviour
     int m_ItemID = 1;
     void Start()
     {
-        //m_PurchaseSuccessful.gameObject.SetActive(false);
+        m_PurchaseSuccessful.gameObject.SetActive(false);
         var configs = ConfigsAsset.GetConfigList<ShopConfig>();
         var config = configs[m_ItemID - 1];
 
@@ -55,7 +55,7 @@ public class ShopItem : MonoBehaviour
         // Set background view
         if (IsSmall)
         {
-            m_BackgroundImage.sprite = GetSprite("Background_Small_" + config.Background);
+            m_BackgroundImage.sprite = GetSprite("Background_" + config.Background);
         }
         else
         {
@@ -116,7 +116,7 @@ public class ShopItem : MonoBehaviour
         m_PurchaseButton.transform.DOScale(Vector3.zero, 0.25f);
         yield return new WaitForSeconds(0.25f);
         var size = m_BackgroundImage.rectTransform.sizeDelta;
-        size.y *= 0.95f;
+        if (!IsSmall) size.y *= 0.8f;
         //size = new Vector2(size.x, size.y * 0.8f);
         m_BackgroundImage.rectTransform.DOSizeDelta(size, 0.5f);
         yield return new WaitForSeconds(0.75f);

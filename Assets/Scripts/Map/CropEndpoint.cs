@@ -22,7 +22,7 @@ public class CropEndpoint : MonoBehaviour
     void Start()
     {
         m_RewardBig.localScale = Vector3.zero;
-        m_RewardIcon.GetComponent<SpriteRenderer>().color = MapManager.Instance.Data.CompleteLevel < m_LevelID ? new Color(1, 1, 1, 0.5f) : Color.white;
+        m_RewardIcon.GetComponent<SpriteRenderer>().color = MapManager.Instance.Data.CompleteLevel + 1 < m_LevelID ? new Color(1, 1, 1, 0.5f) : Color.white;
 
         if (CropManager.Instance.EnableEndpoint && MapManager.Instance.Data.CompleteLevel >= m_LevelID && !m_GrowthWindow)
         {

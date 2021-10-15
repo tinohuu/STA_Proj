@@ -33,6 +33,8 @@ public class MapManager : MonoBehaviour
     List<Image> m_MapImages = new List<Image>();
     GameObject m_MapMakerObj;
 
+    public bool HasMapmaker => m_MapMakerObj;
+
     private void Awake()
     {
         if (!Instance) Instance = this;
@@ -94,6 +96,7 @@ public class MapManager : MonoBehaviour
         {
             m_ScrollRect.DOKill();
             m_ScrollRect.DOHorizontalNormalizedPos(levelWidth / width, duration)
+                .SetEase(Ease.OutBack, 0.6f)
                 .OnStart(() => { m_ScrollRect.horizontal = false; } )
                 .OnComplete(() => { m_ScrollRect.horizontal = true; } );
         }

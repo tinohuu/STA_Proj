@@ -196,6 +196,13 @@ MonoBehaviour:
   InQueue: 1
   IntervalMultiplerOnFadeOut: 0
   FadeInOnEnable: 1
+  OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowFadeIn:
+    m_PersistentCalls:
+      m_Calls: []
+  FadeInDelay: 0
 --- !u!1 &8226363164976792594
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,6 +215,7 @@ GameObject:
   - component: {fileID: 8226363164976792593}
   - component: {fileID: 8226363164976792592}
   - component: {fileID: 1137273158652885217}
+  - component: {fileID: 7449808901536318253}
   m_Layer: 5
   m_Name: CropImage
   m_TagString: Untagged
@@ -225,15 +233,14 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 8226363165835709482}
+  m_Children: []
   m_Father: {fileID: 8226363164457564905}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 220, y: 200}
+  m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8226363164976792593
 CanvasRenderer:
@@ -285,6 +292,21 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &7449808901536318253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8226363164976792594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbba8b36ad04df64e8a14cef5cb5c957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ScaleTo: 1.2
+  Duration: 0.5
+  SmoothExit: 1
 --- !u!1 &8226363165094963987
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,6 +649,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8226363166253338133}
+  - {fileID: 8226363165835709482}
   m_Father: {fileID: 8226363164457564905}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -714,13 +737,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 8226363164976792595}
-  m_RootOrder: 0
+  m_Father: {fileID: 8226363165701043493}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -207.84}
-  m_SizeDelta: {x: 150, y: 75}
+  m_AnchoredPosition: {x: 0, y: -165}
+  m_SizeDelta: {x: 250, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8226363165835709480
 CanvasRenderer:
@@ -777,7 +800,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36.45
+  m_fontSize: 60.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

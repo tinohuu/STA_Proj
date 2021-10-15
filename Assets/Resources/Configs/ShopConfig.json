@@ -49,7 +49,7 @@
     "Times": -1,
     "IsSmall": true,
     "Price": 12,
-    "Background": "Normal",
+    "Background": "SmallNormal",
     "Icon": "Coin",
     "TagIcon": "",
     "TagText": ""
@@ -60,7 +60,7 @@
     "Times": -1,
     "IsSmall": true,
     "Price": 40,
-    "Background": "Normal",
+    "Background": "SmallNormal",
     "Icon": "Coin",
     "TagIcon": "",
     "TagText": ""

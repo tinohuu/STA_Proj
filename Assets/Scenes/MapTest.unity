@@ -4242,7 +4242,6 @@ MonoBehaviour:
   m_CropEndpointPrefab: {fileID: 3365706802845995876, guid: 40f1980cfc349144796da4a5041e610b, type: 3}
   EnableEndpoint: 1
   Data:
-    LastCropGrowthID: 0
     CollectedClockLevelID: 0
 --- !u!1 &1135818863
 GameObject:

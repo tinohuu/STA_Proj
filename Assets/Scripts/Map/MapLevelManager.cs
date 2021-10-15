@@ -79,7 +79,7 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
 
             MapPlayer.Instance.MoveToLevel(curLevel, false, false);
             //MapPlayer.Instance.OnClickRomote(0);
-            MapPlayer.Instance.MoveToLevel(retriedLevel, true, true);
+            MapPlayer.Instance.MoveToLevel(retriedLevel, WindowAnimator.WindowQueue.Count == 0, true);
             MapDataManager.Instance.RetriedLevel = 0;
         }
         else if (curLevel)

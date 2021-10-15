@@ -35,9 +35,8 @@ public class LuckyWheelView : MonoBehaviour
 
     private void Awake()
     {
-
         var window = GetComponent<WindowAnimator>();
-        window.OnWindowEnable.AddListener(() => StartCoroutine(IAnimateWheelIcon()));
+        window.OnWindowFadeIn.AddListener(() => StartCoroutine(IAnimateWheelIcon()));
         window.FadeInDelay = 3;
     }
     // Start is called before the first frame update
@@ -62,6 +61,7 @@ public class LuckyWheelView : MonoBehaviour
     
     IEnumerator IAnimateWheelIcon()
     {
+        yield return null;
         yield return null;
         MapManager.Instance.MoveMap(m_Wheel.transform.position);
         yield return new WaitForSeconds(1.5f);

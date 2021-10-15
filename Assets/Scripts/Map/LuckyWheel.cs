@@ -24,7 +24,7 @@ public class LuckyWheel : MonoBehaviour
 
     public void UpdateView()
     {
-        IconRenderer.color = MapManager.Instance.Data.CompleteLevel >= LevelID ? Color.white : new Color(1, 1, 1, 0.5f);
+        IconRenderer.color = MapManager.Instance.Data.CompleteLevel >= LevelID - 1 ? Color.white : new Color(1, 1, 1, 0.5f);
         IconRenderer.sprite = CropManager.Instance.LevelToCropConfig(LevelID).ID % 2 == 1 ? IconSprites[0] : IconSprites[1];
 
         var levelButton = MapLevelManager.Instance.GetLevelButton(LevelID);

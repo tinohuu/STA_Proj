@@ -46,7 +46,7 @@ public class Tutorial : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_Target && (Type)(m_Config.Type) == Type.Auto)
+        if (m_Target && (Type)(m_Config.Type) == Type.Auto && false)
         {
             m_Arrows[m_ArrowIndex].transform.position = Camera.main.WorldToScreenPoint(m_Target.transform.position);
             m_Arrows[m_ArrowIndex].anchoredPosition += m_ArrowOffset;
@@ -71,10 +71,10 @@ public class Tutorial : MonoBehaviour
 
         var canvas = m_Target.GetComponentInParent<Canvas>();
 
-       bool isUIElement = canvas && canvas.renderMode == RenderMode.ScreenSpaceCamera;
-        m_TutorialPos = isUIElement ? Camera.main.WorldToScreenPoint(target.transform.position) : target.transform.position;
+       bool isWorldElement = canvas && (canvas.renderMode == RenderMode.ScreenSpaceCamera || canvas.renderMode == RenderMode.WorldSpace);
+        m_TutorialPos = isWorldElement ? Camera.main.WorldToScreenPoint(target.transform.position) : target.transform.position;
 
-        Vector2 targetPos = isUIElement ? Camera.main.WorldToScreenPoint(target.transform.position) : target.transform.position;
+        Vector2 targetPos = isWorldElement ? Camera.main.WorldToScreenPoint(target.transform.position) : target.transform.position;
 
         m_ArrowIndex = targetPos.x > Screen.width / 2f ? 2 : 0;
         m_ArrowIndex += targetPos.y > Screen.height / 2f ? 1 : 0;
@@ -96,7 +96,7 @@ public class Tutorial : MonoBehaviour
             //m_Arrows[arrowIndex].GetComponentInChildren<TMP_Text>().GetRenderedValues();
         }
 
-        if ((Type)(config.Type) == Type.Circle)
+        if ((Type)(config.Type) == Type.Circle || (Type)(config.Type) == Type.Auto)
         {
             m_CirclePanel.gameObject.SetActive(true);
             m_CirclePanel.transform.position = m_TutorialPos;

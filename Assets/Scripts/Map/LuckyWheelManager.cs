@@ -15,6 +15,8 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
 
     public static LuckyWheelManager Instance = null;
 
+    LuckyWheelView m_View;
+
     private void Awake()
     {
         if (!Instance) Instance = this;
@@ -25,14 +27,14 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
 
         var wheel = GetAvailableWheel();
-        if (wheel && EnableWheel)
+        if (wheel && !m_View && EnableWheel)
         {
-            var view = Instantiate(m_WheelViewPrefab, MapManager.Instance.UICanvas.transform).GetComponent<LuckyWheelView>();
-            view.SetWheel(wheel);
+            m_View = Instantiate(m_WheelViewPrefab, MapManager.Instance.UICanvas.transform).GetComponent<LuckyWheelView>();
+            m_View.SetWheel(wheel);
         }
     }
 
-    public void ShowView(LuckyWheel wheel)
+    /*public void ShowView(LuckyWheel wheel)
     {
         if (wheel && EnableWheel)
         {
@@ -40,7 +42,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
             //var view = WindowManager.Instance.OpenView(m_WheelViewPrefab).GetComponent<LuckyWheelView>();
             view.SetWheel(wheel);
         }
-    }
+    }*/
 
     LuckyWheel GetAvailableWheel()
     {

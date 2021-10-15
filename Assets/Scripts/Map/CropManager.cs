@@ -140,11 +140,12 @@ public class CropManager : MonoBehaviour, IMapmakerModule
     {
         StopAllCoroutines();
         StartCoroutine(IPlayHarvestEffects());
+        StartCoroutine(IPlayHarvestSound());
     }
 
     IEnumerator IPlayHarvestEffects()
     {
-        SoundManager.Instance.PlaySFX("coinIncreaseHarvest", isLoop: true);
+        //SoundManager.Instance.PlaySFX("coinIncreaseHarvest", isLoop: true);
         var crops = m_CropGroup.GetComponentsInChildren<Crop>();
 
         List<string> shownCropNames = new List<string>();
@@ -178,7 +179,17 @@ public class CropManager : MonoBehaviour, IMapmakerModule
         yield return new WaitForSeconds(5);
         foreach (var paticle in m_Particles) Destroy(paticle.gameObject);
         m_Particles.Clear();
-        SoundManager.Instance.StopSFX("coinIncreaseHarvest");
+    }
+
+    IEnumerator IPlayHarvestSound()
+    {
+        do
+        {
+            SoundManager.Instance.PlaySFX("coinIncreaseUnit");
+            yield return new WaitForSeconds(0.4f);
+        }
+        while (m_Particles.Count != 0);
+        SoundManager.Instance.PlaySFX("harvestFinish");
     }
 
     void CreateParticle(string cropName, Vector3 pos)

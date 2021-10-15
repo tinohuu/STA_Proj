@@ -83,7 +83,7 @@ public class RewardNumber : MonoBehaviour
         while (current < Reward.Data[Type] - 1)
         {
             AnimateScale(true);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1);
             int diff = Reward.Data[Type] - current;
             int target = current + (ParticleManager.Instance.ParticleGroup.childCount > 0 ? (int)(diff * 0.5f) : diff);
             DOTween.To(() => current, x => current = x, target, 1)

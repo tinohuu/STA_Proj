@@ -14,6 +14,7 @@ public class CrateView : MonoBehaviour
     [SerializeField] Transform m_Target;
     [SerializeField] Image m_Crate;
     [SerializeField] Image m_Title;
+    [SerializeField] Image m_TitleRight;
     [SerializeField] GameObject m_BackgroundFront;
     [SerializeField] Transform[] m_CropGroups = new Transform[3];
     [SerializeField] ButtonAnimator m_CollectButton;
@@ -22,7 +23,7 @@ public class CrateView : MonoBehaviour
     [SerializeField] Sprite[] TitleSprite = new Sprite[4];
 
     [HideInInspector] public Crate.Quality Quality = Crate.Quality.Wood;
-    int m_PickTimes = 10;
+    int m_PickTimes = 1;
     List<CrateCrop> m_CrateCrops = new List<CrateCrop>();
     public int LevelID = 1;
 
@@ -49,6 +50,7 @@ public class CrateView : MonoBehaviour
         m_NumberText.text = m_PickTimes.ToString();
         m_Crate.sprite = BoxSprites[(int)Quality];
         m_Title.sprite = TitleSprite[(int)Quality];
+        m_TitleRight.sprite = TitleSprite[(int)Quality];
 
 
         if (CrateManager.Instance.Data.ResumedRewardTypes.Count == 0)

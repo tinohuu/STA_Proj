@@ -1617,6 +1617,7 @@ MonoBehaviour:
   m_Target: {fileID: 6000415815811182480}
   m_Crate: {fileID: 6000415816258888857}
   m_Title: {fileID: 6000415816943061614}
+  m_TitleRight: {fileID: 6000415817062110651}
   m_BackgroundFront: {fileID: 6000415815536667022}
   m_CropGroups:
   - {fileID: 6000415816016844470}

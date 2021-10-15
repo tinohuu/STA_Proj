@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.U2D;
 using System.IO;
+using DG.Tweening;
 
 public class GameplayMgr : MonoBehaviour
 {
@@ -263,7 +264,7 @@ public class GameplayMgr : MonoBehaviour
     bool bHasSetToGaming = false;
 
     int nCurrentChapter { get; set; } = 0;
-    int nCurrentLevel { get; set; } = 0;
+    int nCurrentLevel { get; set; } = 1;
 
     //pengyuan 2021.8.13 temporarily store poker's texture and back
     public Texture2D textureBack;
@@ -286,6 +287,16 @@ public class GameplayMgr : MonoBehaviour
     //2021.9.18 added by pengyuan, to record withdraw and add5_poker buy times.
     int nWithdrawBuyTimes = 0;
     int nAdd5BuyTimes = 0;
+
+    public GameObject FXScoreStar;
+    public GameObject FXCoin;
+    public GameObject FXCardStar;
+
+    public GameObject ParticleTest;
+
+    public Material oneSideMaterial;
+    
+    public GameObject getCoinEffect;
 
     public class StageConfig
     {
@@ -334,6 +345,9 @@ public class GameplayMgr : MonoBehaviour
 
     List<StageConfig> stageConfigs;// = JsonExtensions.JsonToList<CropConfig>(ConfigsAsset.GetConfig("StageConfig"));
     List<PublicConfig> publicConfigs;
+
+    public ParticleSystemForceField[] forceFields;
+    public GameObject starDieBox;
 
     //pengyuan 2021.8.27 added for test
     //public int nWithdrawCount { get; set; } = 0;
@@ -434,6 +448,38 @@ public class GameplayMgr : MonoBehaviour
         if (removeThreePrefabs[3] == null)
             Debug.Log("GameplayMgr::Awake()... FXCardCutRightRed is null....");
 
+        //the following three ara used for streak bonus effects.
+        FXScoreStar = (GameObject)Resources.Load("UI/FXScoreStar");
+        if (FXScoreStar == null)
+            Debug.Log("GameplayMgr::Awake()... FXScoreStar is null....");
+
+        FXCoin = (GameObject)Resources.Load("UI/FXCoin");
+        if (FXCoin == null)
+            Debug.Log("GameplayMgr::Awake()... FXCoin is null....");
+
+        FXCardStar = (GameObject)Resources.Load("UI/FXCardStar");
+        if (FXCardStar == null)
+            Debug.Log("GameplayMgr::Awake()... FXCardStar is null....");
+
+        ParticleTest = (GameObject)Resources.Load("Crops/HarvestParticles/FXHarvestCabbage");
+        if (ParticleTest == null)
+            Debug.Log("GameplayMgr::Awake()... ParticleTest is null....");
+        
+        oneSideMaterial = Resources.Load("Materials/OneSide") as Material;
+        if (oneSideMaterial == null)
+            Debug.Log("GameplayMgr::Awake()... oneSideMaterial is null....");
+
+        getCoinEffect = (GameObject)Resources.Load("Prefabs/GetCoinEffect");
+        if (getCoinEffect == null)
+            Debug.Log("GameplayMgr::Awake()... getCoinEffect is null....");
+
+        /*oneSideMesh = (Mesh)Resources.Load("Poker/CardMesh1");
+        GameObject cardMesh1 = (GameObject)Resources.Load("Poker/CardMesh1");
+        if (oneSideMesh == null)
+            Debug.Log("GameplayMgr::Awake()... oneSideMesh is null....");
+
+        Debug.Log(cardMesh1.GetType());*/
+
         for (int i = 0; i < 52; ++i)
         {
             cardsArray[i] = i + 1;
@@ -510,7 +556,6 @@ public class GameplayMgr : MonoBehaviour
         bIsRemovingThree = false;
 
         wildDropPokers.Clear();
-
 
         InitConfigInformation();
 
@@ -722,7 +767,6 @@ public class GameplayMgr : MonoBehaviour
             //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
             GameObject go = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
 
-            //go.transform.SetParent(Trans);
             go.tag = "poker";
 
             //Debug.Log(go.GetComponent<MeshFilter>().mesh.bounds.size);
@@ -813,6 +857,8 @@ public class GameplayMgr : MonoBehaviour
             publicPokers.Add(go);
 
             i++;
+
+            Debug.Log("the poker's render bounds is: " + pokerScript.pokerInst.GetComponent<Renderer>().bounds.size);
         }
     }
 
@@ -827,7 +873,6 @@ public class GameplayMgr : MonoBehaviour
             //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
             GameObject go = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
             go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
-            //go.transform.SetParent(Trans);
             go.tag = "handCard";
 
             HandPoker handScript = go.GetComponent<HandPoker>();
@@ -914,7 +959,6 @@ public class GameplayMgr : MonoBehaviour
 
             lockArea.Area = go;
             //lockArea.Area.gameObject.layer = 5;
-            //go.transform.SetParent(Trans);
 
             //init the lock area infomation...
             LockArea lockAreaScript = go.GetComponent<LockArea>();
@@ -1414,7 +1458,7 @@ public class GameplayMgr : MonoBehaviour
 
         //todo: this level should come from a call from map ...
         int nTempLevel = Random.Range(1, 6);
-        nTempLevel =  STAGameManager.Instance.nLevelID;
+        nTempLevel = 9;// STAGameManager.Instance.nLevelID;
         nCurrentLevel = nTempLevel;
         JsonReadWriteTest.Test_ReadLevelData(strLevel, 1, nTempLevel, out levelData);
 
@@ -1431,7 +1475,6 @@ public class GameplayMgr : MonoBehaviour
         testModel = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
         testModel.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         testModel.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-        testModel.transform.SetParent(Trans);
         testModel.tag = "poker";
 
         Vector3 targetPos;
@@ -1444,7 +1487,6 @@ public class GameplayMgr : MonoBehaviour
             GameObject go = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
             go.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
             go.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-            go.transform.SetParent(Trans);
             go.tag = "poker";
 
             testCards.Add(go);
@@ -1841,7 +1883,6 @@ public class GameplayMgr : MonoBehaviour
             //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
             GameObject go = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
             go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
-            //go.transform.SetParent(Trans);
             go.tag = "handCard";
 
             HandPoker handScript = go.GetComponent<HandPoker>();
@@ -1862,6 +1903,12 @@ public class GameplayMgr : MonoBehaviour
         }
 
         AdjustAllHandPokerPosition();
+    }
+
+    public void OnClickReplayButton()
+    {
+        MapDataManager.SetRetry(nCurrentLevel);
+        SceneManager.LoadScene("MapTest");
     }
 
     public void OnClickNextLevelButton()
@@ -2322,6 +2369,10 @@ public class GameplayMgr : MonoBehaviour
 
                 gameplayUI.goldAndScoreUI.AddGold(nStepGold);
                 gameplayUI.goldAndScoreUI.AddScore(nStepScore);
+
+                PlayGetCoinEffect(topGamePoker.transform.position - Vector3.forward * 0.5f, nStepGold);
+
+                Debug.Log("*****************************here we fold a game poker, and we got gold number is: " + nStepGold);
 
                 //AddOpStepInfo(opStepInfos.Count, nStreakCount, nColors, GetCollectScore(), 1, StreakType.Add_Gold);
 
@@ -2827,6 +2878,10 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.goldAndScoreUI.AddGold(nBonusGold);
         gameplayUI.goldAndScoreUI.AddScore(nBonusScore);
 
+        gameplayUI.streakBonusUI.ShowCoinEffect();
+        //gameplayUI.goldAndScoreUI.ShowCoinEffectTest();
+        //GameObject streakCoin = Instantiate(FXCoin, gameplayUI.streakBonusUI.transform);
+
         return;
     }
 
@@ -2846,7 +2901,6 @@ public class GameplayMgr : MonoBehaviour
             //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
             GameObject go = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
             go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
-            //go.transform.SetParent(Trans);
             go.tag = "handCard";
 
             GamePoker pokerScript = go.GetComponent<GamePoker>();
@@ -2900,11 +2954,11 @@ public class GameplayMgr : MonoBehaviour
         for (int i = 0; i < nMultiple; ++i)
         {
             //instantiate a wild card , find a position in handpoker, insert it into handpoker.
-            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * 0.35f, -1.0f);
+            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * 0.35f, -2.0f);
 
             GameObject go = (GameObject)Instantiate(wildcardPrefab, Trans.position + posOffset, Quaternion.identity);
-            go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
-            //go.transform.SetParent(Trans);
+            //go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
+            go.transform.rotation = Quaternion.identity;
             go.tag = "wildCard";
 
             WildCard wildcardScript = go.GetComponent<WildCard>();
@@ -2940,7 +2994,7 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.HideAdd5Btn();
         gameplayUI.HideEndGameBtn();
 
-        AdjustAllHandPokerPosition();
+        //AdjustAllHandPokerPosition();
 
     }
 
@@ -2961,6 +3015,7 @@ public class GameplayMgr : MonoBehaviour
         return handPokers.Count;
     }
 
+    //static int nframeINdex = 0;
     private void FixedUpdate()
     {
         if (fGameTime > 3.0f && !bHasSetToGaming)
@@ -2982,6 +3037,8 @@ public class GameplayMgr : MonoBehaviour
         {
             if (GetTopPokerInfos(ref topPokers))
             {
+                //Debug.Log("thee topPokers's couunt is: " + topPokers.Count);
+                //nframeINdex++;
                 for (int i = 0; i < topPokers.Count; ++i)
                 {
                     //todo: flip the top pokers
@@ -2990,6 +3047,7 @@ public class GameplayMgr : MonoBehaviour
                         && gamePokerScript.itemType != GameDefines.PokerItemType.WildDrop)
                     {
                         gamePokerScript.FlipPoker();
+                        //Debug.Log("fixedupdate flip the poker, the frame index is: " + nframeINdex);
                     }
                     else
                     {
@@ -3189,6 +3247,9 @@ public class GameplayMgr : MonoBehaviour
                 //Debug.Log("--------------------------------------------- ---------------\n the gamepoker is null , hti result name is: " + hitResults[i].collider.name);
                 continue;
             }
+
+            if (gamePoker.bIsFolding)
+                continue;
 
             GameObject go = gamePoker.pokerInst;
             if ( (hitResults[i].collider.transform.position.z < fMinDepth) 
@@ -4063,7 +4124,7 @@ public class GameplayMgr : MonoBehaviour
 
     int ComputeOperationGold(bool bWithdraw = false)
     {
-        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+        StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
         PublicConfig publicConfig = publicConfigs[0];
 
         float x = stageConfig.CardCoin / 1000.0f;
@@ -4086,7 +4147,7 @@ public class GameplayMgr : MonoBehaviour
             return 0;
         }
 
-        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+        StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
         string strScoreConfig = stageConfig.CardScore;
         string[] strParams = strScoreConfig.Split('_');
@@ -4104,14 +4165,14 @@ public class GameplayMgr : MonoBehaviour
 
     int GetWildCardCost()
     {
-        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+        StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
         return stageConfig.WildCost;
     }
 
     int GetWithdrawCost()
     {
-        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+        StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
         string[] strParams = stageConfig.CancelCost.Split('_');
 
@@ -4127,7 +4188,7 @@ public class GameplayMgr : MonoBehaviour
 
     int GetBuy5PokerCost()
     {
-        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+        StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
         string[] strParams = stageConfig.BuyCard.Split('_');
 
@@ -4145,7 +4206,7 @@ public class GameplayMgr : MonoBehaviour
     {
         int nStar = 0;
 
-        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+        StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
         string strStarConfig = stageConfig.Star;
         string[] strParams = strStarConfig.Split('_');
@@ -4166,7 +4227,7 @@ public class GameplayMgr : MonoBehaviour
 
     public void Test_ComputeStars(int nScore, ref float[] fillAmounts)
     {
-        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+        StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
         string strStarConfig = stageConfig.Star;
         string[] strParams = strStarConfig.Split('_');
@@ -4203,7 +4264,7 @@ public class GameplayMgr : MonoBehaviour
 
     void InitStreakConfig()
     {
-        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+        StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
         string strStreakConfig = stageConfig.StreakType;
         string strBonuses = stageConfig.StreakBonus;
@@ -4249,7 +4310,7 @@ public class GameplayMgr : MonoBehaviour
 
         nItemCounts[(int)GameDefines.PowerUPType.Remove_Lock] = levelData.lockGroup.nLockGroupCount;
 
-        StageConfig stageConfig = stageConfigs[nCurrentLevel];
+        StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
         //compute each step's score
         if (powerUpProcess.HasPowerUP_ClearBomb())
@@ -4407,15 +4468,22 @@ public class GameplayMgr : MonoBehaviour
         while(handPokers.Count > 0)
         {
             nIndex = handPokers.Count - 1;
-            //Debug.Log("1 SettleAllHandPokers ... ...  " + nIndex);
-            GameObject go = handPokers[nIndex];
             
-            //HandPoker handPokerScript = go.GetComponent<HandPoker>();
-            go.transform.position = go.transform.position + Vector3.up * 2;
+            GameObject go = handPokers[nIndex];
+
+            HandPoker handPoker = go.GetComponent<HandPoker>();
+            go.transform.DOMove(go.transform.position + Vector3.up * 1, 0.5f).SetEase(Ease.InSine);
+            handPoker.pokerInst.GetComponent<MeshRenderer>().material = oneSideMaterial;
+            Material material = handPoker.pokerInst.GetComponent<MeshRenderer>().material;
+
+            yield return new WaitForSeconds(0.5f);
+
+            material.DOColor(new Color(1.0f, 1.0f, 1.0f, 0.4f), 0.5f);
+
             nIndex++;
 
             //add gold and score for the rest hand pokers
-            int nGold = stageConfigs[nCurrentLevel].RestCardCoin * nPokerOrder;
+            int nGold = stageConfigs[nCurrentLevel-1].RestCardCoin * nPokerOrder;
             if( nPokerOrder > 1)
             {
                 nGold = (int)Mathf.RoundToInt(nGold / 10.0f) * 10;
@@ -4428,7 +4496,7 @@ public class GameplayMgr : MonoBehaviour
             nCollectGold += nGold;
             gameplayUI.goldAndScoreUI.AddGold(nGold);
 
-            int nScore = stageConfigs[nCurrentLevel].EndCardScore * nPokerOrder;
+            int nScore = stageConfigs[nCurrentLevel-1].EndCardScore * nPokerOrder;
             if (go.tag == "wildcard")
             {
                 nScore *= 2;
@@ -4436,23 +4504,28 @@ public class GameplayMgr : MonoBehaviour
             nCollectScore += nScore;
             gameplayUI.goldAndScoreUI.AddScore(nScore);
 
-            //star
-            /*Image scoreStar = ((GameObject)Instantiate(scoreStarPrefab, transform)).GetComponent<Image>();
-            scoreStar.transform.position = new Vector3(0f, -2f, -2f);
-            Hashtable args = new Hashtable();
-            args.Add("time", 1.8f);
-            args.Add("speed", 0.2f);
-            args.Add("position", new Vector3(-2f, 4f, -2f));
-            iTween.MoveTo(scoreStar.gameObject, args);
-            
-            Object.Destroy(scoreStar, 2.0f);*/
+            //2021.10.9 here we play the add coin effect.
+            /*GameObject coinEffect = Instantiate(getCoinEffect, go.transform.position + Vector3.up * 1.5f + Vector3.right * -0.4f, Quaternion.identity);
+            GetCoinEffect getCoinScript = coinEffect.GetComponent<GetCoinEffect>();
+            getCoinScript.Init(nGold);*/
+
+            Vector3 coinEffectPos = go.transform.position + Vector3.up * 1.5f + Vector3.right * -0.4f;
+            PlayGetCoinEffect(coinEffectPos, nGold);
+
+            //todo: we should add score and gold effect here.
+            //Vector3 newPos = coinEffect.transform.position;
+            //GameObject streakCoin = Instantiate(GameplayMgr.Instance.FXCardStar, coinEffect.transform.position, Quaternion.identity);
+            GameObject streakCoin = Instantiate(GameplayMgr.Instance.FXCardStar, coinEffectPos, Quaternion.identity);
+
+            PlaySettleStarEffect(streakCoin);
 
             nPokerOrder++;
 
-            yield return new WaitForSeconds(1.0f);
+            //yield return new WaitForSeconds(0.3f);
 
             handPokers.Remove(go);
-            Destroy(go);
+            Destroy(go, 0.5f);
+            Destroy(streakCoin, 1.0f);
         }
 
         string strStageClearBonus = publicConfigs[0].StageClearBonus;
@@ -4465,26 +4538,56 @@ public class GameplayMgr : MonoBehaviour
         float fY = float.Parse(strParams[1]);
         float fZ = float.Parse(strParams[2]);
 
-        int nMinimalGold = (int)(stageConfigs[nCurrentLevel].Cost * fX * 0.0001f);
+        int nMinimalGold = (int)(stageConfigs[nCurrentLevel-1].Cost * fX * 0.0001f);
         float a = Random.Range(fY, fZ) * 0.0001f;
-        nClearGold =(int)(stageConfigs[nCurrentLevel].Cost * a - nCollectGold );
-        Debug.Log("a is: " + a + "  collect gold is: " + nCollectGold + "  clear gold is: " + nClearGold);
+        nClearGold =(int)(stageConfigs[nCurrentLevel-1].Cost * a - nCollectGold );
+        //Debug.Log("a is: " + a + "  collect gold is: " + nCollectGold + "  clear gold is: " + nClearGold);
         if (nClearGold < nMinimalGold)
             nClearGold = nMinimalGold;
 
         Debug.Log("collect gold is: " + nCollectGold + "  clear gold is: " + nClearGold);
 
         //gameplayUI.goldAndScoreUI.SetGold(nCollectGold + nClearGold);
-        gameplayUI.WinGame(nCollectGold, nClearGold);
 
         ScoreStar = ComputeStars(nCollectScore);
         MapDataManager.SetLevelRating(nCurrentLevel, ScoreStar);  //pengyuan 2021.9.28 added, to record stars in chapter data.
+
+        gameplayUI.WinGame(nCollectGold, nClearGold, ScoreStar);
 
         //gameStatus = GameStatus.GameStatus_After_Settle;
         EndGame();
 
         StopCoroutine(SettleAllHandPokers());
        
+    }
+
+    void PlayGetCoinEffect(Vector3 basePos, int nGold)
+    {
+        //Vector3 coinEffectPos = basePos + Vector3.up * 1.5f + Vector3.right * -0.4f;
+
+        GameObject coinEffect = Instantiate(getCoinEffect, basePos, Quaternion.identity);
+        GetCoinEffect getCoinScript = coinEffect.GetComponent<GetCoinEffect>();
+        getCoinScript.Init(nGold);
+    }
+
+    void PlaySettleStarEffect(GameObject cardStarPrefab)
+    {
+        ParticleSystem particleSystem;
+        particleSystem = cardStarPrefab.transform.GetComponentInChildren<ParticleSystem>();
+        ParticleSystemRenderer particleRenderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+
+        ParticleSystem.ExternalForcesModule forcesModule = particleSystem.externalForces;
+        ParticleSystem.TriggerModule triggerModule = particleSystem.trigger;
+        //forcesModule.AddInfluence()
+
+        foreach (ParticleSystemForceField forceField in forceFields)
+            forcesModule.AddInfluence(forceField);
+
+        Collider2D starDieCollider = starDieBox.GetComponent<BoxCollider2D>();
+        triggerModule.AddCollider(starDieCollider);
+
+        //Debug.Log("the star die box is: " + starDieBox);
+        //Debug.Log("the star die collider is: " + starDieCollider);
     }
 
     //////////////////////////////////////////////////////

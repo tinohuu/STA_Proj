@@ -46,6 +46,7 @@ public class Crate : MonoBehaviour
 
     void UpdateData()
     {
+        if (LevelID == 0 ||MapManager.Instance.HasMapmaker) return;
         var cropConfig = CropManager.Instance.LevelToCropConfig(LevelID);
 
         // Get current rating count
@@ -88,6 +89,7 @@ public class Crate : MonoBehaviour
 
     public void UpdateView()
     {
+        if (LevelID < 1 || MapManager.Instance.HasMapmaker) return;
         m_Tick.gameObject.SetActive(CrateManager.Instance.Data.CollectedCrateLevels.Contains(LevelID));
 
         BoxRenderer.color = m_CanInteract ? Color.white : new Color(1, 1, 1, 0.5f);
@@ -98,7 +100,7 @@ public class Crate : MonoBehaviour
         m_Rating.gameObject.SetActive(m_CanInteract);
 
         var cropConfig = CropManager.Instance.LevelToCropConfig(LevelID);
-        if ((MapDataManager.Instance.NewRatings > 0 || CrateManager.Instance.ForceShowLevelProgress) && MapManager.Instance.Data.SelectedLevel <= cropConfig.Level && MapManager.Instance.Data.SelectedLevel >= cropConfig.MinLevel)
+        if ((MapDataManager.Instance.NewRating > 0 || CrateManager.Instance.ForceShowLevelProgress) && MapDataManager.Instance.NewRatingLevel <= cropConfig.Level && MapDataManager.Instance.NewRatingLevel >= cropConfig.MinLevel)
         {
             var barWindow = Window.CreateWindowPrefab(m_CrateBarWindow).GetComponent<CrateBarWindow>();
             barWindow.Initialise(this);

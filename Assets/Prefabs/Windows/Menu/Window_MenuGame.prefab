@@ -757,16 +757,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2053610071}
-        m_TargetAssemblyTypeName: ButtonAnimator, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+      - m_Target: {fileID: 2712256434045723648}
+        m_TargetAssemblyTypeName: Window, Assembly-CSharp
+        m_MethodName: CreateWindow
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 5826694477426911975, guid: 389a37929b088224a9aa8127dc499435, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: MapTest
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 2712256434045723648}
@@ -882,6 +882,9 @@ MonoBehaviour:
   IntervalMultiplerOnFadeOut: 0
   FadeInOnEnable: 1
   OnWindowEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  OnWindowFadeIn:
     m_PersistentCalls:
       m_Calls: []
   FadeInDelay: 0
