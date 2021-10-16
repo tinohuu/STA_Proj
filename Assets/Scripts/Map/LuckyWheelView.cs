@@ -55,7 +55,6 @@ public class LuckyWheelView : MonoBehaviour
         }
 
         m_ButtonAnimator.OnClick.AddListener(() => Spin());
-        m_LuckyWheelButton.onClick.AddListener(() => Spin());
 
     }
     
@@ -66,6 +65,7 @@ public class LuckyWheelView : MonoBehaviour
         MapManager.Instance.MoveMap(m_Wheel.transform.position);
         yield return new WaitForSeconds(1.5f);
         m_Wheel.ToBig();
+        m_LuckyWheelButton.onClick.AddListener(() => Spin());
     }
 
     private void OnEnable()

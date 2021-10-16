@@ -45,6 +45,12 @@ public class MapManager : MonoBehaviour
         CurMapStageConfigs = StageConfigs.Where(e => e.ChapterNum == MapID).ToList();
 
         UpdateView();
+
+    }
+
+    private void Start()
+    {
+        SoundManager.Instance.PlayBGM("main");
     }
 
     private void Update()

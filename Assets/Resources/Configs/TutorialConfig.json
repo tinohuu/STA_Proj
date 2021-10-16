@@ -51,7 +51,7 @@
     "Type": 0,
     "Loop": 12,
     "Content": "You missed a playable card!\\nTap here to undo!",
-    "ConditionComment": "开启条件为玩家进入第2关，且玩家错过了一张原本可以收集的卡牌。引导内容为使用手指图标指向玩家可收集的下一卡牌，该引导会根据玩家的操作不断更新，重复次数为12次。",
+    "ConditionComment": "开启条件为玩家解锁，且玩家进入第2关，当玩家错过了一张原本可以收集的卡牌。引导内容为使用手指图标指向玩家可收集的下一卡牌，该引导会根据玩家的操作不断更新，重复次数为12次。",
     "Comment": "撤回规则新手引导1"
   },
   {
@@ -161,7 +161,7 @@
     "Type": 0,
     "Loop": 0,
     "Content": "POWER UP UNLOCKED!\\nRemoves 3 cards from the playfield.\\nTRY NOW!",
-    "ConditionComment": "开启条件为玩家解锁第21关，并进入第21关的确认界面。内容为高亮并使用手指图标指向消除三张牌道具，在高亮区域右侧显示文本内容，左对齐。高亮、手指与文本内容的关闭条件为玩家点击使用道具。",
+    "ConditionComment": "【开始时发放RemoveCards道具x1】开启条件为玩家解锁第21关，并进入第21关的确认界面。内容为高亮并使用手指图标指向消除三张牌道具，在高亮区域右侧显示文本内容，左对齐。高亮、手指与文本内容的关闭条件为玩家点击使用道具。",
     "Comment": "消三张牌道具新手引导1"
   },
   {
@@ -194,7 +194,7 @@
     "Type": 0,
     "Loop": 0,
     "Content": "POWER UP UNLOCKED!\\nRemoves all faceup cards.\\nTRY NOW!",
-    "ConditionComment": "开启条件为玩家解锁第30关，并进入第30关的确认界面。内容为高亮并使用手指图标指向风车牌道具，在高亮区域右侧显示文本内容，左对齐。高亮、手指与文本内容的关闭条件为玩家点击使用道具。",
+    "ConditionComment": "【开始时发放ClearPlayables道具x1】开启条件为玩家解锁第30关，并进入第30关的确认界面。内容为高亮并使用手指图标指向风车牌道具，在高亮区域右侧显示文本内容，左对齐。高亮、手指与文本内容的关闭条件为玩家点击使用道具。",
     "Comment": "风车道具新手引导1"
   },
   {
@@ -227,7 +227,7 @@
     "Type": 0,
     "Loop": 0,
     "Content": "POWER UP UNLOCKED!\\nAdds 3 Wild Cards to the playfield.\\nTRY NOW!",
-    "ConditionComment": "开启条件为玩家解锁第41关，并进入第41关的确认界面。内容为高亮并使用手指图标指向狂野牌掉落道具，在高亮区域右侧显示文本内容，左对齐。高亮、手指与文本内容的关闭条件为玩家点击使用道具。",
+    "ConditionComment": "【开始时发放WildDrop道具x1】开启条件为玩家解锁第41关，并进入第41关的确认界面。内容为高亮并使用手指图标指向狂野牌掉落道具，在高亮区域右侧显示文本内容，左对齐。高亮、手指与文本内容的关闭条件为玩家点击使用道具。",
     "Comment": "狂野牌掉落道具新手引导1"
   },
   {
@@ -293,7 +293,7 @@
     "Type": 0,
     "Loop": 0,
     "Content": "New!\\nRemove all Value Changers cards from the level.\\nTry now!",
-    "ConditionComment": "玩家解锁第54关，并且进入54关确认界面时开启引导。显示文本描述，并高亮、使用手指图标指向去除加减牌道具。玩家点击道具后关闭文本描述、道具高亮与手指提示。",
+    "ConditionComment": "【开始时发放RemoveValueChanger道具x2】玩家解锁第54关，并且进入54关确认界面时开启引导。显示文本描述，并高亮、使用手指图标指向去除加减牌道具。玩家点击道具后关闭文本描述、道具高亮与手指提示。",
     "Comment": "去除增减牌道具新手引导1"
   },
   {
@@ -315,7 +315,7 @@
     "Type": 0,
     "Loop": 0,
     "Content": "New!\\nRemove all Code Breakers cards from the level.\\nTry now!",
-    "ConditionComment": "玩家解锁第74关，并且进入74关确认界面时开启引导。显示文本描述，并高亮、使用手指图标指向去除加减牌道具。玩家点击道具后关闭文本描述、道具高亮与手指提示。",
+    "ConditionComment": "【开始时发放RemoveCodeBreakers道具x2】玩家解锁第74关，并且进入74关确认界面时开启引导。显示文本描述，并高亮、使用手指图标指向去除加减牌道具。玩家点击道具后关闭文本描述、道具高亮与手指提示。",
     "Comment": "去除锁道具新手引导1"
   },
   {
@@ -337,7 +337,7 @@
     "Type": 0,
     "Loop": 0,
     "Content": "New!\\nRemove all bombs cards from the level.\\nTry now!",
-    "ConditionComment": "玩家解锁第94关，并且进入94关确认界面时开启引导。显示文本描述，并高亮、使用手指图标指向去除加减牌道具。玩家点击道具后关闭文本描述、道具高亮与手指提示。",
+    "ConditionComment": "【开始时发放RemoveBombs道具x2】玩家解锁第94关，并且进入94关确认界面时开启引导。显示文本描述，并高亮、使用手指图标指向去除加减牌道具。玩家点击道具后关闭文本描述、道具高亮与手指提示。",
     "Comment": "去除炸弹道具新手引导1"
   },
   {

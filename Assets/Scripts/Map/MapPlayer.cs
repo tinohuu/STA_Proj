@@ -68,14 +68,14 @@ public class MapPlayer : MonoBehaviour
         //if (isRunning) return;
         //m_IsMovingToLevel = true;
         StopAllCoroutines();
-        transform.DOKill(true);
+        transform.DOKill();
         // Move to the screen edge when far from the screen area
         screenPoint = Camera.main.WorldToScreenPoint(transform.position);
         if (screenPoint.x < 0 - EdgeOffset || screenPoint.x > Screen.width + EdgeOffset)
         {
             RemoteImage.gameObject.SetActive(false);
             screenPoint.x = screenPoint.x < 0 ? 0 - EdgeOffset : Screen.width + EdgeOffset;
-            //transform.position = Camera.main.ScreenToWorldPoint(screenPoint);
+            //if (animate) transform.position = Camera.main.ScreenToWorldPoint(screenPoint);
         }
 
         // Animate
@@ -90,12 +90,22 @@ public class MapPlayer : MonoBehaviour
         MapManager.Instance.Data.SelectedLevel = mapLevel.Data.ID;
     }
 
-    IEnumerator IMoveToLevel(MapLevel mapLevel, bool showpanel, bool animate)
+    IEnumerator IMoveToLevel(MapLevel mapLevel, bool showpanel, bool animate, bool isOverEdge = false)
     {
         //isRunning = true;
         yield return null;
         if  (animate)
         {
+            yield return null;
+            yield return null;
+            var screenPoint = Camera.main.WorldToScreenPoint(transform.position);
+            if (screenPoint.x < 0 - EdgeOffset || screenPoint.x > Screen.width + EdgeOffset)
+            {
+                //RemoteImage.gameObject.SetActive(false);
+                screenPoint.x = screenPoint.x < 0 ? 0 - EdgeOffset : Screen.width + EdgeOffset;
+                if (animate) transform.position = Camera.main.ScreenToWorldPoint(screenPoint);
+            }
+
             SoundManager.Instance.PlaySFX("uiAvatarFly");
             Tween tween = transform.DOLocalJump(mapLevel.transform.localPosition, 1, 1, 1.5f);
             yield return tween.WaitForCompletion();
@@ -123,7 +133,6 @@ public class MapPlayer : MonoBehaviour
         //m_IsMovingToLevel = false;
         //isRunning = false;
     }
-
 
     public void OnClickRomote(float duration = 1)
     {

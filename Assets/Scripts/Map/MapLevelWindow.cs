@@ -13,6 +13,7 @@ public class MapLevelWindow : Window
     public Transform StarGroup = null;
     public TMP_Text CostText = null;
     public MapLevelData LevelData;
+    [SerializeField] TMP_Text m_InfoText;
 
     List<MapLevelWindowPowerup> m_Powerups = new List<MapLevelWindowPowerup>();
     MapLevelWindowBoost m_Boost = null;
@@ -89,6 +90,32 @@ public class MapLevelWindow : Window
             CostText.text = hasFreeRound ? boost == 0 ? freeRoundText : freeRoundBoostText : coinText;
         }
         else CostText.text = hasFreeRound ? freeRoundText : coinText;*/
+
+        if (m_InfoText)
+        {
+            var textConfigs = ConfigsAsset.GetConfigList<TextConfig>();
+            if (LevelData.Rating >= 3)
+            {
+                m_InfoText.text = textConfigs.Find(e => e.Code == "TXT_LVL_WININFO_FULL").Content;
+            }
+            else if (LevelData.Rating > 0)
+            {
+                m_InfoText.text = textConfigs.Find(e => e.Code == "TXT_LVL_WININFO_UNLOCK").Content;
+            }
+            else
+            {
+                if (LevelData.ID == 1)
+                {
+                    m_InfoText.text = "";
+                    return;
+                }
+                var cropConfig = CropManager.Instance.LevelToCropConfig(LevelData.ID);
+                int textID = (LevelData.ID - 1) % 4 + 1;
+                string content = textConfigs.Find(e => e.Code == "TXT_LVL_WININFO_LOCK" + textID).Content;
+                content = string.Format(content, cropConfig.Level - MapManager.Instance.Data.CompleteLevel);
+                m_InfoText.text = content;
+            }
+        }
     }
 
     List<(RewardType, int)> GetCosts()
