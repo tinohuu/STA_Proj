@@ -9,8 +9,8 @@ using UnityEngine.SceneManagement;
 public class SaveManager : MonoBehaviour
 {
     public Save Save = null;
-    public bool ClearOnAwake = false;
-    bool StopSave = false;
+    //public bool ClearOnAwake = false;
+    //bool StopSave = false;
     public static SaveManager Instance;
     private void Awake()
     {

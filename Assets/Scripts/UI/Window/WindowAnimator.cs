@@ -24,6 +24,8 @@ public class WindowAnimator : Window
     public static UnityEvent OnQueueChanged = new UnityEvent();
     public float FadeInDelay = 0;
 
+    public bool IsCrossScene = false;
+
     bool m_IsDestroying = false;
     //Coroutine currentCoroutine = null;
     private void Awake()

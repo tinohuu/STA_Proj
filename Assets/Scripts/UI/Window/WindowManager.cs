@@ -81,5 +81,10 @@ public class WindowManager : MonoBehaviour
         m_SceneFade.gameObject.SetActive(true);
         m_SceneFade.color = Color.black;
         m_SceneFade.DOFade(0, 0.25f).SetDelay(delay).OnComplete(() => m_SceneFade.gameObject.SetActive(false));
+
+        foreach (var winodw in WindowAnimator.WindowQueue)
+        {
+            if (!winodw.IsCrossScene) winodw.Close();
+        }
     }
 }

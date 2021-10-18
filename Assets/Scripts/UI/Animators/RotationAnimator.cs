@@ -6,7 +6,6 @@ public class RotationAnimator : MonoBehaviour
 {
     public float Speed = 20;
 
-
     // Update is called once per frame
     void Update()
     {

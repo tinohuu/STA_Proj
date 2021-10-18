@@ -8651,14 +8651,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1acd27e44ef3cc64a9f17814ad865c44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnableDailyGoodies: 1
-  MaxWeeks: 4
-  MaxVersions: 2
+  m_Enable: 1
+  m_ForceOpenDailyGoodies: 0
+  m_MaxWeeks: 4
+  m_MaxVersions: 2
+  m_ViewPrefab: {fileID: 5668969312729318512, guid: cb31843881a02f149982e3965ba85d31, type: 3}
+  m_IsSuspended: 0
   Data:
     StreakDays: 0
     Version: 1
-  IsSuspended: 0
-  viewPrefab: {fileID: 5668969312729318512, guid: cb31843881a02f149982e3965ba85d31, type: 3}
 --- !u!1 &2045401496
 GameObject:
   m_ObjectHideFlags: 0
@@ -8916,6 +8917,38 @@ PrefabInstance:
     - target: {fileID: 2839194961230771642, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958890202177373248, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958890202177373248, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958890202177373248, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958890202177373248, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958890202680649138, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958890202680649138, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958890202680649138, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4958890202680649138, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}

@@ -9,14 +9,15 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-	[Header("Config")]
+	[Header("Setting")]
 	public int ThresholdMinutes = 30;
 
+	[Header("Data")]
+	public bool IsChecking = false;
+	public bool IsGettingTime = false;
 	public TimeData Data = new TimeData();
 
 	[Header("Debug")]
-	public bool IsChecking = false;
-	public bool IsGettingTime = false;
 	[SerializeField] Vector2 _difference = new Vector2();
 	[SerializeField] string _systemTime = "";
 	[SerializeField] string _realTime = "";
