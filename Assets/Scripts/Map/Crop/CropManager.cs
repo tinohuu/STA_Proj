@@ -66,7 +66,7 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 
     void CreateEndpoints()
     {
-        if (Data.CollectedClockLevelID == 0) Data.LastHarvestTime = TimeManager.Instance.RealNow;
+        if (Data.CollectedClockLevelID == 0 && EnableEndpoint) Data.LastHarvestTime = TimeManager.Instance.RealNow;
         var configs = CropConfigs.FindAll(e => e.Level > Data.CollectedClockLevelID); // todo: 2nd map check
         foreach (var config in configs)
         {

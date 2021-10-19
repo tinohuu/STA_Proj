@@ -212,16 +212,18 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
             bool clamp = now < data.LastHarvestTime;
             if (clamp)
             {
-                TimeDebugText.Log("Clamped the harvest time.");
+                TimeDebugText.Log("Clamped the harvest time. Now: " + now + " Last harvest: " + data.LastHarvestTime);
                 CropManager.Instance.Data.LastHarvestTime = now;
             }
             //CropManager.Instance.UpdateCropsAnimator(true);
         }
         else ResetTime(now);
     }
+
     public void ResetTime(DateTime now)
     {
         //MapManagerData data = MapManager.Instance.Data;
+        TimeDebugText.Log("Reset last harvest time.");
         CropManager.Instance.Data.LastHarvestTime = TimeManager.Instance.RealNow;
     }
 }

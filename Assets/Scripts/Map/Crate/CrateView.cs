@@ -29,6 +29,8 @@ public class CrateView : MonoBehaviour
 
     void Start()
     {
+        SoundManager.Instance.PlaySFX("chestSceneEnter");
+
         //m_PickTimes = (int)Mathf.Pow(2, (int)Quality);
         var publicConfig = ConfigsAsset.GetConfigList<CratePublicConfig>()[0];
         switch (Quality)
@@ -102,7 +104,7 @@ public class CrateView : MonoBehaviour
 
                 rt.DOAnchorPosY(800, 0.5f).From(true).SetEase(Ease.InSine)
                     .OnStart(() => canvasGroup.alpha = 1)
-                    .OnComplete(() => rt.DOShakeAnchorPos(0.25f, 10, 4))
+                    .OnComplete(() => { rt.DOShakeAnchorPos(0.25f, 10, 4); SoundManager.Instance.PlaySFX("chestSceneCropSpawnSingle"); })
                     .SetDelay(i * 0.5f + j * 0.1f);
             }
         }
@@ -133,6 +135,7 @@ public class CrateView : MonoBehaviour
 
     public void Open(CrateCrop crop)
     {
+        SoundManager.Instance.PlaySFX("chestSceneCropClick");
         if (m_PickTimes > 0 && crop)
         {
             int index = m_CrateCrops.IndexOf(crop);
@@ -146,6 +149,8 @@ public class CrateView : MonoBehaviour
 
         if (m_PickTimes == 0)
         {
+            SoundManager.Instance.PlaySFX("chestSceneCropReward" + Random.Range(1, 6));
+
             m_CrateCrops.ForEach(x => x.GetComponentInChildren<ButtonAnimator>().Interactable = false);
 
             m_CollectButton.gameObject.SetActive(true);
@@ -166,6 +171,8 @@ public class CrateView : MonoBehaviour
 
     IEnumerator ICollect()
     {
+        SoundManager.Instance.PlaySFX("chestSceneConfirm");
+
         m_BackgroundFront.SetActive(false);
         m_CollectButton.Interactable = false;
         m_CollectButton.GetComponentInChildren<TMP_Text>().color = new Color(1, 1, 1, 0.5f);
@@ -175,13 +182,17 @@ public class CrateView : MonoBehaviour
             crop.SetTarget(m_CollectButton.transform);
             crop.Collect();
         }
-        yield return new WaitForSeconds(2);
 
         CrateManager.Instance.Collect(LevelID);
+        yield return new WaitForSeconds(1);
+        SoundManager.Instance.PlaySFX("chestSceneApplaud");
+        yield return new WaitForSeconds(2);
 
         var window = GetComponent<WindowAnimator>();
 
         CrateManager.Instance.CurrentCrate.UpdateView();
+
+        SoundManager.Instance.PlaySFX("chestSceneExit");
 
         window.Close();
 

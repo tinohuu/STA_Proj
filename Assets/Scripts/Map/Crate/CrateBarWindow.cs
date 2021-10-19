@@ -41,7 +41,7 @@ public class CrateBarWindow : MonoBehaviour
 
         var levelButton = MapLevelManager.Instance.GetLevelButton(MapDataManager.Instance.NewRatingLevel);
         var bar = Instantiate(m_CrateProgressBarPrefab, levelButton.transform).GetComponent<CrateProgressBar>();
-
+        SoundManager.Instance.PlaySFX("chestBarClose");
         //quality = Mathf.Clamp(quality, 0, 3);
 
         int nextQuality = Mathf.Clamp(oldQuality + 1, 0, 4);
@@ -49,9 +49,10 @@ public class CrateBarWindow : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        int curQuality = 0;
+        int curQuality = (int)m_Crate.GetQuality(oldRatingCount);
         for (int i = oldRatingCount; i <= m_Crate.CurRatingCount; i++)
         {
+            if (curQuality != (int)m_Crate.GetQuality(i)) SoundManager.Instance.PlaySFX("chestBarFill");
             curQuality = (int)m_Crate.GetQuality(i);
 
             //quality = i >= m_Crate.QualityRatings[(int)oldQuality] ? oldQuality : oldQuality + 1;
@@ -61,6 +62,8 @@ public class CrateBarWindow : MonoBehaviour
             bar.Set(i, m_Crate.QualityRatings[nextQuality], (Crate.Quality)nextQuality);
             m_Crate.SetView((Crate.Quality)curQuality, i);
 
+            SoundManager.Instance.PlaySFX("uiQuestBarFillSingle");
+            
             yield return new WaitForSeconds(0.25f);
         }
 
@@ -69,6 +72,8 @@ public class CrateBarWindow : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         bar.Close();
+        SoundManager.Instance.PlaySFX("chestBarClose");
+
         m_WindowAnimator.Close();
         if (oldQuality != curQuality)
         {

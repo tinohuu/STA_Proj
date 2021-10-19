@@ -4236,11 +4236,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a17a67863ff8e42b3a073e3b1992ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_EnableEndpoint: 1
   m_CropGroup: {fileID: 985967770}
   HarvestButton: {fileID: 1400060574}
   m_CropPrefab: {fileID: 2771757302548880857, guid: 1066cfc5e306e4a47b33f16501c7fdb3, type: 3}
   m_CropEndpointPrefab: {fileID: 3365706802845995876, guid: 40f1980cfc349144796da4a5041e610b, type: 3}
-  EnableEndpoint: 1
   Data:
     CollectedClockLevelID: 0
 --- !u!1 &1135818863
@@ -4830,11 +4830,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04c8b58a1d225184ca72886f49620b8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Enable: 1
+  m_ForceShowBar: 0
   m_CratePrefab: {fileID: 7274402190528635073, guid: 8cb1269cfe99a7744b4b3d2eb79ab32a, type: 3}
   m_CrateGroup: {fileID: 1436389699}
   m_CrateViewPrefab: {fileID: 6000415817167348606, guid: d9a3f1076129d844e92d37c34b30de94, type: 3}
-  EnableCrate: 1
-  ForceShowLevelProgress: 0
   Data:
     CollectedCrateLevels: 
     ResumedRewardTypes: 
@@ -5213,10 +5213,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 462a4a036dbc6b249864d73f10147805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Enable: 1
   m_WheelViewPrefab: {fileID: 2828721209400240417, guid: 02a814c9715c77c4da7dd0f13aabd951, type: 3}
   m_WheelPrefab: {fileID: 1124687218495626963, guid: 4b446f58b37517b42be7cb244af13029, type: 3}
   m_WheelGroup: {fileID: 651820891}
-  EnableWheel: 1
 --- !u!1 &1418630843
 GameObject:
   m_ObjectHideFlags: 0
@@ -7677,6 +7677,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: EditorOnly
       objectReference: {fileID: 0}
+    - target: {fileID: 976663574578681244, guid: 2bcbd94afe0f8b547a9eacb552471025, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2bcbd94afe0f8b547a9eacb552471025, type: 3}
 --- !u!1 &1844701847
@@ -8652,7 +8656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Enable: 1
-  m_ForceOpenDailyGoodies: 0
+  m_ForceOpen: 0
   m_MaxWeeks: 4
   m_MaxVersions: 2
   m_ViewPrefab: {fileID: 5668969312729318512, guid: cb31843881a02f149982e3965ba85d31, type: 3}

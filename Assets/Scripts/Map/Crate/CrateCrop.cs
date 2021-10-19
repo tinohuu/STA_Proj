@@ -62,7 +62,7 @@ public class CrateCrop : MonoBehaviour
         
         if (IsOpen)
         {
-            m_Reward.transform.DOJump(m_Target.position, 3, 1, 0.5f).SetDelay(1);
+            m_Reward.transform.DOJump(m_Target.position, 3, 1, 0.5f).SetDelay(1).OnComplete(() => SoundManager.Instance.PlaySFX("chestSceneCountDown"));
             m_Reward.transform.DOScale(Vector3.one * 0.5f, 0.5f).SetDelay(1);
         }
         else

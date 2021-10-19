@@ -1,5 +1,48 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &169729299
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 169729300}
+  - component: {fileID: 169729301}
+  m_Layer: 0
+  m_Name: LocalizationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &169729300
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169729299}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2839194961230771640}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &169729301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169729299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c06b0b6c410b6d4abb454619174dbc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &290416166
 GameObject:
   m_ObjectHideFlags: 0
@@ -1617,6 +1660,7 @@ Transform:
   - {fileID: 290416167}
   - {fileID: 1122259982}
   - {fileID: 1404687525}
+  - {fileID: 169729300}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1678,7 +1722,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 305338f3d89bcc44aaa958daee5099c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ClearOnAwake: 0
 --- !u!1 &2839194961462446414
 GameObject:
   m_ObjectHideFlags: 0
@@ -1766,13 +1809,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ThresholdMinutes: 5
+  IsChecking: 0
+  IsGettingTime: 0
   Data:
     CheckedSource: 0
     CheckedAuthenticity: 0
     CheckedBootTime: 0
     CheckedSystemOffset: 0
-  IsChecking: 0
-  IsGettingTime: 0
   _difference: {x: 0, y: 0}
   _systemTime: 
   _realTime: 
@@ -6998,14 +7041,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d2892c1818884548adbcefd881afe5e, type: 3}
---- !u!224 &576304191283672431 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2349094901836274250, guid: 6d2892c1818884548adbcefd881afe5e, type: 3}
-  m_PrefabInstance: {fileID: 2839194960885575461}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4958890202680649139 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7185313553452632726, guid: 6d2892c1818884548adbcefd881afe5e, type: 3}
+  m_PrefabInstance: {fileID: 2839194960885575461}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &576304191283672431 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2349094901836274250, guid: 6d2892c1818884548adbcefd881afe5e, type: 3}
   m_PrefabInstance: {fileID: 2839194960885575461}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &576304191283672430 stripped

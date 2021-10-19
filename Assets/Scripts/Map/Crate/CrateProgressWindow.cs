@@ -15,7 +15,7 @@ public class CrateProgressWindow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        SoundManager.Instance.PlaySFX("chestTips");
     }
 
     // Update is called once per frame
