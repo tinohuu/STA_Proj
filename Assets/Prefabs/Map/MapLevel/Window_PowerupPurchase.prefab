@@ -308,7 +308,11 @@ MonoBehaviour:
   OnWindowEnable:
     m_PersistentCalls:
       m_Calls: []
+  OnWindowFadeIn:
+    m_PersistentCalls:
+      m_Calls: []
   FadeInDelay: 0
+  IsCrossScene: 0
 --- !u!114 &2749480515694025565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,7 +734,7 @@ MonoBehaviour:
   m_text: Reward Name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 1409587c60fff29488574c55b1ac66f4, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 06785ee8df7295f459dd57b23050e7c2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

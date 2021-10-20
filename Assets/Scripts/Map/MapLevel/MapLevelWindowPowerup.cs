@@ -13,6 +13,7 @@ public class MapLevelWindowPowerup : MonoBehaviour
     public GameObject InUseImage;
     public GameObject TextImage;
     [SerializeField] RewardNumber rewardNumber;
+    [SerializeField] GameObject m_PowerupPurchaseWindow;
 
     public RewardType RewardType { get; private set; }
 
@@ -61,7 +62,7 @@ public class MapLevelWindowPowerup : MonoBehaviour
         {
             if (Reward.Data[RewardType] == 0)
             {
-                RewardPurchaseWindow window = Window.CreateWindowPrefab(Resources.Load<GameObject>("Windows/Window_PowerupPurchase")).GetComponent<RewardPurchaseWindow>();
+                RewardPurchaseWindow window = Window.CreateWindowPrefab(m_PowerupPurchaseWindow).GetComponent<RewardPurchaseWindow>();
                 window.Type = RewardType;
             }
             else

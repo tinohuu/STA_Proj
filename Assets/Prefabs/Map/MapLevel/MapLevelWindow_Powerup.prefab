@@ -474,6 +474,7 @@ MonoBehaviour:
   InUseImage: {fileID: 3206934863310516311}
   TextImage: {fileID: 5741143639154493196}
   rewardNumber: {fileID: 702135138084462488}
+  m_PowerupPurchaseWindow: {fileID: 1853325047715122456, guid: 0be451f5d4d48ef47b2f13e929b95039, type: 3}
   InUse: 0
   Interactable: 0
 --- !u!114 &8155250758019910228

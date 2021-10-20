@@ -15,6 +15,9 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
     [SerializeField] GameObject m_WheelPrefab;
     [SerializeField] Transform m_WheelGroup;
 
+    [Header("Data")]
+    [SavedData] public LuckyWheelManagerData Data = new LuckyWheelManagerData();
+
     public static LuckyWheelManager Instance = null;
 
     LuckyWheelView m_CurView;
@@ -51,7 +54,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
         var wheels = m_WheelGroup.GetComponentsInChildren<LuckyWheel>();
         foreach (var wheel in wheels)
         {
-            if (wheel.LevelID <= MapManager.Instance.Data.CompleteLevel && wheel.LevelID > MapManager.Instance.Data.WheelCollectedLevel)
+            if (wheel.LevelID <= MapManager.Instance.Data.CompleteLevel && wheel.LevelID > Data.WheelCollectedLevel)
             {
                 return wheel;
             }
@@ -86,12 +89,12 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
         var grandSlotConfigs = slotConfigs.FindAll(e => e.IsGrand);
         if (grandSlotConfigs?.Count > 0)
         {
-            MapManager.Instance.Data.WheelTimesSinceGrand++;
+            Instance.Data.WheelTimesSinceGrand++;
             var grandDrawConfig = ConfigsAsset.GetConfigList<LuckyWheelDrawConfig>();
-            int grandDrawIndex = Mathf.Clamp(MapManager.Instance.Data.WheelTimesSinceGrand - 1, 0, grandDrawConfig.Count - 1);
+            int grandDrawIndex = Mathf.Clamp(Instance.Data.WheelTimesSinceGrand - 1, 0, grandDrawConfig.Count - 1);
             float grandWeight = grandDrawConfig[grandDrawIndex].GrandPrizeWeight;
             grandSlotConfigs.ForEach(e => e.Weight = grandWeight);
-            TimeDebugText.Log("Cur Wheel Times: " + MapManager.Instance.Data.WheelTimesSinceGrand);
+            TimeDebugText.Log("Cur Wheel Times: " + Instance.Data.WheelTimesSinceGrand);
             TimeDebugText.Log("Cur Grand Weight: " + grandWeight);
         }
 
@@ -107,7 +110,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
             weightCount += weights[i];
             if (randomWeight < weightCount)
             {
-                if (slotConfigs[i].IsGrand) MapManager.Instance.Data.WheelTimesSinceGrand = 0;
+                if (slotConfigs[i].IsGrand) Instance.Data.WheelTimesSinceGrand = 0;
 
                 TimeDebugText.Log("Lucky Wheel Spin Result: " + (i + 1).ToString());
                 return i;
@@ -135,7 +138,7 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
         var configs = JsonExtensions.JsonToList<Mapmaker_WheelConfig>(json);
         foreach (var config in configs)
         {
-            if (config.LevelID > MapManager.Instance.Data.WheelCollectedLevel)
+            if (config.LevelID > Data.WheelCollectedLevel)
             {
                 var luckyWheel = Instantiate(m_WheelPrefab, m_WheelGroup).GetComponent<LuckyWheel>();
                 luckyWheel.transform.localPosition = config.LocPos;
@@ -185,6 +188,13 @@ public class LuckyWheelManager : MonoBehaviour, IMapmakerModule
         Destroy(target);
     }
     #endregion
+}
+
+[System.Serializable]
+public class LuckyWheelManagerData
+{
+    public int WheelCollectedLevel = 0;
+    public int WheelTimesSinceGrand = 0;
 }
 
 namespace STA.Mapmaker

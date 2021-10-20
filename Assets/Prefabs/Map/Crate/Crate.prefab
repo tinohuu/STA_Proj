@@ -471,7 +471,7 @@ MonoBehaviour:
   m_Rating: {fileID: 277812994167825812}
   m_Tick: {fileID: 4450634307530231333}
   BoxSprites:
-  - {fileID: 21300000, guid: 99c40609b49ca774b82875485fd5559a, type: 3}
+  - {fileID: 21300000, guid: 76bcbb532ff1094409a72cadbb046100, type: 3}
   - {fileID: 21300000, guid: 99c40609b49ca774b82875485fd5559a, type: 3}
   - {fileID: 21300000, guid: d6adc8d7a684d294d8d421fe15273172, type: 3}
   - {fileID: 21300000, guid: fa68df4eb3d833546a0c55c8bfa6e657, type: 3}

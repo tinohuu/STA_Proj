@@ -1,57 +1,62 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class QuestManager : MonoBehaviour
 {
-    public delegate void Handler();
-    public Handler OnWin = null;
-    public Handler OnCollectDeck = null;
-    public Handler OnCollectStarts = null;
-    public Handler OnCompleteStreaks = null;
+    public QuestManagerData Data = new QuestManagerData();
 
     public static QuestManager Instance = null;
+
+    List<UnityEvent> m_Events = new List<UnityEvent>();
+    List<Quest> m_Quests = new List<Quest>();
+
     private void Awake()
     {
-        Instance = this;
+        if (!Instance) Instance = this;
+        CheckEvents();
     }
 
-    private void Start()
+    public UnityEvent this[QuestEventType type]
     {
+        get => m_Events[(int)type];
+        //set => m_Events[(int)type] = value;
+    }
 
+    void CheckEvents()
+    {
+        int length = Enum.GetValues(typeof(QuestEventType)).Length;
+        for (int i = m_Events.Count; i < length; i++) m_Events.Add(new UnityEvent());
     }
 }
 
-public class Quest
+[Serializable]
+public class QuestManagerData
 {
-    public QuestData Data = null;
-    public Sprite QuestSprite = null;
-    public string QuestText = "";
+    public List<QuestData> QuestDatas = new List<QuestData>();
+}
 
-    public void Progress()
-    {
-        Debug.Log("Progress +");
-    }
+public enum QuestEventType
+{
+    None,
+    OnWin,
+    OnWinFirst,
+    OnWinBoost,
+    OnLose,
+    OnCollectDeckCard,
+    OnCollectStar,
+    OnCompleteStreak
+}
 
-    public void Subscribe(bool unsubscribe = false)
+public static class QuestExtensions
+{
+    public static void MultiInvoke(this UnityEvent unityEvent, int times = 1)
     {
-        switch (Data.QuestType)
+        for (int i = 0; i < times; i++)
         {
-            case QuestData.Type.win:
-                if (!unsubscribe) QuestManager.Instance.OnWin += new QuestManager.Handler(Progress);
-                else QuestManager.Instance.OnWin -= new QuestManager.Handler(Progress);
-                break;
+            unityEvent.Invoke();
         }
     }
-}
-
-[System.Serializable]
-public class QuestData
-{
-    public enum Type { none, win, winFirst, winInRow, winHighest, collectDeck, collectStars, CompleteStreaks}
-    public Type QuestType = Type.none;
-    public int LevelMin = 0;
-    public int Progress = 0;
-    public int MaxProgress = 0;
-    public List<int> Rewards = new List<int>();
 }

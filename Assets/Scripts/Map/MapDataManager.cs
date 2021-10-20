@@ -80,8 +80,8 @@ public class MapManagerData
     public int SelectedLevel = 1;
     public DateTime LastHarvestTime => CropManager.Instance.Data.LastHarvestTime;
 
-    public int WheelCollectedLevel = 0;
-    public int WheelTimesSinceGrand = 0;
+    //public int WheelCollectedLevel = 0;
+    //public int WheelTimesSinceGrand = 0;
     public List<MapLevelData> MapLevelDatas = new List<MapLevelData>();
 }
 

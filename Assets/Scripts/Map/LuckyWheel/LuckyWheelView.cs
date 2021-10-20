@@ -99,7 +99,7 @@ public class LuckyWheelView : MonoBehaviour
         m_BoxRewardText.text = m_Slots[m_SlotIndex].RewardText;
 
         var rewards = LuckyWheelManager.GetRewards(m_Wheel.WheelID)[m_SlotIndex];
-        MapManager.Instance.Data.WheelCollectedLevel = m_Wheel.LevelID;
+        LuckyWheelManager.Instance.Data.WheelCollectedLevel = m_Wheel.LevelID;
         Destroy(m_Wheel.gameObject);
         foreach (var type in rewards.Keys)
         {
