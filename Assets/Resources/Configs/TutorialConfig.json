@@ -1,7 +1,7 @@
 [
   {
     "ID": 1,
-    "Code": "COLLECTCARD",
+    "Code": "CollectCard",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -12,7 +12,7 @@
   },
   {
     "ID": 2,
-    "Code": "COLLECTCARD",
+    "Code": "CollectCard",
     "Progress": 2,
     "IsJoint": true,
     "Type": 1,
@@ -23,18 +23,18 @@
   },
   {
     "ID": 3,
-    "Code": "COLLECTCARD",
+    "Code": "CollectCard",
     "Progress": 3,
     "IsJoint": false,
     "Type": 0,
     "Loop": 0,
-    "Content": "9o",
+    "Content": "",
     "ConditionComment": "引导3的开启条件为玩家消除场上最后一张牌，内容为空（用于替换引导2中的文字描述），",
     "Comment": "出牌规则新手引导3"
   },
   {
     "ID": 4,
-    "Code": "NEXTCARD",
+    "Code": "NextCard",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -45,7 +45,7 @@
   },
   {
     "ID": 5,
-    "Code": "UNDO",
+    "Code": "Undo",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -56,7 +56,7 @@
   },
   {
     "ID": 6,
-    "Code": "UNDO",
+    "Code": "Undo",
     "Progress": 2,
     "IsJoint": true,
     "Type": 0,
@@ -67,18 +67,18 @@
   },
   {
     "ID": 7,
-    "Code": "STREAKBONUS",
+    "Code": "StreakBonus",
     "Progress": 1,
     "IsJoint": false,
     "Type": 1,
     "Loop": 0,
-    "Content": "Play multiple cards in a row/nto fill up your streak meter/nand win bonuses!",
+    "Content": "Play multiple cards in a row\\nto fill up your streak meter\\nand win bonuses!",
     "ConditionComment": "开启条件为玩家进入第3关（第3关将开启StreakBonus功能），且SB已开启。内容为使用箭头指示右上角的SB栏，并在箭头末端显示文字说明。玩家点击屏幕的任意位置可关闭提示。",
     "Comment": "StreakBonus规则新手引导1"
   },
   {
     "ID": 8,
-    "Code": "STREAKBONUS",
+    "Code": "StreakBonus",
     "Progress": 1,
     "IsJoint": false,
     "Type": 1,
@@ -89,7 +89,7 @@
   },
   {
     "ID": 9,
-    "Code": "WILDCARD",
+    "Code": "WildCard",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -100,7 +100,7 @@
   },
   {
     "ID": 10,
-    "Code": "HARVEST",
+    "Code": "Harvest",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -111,7 +111,7 @@
   },
   {
     "ID": 11,
-    "Code": "HARVEST",
+    "Code": "Harvest",
     "Progress": 2,
     "IsJoint": false,
     "Type": 0,
@@ -122,7 +122,7 @@
   },
   {
     "ID": 12,
-    "Code": "HARVEST",
+    "Code": "Harvest",
     "Progress": 3,
     "IsJoint": false,
     "Type": 2,
@@ -133,7 +133,7 @@
   },
   {
     "ID": 13,
-    "Code": "CRATE",
+    "Code": "Crate",
     "Progress": 1,
     "IsJoint": false,
     "Type": 1,
@@ -144,7 +144,7 @@
   },
   {
     "ID": 14,
-    "Code": "AVATAR",
+    "Code": "Avatar",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -155,7 +155,7 @@
   },
   {
     "ID": 15,
-    "Code": "REMOVECARDS",
+    "Code": "RemoveCards",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -166,7 +166,7 @@
   },
   {
     "ID": 16,
-    "Code": "REMOVECARDS",
+    "Code": "RemoveCards",
     "Progress": 2,
     "IsJoint": false,
     "Type": 0,
@@ -177,7 +177,7 @@
   },
   {
     "ID": 17,
-    "Code": "REMOVECARDS",
+    "Code": "RemoveCards",
     "Progress": 3,
     "IsJoint": false,
     "Type": 0,
@@ -188,7 +188,7 @@
   },
   {
     "ID": 18,
-    "Code": "CLEARPLAYABLES",
+    "Code": "ClearPlayables",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -199,7 +199,7 @@
   },
   {
     "ID": 19,
-    "Code": "CLEARPLAYABLES",
+    "Code": "ClearPlayables",
     "Progress": 2,
     "IsJoint": false,
     "Type": 0,
@@ -210,7 +210,7 @@
   },
   {
     "ID": 20,
-    "Code": "CLEARPLAYABLES",
+    "Code": "ClearPlayables",
     "Progress": 3,
     "IsJoint": false,
     "Type": 0,
@@ -221,7 +221,7 @@
   },
   {
     "ID": 21,
-    "Code": "WILDCDROP",
+    "Code": "WildDrop",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -232,7 +232,7 @@
   },
   {
     "ID": 22,
-    "Code": "WILDCDROP",
+    "Code": "WildDrop",
     "Progress": 2,
     "IsJoint": false,
     "Type": 0,
@@ -243,7 +243,7 @@
   },
   {
     "ID": 23,
-    "Code": "WILDCDROP",
+    "Code": "WildDrop",
     "Progress": 3,
     "IsJoint": false,
     "Type": 0,
@@ -254,7 +254,7 @@
   },
   {
     "ID": 24,
-    "Code": "VALUECHANGER",
+    "Code": "ValueChangers",
     "Progress": 1,
     "IsJoint": false,
     "Type": 1,
@@ -265,18 +265,18 @@
   },
   {
     "ID": 25,
-    "Code": "LOCK",
+    "Code": "Lock",
     "Progress": 1,
     "IsJoint": false,
     "Type": 1,
     "Loop": 0,
-    "Content": "",
+    "Content": "Very helpful: \\nClear the CodeBreaker\\n to complete the level.",
     "ConditionComment": "玩家解锁第73关，并且进入第73关，在牌堆发牌、手牌发牌，牌堆翻牌、手牌翻牌结束后，使用箭头指向带有特殊机制的卡牌，并在箭头末端显示文字说明。当玩家点击屏幕任意位置时关闭新手引导。",
     "Comment": "锁机制新手引导1"
   },
   {
     "ID": 26,
-    "Code": "BOMB",
+    "Code": "Bomb",
     "Progress": 1,
     "IsJoint": false,
     "Type": 1,
@@ -287,7 +287,7 @@
   },
   {
     "ID": 27,
-    "Code": "REMOVEVALUECHANGERS",
+    "Code": "RemoveValueChangers",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -298,7 +298,7 @@
   },
   {
     "ID": 28,
-    "Code": "REMOVEVALUECHANGERS",
+    "Code": "RemoveValueChangers",
     "Progress": 2,
     "IsJoint": false,
     "Type": 0,
@@ -309,7 +309,7 @@
   },
   {
     "ID": 29,
-    "Code": "REMOVECODEBREAKERS",
+    "Code": "RemoveCodeBreakers",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -320,7 +320,7 @@
   },
   {
     "ID": 30,
-    "Code": "REMOVECODEBREAKERS",
+    "Code": "RemoveCodeBreakers",
     "Progress": 2,
     "IsJoint": false,
     "Type": 0,
@@ -331,7 +331,7 @@
   },
   {
     "ID": 31,
-    "Code": "REMOVEBOMBS",
+    "Code": "RemoveBombs",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -342,7 +342,7 @@
   },
   {
     "ID": 32,
-    "Code": "REMOVEBOMBS",
+    "Code": "RemoveBombs",
     "Progress": 2,
     "IsJoint": false,
     "Type": 0,
@@ -353,7 +353,7 @@
   },
   {
     "ID": 33,
-    "Code": "GRANDLEVEL",
+    "Code": "GrandLevel",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -364,7 +364,7 @@
   },
   {
     "ID": 34,
-    "Code": "GRANDLEVEL",
+    "Code": "GrandLevel",
     "Progress": 2,
     "IsJoint": false,
     "Type": 0,
@@ -375,7 +375,7 @@
   },
   {
     "ID": 35,
-    "Code": "EPICLEVEL",
+    "Code": "EpicLevel",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -386,7 +386,7 @@
   },
   {
     "ID": 36,
-    "Code": "EPICLEVEL",
+    "Code": "EpicLevel",
     "Progress": 2,
     "IsJoint": false,
     "Type": 0,
@@ -397,7 +397,7 @@
   },
   {
     "ID": 37,
-    "Code": "DAILYMISSION",
+    "Code": "DailyMission",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -408,7 +408,7 @@
   },
   {
     "ID": 38,
-    "Code": "DAILYMISSION",
+    "Code": "DailyMission",
     "Progress": 2,
     "IsJoint": false,
     "Type": 1,
@@ -419,7 +419,7 @@
   },
   {
     "ID": 39,
-    "Code": "DAILYMISSION",
+    "Code": "DailyMission",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -430,7 +430,7 @@
   },
   {
     "ID": 40,
-    "Code": "DAILYMISSION",
+    "Code": "DailyMission",
     "Progress": 1,
     "IsJoint": false,
     "Type": 0,
@@ -441,7 +441,7 @@
   },
   {
     "ID": 41,
-    "Code": "DAILYMISSION",
+    "Code": "DailyMission",
     "Progress": 2,
     "IsJoint": false,
     "Type": 1,
@@ -449,5 +449,27 @@
     "Content": "Each completed Mission is\\nalways replaced with a fresh one!",
     "ConditionComment": "开启条件为日常任务首次刷新为新任务，内容为高亮这些新日常任务，并在高亮上方显示文字描述，居中。",
     "Comment": "日常任务功能新手引导5"
+  },
+  {
+    "ID": 42,
+    "Code": "EnterLevel",
+    "Progress": 1,
+    "IsJoint": false,
+    "Type": 2,
+    "Loop": 0,
+    "Content": "",
+    "ConditionComment": "开启条件为玩家首次进入游戏，并且首次进入第一关。",
+    "Comment": "进入关卡1"
+  },
+  {
+    "ID": 43,
+    "Code": "EnterLevel",
+    "Progress": 2,
+    "IsJoint": false,
+    "Type": 0,
+    "Loop": 0,
+    "Content": "",
+    "ConditionComment": "开启条件为玩家首次进入第一关，弹出游戏协议。",
+    "Comment": "进入关卡2"
   }
 ]

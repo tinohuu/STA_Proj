@@ -96,11 +96,11 @@ public class MapLevelWindow : Window
             var textConfigs = ConfigsAsset.GetConfigList<TextConfig>();
             if (LevelData.Rating >= 3)
             {
-                m_InfoText.text = textConfigs.Find(e => e.Code == "TXT_LVL_WININFO_FULL").Content;
+                m_InfoText.text = "TXT_LVL_WININFO_FULL";
             }
             else if (LevelData.Rating > 0)
             {
-                m_InfoText.text = textConfigs.Find(e => e.Code == "TXT_LVL_WININFO_UNLOCK").Content;
+                m_InfoText.text = "TXT_LVL_WININFO_UNLOCK1";
             }
             else
             {
@@ -111,9 +111,8 @@ public class MapLevelWindow : Window
                 }
                 var cropConfig = CropManager.Instance.LevelToCropConfig(LevelData.ID);
                 int textID = (LevelData.ID - 1) % 4 + 1;
-                string content = textConfigs.Find(e => e.Code == "TXT_LVL_WININFO_LOCK" + textID).Content;
-                content = string.Format(content, cropConfig.Level - MapManager.Instance.Data.CompleteLevel);
-                m_InfoText.text = content;
+                m_InfoText.text = "TXT_LVL_WININFO_LOCK" + textID;
+                m_InfoText.Format(cropConfig.Level - MapManager.Instance.Data.CompleteLevel);
             }
         }
     }

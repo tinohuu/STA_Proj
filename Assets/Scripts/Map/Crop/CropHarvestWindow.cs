@@ -45,7 +45,7 @@ public class CropHarvestWindow : MonoBehaviour
         AdText.text = string.Format(AdText.text, (CropHarvest.Instance.GetHarvestCoin() * 2).ToString("N0"));
         //CoinText.rectTransform.DOScale(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo);
 
-        TutorialManager.Instance.Show("Harvest", 2, m_CollectButton.gameObject, 1, 0.5f);
+        TutorialManager.Instance.Show("Harvest", 2, m_CollectButton.gameObject, 0.5f);
     }
 
     private void FixedUpdate()

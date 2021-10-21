@@ -31,6 +31,9 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
     {
         if (!Instance) Instance = this;
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
+
+        //int unlockLevel = ConfigsAsset.GetConfigList<FunctionConfig>().Find(e => e.FunctionName == "crate").FunctionParams;
+        //TutorialManager.Instance.Show("Crate", 1, () => m_CrateGroup.GetComponentInChildren<Crate>().gameObject);
     }
 
     void ShowCrateView()

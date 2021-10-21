@@ -5213,10 +5213,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 462a4a036dbc6b249864d73f10147805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Enable: 1
+  m_Enable: 0
   m_WheelViewPrefab: {fileID: 2828721209400240417, guid: 02a814c9715c77c4da7dd0f13aabd951, type: 3}
   m_WheelPrefab: {fileID: 1124687218495626963, guid: 4b446f58b37517b42be7cb244af13029, type: 3}
   m_WheelGroup: {fileID: 651820891}
+  Data:
+    WheelCollectedLevel: 0
+    WheelTimesSinceGrand: 0
 --- !u!1 &1418630843
 GameObject:
   m_ObjectHideFlags: 0

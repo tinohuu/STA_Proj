@@ -11,4 +11,5 @@ public class FunctionConfig
     public int FunctionParams = 1;
     public bool IsGuidance = false;
     public int FunctionReward = 0;
+    public string FunctionName = "";
 }

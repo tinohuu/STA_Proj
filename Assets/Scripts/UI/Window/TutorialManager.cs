@@ -8,10 +8,7 @@ using UnityEngine.EventSystems;
 public class TutorialManager : MonoBehaviour
 {
     [Header("Setting")]
-    public bool EnableTutorial = true;
-
-    [Header("Ref")]
-    public GameObject TutorialPrefab;
+    [SerializeField] bool m_Enable = true;
 
     [Header("Debug")]
     [SerializeField] Tutorial m_CurTutorial;
@@ -21,7 +18,7 @@ public class TutorialManager : MonoBehaviour
     public static TutorialManager Instance;
 
     public delegate GameObject Getter();
-    public delegate bool Checker();
+    //public delegate bool Checker();
 
     private void Awake()
     {
@@ -33,17 +30,17 @@ public class TutorialManager : MonoBehaviour
         UpdateData();
     }
 
-    float GetSize(RectTransform rt)
+    /*float GetSize(RectTransform rt)
     {
         var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(rt);
         return Mathf.Max(bounds.size.x, bounds.size.y);
-    }
+    }*/
 
-    public bool Show(string code, int progress, Getter getter, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
+    /*public bool Show(string code, int progress, Getter getter, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
-        code = code.ToUpper();
+        //code = code;//.ToUpper();
 
-        if (!CheckTutorial(code, progress)) return false;
+        if (!HasTutorial(code, progress)) return false;
 
         GameObject target = getter();
         if (!target) return false;
@@ -51,21 +48,29 @@ public class TutorialManager : MonoBehaviour
         StartCoroutine(ICreateTutorial(code, progress, target, scale, delay, onClick, onStart, onExit));
 
         return true;
-    }
+    }*/
 
-    public bool Show(string code, int progress, GameObject target, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
+    public bool Show(string code, int progress, Getter getter, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
-        code = code.ToUpper();
+        if (!HasTutorial(code, progress)) return false;
 
-        if (!CheckTutorial(code, progress)) return false;
-        StartCoroutine(ICreateTutorial(code, progress, target, scale, delay, onClick, onStart, onExit));
+        StartCoroutine(ICreateTutorial(code, progress, getter.Invoke(), delay, onClick, onStart, onExit));
 
         return true;
     }
 
-    bool CheckTutorial(string code, int progress)
+    public bool Show(string code, int progress, GameObject target, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
-        if (!EnableTutorial) return false;
+        if (!HasTutorial(code, progress)) return false;
+
+        StartCoroutine(ICreateTutorial(code, progress, target, delay, onClick, onStart, onExit));
+
+        return true;
+    }
+
+    public bool HasTutorial(string code, int progress)
+    {
+        if (!m_Enable) return false;
 
         if (m_CurTutorial) return false;
 
@@ -85,7 +90,7 @@ public class TutorialManager : MonoBehaviour
         m_CurTutorial.SetTutorial(config, target, scale, onClick, onStart, onExit);
     }*/
 
-    IEnumerator ICreateTutorial(string code, int progress, GameObject target = null, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
+    IEnumerator ICreateTutorial(string code, int progress, GameObject target = null, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
         var config = ConfigsAsset.GetConfigList<TutorialConfig>().Find(e => e.Code == code && e.Progress == progress);
         Debug.Log(config.Code);
@@ -94,8 +99,10 @@ public class TutorialManager : MonoBehaviour
 
         yield return new WaitForSeconds(delay);
 
-        m_CurTutorial = Instantiate(TutorialPrefab, WindowManager.Instance.transform).GetComponent<Tutorial>();
-        m_CurTutorial.SetTutorial(config, target, scale, onClick, onStart, onExit);
+        var prefab = Resources.Load<GameObject>("Tutorials/Tutorial_" + code + "_" + progress);
+        if (!prefab) yield break;
+        m_CurTutorial = Window.CreateWindowPrefab(prefab).GetComponent<Tutorial>();
+        m_CurTutorial.SetTutorial(config, target, onClick, onStart, onExit);
     }
 
     void UpdateData()

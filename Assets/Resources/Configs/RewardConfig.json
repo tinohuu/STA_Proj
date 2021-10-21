@@ -1746,26 +1746,26 @@
   {
     "ID": 219,
     "RewardID": 219,
-    "CoinReward": 1500,
-    "ItemReward": "2_2_4_1",
+    "CoinReward": 1000,
+    "ItemReward": "2_3_5_1",
     "VipReward": 0,
-    "Comment": "里程奖励25"
+    "Comment": "里程奖励10"
   },
   {
     "ID": 220,
     "RewardID": 220,
     "CoinReward": 1500,
-    "ItemReward": "2_3_4_1",
+    "ItemReward": "5_1_14_3",
     "VipReward": 0,
-    "Comment": "里程奖励50"
+    "Comment": "里程奖励25"
   },
   {
     "ID": 221,
     "RewardID": 221,
-    "CoinReward": 2000,
-    "ItemReward": "2_4_5_1",
+    "CoinReward": 1500,
+    "ItemReward": "2_3_10_1",
     "VipReward": 0,
-    "Comment": "里程奖励75"
+    "Comment": "里程奖励50"
   },
   {
     "ID": 222,
@@ -1795,7 +1795,7 @@
     "ID": 225,
     "RewardID": 225,
     "CoinReward": 3000,
-    "ItemReward": "2_5_8_2",
+    "ItemReward": "2_5_8_1",
     "VipReward": 0,
     "Comment": "里程奖励250"
   },
@@ -1803,7 +1803,7 @@
     "ID": 226,
     "RewardID": 226,
     "CoinReward": 3000,
-    "ItemReward": "5_2_14_3",
+    "ItemReward": "5_2_14_2",
     "VipReward": 0,
     "Comment": "里程奖励300"
   },
@@ -1811,7 +1811,7 @@
     "ID": 227,
     "RewardID": 227,
     "CoinReward": 3500,
-    "ItemReward": "3_3_5_3",
+    "ItemReward": "3_3_5_2",
     "VipReward": 0,
     "Comment": "里程奖励350"
   },

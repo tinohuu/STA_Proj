@@ -16,7 +16,7 @@ public class LocalizationManager : MonoBehaviour
 
     void OnEnable()
     {
-        TextsByCode = ConfigsAsset.GetConfigList<TextConfig>().ToDictionary(e => e.Code, e => e.Content);
+        TextsByCode = ConfigsAsset.GetConfigList<TextConfig>().ToDictionary(e => e.Code.ToUpper(), e => e.Content);
         TMPro_EventManager.TEXT_CHANGED_EVENT.Add(Localize);
     }
 
@@ -28,9 +28,10 @@ public class LocalizationManager : MonoBehaviour
 
     public void Localize(TMP_Text text)
     {
-        if (text && TextsByCode.ContainsKey(text.text))
+        string code = text.text.ToUpper();
+        if (text && TextsByCode.ContainsKey(code))
         {
-            text.SetText(TextsByCode[text.text]);
+            text.SetText(TextsByCode[code].Replace("\\n", "\n"));
             text.ForceMeshUpdate();
         }
     }
