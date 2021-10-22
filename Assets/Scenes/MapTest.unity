@@ -5213,7 +5213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 462a4a036dbc6b249864d73f10147805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Enable: 0
+  m_Enable: 1
   m_WheelViewPrefab: {fileID: 2828721209400240417, guid: 02a814c9715c77c4da7dd0f13aabd951, type: 3}
   m_WheelPrefab: {fileID: 1124687218495626963, guid: 4b446f58b37517b42be7cb244af13029, type: 3}
   m_WheelGroup: {fileID: 651820891}
@@ -8877,13 +8877,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 290416168, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
+      propertyPath: m_Enable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.CompleteLevel
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.SelectedLevel
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2839194961230771640, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_RootOrder

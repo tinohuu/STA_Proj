@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: TXT_TTR_Harvest1
+  m_text: TXT_TTR_Harvest2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 1409587c60fff29488574c55b1ac66f4, type: 2}
@@ -703,11 +703,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6863630093301349418, guid: 361a80609886cea4eaa37b01fa7ce664, type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6863630093301349418, guid: 361a80609886cea4eaa37b01fa7ce664, type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6863630093301349418, guid: 361a80609886cea4eaa37b01fa7ce664, type: 3}
       propertyPath: m_RootOrder

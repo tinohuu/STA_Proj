@@ -19,7 +19,7 @@ public class MapLevelWindow : Window
     MapLevelWindowBoost m_Boost = null;
     WindowAnimator m_WindowAnimator;
 
-
+    public Transform PlayerButton => m_PlayButton.transform;
 
     private void Awake()
     {
@@ -45,6 +45,74 @@ public class MapLevelWindow : Window
         }
 
         UpdateView();
+
+        if (TutorialManager.Instance.HasTutorial("RemoveCards", 1))
+        {
+            var item = m_Powerups.Find(e => e.RewardType == RewardType.RemoveCards && e.Interactable);
+            if (item)
+            {
+                if (TutorialManager.Instance.Show("RemoveCards", 1, item.gameObject,
+                    onStart: () => Reward.Data[RewardType.RemoveCards]++,
+                    onExit: () => TutorialManager.Instance.Show("RemoveCards", 2, m_PlayButton.gameObject)
+                    ));
+            }
+        }
+        if (TutorialManager.Instance.HasTutorial("ClearPlayables", 1))
+        {
+            var item = m_Powerups.Find(e => e.RewardType == RewardType.ClearPlayables && e.Interactable);
+            if (item)
+            {
+                if (TutorialManager.Instance.Show("ClearPlayables", 1, item.gameObject,
+                    onStart: () => Reward.Data[RewardType.ClearPlayables]++,
+                    onExit: () => TutorialManager.Instance.Show("ClearPlayables", 2, m_PlayButton.gameObject)
+                    )) ;
+            }
+        }
+        if (TutorialManager.Instance.HasTutorial("WildDrop", 1))
+        {
+            var item = m_Powerups.Find(e => e.RewardType == RewardType.WildDrop && e.Interactable);
+            if (item)
+            {
+                if (TutorialManager.Instance.Show("WildDrop", 1, item.gameObject,
+                    onStart: () => Reward.Data[RewardType.WildDrop]++,
+                    onExit: () => TutorialManager.Instance.Show("WildDrop", 2, m_PlayButton.gameObject)
+                    )) ;
+            }
+        }
+
+        if (TutorialManager.Instance.HasTutorial("RemoveValueChangers", 1))
+        {
+            var item = m_Powerups.Find(e => e.RewardType == RewardType.RemoveValueChangers && e.Interactable);
+            if (item)
+            {
+                if (TutorialManager.Instance.Show("RemoveValueChangers", 1, item.gameObject,
+                    onStart: () => { Reward.Data[RewardType.RemoveValueChangers]++; item.UpdateView(); },
+                    onExit: () => TutorialManager.Instance.Show("RemoveValueChangers", 2, m_PlayButton.gameObject)
+                    )) ;
+            }
+        }
+        if (TutorialManager.Instance.HasTutorial("RemoveCodeBreakers", 1))
+        {
+            var item = m_Powerups.Find(e => e.RewardType == RewardType.RemoveCodeBreakers && e.Interactable);
+            if (item)
+            {
+                if (TutorialManager.Instance.Show("RemoveCodeBreakers", 1, item.gameObject,
+                    onStart: () => { Reward.Data[RewardType.RemoveCodeBreakers]++; item.UpdateView(); },
+                    onExit: () => TutorialManager.Instance.Show("RemoveCodeBreakers", 2, m_PlayButton.gameObject)
+                    )) ;
+            }
+        }
+        if (TutorialManager.Instance.HasTutorial("RemoveBombs", 1))
+        {
+            var item = m_Powerups.Find(e => e.RewardType == RewardType.RemoveBombs && e.Interactable);
+            if (item)
+            {
+                if (TutorialManager.Instance.Show("RemoveBombs", 1, item.gameObject,
+                    onStart: () => { Reward.Data[RewardType.RemoveBombs]++; item.UpdateView(); },
+                    onExit: () => TutorialManager.Instance.Show("RemoveBombs", 2, m_PlayButton.gameObject)
+                    )) ;
+            }
+        }
     }
 
     public void UpdateView()

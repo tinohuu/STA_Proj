@@ -119,10 +119,13 @@ public class MapPlayer : MonoBehaviour
         if (!showpanel) yield break;
 
         int windowIndex = 0;
-        if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == 1021).FunctionParams)
+        if (false && MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == 1021).FunctionParams)
             windowIndex = 2;
         else if (MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == 1012).FunctionParams)
+        {
             windowIndex = 1;
+            
+        }
 
         if (WindowAnimator.WindowQueue.Count == 0)
         {

@@ -49,6 +49,14 @@ public class RewardNumber : MonoBehaviour
         Animate();
     }
 
+    public void UpdateView()
+    {
+        //current = Reward.Data[Type];
+        text = GetComponent<TMP_Text>();
+        text.text = Reward.Data[Type].ToString("N0");
+        //Animate();
+    }
+
     public void Animate()
     {
         if (!Switches[Type])

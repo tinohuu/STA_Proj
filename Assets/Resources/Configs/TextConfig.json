@@ -110,25 +110,25 @@
   {
     "ID": 19,
     "Code": "TXT_WDW_Loading4",
-    "Content": "Pro TIP#1: Power-Ups increase your chances of getting 3 Stars!",
+    "Content": "Pro Tip#1: Power-Ups increase your chances of getting 3 Stars!",
     "Comment": "读取界面4 TIPs"
   },
   {
     "ID": 20,
     "Code": "TXT_WDW_Loading5",
-    "Content": "Green TIP#22: Use cold water for your laundry to save up to 80% of the energy",
+    "Content": "Green Tip#22: Use cold water for your laundry to save up to 80% of the energy",
     "Comment": "读取界面5 TIPs"
   },
   {
     "ID": 21,
     "Code": "TXT_WDW_Loading6",
-    "Content": "Green TIP#23: Switch to fluorescent light bulbs to use 4 times less electricity",
+    "Content": "Green Tip#23: Switch to fluorescent light bulbs to use 4 times less electricity",
     "Comment": "读取界面6 TIPs"
   },
   {
     "ID": 22,
     "Code": "TXT_WDW_Loading7",
-    "Content": "Green TIP#24: You can recycle aluminum an indefinite amount of times",
+    "Content": "Green Tip#24: You can recycle aluminum an indefinite amount of times",
     "Comment": "读取界面7 TIPs"
   },
   {
@@ -140,7 +140,7 @@
   {
     "ID": 24,
     "Code": "TXT_WDW_Loading9",
-    "Content": "Pro TIP#125: Use Power-Ups to increase your chances of completing a level",
+    "Content": "Pro Tip#125: Use Power-Ups to increase your chances of completing a level",
     "Comment": "读取界面9 TIPs"
   },
   {
@@ -152,14 +152,14 @@
   {
     "ID": 26,
     "Code": "TXT_WDW_Loading11",
-    "Content": "Pro TIP#432: Complete Streaks with Cards of \"the same color, to mulTIPly Streak Bonus!\"",
+    "Content": "Pro Tip#432: Complete Streaks with Cards of \"the same color, to multiply Streak Bonus!\"",
     "Comment": "读取界面11 TIPs"
   },
   {
     "ID": 27,
-    "Code": "TXT_TTR_CollectCard1",
+    "Code": "TXT_TTR_CollectCard2",
     "Content": "Tap a card one higher or one lower than\\nthe card at the bottom of the screen!",
-    "Comment": "出牌规则新手引导1"
+    "Comment": "出牌规则新手引导2"
   },
   {
     "ID": 28,
@@ -169,14 +169,14 @@
   },
   {
     "ID": 29,
-    "Code": "TXT_TTR_Undo1",
+    "Code": "TXT_TTR_Undo2",
     "Content": "You missed a playable card!\\nTap here to undo!",
-    "Comment": "撤回规则新手引导1"
+    "Comment": "撤回规则新手引导2"
   },
   {
     "ID": 30,
     "Code": "TXT_TTR_StreakBonus1",
-    "Content": "Play mulTIPle cards in a row\\nto fill up your streak meter\\nand win bonuses!",
+    "Content": "Play multiple cards in a row\\nto fill up your streak meter\\nand win bonuses!",
     "Comment": "StreakBonus规则新手引导1"
   },
   {
@@ -193,170 +193,170 @@
   },
   {
     "ID": 33,
-    "Code": "TXT_TTR_WildCard2",
-    "Content": "The Wild Card lets you play\\nany card on the board.",
-    "Comment": "WildCard规则新手引导2"
+    "Code": "TXT_TTR_Harvest2",
+    "Content": "Amazing!\\nHarvest your crops every hours now\\nfor FREE CREDITS!",
+    "Comment": "收获规则新手引导2"
+  },
+  {
+    "ID": 34,
+    "Code": "TXT_TTR_Harvest3",
+    "Content": "Tap to start\\nnext level!",
+    "Comment": "地图规则新手引导3"
   },
   {
     "ID": 35,
-    "Code": "TXT_TTR_Harvest1",
-    "Content": "Amazing!\\nHarvest your crops every hours now\\nfor FREE CREDITS!",
-    "Comment": "收获规则新手引导1"
-  },
-  {
-    "ID": 36,
-    "Code": "TXT_TTR_Map1",
-    "Content": "Tap to start\\nnext level!",
-    "Comment": "地图规则新手引导1"
-  },
-  {
-    "ID": 37,
     "Code": "TXT_TTR_Crate1",
     "Content": "Reach the crate and\\npick amazing rewards",
     "Comment": "关卡宝箱新手引导1"
   },
   {
-    "ID": 38,
+    "ID": 36,
     "Code": "TXT_TTR_Avatar1",
     "Content": "Click on your Avatar to\\nsee your Inventory!",
     "Comment": "个人信息界面新手引导"
   },
   {
-    "ID": 39,
+    "ID": 37,
     "Code": "TXT_TTR_RemoveCards1",
     "Content": "POWER UP UNLOCKED!\\nRemoves 3 cards from the playfield.\\nTRY NOW!",
     "Comment": "消三张牌道具新手引导1"
   },
   {
-    "ID": 41,
+    "ID": 38,
     "Code": "TXT_TTR_ClearPlayables1",
     "Content": "POWER UP UNLOCKED!\\nRemoves all faceup cards.\\nTRY NOW!",
     "Comment": "风车道具新手引导1"
   },
   {
-    "ID": 43,
+    "ID": 39,
     "Code": "TXT_TTR_WildDrop1",
     "Content": "POWER UP UNLOCKED!\\nAdds 3 Wild Cards to the playfield.\\nTRY NOW!",
     "Comment": "狂野牌掉落道具新手引导1"
   },
   {
-    "ID": 45,
+    "ID": 40,
     "Code": "TXT_TTR_ValueChanger1",
     "Content": "Very helpful:\\nThis card increases\\n its value by 1 each turn.",
     "Comment": "增减牌机制新手引导1"
   },
   {
-    "ID": 46,
+    "ID": 41,
     "Code": "TXT_TTR_Lock1",
-    "Content": "Very helpful: \\nClear the CodeBreaker\\n to complete the level.",
+    "Content": "Very helpful: \\nClear the Code Breaker\\n to complete the level.",
     "Comment": "锁机制新手引导1"
   },
   {
-    "ID": 47,
+    "ID": 42,
     "Code": "TXT_TTR_Bomb1",
-    "Content": "Very helpful: \\nYou lose the game if\\nthe counter reaches zero. BOOOM!",
+    "Content": "Very helpful: \\nYou lose the game if the\\ncounter reaches zero. BOOOM!",
     "Comment": "炸弹机制新手引导1"
   },
   {
-    "ID": 48,
+    "ID": 43,
     "Code": "TXT_TTR_RemoveValueChangers1",
     "Content": "New!\\nRemove all Value Changers cards from the level.\\nTry now!",
     "Comment": "去除增减牌道具新手引导1"
   },
   {
-    "ID": 50,
+    "ID": 44,
     "Code": "TXT_TTR_RemoveCodeBreakers1",
     "Content": "New!\\nRemove all Code Breakers cards from the level.\\nTry now!",
     "Comment": "去除锁道具新手引导1"
   },
   {
-    "ID": 52,
+    "ID": 45,
     "Code": "TXT_TTR_RemoveBombs1",
     "Content": "New!\\nRemove all bombs cards from the level.\\nTry now!",
     "Comment": "去除炸弹道具新手引导1"
   },
   {
-    "ID": 55,
-    "Code": "TXT_TTR_Grand1",
+    "ID": 46,
+    "Code": "TXT_TTR_Grand2",
     "Content": "Enjoy free rounds &\\ngreater benefits in\\na Grand Solitaire Level!",
-    "Comment": "倍率2功能新手引导1"
+    "Comment": "倍率2功能新手引导2"
   },
   {
-    "ID": 57,
-    "Code": "TXT_TTR_Epic1",
+    "ID": 47,
+    "Code": "TXT_TTR_Epic2",
     "Content": "Enjoy free rounds &\\ngreater benefits in\\nan Epic Solitaire Level!",
-    "Comment": "倍率4功能新手引导1"
+    "Comment": "倍率4功能新手引导2"
   },
   {
-    "ID": 58,
+    "ID": 48,
     "Code": "TXT_TTR_DailyMission1",
     "Content": "New Daily Missions!\\nAre you up for the challenge?",
     "Comment": "日常任务功能新手引导1"
   },
   {
-    "ID": 59,
+    "ID": 49,
     "Code": "TXT_TTR_DailyMission2",
     "Content": "WELCOME ABOARD!\\nYou'll always have several missions to progress in",
     "Comment": "日常任务功能新手引导2"
   },
   {
-    "ID": 60,
+    "ID": 50,
     "Code": "TXT_TTR_DailyMission3",
     "Content": "Look, you've progressed\\nin {0} Missions!",
     "Comment": "日常任务功能新手引导3"
   },
   {
-    "ID": 61,
+    "ID": 51,
     "Code": "TXT_TTR_DailyMission4",
     "Content": "{0} Mission is completed,\\nway to go!",
     "Comment": "日常任务功能新手引导4"
   },
   {
-    "ID": 62,
+    "ID": 52,
     "Code": "TXT_TTR_DailyMission5",
     "Content": "Each completed Mission is\\nalways replaced with a fresh one!",
     "Comment": "日常任务功能新手引导5"
   },
   {
-    "ID": 63,
+    "ID": 53,
     "Code": "TXT_SYS_GameRules1",
     "Content": "Game rules\\n\\nHow to play\\nYour goal is to remove all cards from the playing area.\\nOn the lower end of the screen you can see a\\nface-up card(the \"pile\") and several overlapping\\nface-down cards(the \"talon\"). All all cards above\\nthese are in the \"playing area\".\\n\\n\\nTap and card in the playing area that is one higher\\nor one lower than the card visible on the pile.\\nFollowing in this order or\\nreverse:...5-6-7-8-9-10-J-Q-K-A-2-3-4-5-6-7-8-9-10\\n-J-Q-K-A... and so on.\\n\\n\\nIf there is no card to play, tap the talon to get a new\\n card on the pile. Check again to see if there is a\\ncard in the playing area one higher or one lower\\nthan the card on the pile. if yes, tap the card. If no,\\ntap the talon again. Move all cards from the playing\\narea to the pile to win.\\n\\n\\nIf you run out of cards in the talon before moving\\nall cards in the play area to the pile, you lose the\\ngame. If so, a \"+5 cards\" and an \"End game\"\\nbutton will appear. You can get 5 additional cards\\nand try to finish the level or tap \"End game\" to retry\\nor go back to the map.\\n\\n\\nStar rating\\nOnce you have mastered a level, your playing\\nskills are rated: 3 stars - incredible, 2 stars - very good, 1 star - ok.\\n\\nTo achieve a higher star rating, concentrate on two factors: 1) The more cards remain in tge talon the better 2) The longer the streaks the better.\\n\\nIn case you have troubles improving your star\\nrating, try using Wild card!\\n\\nWild card\\nThe Wild caard substitutes for all cards. This means\\nif there is a Wild card on the pile, you can play any\\ncard from the playing area! If you have problems\\nfinishing a level or challenge, try using a Wild card!\\n It's also very convenient to extend streaks! The\\nWild card also does not count as a turn on the\\nBomb counter (see \"The Bomb\" below)!\\n\\n\\nUndo\\nIf you miss playing a playable card, the card will\\nanimate. Tap Undo to try again. You can then play\\nthe card you have missed.\\n\\n\\nThe Purple +X card\\nThese purple cards display a number in an \"+X\"\\nformat. If you uncover such a card, you will get the\\nNumber shown on the card as free additional cards\\nin the talon. Very convenient!\\n\\n\\nThe Value-Changer Card\\nA \"Value-changer\" card changes its value with\\neach turn. The up-arrows show that the value gets\\nincreased, e.g. an 8 becomes a 9 in the next turn.\\nDown-arrows show that the value gets decreased,\\ne.g. a 4 becomes a 3 in the next turn. the color\\nand suit stay the same!\\nPlease note: Legend has it that some\\n Value-changers change suit or color. Maybe you\\ncan uncover these during your journey.\\n\\n\\nThe Bomb\\nA bomb is attached to a card. play this card to\\nremove the bomb.\\nThe bomb shows a counter. This counter is\\ndecreased by 1 each turn. You lose the game if the\\n counter reaches zero. BOOOM!\\nPlease note: If you have problems removing the\\nbomb use a Wild card!\\n\\n\\nDaily Bonus\\nYou can collect the Daily Bonus once every day. It\\nwill be increased after you have unlocked several\\n crops.\\nHarvesting Free Credits\\nYou can harvest your fields every hour. Do this to\\nget free credits! Dont't worry, the beautiful crops will\\n fully grow again within 60 minutes of your last\\nharvest, so you can really enjoy looking at your\\nprogress. The more fields\\crops you have\\nunlocked, the more credits you will receive.\\nFacebook and Invites\\nPlease log in to Facebook to back up your\\nprogress and to invite friends. You will get credits\\nfor logging in to Facebook the first time (only the first time).\\n\\nIf you invite Friends, you can get a lot of free\\n credits. Here is how to:\\n- First, you have to log into Facebook.\\n- Then, use the Facebook Button on the main map\\nto bring up the invite pop-up. Confirm it. Then invite\\nyour friends in the next pop-up(s).\\n\\nYou will get free credits for each invited friend that\\na) installs tha app and b) also logs into Facebook\\nwith his\\her account. Both steps have to be done!\\nPlease note that you do not get credits if the friend\\nalready has the app and was already logged in to\\nFacebook prior to you invite.\\nTell your Friends\\nYou get free credits for telling your friends about\\nthis game. Just tap the \"Tell your friends\" button on\\nthe main map.\\n\\nIn the bext pop-up please choose the sharing\\nmethod of your choice. you will get credits once\\nthe sharing process is finished.\\nPlease note that you will get credits only once per\\nday per channel you share. You will get credits\\nagain the next day.\\n\\nPlease do not forget to like us on Facebook. It is\\nthe last option in the list!",
-    "Comment": ""
+    "Comment": "游戏规则1"
   },
   {
-    "ID": 64,
+    "ID": 54,
     "Code": "TXT_LVL_WinInfo_Lock1",
     "Content": "You have planted the first seeds. Keep going!",
     "Comment": "未解锁1"
   },
   {
-    "ID": 65,
+    "ID": 55,
     "Code": "TXT_LVL_WinInfo_Lock2",
     "Content": "Great! Your field is growing.",
     "Comment": "未解锁2"
   },
   {
-    "ID": 66,
+    "ID": 56,
     "Code": "TXT_LVL_WinInfo_Lock3",
     "Content": "Fantastic! Let's finish planting this field.",
     "Comment": "未解锁3"
   },
   {
-    "ID": 67,
+    "ID": 57,
     "Code": "TXT_LVL_WinInfo_Lock4",
     "Content": "Only {0} more levels to finish this field!",
     "Comment": "未解锁4"
   },
   {
-    "ID": 68,
+    "ID": 58,
     "Code": "TXT_LVL_WinInfo_Unlock1",
     "Content": "Play this level again for more stars!",
     "Comment": "已完成1"
   },
   {
-    "ID": 69,
+    "ID": 59,
     "Code": "TXT_LVL_WinInfor_Full",
     "Content": "You have mastered this level with 3 stars.",
     "Comment": "已完成三星1"
+  },
+  {
+    "ID": 60,
+    "Code": "TXT_LVL_WildCard1",
+    "Content": "The Wild Card lets you play\\nany card on the board.",
+    "Comment": "WildCard使用规则1"
   }
 ]

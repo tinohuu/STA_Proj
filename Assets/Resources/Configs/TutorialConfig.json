@@ -270,7 +270,7 @@
     "IsJoint": false,
     "Type": 1,
     "Loop": 0,
-    "Content": "Very helpful: \\nClear the CodeBreaker\\n to complete the level.",
+    "Content": "Very helpful: \\nClear the Code Breaker\\n to complete the level.",
     "ConditionComment": "玩家解锁第73关，并且进入第73关，在牌堆发牌、手牌发牌，牌堆翻牌、手牌翻牌结束后，使用箭头指向带有特殊机制的卡牌，并在箭头末端显示文字说明。当玩家点击屏幕任意位置时关闭新手引导。",
     "Comment": "锁机制新手引导1"
   },

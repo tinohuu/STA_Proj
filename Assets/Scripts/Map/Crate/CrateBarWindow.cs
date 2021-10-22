@@ -75,6 +75,19 @@ public class CrateBarWindow : MonoBehaviour
         SoundManager.Instance.PlaySFX("chestBarClose");
 
         m_WindowAnimator.Close();
+
+        // Show tutorial
+        if (TutorialManager.Instance.HasTutorial("Crate", 1))
+        {
+            var crate = CrateManager.Instance.GetCratesOfMap().Find(e => e.CanInteract);
+            if (crate)
+            {
+                TutorialManager.Instance.Show("Crate", 1, crate.gameObject, 0.5f, onStart: () => MapManager.Instance.MoveMap(crate.transform.position, 0.5f));
+            }
+        }
+
+
+
         if (oldQuality != curQuality)
         {
             var window = Window.CreateWindowPrefab(m_CrateUnlockWindowPrefab).GetComponent<CrateUnlockWindow>();

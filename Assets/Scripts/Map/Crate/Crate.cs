@@ -32,7 +32,7 @@ public class Crate : MonoBehaviour
     TMP_Text m_Text;
     ButtonAnimator m_ButtonAnimator;
 
-    bool m_CanInteract => !CrateManager.Instance.Data.CollectedCrateLevels.Contains(LevelID) && CropManager.Instance.LevelToCropConfig(LevelID).MinLevel <= MapManager.Instance.Data.CompleteLevel;
+    public bool CanInteract => !CrateManager.Instance.Data.CollectedCrateLevels.Contains(LevelID) && CropManager.Instance.LevelToCropConfig(LevelID).MinLevel <= MapManager.Instance.Data.CompleteLevel;
 
     private void Start()
     {
@@ -92,12 +92,12 @@ public class Crate : MonoBehaviour
         if (LevelID < 1 || MapManager.Instance.HasMapmaker) return;
         m_Tick.gameObject.SetActive(CrateManager.Instance.Data.CollectedCrateLevels.Contains(LevelID));
 
-        BoxRenderer.color = m_CanInteract ? Color.white : new Color(1, 1, 1, 0.5f);
-        m_ButtonAnimator.Interactable = m_CanInteract;
+        BoxRenderer.color = CanInteract ? Color.white : new Color(1, 1, 1, 0.5f);
+        m_ButtonAnimator.Interactable = CanInteract;
 
         m_ButtonAnimator.OnClick.AddListener(() => OnClickCrate());
 
-        m_Rating.gameObject.SetActive(m_CanInteract);
+        m_Rating.gameObject.SetActive(CanInteract);
 
         var cropConfig = CropManager.Instance.LevelToCropConfig(LevelID);
         if ((MapDataManager.Instance.NewRating > 0 || CrateManager.Instance.ForceShowBar) && MapDataManager.Instance.NewRatingLevel <= cropConfig.Level && MapDataManager.Instance.NewRatingLevel >= cropConfig.MinLevel)

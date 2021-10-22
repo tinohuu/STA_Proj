@@ -31,6 +31,9 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
         Mapmaker_CreateItems(Mapmaker.GetConfig(this));
         //if (l)
         //MapLevel level = LevelGroup.GetChild(MapManager.Instance.Data.SelectedLevel - 1).GetComponent<MapLevel>();
+        TutorialManager.Instance.Show("EnterLevel", 1, (GameObject)null, 0.1f,
+            onStart: () => MapManager.Instance.MoveMap(GetLevelButton(1).transform.position, 0.5f),
+            onExit: () => Play(1));
     }
 
     public void UpdateLevelsView()
@@ -52,6 +55,14 @@ public class MapLevelManager : MonoBehaviour, IMapmakerModule
     {
         var levels = LevelGroup.GetComponentsInChildren<MapLevel>().ToList();
         return levels.Find(e => e.Data.ID == level);
+    }
+
+    public void Play(int levelID)
+    {
+       // STAGameManager.Instance.InUseItems = inUseItems;
+        STAGameManager.Instance.nLevelID = levelID;
+        //MapDataManager.Instance.NewRatings = 0;
+        WindowManager.Instance.LoadSceneWithFade("GameScene");
     }
 
     #region Mapmaker

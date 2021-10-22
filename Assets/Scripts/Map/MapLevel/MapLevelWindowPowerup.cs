@@ -50,6 +50,7 @@ public class MapLevelWindowPowerup : MonoBehaviour
         
         Interactable = MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == (int)RewardType + 1012 - 8).FunctionParams;
         canvasGroup.alpha = Interactable ? 1 : 0.5f;
+        rewardNumber.UpdateView();
     }
 
     private void Update()

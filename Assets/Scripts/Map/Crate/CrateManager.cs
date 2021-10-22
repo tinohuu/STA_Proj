@@ -26,6 +26,7 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
 
     public static CrateManager Instance = null;
     CrateView m_CrateView;
+    
 
     void Start()
     {
@@ -82,6 +83,11 @@ public class CrateManager : MonoBehaviour, IMapmakerModule
         {
             crate.UpdateView();
         }
+    }
+
+    public List<Crate> GetCratesOfMap()
+    {
+        return m_CrateGroup.GetComponentsInChildren<Crate>().ToList();
     }
 
     #region Mapmaker

@@ -19,15 +19,16 @@ public class TutorialManager : MonoBehaviour
 
     public delegate GameObject Getter();
     //public delegate bool Checker();
-
+    bool m_IsShowing = false;
     private void Awake()
     {
         if (!Instance) Instance = this;
+        UpdateData();
     }
 
     void Start()
     {
-        UpdateData();
+        //UpdateData();
     }
 
     /*float GetSize(RectTransform rt)
@@ -70,11 +71,13 @@ public class TutorialManager : MonoBehaviour
 
     public bool HasTutorial(string code, int progress)
     {
+
         if (!m_Enable) return false;
 
-        if (m_CurTutorial) return false;
+        if (m_CurTutorial || m_IsShowing) return false;
 
         if (!m_DatasByCode.ContainsKey(code) || m_DatasByCode[code].IsComplete || m_DatasByCode[code].Progress != progress - 1) return false;
+
 
         return true;
     }
@@ -92,6 +95,7 @@ public class TutorialManager : MonoBehaviour
 
     IEnumerator ICreateTutorial(string code, int progress, GameObject target = null, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {
+        m_IsShowing = true;
         var config = ConfigsAsset.GetConfigList<TutorialConfig>().Find(e => e.Code == code && e.Progress == progress);
         Debug.Log(config.Code);
         if (onClick == null)
@@ -136,6 +140,7 @@ public class TutorialManager : MonoBehaviour
     {
         m_DatasByCode[config.Code].Progress++;
         m_CurTutorial = null;
+        m_IsShowing = false;
     }
 }
 

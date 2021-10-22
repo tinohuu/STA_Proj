@@ -127,6 +127,7 @@ public class Tutorial : MonoBehaviour
         }*/
 
         //if ((Type)(config.Type) == Type.Circle)
+        if (m_ClickButton)
         {
             //m_ClickButton.gameObject.SetActive(true);
             m_ClickButton.onClick.AddListener(onClick);
@@ -151,6 +152,7 @@ public class Tutorial : MonoBehaviour
 
     void FollowTarget()
     {
+        if (!m_Target) return;
         var canvas = m_Target.GetComponentInParent<Canvas>();
         bool isWorldElement = canvas && (canvas.renderMode == RenderMode.ScreenSpaceCamera || canvas.renderMode == RenderMode.WorldSpace);
         var targetTutorialPos = isWorldElement ? Camera.main.WorldToScreenPoint(m_Target.transform.position) : m_Target.transform.position;
