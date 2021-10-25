@@ -21,12 +21,12 @@ public class CropManager : MonoBehaviour, IMapmakerModule
 
     [Header("Data")]
     [SavedData] public CropManagerData Data = new CropManagerData();
-    //public CropManagerData Data => m_Data;
 
     public List<CropConfig> CropConfigs { get; private set; }
     public bool IsMature { get; private set; }
 
     public static CropManager Instance = null;
+
     List<Transform> m_Particles = new List<Transform>();
 
     private void Awake()

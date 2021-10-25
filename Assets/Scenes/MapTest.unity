@@ -6313,8 +6313,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e66d21ba09bb5a44b6453b773a8f5b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelGroup: {fileID: 845649195}
-  LevelPrefab: {fileID: 3710904890757660678, guid: 4b5d7b5173fd16841a06b8a2461e7560, type: 3}
+  m_LevelGroup: {fileID: 845649195}
+  m_LevelPrefab: {fileID: 3710904890757660678, guid: 4b5d7b5173fd16841a06b8a2461e7560, type: 3}
 --- !u!1 &1666006322
 GameObject:
   m_ObjectHideFlags: 0
@@ -8879,7 +8879,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 290416168, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_Enable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.CompleteLevel
