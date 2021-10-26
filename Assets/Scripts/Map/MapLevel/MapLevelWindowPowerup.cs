@@ -7,6 +7,11 @@ using UnityEngine.UI;
 
 public class MapLevelWindowPowerup : MonoBehaviour
 {
+    [Header("Setting")]
+    [SerializeField] bool m_ForcePurchase = false;
+    [SerializeField] bool m_DiableOnLocked = false;
+    [SerializeField] RewardType m_RewardType;
+
     [Header("Ref")]
     public GameObject PromptWindowPrefab;
     public GameObject PurchaseImage;
@@ -15,7 +20,8 @@ public class MapLevelWindowPowerup : MonoBehaviour
     [SerializeField] RewardNumber rewardNumber;
     [SerializeField] GameObject m_PowerupPurchaseWindow;
 
-    public RewardType RewardType { get; private set; }
+
+    public RewardType RewardType { get => m_RewardType; private set => m_RewardType = value; }
 
     [Header("Data")]
     public bool InUse = false;
@@ -35,6 +41,11 @@ public class MapLevelWindowPowerup : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        UpdateView();
+    }
+
     public void Initialise(RewardType rewardType)
     {
         RewardType = rewardType;
@@ -47,18 +58,37 @@ public class MapLevelWindowPowerup : MonoBehaviour
         Sprite sprite = Array.Find(icons, e => e.name == RewardType.ToString());
         image.sprite = sprite;
         rewardNumber.Type = RewardType;
-        
+
         Interactable = MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == (int)RewardType + 1012 - 8).FunctionParams;
-        canvasGroup.alpha = Interactable ? 1 : 0.5f;
-        rewardNumber.UpdateView();
+
+        if (m_DiableOnLocked && !Interactable)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            canvasGroup.alpha = Interactable ? 1 : 0.5f;
+            rewardNumber.UpdateView();
+
+            InUseImage.SetActive(Interactable && InUse);
+            PurchaseImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] == 0);
+            TextImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] != 0);
+        }
     }
 
     private void Update()
     {
-        UpdateIconImage();
+        //UpdateIconImage();
     }
     public void OnClick()
     {
+        if (m_ForcePurchase)
+        {
+            RewardPurchaseWindow window = Window.CreateWindowPrefab(m_PowerupPurchaseWindow).GetComponent<RewardPurchaseWindow>();
+            window.Type = RewardType;
+            return;
+        }
+
         if (Interactable)
         {
             if (Reward.Data[RewardType] == 0)

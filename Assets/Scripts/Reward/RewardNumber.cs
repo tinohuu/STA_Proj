@@ -59,7 +59,7 @@ public class RewardNumber : MonoBehaviour
 
     public void Animate()
     {
-        if (!Switches[Type])
+        if (!Switches[Type] || !gameObject.activeInHierarchy)
         {
             //if (animCoroutine != null) StopCoroutine(animCoroutine);
             //current = Reward.Data[Type];

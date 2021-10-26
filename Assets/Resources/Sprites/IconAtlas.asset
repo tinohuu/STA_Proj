@@ -159,6 +159,18 @@ MonoBehaviour:
     m_Scale: 1.4
     m_Name: Star
     m_HashCode: 3005684
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 20
+    m_Scale: 1.4
+    m_Name: Button
+    m_HashCode: -1575021994
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 21
+    m_Scale: 1
+    m_Name: Tick
+    m_HashCode: 2992533
   m_SpriteGlyphTable:
   - m_Index: 0
     m_Metrics:
@@ -460,6 +472,36 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 6120908473732132678, guid: 0e68e94b380751d42817f2bee4a907d0, type: 3}
+  - m_Index: 20
+    m_Metrics:
+      m_Width: 200
+      m_Height: 200
+      m_HorizontalBearingX: -25
+      m_HorizontalBearingY: 150
+      m_HorizontalAdvance: 150
+    m_GlyphRect:
+      m_X: 400
+      m_Y: 400
+      m_Width: 200
+      m_Height: 200
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: 5738201534200495273, guid: 0e68e94b380751d42817f2bee4a907d0, type: 3}
+  - m_Index: 21
+    m_Metrics:
+      m_Width: 200
+      m_Height: 200
+      m_HorizontalBearingX: -75
+      m_HorizontalBearingY: 150
+      m_HorizontalAdvance: 100
+    m_GlyphRect:
+      m_X: 600
+      m_Y: 400
+      m_Width: 200
+      m_Height: 200
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: -7424967190693757416, guid: 0e68e94b380751d42817f2bee4a907d0, type: 3}
   spriteInfoList: []
   fallbackSpriteAssets: []
 --- !u!21 &9114294826249784613
