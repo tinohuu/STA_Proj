@@ -31,6 +31,10 @@ public class GamePlayUI : MonoBehaviour
 
     public CongratulationUI congratulateUI;
 
+    public WithdrawButton withdrawUI;
+
+    public Add5Button add5UI;
+
     bool bIsHidingAdd5Btn = false;
 
     //Image imgCongratulation;// = new Image();
@@ -84,7 +88,7 @@ public class GamePlayUI : MonoBehaviour
 
         Vector3 newPos = withdrawBtn.GetComponent<Transform>().position;
         newPos.x = Screen.width * 0.75f;
-        newPos.y = Screen.height * 0.1f;
+        newPos.y = Screen.height * 0.2f;
         //withdrawBtn.GetComponent<Transform>().position = newPos;
 
         withdrawBtn.onClick.AddListener(delegate { this.OnClickWithdrawBtn(); });
@@ -117,7 +121,8 @@ public class GamePlayUI : MonoBehaviour
         if (wildcardBtn == null)
             Debug.Log("game ui init error! we can not find wildcardBtn Button! ");
 
-        newPos = wildcardBtn.GetComponent<Transform>().position;
+        newPos = wildcardBtn.GetComponent<Transform>().position + Vector3.up * 0.12f;
+        wildcardBtn.transform.position = newPos;
         Debug.Log("the wild card btn's new pos is: " + newPos + "  the screen width is: " + Screen.width);
 
         wildcardBtn.onClick.AddListener(delegate { this.OnClickWildCardBtn(); });
@@ -170,6 +175,14 @@ public class GamePlayUI : MonoBehaviour
             Debug.Log("GamePlayUI::Start()... congratulateUI is null....");
         HideCongratulationUI();
 
+        //withdrawUI = Object.FindObjectOfType<WithdrawButton>();
+        withdrawUI = withdrawBtn.GetComponent<WithdrawButton>();
+        if (withdrawUI == null)
+            Debug.Log("GamePlayUI::Start()... withdrawUI is null....");
+
+        add5UI = add5Btn.GetComponent<Add5Button>();
+        if (add5UI == null)
+            Debug.Log("GamePlayUI::Start()... add5UI is null....");
     }
 
     // Update is called once per frame
@@ -228,9 +241,11 @@ public class GamePlayUI : MonoBehaviour
         add5Btn.enabled = true ;
         //Vector3 dest = new Vector3(add5Btn.transform.position.x, Screen.height * 0.15f, add5Btn.transform.position.z);
         Vector3 dest = new Vector3(add5Btn.transform.position.x, -4.0f, add5Btn.transform.position.z);
-        Debug.Log("the add5 btn target pos is : " + dest + " origin pos is: " + add5Btn.transform.position);
+        Debug.Log("ShowAdd5Btn ... ...  the add5 btn target pos is : " + dest + " origin pos is: " + add5Btn.transform.position);
         StopAllCoroutines();
         StartCoroutine(ShowButton(add5Btn, dest, 0.7f));
+
+        SoundManager.Instance.PlaySFX("gameBuycardEmerge");
 
         //add5Btn.gameObject.SetActive(true);
     }
@@ -242,10 +257,13 @@ public class GamePlayUI : MonoBehaviour
 
         //add5Btn.gameObject.SetActive(false);
 
-        if(bIsHidingAdd5Btn)
+        Debug.Log("111 HideAdd5Btn ... ...  the add5 btn target pos is : ");
+        if (bIsHidingAdd5Btn)
         {
             return;
         }
+
+        Debug.Log("222 HideAdd5Btn ... ...  the add5 btn target pos is : ");
 
         bIsHidingAdd5Btn = true;
         add5Btn.enabled = false;
@@ -261,10 +279,12 @@ public class GamePlayUI : MonoBehaviour
 
     IEnumerator  ShowButton(Button  btn, Vector3 destPos, float fWaitTime)
     {
-        btn.gameObject.SetActive(true);
-
         float fBeginTime = 0.0f;
-/*
+
+        btn.gameObject.SetActive(true);
+        btn.enabled = false;
+
+        /*
         Vector3 moveSpeed = (destPos - btn.transform.position) / 0.7f;
 
         while(fBeginTime < fWaitTime)
@@ -278,7 +298,8 @@ public class GamePlayUI : MonoBehaviour
             fBeginTime += Time.deltaTime;
             btn.transform.position += moveSpeed * Time.deltaTime;
             yield return null;
-        }*/
+        }
+        */
 
         btn.transform.DOMove(destPos, fWaitTime);
 
@@ -288,11 +309,13 @@ public class GamePlayUI : MonoBehaviour
             yield return null;
         }
 
+        btn.enabled = true;
     }
 
     IEnumerator HideButton(Button btn, Vector3 destPos)
     {
-        float fBeginTime = 0.0f; ;
+        float fBeginTime = 0.0f;
+        btn.enabled = false;
 
         Vector3 moveSpeed = (destPos - btn.transform.position) / 0.5f; 
         while (fBeginTime < 0.5f)
@@ -310,7 +333,6 @@ public class GamePlayUI : MonoBehaviour
         }
     }
 
-    
 
     public void ShowEndGameBtn()
     {
@@ -320,6 +342,7 @@ public class GamePlayUI : MonoBehaviour
 
         //StopAllCoroutines();
         StartCoroutine(ShowButton(endGameBtn, dest, 0.7f));
+        SoundManager.Instance.PlaySFX("gameEndButtonEmerge");
     }
 
     public void HideEndGameBtn()
@@ -372,6 +395,8 @@ public class GamePlayUI : MonoBehaviour
         HideAllGameUI();
 
         settlementUI.SetSettlementData(nCollect, nClear, nScoreStar);
+
+        SoundManager.Instance.PlaySFX("gameClearBGM");
 
         ShowCongratulationUI(nScoreStar);
         //ShowCongratulationsToPlayer();
@@ -450,6 +475,9 @@ public class GamePlayUI : MonoBehaviour
         settlementUI.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
         //settlementUI.SetSettlementData(nCollect, nClear);
+
+        //SoundManager.Instance.PlaySFX("gameClearApplaud");
+        SoundManager.Instance.PlayBGM("gameClearApplaud");
 
         settlementUI.FadeIn();
     }
@@ -605,6 +633,8 @@ public class GamePlayUI : MonoBehaviour
         HideAdd5Btn();
         HideEndGameBtn();
 
+        SoundManager.Instance.PlaySFX("gameUseBuycard");
+
         GameplayMgr.Instance.Add5HandPoker();
     }
 
@@ -646,6 +676,16 @@ public class GamePlayUI : MonoBehaviour
         WildCardButton wildCardScript = wildcardBtn.GetComponent<WildCardButton>();
 
         wildCardScript.SetWildItemCount(nCount);
+    }
+
+    public void SetWithdrawItemCount(int nCount)
+    {
+        withdrawUI.SetWithdrawItemCount(nCount);
+    }
+
+    public void SetAdd5ItemCount(int nCount)
+    {
+        add5UI.SetAdd5ItemCount(nCount);
     }
 
     public void ShowCoinEffect()

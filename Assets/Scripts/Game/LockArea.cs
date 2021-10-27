@@ -11,7 +11,7 @@ public class LockArea : MonoBehaviour
 
     Vector3 originPos;
 
-    JsonReadWriteTest.LockArea areaInfo;
+    JsonReadWriteTest.LockArea areaInfo = new JsonReadWriteTest.LockArea();
 
     public int unlockPokerCount = 0;
     public int[] unlockPokerIDs;
@@ -48,24 +48,65 @@ public class LockArea : MonoBehaviour
 
         nGroupID = info.nAreaID;
 
-        areaInfo = info;
+        areaInfo.nAreaID = info.nAreaID;
+        areaInfo.fPosX = info.fPosX;
+        areaInfo.fPosY = info.fPosY;
 
-        rectTrans.sizeDelta = new Vector2(info.fWidth, info.fHeight);
+        //areaInfo.fWidth = 928.0f;
+        areaInfo.fHeight = 800.0f;
 
-        Sprite cloudSprite = GetComponent<SpriteRenderer>().sprite;
-        GetComponent<SpriteRenderer>().sprite = Sprite.Create( ScaleTexture(cloudSprite.texture, info.fWidth, info.fHeight) , rectTrans.rect, new Vector2(0.5f, 0.5f));
+        ResetLockAreaWidth(info);
+
+        rectTrans.sizeDelta = new Vector2(areaInfo.fWidth, areaInfo.fHeight);
+
+        //Sprite cloudSprite = GetComponent<SpriteRenderer>().sprite;
+        //GetComponent<SpriteRenderer>().sprite = Sprite.Create( ScaleTexture(cloudSprite.texture, info.fWidth, info.fHeight) , rectTrans.rect, new Vector2(0.5f, 0.5f));
 
         BoxCollider2D collider = GetComponent<BoxCollider2D>();
-        collider.size = new Vector2(info.fWidth * 0.01f, info.fHeight * 0.01f);
+        collider.size = new Vector2(areaInfo.fWidth * 0.01f, areaInfo.fHeight * 0.01f);
+
+        GetComponent<SpriteRenderer>().sprite = GetLockAreaSprite();
 
         //Vector3 posOffset = new Vector3(areaInfo.fPosX * 1920.0f/1440.0f, areaInfo.fPosY, -0.0f) * 0.01f - Vector3.forward * 2.0f;
-        Vector3 posOffset = new Vector3(areaInfo.fPosX, areaInfo.fPosY, -0.0f) * 0.01f - Vector3.forward * 2.0f;
+        //Vector3 posOffset = new Vector3(areaInfo.fPosX, areaInfo.fPosY, -0.0f) * 0.01f - Vector3.forward * 2.0f;
+        float fPosDelta;
+        if (info.fPosX > 50.0f)
+            fPosDelta = (areaInfo.fWidth - info.fWidth) / 2;
+        else
+            fPosDelta = -(areaInfo.fWidth - info.fWidth) / 2;
+
+        Vector3 posOffset = new Vector3(areaInfo.fPosX + fPosDelta, areaInfo.fPosY, -0.0f) * 0.01f - Vector3.forward * 2.0f;
 
         rectTrans.transform.position = pos + posOffset;
         //gameObject.transform.position = pos + posOffset;
         originPos = rectTrans.transform.position;
 
+        Debug.Log("the areaInfo.fWidth is: " + areaInfo.fWidth + "  info.fWidth is: " + info.fWidth);
         Debug.Log("lock area position is: " + rectTrans.transform.position + "  posOffset is:  " + posOffset + "  size Delta is: " + rectTrans.sizeDelta);
+    }
+
+    void ResetLockAreaWidth(JsonReadWriteTest.LockArea info)
+    {
+        if (info.fWidth < 400.0f)
+            areaInfo.fWidth = 400.0f;
+        else if(info.fWidth < 928.0f)
+            areaInfo.fWidth = 928.0f;
+        else
+            areaInfo.fWidth = 1536.0f;
+    }
+
+    Sprite GetLockAreaSprite()
+    {
+        if (areaInfo.fWidth == 400.0f)
+            return GameplayMgr.Instance.lockMinSprite;
+
+        if (areaInfo.fWidth == 928.0f)
+            return GameplayMgr.Instance.lockMedSprite;
+
+        if (areaInfo.fWidth == 1536.0f)
+            return GameplayMgr.Instance.lockMaxSprite;
+
+        return GameplayMgr.Instance.lockMinSprite;
     }
 
     Texture2D ScaleTexture(Texture2D source, float targetWidth, float targetHeight)

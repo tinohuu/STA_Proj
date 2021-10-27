@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class ScrollRectModifier : MonoBehaviour
+public class ScrollRectExtensionActions : MonoBehaviour
 {
     public void AddVertical(float addition)
     {

@@ -10,33 +10,28 @@ public class RewardPurchaseWindow : MonoBehaviour
 {
     public RewardType Type;
     public static RewardType LastPurchasedReward = RewardType.None;
-    [SerializeField] TMP_Text rewardNameText;
-    [SerializeField] Image rewardImage;
-    [SerializeField] TMP_Text purchasePromptText;
-    [SerializeField] ButtonAnimator purchaseButton;
+
+    [SerializeField] TMP_Text m_RewardName;
+    [SerializeField] Image m_RewardImage;
+    [SerializeField] TMP_Text m_RewardInfo;
+    [SerializeField] TMP_Text m_RewardCost;
+    [SerializeField] ButtonAnimator m_PurchaseButton;
 
     // Start is called before the first frame update
     void Start()
     {
-        purchaseButton.OnClick.AddListener(() => Purcahse());
-        purchaseButton.OnClick.AddListener(() => GetComponent<WindowAnimator>().Close());
+        m_PurchaseButton.OnClick.AddListener(() => Purcahse());
+        m_PurchaseButton.OnClick.AddListener(() => GetComponent<WindowAnimator>().Close());
         UpdateView();
     }
 
     void UpdateView()
     {
-        // Reward name text
-        string rewardName = Type.ToString();
-        rewardName = Regex.Replace(rewardName, "([a-z])_?([A-Z])", "$1 $2");
-        rewardNameText.text = rewardName;
-
-        // Reward image
-        var icons = Resources.LoadAll<Sprite>("Sprites/IconAtlas");
-        Sprite sprite = Array.Find(icons, e => e.name == Type.ToString());
-        rewardImage.sprite = sprite;
-
+        m_RewardName.text = "TXT_RWD_" + (int)Type;
+        m_RewardInfo.text = "TXT_RWD_" + (int)Type + "_Info";
+        m_RewardImage.sprite = Type.ToSprite();
         int cost = RewardManager.GetRewardCost(Type);
-        purchasePromptText.text = string.Format(purchasePromptText.text, cost);
+        m_RewardCost.Format(cost);
     }
 
     void Purcahse()

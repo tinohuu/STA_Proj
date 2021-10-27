@@ -9,7 +9,7 @@ public class WildCard : MonoBehaviour
 
     public GameDefines.WildCardSource wildcardSource { get; set; }
 
-    GameObject pokerInst = null;
+    public GameObject pokerInst = null;
 
     Animator animator = null;
 
@@ -60,7 +60,7 @@ public class WildCard : MonoBehaviour
         targetPos.x = pos.x + rendererSize.x * 0.1f;
         targetPos.y = pos.y - rendererSize.y * 0.35f;
         //targetPos.z = zValue - 0.05f ;
-        targetPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+        targetPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
 
         fTime = fBeginTime;
 
@@ -70,7 +70,14 @@ public class WildCard : MonoBehaviour
         animator = GetComponent<Animator>();
         animator.SetTrigger("WildBuy");
 
-        transform.DOMove(targetPos, 1.0f);
+        Sequence s = DOTween.Sequence();
+        s.Append(transform.DOMoveX(targetPos.x, 1.0f));
+        s.Insert(0.0f, transform.DOMoveY(targetPos.y + 3.0f, 0.5f));
+        s.Insert(0.5f, transform.DOMoveY(targetPos.y, 0.5f));
+        s.Insert(0.0f, transform.DOMoveZ(targetPos.z, 0.5f));
+        s.Play();
+        //transform.DOMove(targetPos, 1.0f);
+        //transform.domo
 
         //Transform textTrans = gameObject.transform.Find("Text");
         //textName = textTrans.GetComponent<TextMesh>();
@@ -110,9 +117,9 @@ public class WildCard : MonoBehaviour
 
         if (!bWithdraw && !bFlip && !bCancel)
         {
-            //targetPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+            //targetPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
 
-            //transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.05f);
+            //transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.01f);
             
             Quaternion quatFrom = Quaternion.Euler(90.0f, 0.0f, 0.0f);
             Quaternion quatTo = Quaternion.Euler(0.0f, 0.0f, 0.0f);// y=180.0
@@ -138,7 +145,7 @@ public class WildCard : MonoBehaviour
             {
                 targetPos.x = GameplayMgr.Instance.Trans.position.x;// + GameplayMgr.Instance.rendererSize.x * 0.1f;
                 targetPos.y = GameplayMgr.Instance.Trans.position.y - GameplayMgr.Instance.rendererSize.y * 0.35f; 
-                targetPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+                targetPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
 
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.1f);
 
@@ -162,7 +169,7 @@ public class WildCard : MonoBehaviour
             fFlipTime += Time.deltaTime;
 
             targetPos = GameplayMgr.Instance.GetFoldPokerPosition(); 
-            targetPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+            targetPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
             transform.position = Vector3.MoveTowards(transform.position, targetPos, 0.1f);
             
             Quaternion quatTo = Quaternion.Euler(0.0f, 0.0f, 0.0f);
@@ -255,18 +262,18 @@ public class WildCard : MonoBehaviour
         {
             newPos.x = pos.x - (20 - index) * 0.2f;
             newPos.y = pos.y + rendererSize.y * 0.35f;
-            newPos.z = pos.z - index * 0.05f;
+            newPos.z = pos.z - index * 0.01f;
         }
         else
         {
             newPos.x = pos.x - (nTotalCount - index) * 0.2f;
             newPos.y = pos.y + rendererSize.y * 0.35f;
-            newPos.z = pos.z - index * 0.05f;
+            newPos.z = pos.z - index * 0.01f;
         }
 
         /*newPos.x = pos.x - (nTotalCount - index) * 0.3f;
         newPos.y = pos.y + rendererSize.y * 0.3f;
-        newPos.z = pos.z - index * 0.05f;*/
+        newPos.z = pos.z - index * 0.01f;*/
 
         targetPos = newPos;
         transform.DOMove(targetPos, 0.2f);

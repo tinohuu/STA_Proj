@@ -1700,7 +1700,7 @@
     "RewardID": 213,
     "CoinReward": 17000,
     "ItemReward": "2_1_3_1_4_1_5_1",
-    "VipReward": 0,
+    "VipReward": 100,
     "Comment": "新手礼包"
   },
   {
@@ -1708,7 +1708,7 @@
     "RewardID": 214,
     "CoinReward": 55000,
     "ItemReward": "2_10_3_2_4_1_5_3",
-    "VipReward": 0,
+    "VipReward": 250,
     "Comment": "道具礼包1"
   },
   {
@@ -1716,7 +1716,7 @@
     "RewardID": 215,
     "CoinReward": 95000,
     "ItemReward": "2_15_3_5_4_5_5_5",
-    "VipReward": 0,
+    "VipReward": 400,
     "Comment": "道具礼包2"
   },
   {
@@ -1724,7 +1724,7 @@
     "RewardID": 216,
     "CoinReward": 245000,
     "ItemReward": "2_35_3_10_4_10_5_10",
-    "VipReward": 0,
+    "VipReward": 1300,
     "Comment": "道具礼包3"
   },
   {
@@ -1732,7 +1732,7 @@
     "RewardID": 217,
     "CoinReward": 17000,
     "ItemReward": "",
-    "VipReward": 0,
+    "VipReward": 100,
     "Comment": "金币礼包1"
   },
   {
@@ -1740,7 +1740,7 @@
     "RewardID": 218,
     "CoinReward": 55000,
     "ItemReward": "",
-    "VipReward": 0,
+    "VipReward": 300,
     "Comment": "金币礼包2"
   },
   {

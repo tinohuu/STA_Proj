@@ -170,6 +170,10 @@ public class GameplayMgr : MonoBehaviour
     //public SpriteAtlas lockSprites;
     public Sprite[] lockSprites;
 
+    public Sprite lockMinSprite;
+    public Sprite lockMedSprite;
+    public Sprite lockMaxSprite;
+
     //pengyuan 2021.8.31 added for ascending and descending poker
     public GameObject ascendingPrefab;
     public GameObject descendingPrefab;
@@ -219,6 +223,8 @@ public class GameplayMgr : MonoBehaviour
     float fGameTime;
 
     public bool bAutoFlipHandPoker = false;
+
+    public bool bAutoFlipGamePoker = false;
 
     public bool bFirstCheckPowerUPs = false;
 
@@ -297,6 +303,10 @@ public class GameplayMgr : MonoBehaviour
     public Material oneSideMaterial;
     
     public GameObject getCoinEffect;
+
+    public GameObject RibbonEffect;
+
+    public GameObject WinPokerEffect;
 
     public class StageConfig
     {
@@ -392,6 +402,10 @@ public class GameplayMgr : MonoBehaviour
         lockSprites = Resources.LoadAll<Sprite>("Lock/LockMark");
         Debug.Log("the lock sprites length is: " + lockSprites.Length);
 
+        lockMinSprite = Resources.Load<Sprite>("Lock/Cloud1");
+        lockMedSprite = Resources.Load<Sprite>("Lock/CloudMed");
+        lockMaxSprite = Resources.Load<Sprite>("Lock/CloudMax");
+
         ascendingPrefab = (GameObject)Resources.Load("Poker/FXChangeUp");
         if (ascendingPrefab == null)
             Debug.Log("GameplayMgr::Awake()... ChangeUp is null....");
@@ -468,10 +482,18 @@ public class GameplayMgr : MonoBehaviour
         oneSideMaterial = Resources.Load("Materials/OneSide") as Material;
         if (oneSideMaterial == null)
             Debug.Log("GameplayMgr::Awake()... oneSideMaterial is null....");
-
+        
         getCoinEffect = (GameObject)Resources.Load("Prefabs/GetCoinEffect");
         if (getCoinEffect == null)
             Debug.Log("GameplayMgr::Awake()... getCoinEffect is null....");
+        
+        RibbonEffect = (GameObject)Resources.Load("Prefabs/FXRibbon");
+        if (RibbonEffect == null)
+            Debug.Log("GameplayMgr::Awake()... RibbonEffect is null....");
+
+        WinPokerEffect = (GameObject)Resources.Load("Prefabs/FXWinPoker");
+        if (WinPokerEffect == null)
+            Debug.Log("GameplayMgr::Awake()... WinPokerEffect is null....");
 
         /*oneSideMesh = (Mesh)Resources.Load("Poker/CardMesh1");
         GameObject cardMesh1 = (GameObject)Resources.Load("Poker/CardMesh1");
@@ -549,6 +571,8 @@ public class GameplayMgr : MonoBehaviour
 
         publicConfigs = JsonExtensions.JsonToList<PublicConfig>(ConfigsAsset.GetConfig("PublicConfig"));
 
+        SoundManager.Instance.PlayBGM("gameAtmosphere1");
+
         //2021.9.10 added by pengyuan, to process powerups.
         powerUpProcess.Init();
         nRemoveThreeLeftCount = 3;
@@ -602,6 +626,10 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.goldAndScoreUI.SetGold(Reward.Coin);
         gameplayUI.goldAndScoreUI.nScore = 0;
 
+        InitGameItemInfo();
+
+        SoundManager.Instance.PlaySFX("gameDealCard");
+
         //Debug.Log("GameplayMgr::Start()... nGold is: " + Reward.Coin);
     }
 
@@ -616,6 +644,13 @@ public class GameplayMgr : MonoBehaviour
         InitItemCount();
     }
 
+    void InitGameItemInfo()
+    {
+        gameplayUI.SetWildCardCount(Reward.Data[RewardType.WildCard]);
+        gameplayUI.SetWithdrawItemCount(Reward.Data[RewardType.Undo]);
+        gameplayUI.SetAdd5ItemCount(Reward.Data[RewardType.MoreCards]);
+    }
+
     public void RestartGame()
     {
         EndGame();
@@ -628,9 +663,10 @@ public class GameplayMgr : MonoBehaviour
         nRemoveThreeFinishCount = 0;
         bIsRemovingThree = false;
 
+        SoundManager.Instance.PlayBGM("gameAtmosphere1");
 
         InitConfigInformation();
-        
+
         nWithdrawBuyTimes = 0;
         nAdd5BuyTimes = 0;
 
@@ -650,6 +686,7 @@ public class GameplayMgr : MonoBehaviour
         gameStatus = GameStatus.GameStatus_Before;
         bHasSetToGaming = false;
         bAutoFlipHandPoker = false;
+        bAutoFlipGamePoker = false;
         bHasUsedOncePowerUPs = false;
         bHasFinishedOncePowerUPs = false;
 
@@ -666,6 +703,8 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.goldAndScoreUI.nScore = 0;
 
         gameplayUI.Reset();
+
+        InitGameItemInfo();
     }
 
     public void ReturnToMap()
@@ -728,6 +767,7 @@ public class GameplayMgr : MonoBehaviour
 
         currentFlippingPoker = null;
         bAutoFlipHandPoker = false;
+        bAutoFlipGamePoker = false;
         bHasUsedOncePowerUPs = false;
         bHasFinishedOncePowerUPs = false;
 
@@ -858,7 +898,7 @@ public class GameplayMgr : MonoBehaviour
 
             i++;
 
-            Debug.Log("the poker's render bounds is: " + pokerScript.pokerInst.GetComponent<Renderer>().bounds.size);
+            //Debug.Log("the poker's render bounds is: " + pokerScript.pokerInst.GetComponent<Renderer>().bounds.size);
         }
     }
 
@@ -866,7 +906,8 @@ public class GameplayMgr : MonoBehaviour
     {
         Debug.Log("GameplayMgr::InitHandPokerInfo... count is : " + levelData.handPokerCount);
 
-        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, -1.0f);
+        //Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, -1.0f);
+        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, GameDefines.HandPokerZBase);
 
         for (int i = 0; i < levelData.handPokerCount; ++i)
         {
@@ -918,6 +959,7 @@ public class GameplayMgr : MonoBehaviour
                 GameObject go = (GameObject)Instantiate(lockPrefab, Trans.position + posOffset, Quaternion.identity);
 
                 go.tag = "lock";
+                go.GetComponent<SpriteRenderer>().sortingOrder = 1;
 
                 GameLock lockScript = go.GetComponent<GameLock>();
                 lockScript.Init(levelData.lockGroup.lockGroups[i].lockInfos[j], j, Trans.position, renderer.bounds.size, 0.0f);
@@ -1060,6 +1102,8 @@ public class GameplayMgr : MonoBehaviour
                 {
                     LockArea lockAreaScript = lockAreas[i].Area.GetComponent<LockArea>();
                     lockAreaScript.ClearArea();
+
+                    SoundManager.Instance.PlaySFX("gameLockAreaRemoved");
 
                     return true;
                 }
@@ -1458,7 +1502,7 @@ public class GameplayMgr : MonoBehaviour
 
         //todo: this level should come from a call from map ...
         int nTempLevel = Random.Range(1, 6);
-        nTempLevel = 9;// STAGameManager.Instance.nLevelID;
+        nTempLevel =  STAGameManager.Instance.nLevelID;
         nCurrentLevel = nTempLevel;
         JsonReadWriteTest.Test_ReadLevelData(strLevel, 1, nTempLevel, out levelData);
 
@@ -1568,9 +1612,9 @@ public class GameplayMgr : MonoBehaviour
         pos.x = renderer.bounds.size.x * 0.1f;
         pos.y = Trans.position.y + renderer.bounds.size.y * -0.35f;
         if(foldPoker.Count == 0)
-            pos.z = -0.05f;
+            pos.z = -0.01f;
         else
-            pos.z = foldPoker.Peek().GetComponent<Transform>().position.z - 0.05f;
+            pos.z = foldPoker.Peek().GetComponent<Transform>().position.z - 0.01f;
 
         return pos;
     }
@@ -1582,8 +1626,8 @@ public class GameplayMgr : MonoBehaviour
             return Trans.position.z - 2.0f;
         }
 
-        //float fZ = foldPoker.Peek().GetComponent<Transform>().position.z - 0.05f;
-        float fZ = Trans.position.z - 2.0f;// - foldPoker.Count * 0.05f;
+        //float fZ = foldPoker.Peek().GetComponent<Transform>().position.z - 0.01f;
+        float fZ = Trans.position.z - 2.0f;// - foldPoker.Count * 0.01f;
 
         return fZ;
     }
@@ -1607,16 +1651,25 @@ public class GameplayMgr : MonoBehaviour
             return;
         }
 
-        int nBuyCost = GetWithdrawCost();
-        if (Reward.Coin < nBuyCost)
+        if(Reward.Data[RewardType.Undo] > 0)
         {
-            Debug.Log("WithDrawClicked, but money is not enough!");
-            return;
+            Reward.Data[RewardType.Undo]--;
+            gameplayUI.withdrawUI.DecWildCardItem();
         }
-            
+        else
+        {
+            int nBuyCost = GetWithdrawCost();
+            if (Reward.Coin < nBuyCost)
+            {
+                Debug.Log("WithDrawClicked, but money is not enough!");
+                return;
+            }
+
+            gameplayUI.AddGold(-nBuyCost);
+            Reward.Coin -= nBuyCost;
+        }
+
         nWithdrawBuyTimes++;
-        gameplayUI.AddGold(-nBuyCost);
-        Reward.Coin -= nBuyCost;
 
         GameObject topHandPoker = foldPoker.Peek();
         HandPoker handPokerScript = topHandPoker.GetComponent<HandPoker>();
@@ -1644,7 +1697,7 @@ public class GameplayMgr : MonoBehaviour
     //withdraw one poker from the foldPokers
     public void WithdrawOnePoker()
     {
-        if(foldPoker.Count < 2)
+        if(foldPoker.Count <= 1)
         {
             Debug.Log("nothing to do!");
             return;
@@ -1798,14 +1851,15 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.InitStreakBonus(streakType, GetNextStreakType());
         gameplayUI.SetStreakBonusStatus(nStreakCount, stepInfo.nStreakBonus);
 
-        Debug.Log("Withdraw a poker, and the last streakType is: " + streakType + "  streak count is: " + nStreakCount);
+        Debug.Log("Withdraw a poker, and the last streakType is: " + streakType + "  streak count is: " + nStreakCount + "  nStreakBonus is: " + stepInfo.nStreakBonus);
 
         opStepInfos.Pop();
 
         if (foldPoker.Count < 2)
         {
             Debug.Log("Withdraw Button disabled! foldPoker count is: " + foldPoker.Count);
-            gameplayUI.DisableWithdrawBtn();
+            //gameplayUI.DisableWithdrawBtn();
+            gameplayUI.HideWithDrawBtn();
         }
         else//this case if for test only...
         {
@@ -1817,12 +1871,18 @@ public class GameplayMgr : MonoBehaviour
         {
             gameplayUI.ShowAdd5Btn();
             gameplayUI.ShowEndGameBtn();
+
+            //Debug.Log("111 Withdraw WithdrawOnePoker! handPokers.Count: " + handPokers.Count);
         }
         else
         {
             gameplayUI.HideAdd5Btn();
             gameplayUI.HideEndGameBtn();
+
+            //Debug.Log("222 Withdraw WithdrawOnePoker! handPokers.Count: " + handPokers.Count);
         }
+
+        SoundManager.Instance.PlaySFX("gameUseUndo");
 
         //todo: here we check opStepInfos's peek info, to see whether we should withdraw the add n poker from the handpokers
         while(CheckCanWithdrawAddNPoker())
@@ -1860,15 +1920,26 @@ public class GameplayMgr : MonoBehaviour
     //when click "Add5Btn", add 5 pokers to the hand poker
     public void Add5HandPoker()
     {
+        SwingGamePokers();
+
         //first check if we have enough gold
-        int nBuyCost = GetBuy5PokerCost();
-        if (Reward.Coin < nBuyCost)
-            return;
+        if (Reward.Data[RewardType.MoreCards] > 0)
+        {
+            Reward.Data[RewardType.MoreCards]--;
+            gameplayUI.add5UI.DecAdd5Item();
+        }
+        else
+        {
+            int nBuyCost = GetBuy5PokerCost();
+            if (Reward.Coin < nBuyCost)
+                return;
 
+            gameplayUI.AddGold(-nBuyCost);
+            Reward.Coin -= nBuyCost;
+        }
+        
         nAdd5BuyTimes++;
-        gameplayUI.AddGold(-nBuyCost);
-        Reward.Coin -= nBuyCost;
-
+        
         PokerSuit[] suits = new PokerSuit[5];
         int[] nNumbers = new int[5];
 
@@ -1876,8 +1947,9 @@ public class GameplayMgr : MonoBehaviour
 
         int nBegin = levelData.handPokerCount;
         levelData.handPokerCount += 5;
-        //Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * 0.5f, 0.0f);
-        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, -1.0f);
+        
+        //Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, -1.0f);
+        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.7f, GameDefines.HandPokerZBase);
         for (int i = 0; i < 5; ++i)
         {
             //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
@@ -1900,7 +1972,11 @@ public class GameplayMgr : MonoBehaviour
             go.name = strName;
 
             handPokers.Add(go);
+
+            Debug.Log("-----------------------------------------here we add 5 add poker, the name is: " + strName);
         }
+
+        SoundManager.Instance.PlaySFX("gameUseBuycardDealCardUnit");
 
         AdjustAllHandPokerPosition();
     }
@@ -1924,7 +2000,7 @@ public class GameplayMgr : MonoBehaviour
         {
             GameObject top = foldPoker.Peek();
 
-            if(top.tag == "wildCard")
+            if(top.tag == "wildCard" || top.tag == "wildDrop")
             {
                 return;
             }
@@ -1945,7 +2021,7 @@ public class GameplayMgr : MonoBehaviour
             }
             else
             {
-                Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * -0.35f, -1.0f);
+                Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.3f, renderer.bounds.size.y * -0.35f, -1.0f);
 
                 GameObject go = (GameObject)Instantiate(wildcardPrefab, Trans.position + posOffset, Quaternion.identity);
                 //go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
@@ -1954,7 +2030,9 @@ public class GameplayMgr : MonoBehaviour
                 WildCard wildcardScript = go.GetComponent<WildCard>();
                 GameObject topPoker = foldPoker.Peek();
                 float fZ = topPoker.GetComponent<Transform>().position.z;
+
                 wildcardScript.Init(wildcardPrefab, foldPoker.Count, Trans.position, renderer.bounds.size, 0.0f);//the second parameter should be the top foldPoker's index
+                wildcardScript.wildcardSource = GameDefines.WildCardSource.Item;
 
                 foldPoker.Push(go);
             }
@@ -1968,7 +2046,7 @@ public class GameplayMgr : MonoBehaviour
             gameplayUI.AddGold(-nBuyCost);
             Reward.Coin -= nBuyCost;
 
-            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * -0.35f, -1.0f);
+            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.3f, renderer.bounds.size.y * -0.35f, -1.0f);
 
             GameObject go = (GameObject)Instantiate(wildcardPrefab, Trans.position + posOffset, Quaternion.identity);
             //go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
@@ -2129,6 +2207,11 @@ public class GameplayMgr : MonoBehaviour
         {
             handPokers.Add(poker);
         }
+        else if(wildCard.wildcardSource == GameDefines.WildCardSource.Item)
+        {
+            Reward.Data[RewardType.WildCard]++;
+            gameplayUI.SetWildCardCount(Reward.Data[RewardType.WildCard]);
+        }
         else
         {
             needChangeAseDesStatus = false;
@@ -2192,7 +2275,7 @@ public class GameplayMgr : MonoBehaviour
         int nIndex = withdrawedPoker.GetComponent<GamePoker>().Index;
         targetPos.x = Trans.position.x + levelData.pokerInfo[nIndex].fPosX * 0.01f;
         targetPos.y = Trans.position.y + levelData.pokerInfo[nIndex].fPosY * 0.01f;
-        targetPos.z = Trans.position.z - 1.0f - nIndex * 0.05f;
+        targetPos.z = Trans.position.z - 1.0f - nIndex * 0.01f;
         //targetPos = withdrawedPoker.GetComponent<GamePoker>().targetPos;
 
         //detect all facing poker to see whether the withdrawed poker can cover it.
@@ -2259,7 +2342,9 @@ public class GameplayMgr : MonoBehaviour
     {
         GamePoker gamePokerScript = hitResults[0].collider.GetComponent<GamePoker>();
 
-        if (gamePokerScript != null && gamePokerScript.pokerType == PokerType.PublicPoker)
+        //2021.10.19 modified  by pengyuan, if the poker is flipping, we should not check this poker until it has finished flipping.
+        //if (gamePokerScript != null && gamePokerScript.pokerType == PokerType.PublicPoker)
+        if (gamePokerScript != null && gamePokerScript.pokerType == PokerType.PublicPoker && !gamePokerScript.bIsFlipping)
         {
             return true;
         }
@@ -2275,8 +2360,19 @@ public class GameplayMgr : MonoBehaviour
             //Debug.Log("here we get a ray, the hitResults[i].collider.name is: " + hitResults[i].collider.name);
             if (hitResults[i].collider.name == topHandPoker.name)
             {
-                bFind = true;
-                break;
+                HandPoker handPokerScript = topHandPoker.GetComponent<HandPoker>();
+                if(handPokerScript && !handPokerScript.bIsRotating)
+                {
+                    bFind = true;
+                    break;
+                }
+
+                WildCard wildCardScript = topHandPoker.GetComponent<WildCard>();
+                if (wildCardScript)
+                {
+                    bFind = true;
+                    break;
+                }
             }
         }
 
@@ -2319,6 +2415,8 @@ public class GameplayMgr : MonoBehaviour
 
                     gamePokerScript.FoldPokerWithLock(foldPoker.Count, lockObject.transform.position);
 
+                    SoundManager.Instance.PlaySFX("gameLockUnitRemoved");
+
                     //check whether a lock area can be open
                     if (CheckAndClearLockArea(lockScript.nGroupID))
                     {
@@ -2349,6 +2447,7 @@ public class GameplayMgr : MonoBehaviour
 
                 AddOpStepInfo(opStepInfos.Count, nLastStreakCount, nColors, nStepScore, nStepGold, 1, streakType, nTotalComboCount);
                 nTotalComboCount++;
+                SoundManager.Instance.PlaySFX(GetCollectComboSoundFx());
 
                 if(strLockInfo != null)
                 {
@@ -2378,6 +2477,7 @@ public class GameplayMgr : MonoBehaviour
 
                 //gameplayUI.SetStreakBonusStatus(nStreakCount, nColors);
                 nColors = GetStreakBonusEncode();
+                Debug.Log("the nColors is: " + nColors);
                 UpdateStreakStatus(nStreakCount, nColors);
 
                 currentFlippingPoker = topGamePoker;
@@ -2412,6 +2512,9 @@ public class GameplayMgr : MonoBehaviour
 
             handPokerScript.SetFoldIndex(foldPoker.Count);
 
+            if (!bFirstFlip)
+                SwingGamePokers();
+
         }
         else if (topHandPoker.tag == "wildCard")//if hand poker is wildcard, we still need to interrupt the streak
         {
@@ -2439,6 +2542,8 @@ public class GameplayMgr : MonoBehaviour
 
             OpStepInfo stepInfo = opStepInfos.Peek();
             stepInfo.strCardName = topHandPoker.name;  //2021.9.17 added by pengyuan, to store the clear all hand poker's name , so when the clear all animation has finished, we can store the information to opStepInfos.
+
+            SoundManager.Instance.PlaySFX("gameFlipDeckCard");
         }
 
         currentFlippingPoker = topHandPoker;
@@ -2463,12 +2568,67 @@ public class GameplayMgr : MonoBehaviour
         
         AdjustAllHandPokerPosition();
 
+        if (foldPoker.Count >= 2)
+        {
+            gameplayUI.ShowWithDrawBtn();
+        }
+
         //determine whether we should show Add5Btn
-        if(handPokers.Count == 0)
+        if (handPokers.Count == 0)
         {
             gameplayUI.ShowAdd5Btn();
             gameplayUI.ShowEndGameBtn();
         }
+
+
+    }
+
+    void SwingGamePokers()
+    {
+        GameObject topFoldPoker = GetTopFoldPoker();
+
+        if (topFoldPoker == null)
+            return;
+
+        if (topFoldPoker.tag != "poker" && topFoldPoker.tag != "handCard")
+            return;
+
+        List<GameObject> topPokers = new List<GameObject>();
+        GetAllFacingPoker(ref topPokers);
+
+        bool bHasMissCard = false;
+
+        foreach(GameObject go in topPokers)
+        {
+            GamePoker gamePokerScript = go.GetComponent<GamePoker>();
+
+            if (CanFoldGamePoker(gamePokerScript, topFoldPoker))
+            {
+                gamePokerScript.Swing();
+                bHasMissCard = true;
+            }
+        }
+
+        if(bHasMissCard)
+            SoundManager.Instance.PlaySFX("gameMissCard");
+    }
+
+    string GetCollectComboSoundFx()
+    {
+        if (nTotalComboCount >= 20)
+            return "gameCollectCard21";
+
+        return string.Format("gameCollectCard{0}", nTotalComboCount);
+    }
+
+    string GetAddNStepSoundFx(GamePoker gamePokerScript)
+    {
+        int nStepIndex = gamePokerScript.nAddNOriginCount - gamePokerScript.nAddNCount;
+
+        if(nStepIndex <= 9)
+            return string.Format("gameCardDrop{0}", nStepIndex);
+        else
+            return "gameCardDrop10";
     }
 
     public void AdjustAllHandPokerPosition()
@@ -2581,7 +2741,7 @@ public class GameplayMgr : MonoBehaviour
     {
         for(int i = 0; i < Max_StreakBonus_Count; ++i)
         {
-            nStreakBonusColor[i] = (nBonus & (1 << i) >> i ) + 1;
+            nStreakBonusColor[i] = ((nBonus & (1 << i)) >> i) + 1;
         }
     }
 
@@ -2647,7 +2807,7 @@ public class GameplayMgr : MonoBehaviour
     void UpdateStreakStatus(int nCount, int nStreakBonus)
     {
         gameplayUI.SetStreakBonusStatus(nCount, nStreakBonus);
-        //Debug.Log("UpdateStreakStatus... nCount is: " + nCount + "  type is: " + streakType);
+        Debug.Log("UpdateStreakStatus... nCount is: " + nCount + "  type is: " + streakType);
         
         if (nCount >= GetStreakFinishCount(streakType))
         {
@@ -2856,6 +3016,9 @@ public class GameplayMgr : MonoBehaviour
             default:break;
 
         }
+
+        if (streakType == StreakType.Add_Poker || streakType == StreakType.Add_Wildcard)
+            SoundManager.Instance.PlaySFX("gameStreakbonusCombo");
     }
 
     //2021.8.9 added by pengyuan
@@ -2863,8 +3026,11 @@ public class GameplayMgr : MonoBehaviour
     {
         int nMultiple = bDouble ? 2 : 1;
 
-        int nBonusGold = GetStreakBonusGold() * 2;
-        int nBonusScore = GetStreakBonusScore(streakType) * 2;
+        /*int nBonusGold = GetStreakBonusGold() * 2;
+        int nBonusScore = GetStreakBonusScore(streakType) * 2;*/
+
+        int nBonusGold = GetStreakBonusGold() * nMultiple;
+        int nBonusScore = GetStreakBonusScore(streakType) * nMultiple;
 
         Debug.Log("AddStreakBonusGold ... nBonusGold is:  " + nBonusGold + "  nBonusScore is: " + nBonusScore);
 
@@ -2879,6 +3045,8 @@ public class GameplayMgr : MonoBehaviour
         gameplayUI.goldAndScoreUI.AddScore(nBonusScore);
 
         gameplayUI.streakBonusUI.ShowCoinEffect();
+        SoundManager.Instance.PlaySFX("gameStreakbonusScore");
+        SoundManager.Instance.PlaySFX("coinIncreaseSingle");
         //gameplayUI.goldAndScoreUI.ShowCoinEffectTest();
         //GameObject streakCoin = Instantiate(FXCoin, gameplayUI.streakBonusUI.transform);
 
@@ -2896,10 +3064,11 @@ public class GameplayMgr : MonoBehaviour
         for (int i = 0; i < nMultiple; ++i)
         {
             //instantiate a hand poker , find a position in handpoker, insert it into handpoker.
-            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * 0.35f, -1.0f);
+            //Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * 0.35f, -1.0f); GameDefines.HandPokerZBase
+            Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.4f, renderer.bounds.size.y * 0.35f, GameDefines.HandPokerZBase);
 
-            //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
-            GameObject go = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
+             //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position + posOffset, Quaternion.identity);
+             GameObject go = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
             go.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
             go.tag = "handCard";
 
@@ -2909,8 +3078,16 @@ public class GameplayMgr : MonoBehaviour
             HandPoker handPokerScript = go.GetComponent<HandPoker>();
 
             int insertIndex = GetInsertPositionInHandPoker();
-            GameObject insertGameObject = handPokers[insertIndex];
-            handPokerScript.InitStreakBonusHandPoker(insertIndex, insertGameObject.transform.position, renderer.bounds.size, 0.0f);
+            if(insertIndex == 0)
+            {
+                Vector3 insertPos = new Vector3(Trans.position.x - 0.2f, Trans.position.y - renderer.bounds.size.y * 0.35f, -1.0f);
+                handPokerScript.InitStreakBonusHandPoker(insertIndex, insertPos, renderer.bounds.size, 0.0f);
+            }
+            else
+            {
+                GameObject insertGameObject = handPokers[insertIndex];
+                handPokerScript.InitStreakBonusHandPoker(insertIndex, insertGameObject.transform.position, renderer.bounds.size, 0.0f);
+            }
 
             PokerSuit suit;
             int nNumber;
@@ -2966,8 +3143,17 @@ public class GameplayMgr : MonoBehaviour
             //float fZ = topPoker.GetComponent<Transform>().position.z;
 
             int insertIndex = GetInsertPositionInHandPoker();
-            GameObject insertGameObject = handPokers[insertIndex];
-            wildcardScript.InitStreakBonusWildcard(insertIndex, insertGameObject.transform.position, renderer.bounds.size, 0.0f);
+            Debug.Log("hand pker count is: " + handPokers.Count + "  insert Index is: " + insertIndex);
+            if(insertIndex == 0)
+            {
+                Vector3 insertPos = new Vector3(Trans.position.x - 0.2f, Trans.position.y - renderer.bounds.size.y * 0.35f, -1.0f);
+                wildcardScript.InitStreakBonusWildcard(insertIndex, insertPos, renderer.bounds.size, 0.0f);
+            }
+            else
+            {
+                GameObject insertGameObject = handPokers[insertIndex];
+                wildcardScript.InitStreakBonusWildcard(insertIndex, insertGameObject.transform.position, renderer.bounds.size, 0.0f);
+            }
 
             string strName = string.Format("wildcard_bonus_{0}", insertIndex);
             go.name = strName;
@@ -3000,10 +3186,11 @@ public class GameplayMgr : MonoBehaviour
 
     int GetInsertPositionInHandPoker()
     {
-        if(handPokers.Count < 2)
-        {
+        if (handPokers.Count == 0)
             return 0;
-        }
+
+        if (handPokers.Count == 1)
+            return 1;
 
         Random.InitState((int)Time.time);
 
@@ -3015,7 +3202,7 @@ public class GameplayMgr : MonoBehaviour
         return handPokers.Count;
     }
 
-    //static int nframeINdex = 0;
+    
     private void FixedUpdate()
     {
         if (fGameTime > 3.0f && !bHasSetToGaming)
@@ -3038,7 +3225,7 @@ public class GameplayMgr : MonoBehaviour
             if (GetTopPokerInfos(ref topPokers))
             {
                 //Debug.Log("thee topPokers's couunt is: " + topPokers.Count);
-                //nframeINdex++;
+                
                 for (int i = 0; i < topPokers.Count; ++i)
                 {
                     //todo: flip the top pokers
@@ -3048,6 +3235,9 @@ public class GameplayMgr : MonoBehaviour
                     {
                         gamePokerScript.FlipPoker();
                         //Debug.Log("fixedupdate flip the poker, the frame index is: " + nframeINdex);
+
+                        if(bAutoFlipGamePoker == false)
+                            SoundManager.Instance.PlaySFX("gameFlipPileCard");
                     }
                     else
                     {
@@ -3056,6 +3246,9 @@ public class GameplayMgr : MonoBehaviour
                         {
                             if (gamePokerScript.AddNPoker())
                             {
+                                //2021.10.18 added by pengyuan for hide add5 button when add n poker is working.
+                                gameplayUI.HideAdd5Btn();
+
                                 Add_AddNPokerStep(gamePokerScript);
                             }
                         }
@@ -3064,6 +3257,8 @@ public class GameplayMgr : MonoBehaviour
                         { }*/
                     }
                 }
+
+                bAutoFlipGamePoker = true;
 
                 //2021.9.24 added by pengyuan, to process all wild drops
                 //ProcessWildDropUpdate();
@@ -3089,6 +3284,8 @@ public class GameplayMgr : MonoBehaviour
                 {
                     OnTopHandPokerClicked(handPoker, true);
                     bAutoFlipHandPoker = true;
+
+                    SoundManager.Instance.PlaySFX("gameFlipDeckCard");
                 }
 
                 if(!bFirstCheckPowerUPs)
@@ -3218,7 +3415,14 @@ public class GameplayMgr : MonoBehaviour
 
         for(int i = 0; i < hitResults.Length; ++i)
         {
-            if(hitResults[i].collider.transform.position.z < fMinDepth)
+            if(hitResults[i].collider.GetComponent<GamePoker>() != null)
+            {
+                if (hitResults[i].collider.GetComponent<GamePoker>().pokerInst.GetComponent<MeshRenderer>().enabled == false)
+                    continue;
+            }
+            
+            //GetComponent<MeshRenderer>().enabled = false
+            if (hitResults[i].collider.transform.position.z < fMinDepth)
             {
                 fMinDepth = hitResults[i].collider.transform.position.z;
                 nMinIndex = i;
@@ -3306,6 +3510,14 @@ public class GameplayMgr : MonoBehaviour
     public void RemoveOneHandPoker(GameObject handPoker)
     {
         handPokers.Remove(handPoker);
+    }
+
+    GameObject GetTopFoldPoker()
+    {
+        if (foldPoker.Count == 0)
+            return null;
+
+        return foldPoker.Peek();
     }
 
     private bool IsPublicPokerFlipping()
@@ -3553,9 +3765,12 @@ public class GameplayMgr : MonoBehaviour
         }
     }
 
+    //pengyuan 2021.10.19 this function unused
     public void OnBombEndGame()
     {
         Debug.Log("---------------------OnBombEndGame-----------------");
+
+        SoundManager.Instance.PlaySFX("gameBombTriggered");
 
         gameStatus = GameStatus.GameStatus_WaitForSettle;
 
@@ -3589,6 +3804,8 @@ public class GameplayMgr : MonoBehaviour
                 if (!gamePoker.bAccelAddingNPoker)
                 {
                     gamePoker.bAccelAddingNPoker = true;
+
+                    //SoundManager.Instance.PlaySFX("");
                 }
 
                 return;
@@ -3600,7 +3817,8 @@ public class GameplayMgr : MonoBehaviour
     //2021.9.7 added by pengyaun add one poker
     public void OnAddNPoker_One(GamePoker gamePokerScript)
     {
-        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.35f, -1.0f);
+        //Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.35f, -1.0f);
+        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.35f, GameDefines.HandPokerZBase);
 
         //GameObject go = (GameObject)Instantiate(pokerPrefab, Trans.position, Quaternion.identity);
         GameObject go = (GameObject)Instantiate(pokerCard, Trans.position, Quaternion.identity);
@@ -3627,6 +3845,8 @@ public class GameplayMgr : MonoBehaviour
         go.name = strName;
 
         handPokers.Insert(insertIndex, go);
+
+        SoundManager.Instance.PlaySFX(GetAddNStepSoundFx(pokerScript));
     }
 
     public void Add_AddNPokerStep(GamePoker pokerScript)
@@ -4163,14 +4383,17 @@ public class GameplayMgr : MonoBehaviour
         return nScore;
     }
 
-    int GetWildCardCost()
+    public int GetWildCardCost()
     {
+        if (stageConfigs == null)
+            return 500;
+
         StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
         return stageConfig.WildCost;
     }
 
-    int GetWithdrawCost()
+    public int GetWithdrawCost()
     {
         StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
@@ -4186,7 +4409,7 @@ public class GameplayMgr : MonoBehaviour
         }
     }
 
-    int GetBuy5PokerCost()
+    public int GetBuy5PokerCost()
     {
         StageConfig stageConfig = stageConfigs[nCurrentLevel-1];
 
@@ -4465,20 +4688,41 @@ public class GameplayMgr : MonoBehaviour
         int nIndex = 0;
         int nPokerOrder = 1;
 
+        GameObject ribbonEffect = Instantiate(RibbonEffect);
+
         while(handPokers.Count > 0)
         {
             nIndex = handPokers.Count - 1;
             
             GameObject go = handPokers[nIndex];
+            
+            //todo: here we should process handpoker script and wildpoker script
+            if (go.tag == "handCard")
+            {
+                HandPoker handPoker = go.GetComponent<HandPoker>();
+                go.transform.DOMove(go.transform.position + Vector3.up * 1, 0.5f).SetEase(Ease.InSine);
+                handPoker.pokerInst.GetComponent<MeshRenderer>().material = oneSideMaterial;
+                Material material = handPoker.pokerInst.GetComponent<MeshRenderer>().material;
+                SoundManager.Instance.PlaySFX("SFX_gameClearDeck");
 
-            HandPoker handPoker = go.GetComponent<HandPoker>();
-            go.transform.DOMove(go.transform.position + Vector3.up * 1, 0.5f).SetEase(Ease.InSine);
-            handPoker.pokerInst.GetComponent<MeshRenderer>().material = oneSideMaterial;
-            Material material = handPoker.pokerInst.GetComponent<MeshRenderer>().material;
+                yield return new WaitForSeconds(0.5f);
 
-            yield return new WaitForSeconds(0.5f);
+                material.DOColor(new Color(1.0f, 1.0f, 1.0f, 0.4f), 0.5f);
+            }
 
-            material.DOColor(new Color(1.0f, 1.0f, 1.0f, 0.4f), 0.5f);
+            if (go.tag == "wildCard")
+            {
+                WildCard wildPoker = go.GetComponent<WildCard>();
+                go.transform.DOMove(go.transform.position + Vector3.up * 1, 0.5f).SetEase(Ease.InSine);
+                wildPoker.pokerInst.GetComponent<MeshRenderer>().material = oneSideMaterial;
+                Material material = wildPoker.pokerInst.GetComponent<MeshRenderer>().material;
+                material.SetTexture("_MainTex", wildCardTexture);
+                SoundManager.Instance.PlaySFX("SFX_gameClearDeck");
+
+                yield return new WaitForSeconds(0.5f);
+
+                material.DOColor(new Color(1.0f, 1.0f, 1.0f, 0.4f), 0.5f);
+            }
 
             nIndex++;
 
@@ -4578,7 +4822,6 @@ public class GameplayMgr : MonoBehaviour
 
         ParticleSystem.ExternalForcesModule forcesModule = particleSystem.externalForces;
         ParticleSystem.TriggerModule triggerModule = particleSystem.trigger;
-        //forcesModule.AddInfluence()
 
         foreach (ParticleSystemForceField forceField in forceFields)
             forcesModule.AddInfluence(forceField);
@@ -4601,8 +4844,10 @@ public class GameplayMgr : MonoBehaviour
         //3. insert to handPokers
         //return;
         //GameObject clearAll = Instantiate();
-        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * 0.5f, -2.0f);
+
         //Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * -0.4f, -1.0f);
+
+        Vector3 posOffset = new Vector3(renderer.bounds.size.x * 0.0f, renderer.bounds.size.y * 0.5f, GameDefines.HandPokerZBase);
 
         GameObject clearAll = (GameObject)Instantiate(pokerCard, Trans.position + posOffset, Quaternion.identity);
         //clearAll.transform.rotation = Quaternion.Euler(90.0f, 180.0f, 0.0f);
@@ -4614,7 +4859,7 @@ public class GameplayMgr : MonoBehaviour
         int insertIndex = GetInsertPositionInHandPoker();
         GameObject insertGameObject = handPokers[insertIndex];
         HandPoker handScript = clearAll.GetComponent<HandPoker>();
-        handScript.InitClearAllHandPoker(insertIndex, Trans.position, insertGameObject.transform.position, renderer.bounds.size, 0.0f);
+        handScript.InitClearAllHandPoker(insertIndex, Trans.position + Vector3.forward * -1.0f, insertGameObject.transform.position, renderer.bounds.size, 0.0f);
 
         //test code, set suit and number for display
         //  PokerSuit suit = PokerSuit.Suit_Club;
@@ -4631,6 +4876,8 @@ public class GameplayMgr : MonoBehaviour
 
         //handPokers.Add(clearAll);
         handPokers.Insert(insertIndex, clearAll);
+
+        SoundManager.Instance.PlaySFX("gamePUWindmillAppear");
     }
 
     public bool UsePowerUP_RemoveThree(GameDefines.PowerUPInfo powerUPInfo)
@@ -4703,6 +4950,8 @@ public class GameplayMgr : MonoBehaviour
             UpdateRemoveThreeScore(gamePoker);
         }
 
+        SoundManager.Instance.PlaySFX("gamePUClearThreeCards");
+
         return bResult;
     }
 
@@ -4734,6 +4983,8 @@ public class GameplayMgr : MonoBehaviour
 
             wildDropPokers.Add(wildDrop);
         }
+
+        SoundManager.Instance.PlaySFX("gamePUWildDrop");
 
         return true;
     }
@@ -5226,6 +5477,8 @@ public class GameplayMgr : MonoBehaviour
                         break;
                     }
                 }
+
+                SoundManager.Instance.PlaySFX("gamePULockRemoved");
                 //bool bLeft = ClearAll_ClearLockArea(workingLockGroups[i]);
                 //ClearAll_ClearLockGroup(workingLockGroups[i], bLeft);
 

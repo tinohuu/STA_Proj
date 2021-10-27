@@ -6,18 +6,19 @@ using UnityEngine;
 
 public class RewardNumber : MonoBehaviour
 {
-    public int current = 0;
+    [SerializeField] bool m_RefreshOnDisable = false;
+
     public RewardType Type = RewardType.None;
     public bool BlockAnimation = false;
+
     static bool[] m_switches;
 
     public static RewardNumberSwitches Switches = new RewardNumberSwitches();
-    //public Transform ParticleGroup;
-    Coroutine animCoroutine;
 
-    TMP_Text text;
-    Vector3 oriScale;
-    Tween textTween = null;
+    int m_CurNumber = 0;
+    Coroutine m_AnimCoroutine;
+    TMP_Text m_NumberText;
+    Vector3 m_OriScale;
 
     private void Awake()
     {
@@ -33,17 +34,23 @@ public class RewardNumber : MonoBehaviour
     private void Start()
     {
 
-        text = GetComponent<TMP_Text>();
-        oriScale = transform.localScale;
+        m_NumberText = GetComponent<TMP_Text>();
+        m_OriScale = transform.localScale;
 
-        current = Reward.Data[Type];
-        text.text = Reward.Data[Type].ToString("N0");
+        m_CurNumber = Reward.Data[Type];
+        m_NumberText.text = Reward.Data[Type].ToString("N0");
         Animate();
     }
     private void Update()
     {
 
     }
+
+    private void OnEnable()
+    {
+        UpdateView();
+    }
+
     void Animate(bool add)
     {
         Animate();
@@ -52,8 +59,8 @@ public class RewardNumber : MonoBehaviour
     public void UpdateView()
     {
         //current = Reward.Data[Type];
-        text = GetComponent<TMP_Text>();
-        text.text = Reward.Data[Type].ToString("N0");
+        m_NumberText = GetComponent<TMP_Text>();
+        m_NumberText.text = Reward.Data[Type].ToString("N0");
         //Animate();
     }
 
@@ -71,12 +78,12 @@ public class RewardNumber : MonoBehaviour
 
         if (BlockAnimation)
         {
-            text.text = Reward.Data[Type].ToString();
+            m_NumberText.text = Reward.Data[Type].ToString("N0");
             return;
         }
 
 
-        if (animCoroutine == null) animCoroutine = StartCoroutine(IAnimate());
+        if (m_AnimCoroutine == null) m_AnimCoroutine = StartCoroutine(IAnimate());
         /*textTween.Kill(false);
         if (textTween.IsActive()) duration = duration >= textTween.Duration() - textTween.Elapsed() ? duration : textTween.Duration() - textTween.Elapsed();
         textTween = DOTween.To(() => current, x => current = x, Reward.Data[Type], duration)
@@ -88,18 +95,18 @@ public class RewardNumber : MonoBehaviour
 
     IEnumerator IAnimate()
     {
-        while (current < Reward.Data[Type] - 1)
+        while (m_CurNumber < Reward.Data[Type] - 1)
         {
             AnimateScale(true);
             yield return new WaitForSeconds(1);
-            int diff = Reward.Data[Type] - current;
-            int target = current + (ParticleManager.Instance.ParticleGroup.childCount > 0 ? (int)(diff * 0.5f) : diff);
-            DOTween.To(() => current, x => current = x, target, 1)
-                .OnUpdate(() => text.text = current.ToString("N0"));
+            int diff = Reward.Data[Type] - m_CurNumber;
+            int target = m_CurNumber + (ParticleManager.Instance.ParticleGroup.childCount > 0 ? (int)(diff * 0.5f) : diff);
+            DOTween.To(() => m_CurNumber, x => m_CurNumber = x, target, 1)
+                .OnUpdate(() => m_NumberText.text = m_CurNumber.ToString("N0"));
         }
-        text.text = Reward.Data[Type].ToString("N0");
+        m_NumberText.text = Reward.Data[Type].ToString("N0");
         AnimateScale(false);
-        animCoroutine = null;
+        m_AnimCoroutine = null;
     }
 
     void AnimateScale(bool on = true)
@@ -107,13 +114,13 @@ public class RewardNumber : MonoBehaviour
         if (on)
         {
             transform.DOKill();
-            transform.localScale = oriScale;
-            transform.DOScale(oriScale * 1.1f, 0.25f).SetLoops(-1, LoopType.Yoyo);
+            transform.localScale = m_OriScale;
+            transform.DOScale(m_OriScale * 1.1f, 0.25f).SetLoops(-1, LoopType.Yoyo);
         }
         else
         {
             transform.DOKill();
-            transform.DOScale(oriScale, 0.25f);
+            transform.DOScale(m_OriScale, 0.25f);
         }
     }
 

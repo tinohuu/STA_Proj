@@ -153,6 +153,8 @@ public class CongratulationUI : MonoBehaviour
         {
             imgStar_1.enabled = true;
             imgStar_1.transform.DOScale(0.875f, 0.5f);
+            SoundManager.Instance.PlaySFX("gameClearStar1");
+
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -160,6 +162,8 @@ public class CongratulationUI : MonoBehaviour
         {
             imgStar_2.enabled = true;
             imgStar_2.transform.DOScale(1.0f, 0.5f);
+            SoundManager.Instance.PlaySFX("gameClearStar2");
+
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -167,6 +171,8 @@ public class CongratulationUI : MonoBehaviour
         {
             imgStar_3.enabled = true;
             imgStar_3.transform.DOScale(0.875f, 0.5f);
+            SoundManager.Instance.PlaySFX("gameClearStar3");
+
             yield return new WaitForSeconds(0.5f);
         }
 

@@ -20,6 +20,6 @@ public class GameBombCallback : MonoBehaviour
     {
         Debug.Log("--------------------------GameBombCallback::OnBombBlast--------------------------------------");
 
-        GameplayMgr.Instance.OnBombEndGame();
+        //GameplayMgr.Instance.OnBombEndGame();
     }
 }

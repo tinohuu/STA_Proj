@@ -111,6 +111,8 @@ public class MapLevelWindowPowerup : MonoBehaviour
             rawString = System.Text.RegularExpressions.Regex.Replace(rawString, "([a-z])_?([A-Z])", "$1 $2");
             text.text = rawString;
         }
+
+        UpdateView();
     }
 
     void UpdateIconImage()

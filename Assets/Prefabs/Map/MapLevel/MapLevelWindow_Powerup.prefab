@@ -93,7 +93,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.3
+  m_fontSize: 72
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: -15
+  m_characterSpacing: -10
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b423f53095471e488f91b087d142109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_RefreshOnDisable: 0
   current: 0
   Type: 8
   BlockAnimation: 1
@@ -514,8 +515,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427c8435aa9a59c459d114b8f0c24ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ForcePurchase: 1
-  m_DiableOnLocked: 1
+  m_ForcePurchase: 0
+  m_DiableOnLocked: 0
   m_RewardType: 8
   PromptWindowPrefab: {fileID: 1853325047715122456, guid: e200e514bfe5dff4eb11c1bd38998b49, type: 3}
   PurchaseImage: {fileID: 1659788085011291699}

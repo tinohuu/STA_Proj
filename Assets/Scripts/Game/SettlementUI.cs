@@ -101,6 +101,10 @@ public class SettlementUI : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
+        SoundManager.Instance.PlaySFX("gameClearBoardEmerge");
+
+        GameObject winPokerEffect = Instantiate(GameplayMgr.Instance.WinPokerEffect);
+
         StartCoroutine(PlayGoldEffect(nClearGold));
     }
 
@@ -127,8 +131,12 @@ public class SettlementUI : MonoBehaviour
             nGold += nStep;
             clearGold.text = nGold.ToString("N0");
 
+            SoundManager.Instance.PlaySFX("gameClearScoreSingle");
+
             yield return new WaitForSeconds(0.05f);
         }
+
+        SoundManager.Instance.PlaySFX("gameClearCheer");
 
         StopCoroutine(PlayGoldEffect(nAddValue));
     }

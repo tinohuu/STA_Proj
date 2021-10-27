@@ -44,7 +44,7 @@ public class GamePoker : MonoBehaviour
     //pengyuan 2021.9.6, the following are used for add n poker process
     GameObject addNEffect = null;
     public int nAddNCount = 1;
-    int nAddNOriginCount = 1;
+    public int nAddNOriginCount = 1;
     Image addNPlusImage;    //+
     Image addNUnitImage;    //number
     Animator addNAnim;
@@ -67,7 +67,7 @@ public class GamePoker : MonoBehaviour
     float fFlipTime = 0.0f;
 
     static float fRotateTime = 1.5f;
-    static float fFlipTotalTime = 0.8f;
+    static float fFlipTotalTime = 0.4f;
     static float fFoldTotalTime = 0.8f;
 
     public string strName { get; set; }//this is for test
@@ -175,7 +175,7 @@ public class GamePoker : MonoBehaviour
         pokerInfo = info;
         targetPos.x = pos.x + pokerInfo.fPosX * 0.01f;
         targetPos.y = pos.y + pokerInfo.fPosY * 0.01f;
-        targetPos.z = pos.z - 1.0f - nIndex * 0.05f;
+        targetPos.z = pos.z - 1.0f - nIndex * 0.01f;
 
         dismissPos = targetPos - Vector3.up * 8.0f - Vector3.right * 8.0f ;
 
@@ -520,6 +520,7 @@ public class GamePoker : MonoBehaviour
 
             if(nBombStep > 5)
                 bombAnim.SetBool("BlastIdle", false);
+
         }
         else
         {
@@ -536,6 +537,15 @@ public class GamePoker : MonoBehaviour
                 bombAnim.SetBool("BlastIdle", true);
 
             bombAnim.SetInteger("BombStep", nBombStep);
+
+            if(nBombStep <= 0)
+            {
+                GameplayMgr.Instance.OnBombEndGame();
+            }
+            else
+            {
+                SoundManager.Instance.PlaySFX("gameBombCountdown");
+            }
             /*if (nBombStep == 0)
                 Debug.Log("-------------------nBombStep is 0-------------------------------------");*/
         }
@@ -782,7 +792,7 @@ public class GamePoker : MonoBehaviour
             return;
         }
 
-        Debug.Log("here we flip the poker, name is: " + gameObject.name + "  depth is: " + transform.position.z + " time is : " + Time.time);
+        //Debug.Log("here we flip the poker, name is: " + gameObject.name + "  depth is: " + transform.position.z + " time is : " + Time.time);
         
         bFlip = true;
         bUnFlip = false;
@@ -790,7 +800,7 @@ public class GamePoker : MonoBehaviour
         fFlipTime = 0.0f;
 
         //2021.8.10 added by pengyuan for testing the z value
-        //transform.position -= Vector3.forward * 1.5f;
+        //pokerInst.transform.position -= Vector3.forward * 1.0f;
 
         pokerFacing = GameplayMgr.PokerFacing.Facing;
         UpdatePokerItemDisplay(true);
@@ -800,13 +810,16 @@ public class GamePoker : MonoBehaviour
 
     public void UnflipPoker()
     {
-        Debug.Log("GamePoker::UnflipPoker... we UnflipPoker, the name is: " + name + "  number is: " + nPokerNumber);
+        //Debug.Log("GamePoker::UnflipPoker... we UnflipPoker, the name is: " + name + "  number is: " + nPokerNumber);
 
         bFlip = false;
         bFold = false;
         bUnFlip = true;
         bIsFlipping = true;
         fFlipTime = 0.0f;
+
+        //2021.8.10 added by pengyuan for testing the z value
+        //pokerInst.transform.position += Vector3.forward * 1.0f;
 
         pokerFacing = GameplayMgr.PokerFacing.Backing;
         UpdatePokerItemDisplay(false);
@@ -833,7 +846,7 @@ public class GamePoker : MonoBehaviour
         
         //2021.8.11 added by pengyuan 
         Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
-        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
 
         //StartCoroutine(CardJump(trans, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
         StartCoroutine(CardJump(transform, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, foldPos));
@@ -857,7 +870,7 @@ public class GamePoker : MonoBehaviour
 
         //2021.8.11 added by pengyuan 
         Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
-        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
         foldPos.y += 2.0f;
 
         Vector3 wildCardPos = new Vector3(5.6f, -4.0f, -1.0f);
@@ -869,7 +882,7 @@ public class GamePoker : MonoBehaviour
     public void UnFoldWildDropPoker()
     {
         Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
-        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
         //foldPos.y += 2.0f;
 
         pokerInst.gameObject.GetComponent<MeshRenderer>().enabled = true;
@@ -897,6 +910,7 @@ public class GamePoker : MonoBehaviour
         DisablePokerItemDisplay();
 
         Vector3 foldPos = GameplayMgr.Instance.GetFoldPokerPosition();
+        foldPos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
 
         Debug.Log("game card jump second coroutine... the target1 is: " + lockPos);
 
@@ -913,6 +927,7 @@ public class GamePoker : MonoBehaviour
     {
         bFlip = false;
         bFold = false;
+        bIsFolding = false;
 
         bIsWithdrawing = true;
         fWithdrawTime = 0.0f;
@@ -945,6 +960,8 @@ public class GamePoker : MonoBehaviour
             pokerInst.gameObject.GetComponent<MeshRenderer>().enabled = true;
         }
 
+        StopAllCoroutines();
+        //StopCoroutine(CardJump(transform, pokerInst.gameObject.GetComponent<Renderer>().bounds.size.x, targetPos))
         transform.DOMove(targetPos, 0.5f).OnComplete(() => { transform.DORotate(new Vector3(0.0f, 0.0f, pokerInfo.fRotation), 0.0f, RotateMode.WorldAxisAdd); }) ;
 
         //here we process the wild drop
@@ -978,6 +995,11 @@ public class GamePoker : MonoBehaviour
 
         transform.DOMove(dismissPos, fDismissTotalTime);
         transform.DORotate(new Vector3(90.0f, 180.0f, 90.0f), fDismissTotalTime, RotateMode.WorldAxisAdd);
+    }
+
+    public void Swing()
+    {
+        animator.SetTrigger("Swing");
     }
 
     //2021.9.13 added by pengyuan, to process remove three cards effect
@@ -1138,6 +1160,8 @@ public class GamePoker : MonoBehaviour
 
             Destroy(bombEffect, 1.0f);
             bombEffect = null;
+
+            SoundManager.Instance.PlaySFX("gamePUBombRemoved");
         }
     }
 
@@ -1153,7 +1177,7 @@ public class GamePoker : MonoBehaviour
             return;
         }
 
-        if(GameplayMgr.Instance.powerUpProcess.HasPowerUP_ClearAscDes())
+        if (GameplayMgr.Instance.powerUpProcess.HasPowerUP_ClearAscDes())
         {
             Animator ascDesAnim = ascendEffectEntity.GetComponent<Animator>();
             ascDesAnim.SetTrigger("Remove");
@@ -1166,6 +1190,8 @@ public class GamePoker : MonoBehaviour
 
             Destroy(ascendEffect, 1.25f);
             ascendEffect = null;
+
+            SoundManager.Instance.PlaySFX("gamePUValueChangerRemoved");
         }
     }
 

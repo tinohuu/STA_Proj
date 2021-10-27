@@ -7,24 +7,28 @@ using UnityEngine.UI;
 
 public class WindowAnimator : Window
 {
-    [Header("Config")]
+    [Header("Basic Settings")]
     [Tooltip("Please add Canvas Group component to animated UI elements")]
     public List<WindowAnimatorElement> Elements = new List<WindowAnimatorElement>();
-    public bool InverseOnFadeOut = false;
+    public bool InQueue = true;
+    public bool IsCrossScene = false;
+
+    [Header("Panel Settings")]
     public bool ShowPanel = true;
     public bool CanCloseByPanel = true;
-    public bool InQueue = true;
-    public float IntervalMultiplerOnFadeOut = 1;
-    public bool FadeInOnEnable = true;
 
-    public static List<WindowAnimator> WindowQueue = new List<WindowAnimator>();
+    [Header("Fade Settings")]
+    public bool FadeInOnEnable = true;
+    public float FadeInDelay = 0;
+    public bool InverseOnFadeOut = false;
+    public float IntervalMultiplerOnFadeOut = 1;
 
     public UnityEvent OnWindowEnable = new UnityEvent();
     public UnityEvent OnWindowFadeIn = new UnityEvent();
-    public static UnityEvent OnQueueChanged = new UnityEvent();
-    public float FadeInDelay = 0;
 
-    public bool IsCrossScene = false;
+    public static List<WindowAnimator> WindowQueue = new List<WindowAnimator>();
+
+    public static UnityEvent OnQueueChanged = new UnityEvent();
 
     bool m_IsDestroying = false;
     //Coroutine currentCoroutine = null;

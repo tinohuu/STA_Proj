@@ -1,362 +1,1262 @@
 [
   {
     "ID": 1,
-    "Code": "TXT_LVL_Standard1",
-    "Content": "Get Credits in a Standard Level",
-    "Comment": "倍率1 TIPs"
+    "Code": "TXT_QST_ITF_DailyMission",
+    "Content": "DAILY MISSION",
+    "Comment1": "日常任务",
+    "Comment2": "窗口大标题"
   },
   {
     "ID": 2,
-    "Code": "TXT_LVL_Grand1",
-    "Content": "Get more Credits in a Grand Level",
-    "Comment": "倍率2 TIPs"
+    "Code": "TXT_QST_ITF_DailyMission_Body",
+    "Content": "Complete Missions to win amazing rewards!",
+    "Comment1": "日常任务",
+    "Comment2": "窗口大标题说明"
   },
   {
     "ID": 3,
-    "Code": "TXT_LVL_Epic1",
-    "Content": "Get the most Credits in an Epic Level",
-    "Comment": "倍率4 TIPs"
+    "Code": "TXT_QST_TIP_HowToPlay",
+    "Content": "How to Play?",
+    "Comment1": "日常任务",
+    "Comment2": "提示界面大标题"
   },
   {
     "ID": 4,
-    "Code": "TXT_LVL_CollectStar1",
-    "Content": "Keep as many cards left in your deck",
-    "Comment": "集星1 TIPs"
+    "Code": "TXT_QST_TIP_Play",
+    "Content": "PLAY",
+    "Comment1": "日常任务",
+    "Comment2": "提示界面小标题1"
   },
   {
     "ID": 5,
-    "Code": "TXT_LVL_CollectStar2",
-    "Content": "Get more streaks in each level",
-    "Comment": "集星2 TIPs"
+    "Code": "TXT_QST_TIP_Play_Body",
+    "Content": "Play Solitaire Levels",
+    "Comment1": "日常任务",
+    "Comment2": "提示界面说明1"
   },
   {
     "ID": 6,
-    "Code": "TXT_LVL_CollectStar3",
-    "Content": "Use Power Ups to boost the game",
-    "Comment": "集星3 TIPs"
+    "Code": "TXT_QST_TIP_Complete",
+    "Content": "COMPLETE",
+    "Comment1": "日常任务",
+    "Comment2": "提示界面小标题2"
   },
   {
     "ID": 7,
-    "Code": "TXT_QST_DailyMission1",
-    "Content": "Play Solitaire levels",
-    "Comment": "日常任务1 TIPs"
+    "Code": "TXT_QST_TIP_Complete_Body",
+    "Content": "Complete different types of missions",
+    "Comment1": "日常任务",
+    "Comment2": "提示界面说明2"
   },
   {
     "ID": 8,
-    "Code": "TXT_QST_DailyMission2",
-    "Content": "Complete different types of missions",
-    "Comment": "日常任务2 TIPs"
+    "Code": "TXT_QST_TIP_Claim",
+    "Content": "CLAIM",
+    "Comment1": "日常任务",
+    "Comment2": "提示界面小标题3"
   },
   {
     "ID": 9,
-    "Code": "TXT_QST_DailyMission3",
+    "Code": "TXT_QST_TIP_Claim_Body",
     "Content": "Claim your rewards to get a new mission",
-    "Comment": "日常任务3 TIPs"
+    "Comment1": "日常任务",
+    "Comment2": "提示界面说明3"
   },
   {
     "ID": 10,
-    "Code": "TXT_RWD_RemoveCards1",
-    "Content": "Remove 3 cards at the start of a level",
-    "Comment": "移除3张牌 TIPs"
+    "Code": "TXT_QST_Info1",
+    "Content": "Win Levels",
+    "Comment1": "日常任务",
+    "Comment2": "任务类型1"
   },
   {
     "ID": 11,
-    "Code": "TXT_RWD_ClearPlayables1",
-    "Content": "Clears all faceup cards on the playfield",
-    "Comment": "移除场上所有明牌 TIPs"
+    "Code": "TXT_QST_Info2",
+    "Content": "Win Levels On Your First Try",
+    "Comment1": "日常任务",
+    "Comment2": "任务类型2"
   },
   {
     "ID": 12,
-    "Code": "TXT_RWD_WildDrop1",
-    "Content": "Adds 3 Wild cards to the playfield",
-    "Comment": "增加3张狂野牌 TIPs"
+    "Code": "TXT_QST_Info3",
+    "Content": "Win Levels In A Row",
+    "Comment1": "日常任务",
+    "Comment2": "任务类型3"
   },
   {
     "ID": 13,
-    "Code": "TXT_RWD_RemoveBomb1",
-    "Content": "Removes all bombs from a level",
-    "Comment": "移除炸弹牌 TIPs"
+    "Code": "TXT_QST_Info4",
+    "Content": "Win Levels In Highest Mode",
+    "Comment1": "日常任务",
+    "Comment2": "任务类型4"
   },
   {
     "ID": 14,
-    "Code": "TXT_RWD_RemoveCodeBreakers1",
-    "Content": "Removes all locks from a level",
-    "Comment": "移除牌锁 TIPs"
+    "Code": "TXT_QST_Info5",
+    "Content": "Win Levels In Higher Mode",
+    "Comment1": "日常任务",
+    "Comment2": "任务类型5"
   },
   {
     "ID": 15,
-    "Code": "TXT_RWD_RemoveValueChangers1",
-    "Content": "Removes all Value Changers from a level",
-    "Comment": "移除加减牌 TIPs"
+    "Code": "TXT_QST_Info6",
+    "Content": "Collect Deck Cards",
+    "Comment1": "日常任务",
+    "Comment2": "任务类型6"
   },
   {
     "ID": 16,
-    "Code": "TXT_WDW_Loading1",
-    "Content": "Did You Know? The 1st Solitaire game took place in 1788",
-    "Comment": "读取界面1 TIPs"
+    "Code": "TXT_QST_Info7",
+    "Content": "Collect Stars",
+    "Comment1": "日常任务",
+    "Comment2": "任务类型7"
   },
   {
     "ID": 17,
-    "Code": "TXT_WDW_Loading2",
-    "Content": "Did You Know? Solitaire is also known as \"Patience\" in many European countries",
-    "Comment": "读取界面2 TIPs"
+    "Code": "TXT_QST_Info8",
+    "Content": "Complete Streaks",
+    "Comment1": "日常任务",
+    "Comment2": "任务类型8"
   },
   {
     "ID": 18,
-    "Code": "TXT_WDW_Loading3",
-    "Content": "Did You Know? Avocados contain more fat than any fruit or vegatable on earth!",
-    "Comment": "读取界面3 TIPs"
+    "Code": "TXT_GDE_DailyGoodies_Head",
+    "Content": "DAILY GOODIES",
+    "Comment1": "签到",
+    "Comment2": "标题"
   },
   {
     "ID": 19,
-    "Code": "TXT_WDW_Loading4",
-    "Content": "Pro Tip#1: Power-Ups increase your chances of getting 3 Stars!",
-    "Comment": "读取界面4 TIPs"
+    "Code": "TXT_GDE_DailyGoodies_Body",
+    "Content": "A visit a day sends bigger prizes your way!",
+    "Comment1": "签到",
+    "Comment2": "说明"
   },
   {
     "ID": 20,
-    "Code": "TXT_WDW_Loading5",
-    "Content": "Green Tip#22: Use cold water for your laundry to save up to 80% of the energy",
-    "Comment": "读取界面5 TIPs"
+    "Code": "TXT_GDE_DailyGoodies_Day",
+    "Content": "Day {0}",
+    "Comment1": "签到",
+    "Comment2": "说明"
   },
   {
     "ID": 21,
-    "Code": "TXT_WDW_Loading6",
-    "Content": "Green Tip#23: Switch to fluorescent light bulbs to use 4 times less electricity",
-    "Comment": "读取界面6 TIPs"
+    "Code": "TXT_RWD_8",
+    "Content": "Remove Cards",
+    "Comment1": "Reward",
+    "Comment2": "消三张牌标题"
   },
   {
     "ID": 22,
-    "Code": "TXT_WDW_Loading7",
-    "Content": "Green Tip#24: You can recycle aluminum an indefinite amount of times",
-    "Comment": "读取界面7 TIPs"
+    "Code": "TXT_RWD_8_Info",
+    "Content": "Remove 3 cards at the start of a level.",
+    "Comment1": "Reward",
+    "Comment2": "消三张牌说明"
   },
   {
     "ID": 23,
-    "Code": "TXT_WDW_Loading8",
-    "Content": "\"Did You Know? Sam's winged friend, Flutter,\" was named by Solitaire players",
-    "Comment": "读取界面8 TIPs"
+    "Code": "TXT_RWD_9",
+    "Content": "Clear Playables",
+    "Comment1": "Reward",
+    "Comment2": "风车牌标题"
   },
   {
     "ID": 24,
-    "Code": "TXT_WDW_Loading9",
-    "Content": "Pro Tip#125: Use Power-Ups to increase your chances of completing a level",
-    "Comment": "读取界面9 TIPs"
+    "Code": "TXT_RWD_9_Info",
+    "Content": "Clears all\\nfaceup cards on the playfield.",
+    "Comment1": "Reward",
+    "Comment2": "风车牌说明"
   },
   {
     "ID": 25,
-    "Code": "TXT_WDW_Loading10",
-    "Content": "A player's Best Friend: Pet Sam the dog and he will reward you with extra Credits",
-    "Comment": "读取界面10 TIPs"
+    "Code": "TXT_RWD_10",
+    "Content": "Wild Drop",
+    "Comment1": "Reward",
+    "Comment2": "狂野牌标题"
   },
   {
     "ID": 26,
-    "Code": "TXT_WDW_Loading11",
-    "Content": "Pro Tip#432: Complete Streaks with Cards of \"the same color, to multiply Streak Bonus!\"",
-    "Comment": "读取界面11 TIPs"
+    "Code": "TXT_RWD_10_Info",
+    "Content": "Adds 3 Wild cards to the playfield.",
+    "Comment1": "Reward",
+    "Comment2": "狂野牌说明"
   },
   {
     "ID": 27,
-    "Code": "TXT_TTR_CollectCard2",
-    "Content": "Tap a card one higher or one lower than\\nthe card at the bottom of the screen!",
-    "Comment": "出牌规则新手引导2"
+    "Code": "TXT_RWD_11",
+    "Content": "Remove Value Changers",
+    "Comment1": "Reward",
+    "Comment2": "移除加减牌标题"
   },
   {
     "ID": 28,
-    "Code": "TXT_TTR_NextCard1",
-    "Content": "No playable cards.\\nTap to deal a new card.",
-    "Comment": "翻牌规则新手引导1"
+    "Code": "TXT_RWD_11_Info",
+    "Content": "Removes all Value Changers from a level.",
+    "Comment1": "Reward",
+    "Comment2": "移除加减牌说明"
   },
   {
     "ID": 29,
-    "Code": "TXT_TTR_Undo2",
-    "Content": "You missed a playable card!\\nTap here to undo!",
-    "Comment": "撤回规则新手引导2"
+    "Code": "TXT_RWD_12",
+    "Content": "Remove Code Breaker",
+    "Comment1": "Reward",
+    "Comment2": "移除锁标题"
   },
   {
     "ID": 30,
-    "Code": "TXT_TTR_StreakBonus1",
-    "Content": "Play multiple cards in a row\\nto fill up your streak meter\\nand win bonuses!",
-    "Comment": "StreakBonus规则新手引导1"
+    "Code": "TXT_RWD_12_Info",
+    "Content": "Removes all code breakers from a level.",
+    "Comment1": "Reward",
+    "Comment2": "移除锁说明"
   },
   {
     "ID": 31,
-    "Code": "TXT_TTR_StreakBonus2",
-    "Content": "Awesome!\\nStreaks of only one color\\nDOUBLE the reward!",
-    "Comment": "StreakBonus规则新手引导2"
+    "Code": "TXT_RWD_13",
+    "Content": "Remove Bombs",
+    "Comment1": "Reward",
+    "Comment2": "移除炸弹标题"
   },
   {
     "ID": 32,
-    "Code": "TXT_TTR_WildCard1",
-    "Content": "Lets you play any card\\non the board. Perfect for\\nextending a long streak!",
-    "Comment": "WildCard规则新手引导1"
+    "Code": "TXT_RWD_13_Info",
+    "Content": "Removes all bombs from a level.",
+    "Comment1": "Reward",
+    "Comment2": "移除炸弹说明"
   },
   {
     "ID": 33,
-    "Code": "TXT_TTR_Harvest2",
-    "Content": "Amazing!\\nHarvest your crops every hours now\\nfor FREE CREDITS!",
-    "Comment": "收获规则新手引导2"
+    "Code": "TXT_LVL_ITF_Boost_Banner1",
+    "Content": "Standard",
+    "Comment1": "倍率",
+    "Comment2": "1倍说明横幅"
   },
   {
     "ID": 34,
-    "Code": "TXT_TTR_Harvest3",
-    "Content": "Tap to start\\nnext level!",
-    "Comment": "地图规则新手引导3"
+    "Code": "TXT_LVL_ITF_Boost_Banner2",
+    "Content": "Grandx2",
+    "Comment1": "倍率",
+    "Comment2": "2倍说明横幅"
   },
   {
     "ID": 35,
-    "Code": "TXT_TTR_Crate1",
-    "Content": "Reach the crate and\\npick amazing rewards",
-    "Comment": "关卡宝箱新手引导1"
+    "Code": "TXT_LVL_ITF_Boost_Banner3",
+    "Content": "Epicx4",
+    "Comment1": "倍率",
+    "Comment2": "4倍说明横幅"
   },
   {
     "ID": 36,
-    "Code": "TXT_TTR_Avatar1",
-    "Content": "Click on your Avatar to\\nsee your Inventory!",
-    "Comment": "个人信息界面新手引导"
+    "Code": "TXT_LVL_ITF_Boost_Banner4",
+    "Content": "1 GEM CARD",
+    "Comment1": "倍率",
+    "Comment2": "1倍奖励说明横幅"
   },
   {
     "ID": 37,
-    "Code": "TXT_TTR_RemoveCards1",
-    "Content": "POWER UP UNLOCKED!\\nRemoves 3 cards from the playfield.\\nTRY NOW!",
-    "Comment": "消三张牌道具新手引导1"
+    "Code": "TXT_LVL_ITF_Boost_Banner5",
+    "Content": "3 GEM CARDS",
+    "Comment1": "倍率",
+    "Comment2": "2倍奖励说明横幅"
   },
   {
     "ID": 38,
-    "Code": "TXT_TTR_ClearPlayables1",
-    "Content": "POWER UP UNLOCKED!\\nRemoves all faceup cards.\\nTRY NOW!",
-    "Comment": "风车道具新手引导1"
+    "Code": "TXT_LVL_ITF_Boost_Banner6",
+    "Content": "7 GEM CARDS",
+    "Comment1": "倍率",
+    "Comment2": "4倍奖励说明横幅"
   },
   {
     "ID": 39,
-    "Code": "TXT_TTR_WildDrop1",
-    "Content": "POWER UP UNLOCKED!\\nAdds 3 Wild Cards to the playfield.\\nTRY NOW!",
-    "Comment": "狂野牌掉落道具新手引导1"
+    "Code": "TXT_LVL_Boost_TIP_Head",
+    "Content": "Boost Your Wins!",
+    "Comment1": "倍率",
+    "Comment2": "提示界面大标题"
   },
   {
     "ID": 40,
-    "Code": "TXT_TTR_ValueChanger1",
-    "Content": "Very helpful:\\nThis card increases\\n its value by 1 each turn.",
-    "Comment": "增减牌机制新手引导1"
+    "Code": "TXT_LVL_Boost_TIP_body",
+    "Content": "Gems can only be collected in current Crop level & Masters League. Level difficulty stays the same & your rewards get bigger! Grand & Epic levels cost extra.",
+    "Comment1": "倍率",
+    "Comment2": "提示界面说明"
   },
   {
     "ID": 41,
-    "Code": "TXT_TTR_Lock1",
-    "Content": "Very helpful: \\nClear the Code Breaker\\n to complete the level.",
-    "Comment": "锁机制新手引导1"
+    "Code": "TXT_LVL_Boost_TIP_SubHead1",
+    "Content": "Standard",
+    "Comment1": "倍率",
+    "Comment2": "1倍小标题"
   },
   {
     "ID": 42,
-    "Code": "TXT_TTR_Bomb1",
-    "Content": "Very helpful: \\nYou lose the game if the\\ncounter reaches zero. BOOOM!",
-    "Comment": "炸弹机制新手引导1"
+    "Code": "TXT_LVL_Boost_TIP_SubBody1",
+    "Content": "Get Gems in a Standard Level",
+    "Comment1": "倍率",
+    "Comment2": "1倍说明"
   },
   {
     "ID": 43,
-    "Code": "TXT_TTR_RemoveValueChangers1",
-    "Content": "New!\\nRemove all Value Changers cards from the level.\\nTry now!",
-    "Comment": "去除增减牌道具新手引导1"
+    "Code": "TXT_LVL_Boost_TIP_SubHead2",
+    "Content": "Grand",
+    "Comment1": "倍率",
+    "Comment2": "2倍小标题"
   },
   {
     "ID": 44,
-    "Code": "TXT_TTR_RemoveCodeBreakers1",
-    "Content": "New!\\nRemove all Code Breakers cards from the level.\\nTry now!",
-    "Comment": "去除锁道具新手引导1"
+    "Code": "TXT_LVL_Boost_TIP_SubBody2",
+    "Content": "Get more Gems & Credits in a Grand Level",
+    "Comment1": "倍率",
+    "Comment2": "2倍说明"
   },
   {
     "ID": 45,
-    "Code": "TXT_TTR_RemoveBombs1",
-    "Content": "New!\\nRemove all bombs cards from the level.\\nTry now!",
-    "Comment": "去除炸弹道具新手引导1"
+    "Code": "TXT_LVL_Boost_TIP_SubHead3",
+    "Content": "Epic",
+    "Comment1": "倍率",
+    "Comment2": "4倍小标题"
   },
   {
     "ID": 46,
-    "Code": "TXT_TTR_Grand2",
-    "Content": "Enjoy free rounds &\\ngreater benefits in\\na Grand Solitaire Level!",
-    "Comment": "倍率2功能新手引导2"
+    "Code": "TXT_LVL_Boost_TIP_SubBody3",
+    "Content": "Get the most Gems and Credits in an Epic Level",
+    "Comment1": "倍率",
+    "Comment2": "4倍说明"
   },
   {
     "ID": 47,
-    "Code": "TXT_TTR_Epic2",
-    "Content": "Enjoy free rounds &\\ngreater benefits in\\nan Epic Solitaire Level!",
-    "Comment": "倍率4功能新手引导2"
+    "Code": "TXT_LVL_Loading",
+    "Content": "Connecting...",
+    "Comment1": "连接中",
+    "Comment2": "加载说明"
   },
   {
     "ID": 48,
-    "Code": "TXT_TTR_DailyMission1",
-    "Content": "New Daily Missions!\\nAre you up for the challenge?",
-    "Comment": "日常任务功能新手引导1"
+    "Code": "TXT_CRT_Lock_Info",
+    "Content": "Collect stars to win a bigger crate and pick more prizes",
+    "Comment1": "关卡宝箱",
+    "Comment2": "宝箱界面说明"
   },
   {
     "ID": 49,
-    "Code": "TXT_TTR_DailyMission2",
-    "Content": "WELCOME ABOARD!\\nYou'll always have several missions to progress in",
-    "Comment": "日常任务功能新手引导2"
+    "Code": "TXT_CRT_Lock_TIP_Info",
+    "Content": "How to be the Crop Master?",
+    "Comment1": "关卡宝箱",
+    "Comment2": "宝箱界面提示说明"
   },
   {
     "ID": 50,
-    "Code": "TXT_TTR_DailyMission3",
-    "Content": "Look, you've progressed\\nin {0} Missions!",
-    "Comment": "日常任务功能新手引导3"
+    "Code": "TXT_CRT_Lock_Wooden",
+    "Content": "Wooden",
+    "Comment1": "关卡宝箱",
+    "Comment2": "等级1宝箱"
   },
   {
     "ID": 51,
-    "Code": "TXT_TTR_DailyMission4",
-    "Content": "{0} Mission is completed,\\nway to go!",
-    "Comment": "日常任务功能新手引导4"
+    "Code": "TXT_CRT_Lock_Silver",
+    "Content": "Silver",
+    "Comment1": "关卡宝箱",
+    "Comment2": "等级2宝箱"
   },
   {
     "ID": 52,
-    "Code": "TXT_TTR_DailyMission5",
-    "Content": "Each completed Mission is\\nalways replaced with a fresh one!",
-    "Comment": "日常任务功能新手引导5"
+    "Code": "TXT_CRT_Lock_Golden",
+    "Content": "Golden",
+    "Comment1": "关卡宝箱",
+    "Comment2": "等级3宝箱"
   },
   {
     "ID": 53,
-    "Code": "TXT_SYS_GameRules1",
-    "Content": "Game rules\\n\\nHow to play\\nYour goal is to remove all cards from the playing area.\\nOn the lower end of the screen you can see a\\nface-up card(the \"pile\") and several overlapping\\nface-down cards(the \"talon\"). All all cards above\\nthese are in the \"playing area\".\\n\\n\\nTap and card in the playing area that is one higher\\nor one lower than the card visible on the pile.\\nFollowing in this order or\\nreverse:...5-6-7-8-9-10-J-Q-K-A-2-3-4-5-6-7-8-9-10\\n-J-Q-K-A... and so on.\\n\\n\\nIf there is no card to play, tap the talon to get a new\\n card on the pile. Check again to see if there is a\\ncard in the playing area one higher or one lower\\nthan the card on the pile. if yes, tap the card. If no,\\ntap the talon again. Move all cards from the playing\\narea to the pile to win.\\n\\n\\nIf you run out of cards in the talon before moving\\nall cards in the play area to the pile, you lose the\\ngame. If so, a \"+5 cards\" and an \"End game\"\\nbutton will appear. You can get 5 additional cards\\nand try to finish the level or tap \"End game\" to retry\\nor go back to the map.\\n\\n\\nStar rating\\nOnce you have mastered a level, your playing\\nskills are rated: 3 stars - incredible, 2 stars - very good, 1 star - ok.\\n\\nTo achieve a higher star rating, concentrate on two factors: 1) The more cards remain in tge talon the better 2) The longer the streaks the better.\\n\\nIn case you have troubles improving your star\\nrating, try using Wild card!\\n\\nWild card\\nThe Wild caard substitutes for all cards. This means\\nif there is a Wild card on the pile, you can play any\\ncard from the playing area! If you have problems\\nfinishing a level or challenge, try using a Wild card!\\n It's also very convenient to extend streaks! The\\nWild card also does not count as a turn on the\\nBomb counter (see \"The Bomb\" below)!\\n\\n\\nUndo\\nIf you miss playing a playable card, the card will\\nanimate. Tap Undo to try again. You can then play\\nthe card you have missed.\\n\\n\\nThe Purple +X card\\nThese purple cards display a number in an \"+X\"\\nformat. If you uncover such a card, you will get the\\nNumber shown on the card as free additional cards\\nin the talon. Very convenient!\\n\\n\\nThe Value-Changer Card\\nA \"Value-changer\" card changes its value with\\neach turn. The up-arrows show that the value gets\\nincreased, e.g. an 8 becomes a 9 in the next turn.\\nDown-arrows show that the value gets decreased,\\ne.g. a 4 becomes a 3 in the next turn. the color\\nand suit stay the same!\\nPlease note: Legend has it that some\\n Value-changers change suit or color. Maybe you\\ncan uncover these during your journey.\\n\\n\\nThe Bomb\\nA bomb is attached to a card. play this card to\\nremove the bomb.\\nThe bomb shows a counter. This counter is\\ndecreased by 1 each turn. You lose the game if the\\n counter reaches zero. BOOOM!\\nPlease note: If you have problems removing the\\nbomb use a Wild card!\\n\\n\\nDaily Bonus\\nYou can collect the Daily Bonus once every day. It\\nwill be increased after you have unlocked several\\n crops.\\nHarvesting Free Credits\\nYou can harvest your fields every hour. Do this to\\nget free credits! Dont't worry, the beautiful crops will\\n fully grow again within 60 minutes of your last\\nharvest, so you can really enjoy looking at your\\nprogress. The more fields\\crops you have\\nunlocked, the more credits you will receive.\\nFacebook and Invites\\nPlease log in to Facebook to back up your\\nprogress and to invite friends. You will get credits\\nfor logging in to Facebook the first time (only the first time).\\n\\nIf you invite Friends, you can get a lot of free\\n credits. Here is how to:\\n- First, you have to log into Facebook.\\n- Then, use the Facebook Button on the main map\\nto bring up the invite pop-up. Confirm it. Then invite\\nyour friends in the next pop-up(s).\\n\\nYou will get free credits for each invited friend that\\na) installs tha app and b) also logs into Facebook\\nwith his\\her account. Both steps have to be done!\\nPlease note that you do not get credits if the friend\\nalready has the app and was already logged in to\\nFacebook prior to you invite.\\nTell your Friends\\nYou get free credits for telling your friends about\\nthis game. Just tap the \"Tell your friends\" button on\\nthe main map.\\n\\nIn the bext pop-up please choose the sharing\\nmethod of your choice. you will get credits once\\nthe sharing process is finished.\\nPlease note that you will get credits only once per\\nday per channel you share. You will get credits\\nagain the next day.\\n\\nPlease do not forget to like us on Facebook. It is\\nthe last option in the list!",
-    "Comment": "游戏规则1"
+    "Code": "TXT_CRT_Lock_Diamond",
+    "Content": "Diamond",
+    "Comment1": "关卡宝箱",
+    "Comment2": "等级4宝箱"
   },
   {
     "ID": 54,
-    "Code": "TXT_LVL_WinInfo_Lock1",
-    "Content": "You have planted the first seeds. Keep going!",
-    "Comment": "未解锁1"
+    "Code": "TXT_CRT_Lock_Picks",
+    "Content": "Picks",
+    "Comment1": "关卡宝箱",
+    "Comment2": "抽奖次数"
   },
   {
     "ID": 55,
-    "Code": "TXT_LVL_WinInfo_Lock2",
-    "Content": "Great! Your field is growing.",
-    "Comment": "未解锁2"
+    "Code": "TXT_CRT_Unlock_CropCompleted",
+    "Content": "Crop Completed",
+    "Comment1": "关卡宝箱",
+    "Comment2": "解锁宝箱界面大标题"
   },
   {
     "ID": 56,
-    "Code": "TXT_LVL_WinInfo_Lock3",
-    "Content": "Fantastic! Let's finish planting this field.",
-    "Comment": "未解锁3"
+    "Code": "TXT_CRT_Unlock_Replay",
+    "Content": "Replay",
+    "Comment1": "关卡宝箱",
+    "Comment2": "解锁宝箱界面小标题"
   },
   {
     "ID": 57,
-    "Code": "TXT_LVL_WinInfo_Lock4",
-    "Content": "Only {0} more levels to finish this field!",
-    "Comment": "未解锁4"
+    "Code": "TXT_CRT_Opening_CropMaster",
+    "Content": "Crop Master",
+    "Comment1": "关卡宝箱",
+    "Comment2": "开启宝箱界面大标题"
   },
   {
     "ID": 58,
-    "Code": "TXT_LVL_WinInfo_Unlock1",
-    "Content": "Play this level again for more stars!",
-    "Comment": "已完成1"
+    "Code": "TXT_CRT_Opening_CropMaster_Body1",
+    "Content": "Time to pick your prizes!",
+    "Comment1": "关卡宝箱",
+    "Comment2": "开启宝箱界面说明"
   },
   {
     "ID": 59,
-    "Code": "TXT_LVL_WinInfor_Full",
-    "Content": "You have mastered this level with 3 stars.",
-    "Comment": "已完成三星1"
+    "Code": "TXT_CRT_Opening_CropMaster_Body2",
+    "Content": "PICKS LEFT",
+    "Comment1": "关卡宝箱",
+    "Comment2": "开启宝箱界面说明"
   },
   {
     "ID": 60,
-    "Code": "TXT_LVL_WildCard1",
-    "Content": "The Wild Card lets you play\\nany card on the board.",
-    "Comment": "WildCard使用规则1"
+    "Code": "TXT_CRT_TIP_MoreStars",
+    "Content": "How to get more stars?",
+    "Comment1": "关卡宝箱",
+    "Comment2": "提示界面标题"
+  },
+  {
+    "ID": 61,
+    "Code": "TXT_CRT_TIP_MoreStars_Body1",
+    "Content": "Keep as many cards left in your deck",
+    "Comment1": "关卡宝箱",
+    "Comment2": "提示界面说明1"
+  },
+  {
+    "ID": 62,
+    "Code": "TXT_CRT_TIP_MoreStars_Body2",
+    "Content": "Get more streaks in each level",
+    "Comment1": "关卡宝箱",
+    "Comment2": "提示界面说明2"
+  },
+  {
+    "ID": 63,
+    "Code": "TXT_CRT_TIP_MoreStars_Body3",
+    "Content": "Use Power Ups to boost the game",
+    "Comment1": "关卡宝箱",
+    "Comment2": "提示界面说明3"
+  },
+  {
+    "ID": 64,
+    "Code": "TXT_LVL_Ads_PlayMore",
+    "Content": "Play More!",
+    "Comment1": "广告",
+    "Comment2": "界面大标题"
+  },
+  {
+    "ID": 65,
+    "Code": "TXT_LVL_Ads_PlayMore_Body",
+    "Content": "Watch an ad to enjoy a 15% discount on all levels for the next 10 minutes",
+    "Comment1": "广告",
+    "Comment2": "界面说明"
+  },
+  {
+    "ID": 66,
+    "Code": "TXT_CRP_Ads_Info",
+    "Content": "Watch an ad to collect {0}",
+    "Comment1": "广告",
+    "Comment2": "收获"
+  },
+  {
+    "ID": 67,
+    "Code": "TXT_PLY_You",
+    "Content": "You",
+    "Comment1": "玩家",
+    "Comment2": "玩家名称"
+  },
+  {
+    "ID": 68,
+    "Code": "TXT_PLY_Rank",
+    "Content": "Rank",
+    "Comment1": "玩家",
+    "Comment2": "头衔标题"
+  },
+  {
+    "ID": 69,
+    "Code": "TXT_PLY_Rank_Body",
+    "Content": "{0} {1}",
+    "Comment1": "玩家",
+    "Comment2": "玩家头衔说明"
+  },
+  {
+    "ID": 70,
+    "Code": "TXT_PLY_Crop",
+    "Content": "CROP {0}",
+    "Comment1": "玩家",
+    "Comment2": "作物标题"
+  },
+  {
+    "ID": 71,
+    "Code": "TXT_PLY_Crop_Body",
+    "Content": "LEVEL {0}",
+    "Comment1": "玩家",
+    "Comment2": "当前作物等级"
+  },
+  {
+    "ID": 72,
+    "Code": "TXT_PLY_DailyGoodies",
+    "Content": "DAILY GOODIES",
+    "Comment1": "玩家",
+    "Comment2": "每日签到标题"
+  },
+  {
+    "ID": 73,
+    "Code": "TXT_PLY_DailyGoodies_Body",
+    "Content": "DAY {0}",
+    "Comment1": "玩家",
+    "Comment2": "当前签到天数"
+  },
+  {
+    "ID": 74,
+    "Code": "TXT_PLY_LuckyWheel",
+    "Content": "LUCKY WHEELS",
+    "Comment1": "玩家",
+    "Comment2": "幸运转盘标题"
+  },
+  {
+    "ID": 75,
+    "Code": "TXT_PLY_LuckyWheel_Body",
+    "Content": "LEVEL {0}",
+    "Comment1": "玩家",
+    "Comment2": "当前转盘关卡"
+  },
+  {
+    "ID": 76,
+    "Code": "TXT_PLY_Boosters",
+    "Content": "BOOSTERS",
+    "Comment1": "玩家",
+    "Comment2": "关卡内道具"
+  },
+  {
+    "ID": 77,
+    "Code": "TXT_PLY_PowerUps",
+    "Content": "POWER UPS",
+    "Comment1": "玩家",
+    "Comment2": "关卡外道具"
+  },
+  {
+    "ID": 78,
+    "Code": "TXT_MEN_Setting",
+    "Content": "SETTING",
+    "Comment1": "菜单",
+    "Comment2": "设置"
+  },
+  {
+    "ID": 79,
+    "Code": "TXT_MEN_Sync",
+    "Content": "Sync",
+    "Comment1": "菜单",
+    "Comment2": "同步"
+  },
+  {
+    "ID": 80,
+    "Code": "TXT_MEN_SoundSetting",
+    "Content": "Sound Setting",
+    "Comment1": "菜单",
+    "Comment2": "声音设置"
+  },
+  {
+    "ID": 81,
+    "Code": "TXT_MEN_Notifications",
+    "Content": "Notifications",
+    "Comment1": "菜单",
+    "Comment2": "通知设置"
+  },
+  {
+    "ID": 82,
+    "Code": "TXT_MEN_PersonalizedAds",
+    "Content": "Personalized Ads",
+    "Comment1": "菜单",
+    "Comment2": "个性化广告"
+  },
+  {
+    "ID": 83,
+    "Code": "TXT_MEN_PrivacyNotice",
+    "Content": "Privacy Notice",
+    "Comment1": "菜单",
+    "Comment2": "隐私条款"
+  },
+  {
+    "ID": 84,
+    "Code": "TXT_MEN_Terms",
+    "Content": "Terms of Service",
+    "Comment1": "菜单",
+    "Comment2": "政策"
+  },
+  {
+    "ID": 85,
+    "Code": "TXT_MEN_UserAccount",
+    "Content": "User Account:",
+    "Comment1": "菜单",
+    "Comment2": "玩家账号"
+  },
+  {
+    "ID": 86,
+    "Code": "TXT_MEN_VertificationCode",
+    "Content": "Vertification Code:",
+    "Comment1": "菜单",
+    "Comment2": "验证码"
+  },
+  {
+    "ID": 87,
+    "Code": "TXT_MEN_Share_Head",
+    "Content": "Spread the World",
+    "Comment1": "菜单",
+    "Comment2": "分享标题1"
+  },
+  {
+    "ID": 88,
+    "Code": "TXT_MEN_Share_Body",
+    "Content": "GET CREDITS EVERY DAY!",
+    "Comment1": "菜单",
+    "Comment2": "分享标题2"
+  },
+  {
+    "ID": 89,
+    "Code": "TXT_MEN_Share_Email",
+    "Content": "EMAIL",
+    "Comment1": "菜单",
+    "Comment2": "邮件分享标题"
+  },
+  {
+    "ID": 90,
+    "Code": "TXT_MEN_Share_Email_Body",
+    "Content": "GET {0}",
+    "Comment1": "菜单",
+    "Comment2": "邮件分享内容"
+  },
+  {
+    "ID": 91,
+    "Code": "TXT_MEN_Share_Email_Info",
+    "Content": 0,
+    "Comment1": "菜单",
+    "Comment2": "邮件分享信息"
+  },
+  {
+    "ID": 92,
+    "Code": "TXT_MEN_Share_Text",
+    "Content": "TEXT",
+    "Comment1": "菜单",
+    "Comment2": "短信分享标题"
+  },
+  {
+    "ID": 93,
+    "Code": "TXT_MEN_Share_Text_Body",
+    "Content": "GET {0}",
+    "Comment1": "菜单",
+    "Comment2": "短信分享内容"
+  },
+  {
+    "ID": 94,
+    "Code": "TXT_MEN_Share_Text_Info",
+    "Content": "Do you like Solitaire? Then you will love Solitaire - Grand Harvest!\\n\\nhttps://grandharvest.onelink.me/UgRe/a31347cf\\n\\nTry the best app for free now!",
+    "Comment1": "菜单",
+    "Comment2": "短信分享信息"
+  },
+  {
+    "ID": 95,
+    "Code": "TXT_MEN_GameRules",
+    "Content": "Game rules\\n\\nHow to play\\nYour goal is to remove all cards from the playing area.\\nOn the lower end of the screen you can see a\\nface-up card(the \"pile\") and several overlapping\\nface-down cards(the \"talon\"). All all cards above\\nthese are in the \"playing area\".\\n\\n\\nTap and card in the playing area that is one higher\\nor one lower than the card visible on the pile.\\nFollowing in this order or\\nreverse:...5-6-7-8-9-10-J-Q-K-A-2-3-4-5-6-7-8-9-10\\n-J-Q-K-A... and so on.\\n\\n\\nIf there is no card to play, tap the talon to get a new\\n card on the pile. Check again to see if there is a\\ncard in the playing area one higher or one lower\\nthan the card on the pile. if yes, tap the card. If no,\\ntap the talon again. Move all cards from the playing\\narea to the pile to win.\\n\\n\\nIf you run out of cards in the talon before moving\\nall cards in the play area to the pile, you lose the\\ngame. If so, a \"+5 cards\" and an \"End game\"\\nbutton will appear. You can get 5 additional cards\\nand try to finish the level or tap \"End game\" to retry\\nor go back to the map.\\n\\n\\nStar rating\\nOnce you have mastered a level, your playing\\nskills are rated: 3 stars - incredible, 2 stars - very good, 1 star - ok.\\n\\nTo achieve a higher star rating, concentrate on two factors: 1) The more cards remain in tge talon the better 2) The longer the streaks the better.\\n\\nIn case you have troubles improving your star\\nrating, try using Wild card!\\n\\nWild card\\nThe Wild caard substitutes for all cards. This means\\nif there is a Wild card on the pile, you can play any\\ncard from the playing area! If you have problems\\nfinishing a level or challenge, try using a Wild card!\\n It's also very convenient to extend streaks! The\\nWild card also does not count as a turn on the\\nBomb counter (see \"The Bomb\" below)!\\n\\n\\nUndo\\nIf you miss playing a playable card, the card will\\nanimate. Tap Undo to try again. You can then play\\nthe card you have missed.\\n\\n\\nThe Purple +X card\\nThese purple cards display a number in an \"+X\"\\nformat. If you uncover such a card, you will get the\\nNumber shown on the card as free additional cards\\nin the talon. Very convenient!\\n\\n\\nThe Value-Changer Card\\nA \"Value-changer\" card changes its value with\\neach turn. The up-arrows show that the value gets\\nincreased, e.g. an 8 becomes a 9 in the next turn.\\nDown-arrows show that the value gets decreased,\\ne.g. a 4 becomes a 3 in the next turn. the color\\nand suit stay the same!\\nPlease note: Legend has it that some\\n Value-changers change suit or color. Maybe you\\ncan uncover these during your journey.\\n\\n\\nThe Bomb\\nA bomb is attached to a card. play this card to\\nremove the bomb.\\nThe bomb shows a counter. This counter is\\ndecreased by 1 each turn. You lose the game if the\\n counter reaches zero. BOOOM!\\nPlease note: If you have problems removing the\\nbomb use a Wild card!\\n\\n\\nDaily Bonus\\nYou can collect the Daily Bonus once every day. It\\nwill be increased after you have unlocked several\\n crops.\\nHarvesting Free Credits\\nYou can harvest your fields every hour. Do this to\\nget free credits! Dont't worry, the beautiful crops will\\n fully grow again within 60 minutes of your last\\nharvest, so you can really enjoy looking at your\\nprogress. The more fields\\crops you have\\nunlocked, the more credits you will receive.\\nFacebook and Invites\\nPlease log in to Facebook to back up your\\nprogress and to invite friends. You will get credits\\nfor logging in to Facebook the first time (only the first time).\\n\\nIf you invite Friends, you can get a lot of free\\n credits. Here is how to:\\n- First, you have to log into Facebook.\\n- Then, use the Facebook Button on the main map\\nto bring up the invite pop-up. Confirm it. Then invite\\nyour friends in the next pop-up(s).\\n\\nYou will get free credits for each invited friend that\\na) installs tha app and b) also logs into Facebook\\nwith his\\her account. Both steps have to be done!\\nPlease note that you do not get credits if the friend\\nalready has the app and was already logged in to\\nFacebook prior to you invite.\\nTell your Friends\\nYou get free credits for telling your friends about\\nthis game. Just tap the \"Tell your friends\" button on\\nthe main map.\\n\\nIn the bext pop-up please choose the sharing\\nmethod of your choice. you will get credits once\\nthe sharing process is finished.\\nPlease note that you will get credits only once per\\nday per channel you share. You will get credits\\nagain the next day.\\n\\nPlease do not forget to like us on Facebook. It is\\nthe last option in the list!",
+    "Comment1": "菜单",
+    "Comment2": "游戏规则"
+  },
+  {
+    "ID": 96,
+    "Code": "TXT_TTR_HolleandWelcome",
+    "Content": "Hello and Welcome!",
+    "Comment1": "新手引导",
+    "Comment2": "开始游戏引导"
+  },
+  {
+    "ID": 97,
+    "Code": "TXT_TTR_AcceptTerms_Head",
+    "Content": "We Care About Your Privacy",
+    "Comment1": "新手引导",
+    "Comment2": "隐私条款标题"
+  },
+  {
+    "ID": 98,
+    "Code": "TXT_TTR_AcceptTerms_Body",
+    "Content": "Our <u>Terms</u> & <u>Privacy Policy</u> were updated - please read and accept.\nBy clicking 'Accept & Play' you agree to our <u>Terms of Service</u>, and confirm you read our <u>Privacy Policy</u> (Summary of the Privacy Policy is available below in which you can learn how we collect, use and share your data and how we use cookies and similar technology. You may receive marketing notification from us and can opt out at any time <u>here</u>.\n\n<b><size=110%>What personal data is being collected and how we collect it?</b>\n• While registration you are asked to provide us Carta Ltd. and its Affiliates (\"Carta\") with personal details such as your name and e-mail address and/or social network user profile and D (Facebook for example) or other third-party service. In some cases, such social network will share with us other information that was published on such network since you gave consent to share it with us.\n•During in app purchase we collect financial data regarding your purchases and the processes of such purchases for billing purposes.\n•To improve and customize your game experience we may collect information when you use any of the Carta games such as the frequency and scope of your use of the Services, the duration of your sessions, the games that you like, your communications with other users, the Internet protocol (IP) address, mobile device's unique identifier (UDID and the geographic location of the device that you are using to log-in on Carta games.\n•We may automatically gather information, using log files. If you are registered with Carta games the information we gather may be anonymous or in some instances personally identifiable. If you are not a registered user, then we will not knowingly make use of any information which personally identifies you, except as specifically indicated in the policy.\n• We may receive personal data about you from third parties, that you have authorized to act on your behalf. Any information we receive about you from these third parties will only be processed for the purposes described under 'How will we use the information about you'.\n•Further information may be collected if you enter a sweepstake, contest, or similar promotion, or when we exchange communications with you, for example, if you submit a request to our customer support we may collect your telephone number and other data that you provide us with.\n<u>Learn More</u>\n\n<b><size=110%>How will we use the personal data about you?</b>\nCarta uses the data we collect for three basic purposes: (1) to operate our business and provide (including improving and personalizing) the products and games we offer such as providing you with support, handle complaints and collect fees, (2) to send communications, including promotional communications, and (3) to enforce the Terms of Use and to comply with any applicable law and assist law enforcement agencies under any applicable law.\n\n<b><size=110%>Reasons we share personal data? </b>\nWe do not sell, rent or lease your personally identifiable information to third parties for any of their marketing purposes unless you give us your consent. We share your personal data with your consent or as necessary to the operation of our business and provide you with better game experience or to complete any transaction or any service you have requested or authorized. We also share data with Carta-controlled affiliates, subsidiaries sister-companies and parent companies; with vendors working on our behalf and business partners, with the express provision that their use of such information must comply with Carta's privacy policy, in order to send you updates and notices, for marketing and advertising purposes, to facilitate communication between you and us, and between you and other users, to contact you as and when we believe it to be necessary, when required by law or to respond to legal process; to protect our customers; to maintain the security of our products; and to protect the rights or property of Carta.\n<u>Learn More</u>\n\n<b><size=110%>Transfer of data outside your territory</b>\nThe Service, by its nature as an online service, may store and process in formation in various sites throughout the globe. If you are a resident in a jurisdiction, where transfer of your personal information to another jurisdiction requires your consent, then you provide us your express and unambiguous consent to such transfer.\n\n<b><size=110%>Consent to communicate with you by different means</b>\nYou are consenting for us to communicate with you, including\nto send you updates and notices, marketing and advertising purposes, by the following means: SMS, push notifications in your phone or other device that you us, popups and/ or messages through your browser and in any social networks you are related to or your friends belong to, and any other future means. You may withdraw your consent for some or several communications means.\n<u>Learn More</u>\n\n<b><size=110%>Cookies & Similar Technologies</b>\nCarta uses cookies (small text files placed on your device) and similar technologies to help our games to collect data. Cookies allow us, among other things, to store your preferences and settings: enable you to sign-in provide interest-based advertising: combat fraud, and analyse how our websites and online services are performing.\nWe also use web beacons to help deliver cookies and gather usage and performance data. Our games may include web beacons and cookies from third-party service providers.\nYou have a variety of tools to control cookies, web beacons and similar technologies, including browser controls to block and delete cookies and controls from some third-party analytics service providers to opt out of data collection through web beacons and similar technologies. Your browser and other choices may impact your experiences with our products.\n<u>Learn More</u>\n\n<b><size=110%>Users in California</b>\n•If you are a user residing in California, a list of the categories of personal information collected about you, and disclosed for a business purposes, generally and in the preceding 12 months, along with the purposes of collection, categories of sources and categories of third party disclosures, is available <u>here</u>;\n•If you are a user residing in California, you have various rights in relation to personal information we collect about you. More information is available",
+    "Comment1": "新手引导",
+    "Comment2": "隐私条款内容"
+  },
+  {
+    "ID": 99,
+    "Code": "TXT_TTR_CollectCard",
+    "Content": "Tap a card one higher or one lower than\\nthe card at the bottom of the screen!",
+    "Comment1": "新手引导",
+    "Comment2": "出牌"
+  },
+  {
+    "ID": 100,
+    "Code": "TXT_TTR_NextCard",
+    "Content": "No playable cards.\\nTap to deal a new card.",
+    "Comment1": "新手引导",
+    "Comment2": "翻牌"
+  },
+  {
+    "ID": 101,
+    "Code": "TXT_TTR_Undo",
+    "Content": "You missed a playable card!\\nTap here to undo!",
+    "Comment1": "新手引导",
+    "Comment2": "撤回"
+  },
+  {
+    "ID": 102,
+    "Code": "TXT_TTR_StreakBonus1",
+    "Content": "Play multiple cards in a row\\nto fill up your streak meter\\nand win bonuses!",
+    "Comment1": "新手引导",
+    "Comment2": "StreakBonus"
+  },
+  {
+    "ID": 103,
+    "Code": "TXT_TTR_StreakBonus2",
+    "Content": "Awesome!\\nStreaks of only one color\\nDOUBLE the reward!",
+    "Comment1": "新手引导",
+    "Comment2": "StreakBonus"
+  },
+  {
+    "ID": 104,
+    "Code": "TXT_TTR_WildCard",
+    "Content": "Lets you play any card\\non the board. Perfect for\\nextending a long streak!",
+    "Comment1": "新手引导",
+    "Comment2": "狂野牌"
+  },
+  {
+    "ID": 105,
+    "Code": "TXT_TTR_Harvest1",
+    "Content": "Amazing!\\nHarvest your crops every hours now\\nfor FREE CREDITS!",
+    "Comment1": "新手引导",
+    "Comment2": "收获"
+  },
+  {
+    "ID": 106,
+    "Code": "TXT_TTR_Harvest2",
+    "Content": "Tap to start\\nnext level!",
+    "Comment1": "新手引导",
+    "Comment2": "收获"
+  },
+  {
+    "ID": 107,
+    "Code": "TXT_TTR_Crate",
+    "Content": "Reach the crate and\\npick amazing rewards",
+    "Comment1": "新手引导",
+    "Comment2": "关卡宝箱"
+  },
+  {
+    "ID": 108,
+    "Code": "TXT_TTR_Avatar",
+    "Content": "Click on your Avatar to\\nsee your Inventory!",
+    "Comment1": "新手引导",
+    "Comment2": "玩家信息图标"
+  },
+  {
+    "ID": 109,
+    "Code": "TXT_TTR_RemoveCards",
+    "Content": "POWER UP UNLOCKED!\\nRemoves 3 cards from the playfield.\\nTRY NOW!",
+    "Comment1": "新手引导",
+    "Comment2": "移除三张牌"
+  },
+  {
+    "ID": 110,
+    "Code": "TXT_TTR_ClearPlayables",
+    "Content": "POWER UP UNLOCKED!\\nRemoves all faceup cards.\\nTRY NOW!",
+    "Comment1": "新手引导",
+    "Comment2": "风车牌"
+  },
+  {
+    "ID": 111,
+    "Code": "TXT_TTR_WildDrop",
+    "Content": "POWER UP UNLOCKED!\\nAdds 3 Wild Cards to the playfield.\\nTRY NOW!",
+    "Comment1": "新手引导",
+    "Comment2": "狂野牌掉落"
+  },
+  {
+    "ID": 112,
+    "Code": "TXT_TTR_ValueChangers",
+    "Content": "Very helpful:\\nThis card increases\\n its value by 1 each turn.",
+    "Comment1": "新手引导",
+    "Comment2": "加减牌"
+  },
+  {
+    "ID": 113,
+    "Code": "TXT_TTR_Lock",
+    "Content": "Very helpful: \\nClear the Code Breaker\\n to complete the level.",
+    "Comment1": "新手引导",
+    "Comment2": "锁"
+  },
+  {
+    "ID": 114,
+    "Code": "TXT_TTR_Bomb",
+    "Content": "Very helpful: \\nYou lose the game if\\nthe counter reaches zero. BOOOM!",
+    "Comment1": "新手引导",
+    "Comment2": "炸弹"
+  },
+  {
+    "ID": 115,
+    "Code": "TXT_TTR_RemoveValueChangers",
+    "Content": "New!\\nRemove all Value Changers cards from the level.\\nTry now!",
+    "Comment1": "新手引导",
+    "Comment2": "移除加减牌"
+  },
+  {
+    "ID": 116,
+    "Code": "TXT_TTR_RemoveCodeBreakers",
+    "Content": "New!\\nRemove all Code Breakers cards from the level.\\nTry now!",
+    "Comment1": "新手引导",
+    "Comment2": "移除锁"
+  },
+  {
+    "ID": 117,
+    "Code": "TXT_TTR_RemoveBombs",
+    "Content": "New!\\nRemove all bombs cards from the level.\\nTry now!",
+    "Comment1": "新手引导",
+    "Comment2": "移除炸弹"
+  },
+  {
+    "ID": 118,
+    "Code": "TXT_TTR_GrandLevel",
+    "Content": "Enjoy free rounds &\\ngreater benefits in\\na Grand Solitaire Level!",
+    "Comment1": "新手引导",
+    "Comment2": "倍率2"
+  },
+  {
+    "ID": 119,
+    "Code": "TXT_TTR_EpicLevel",
+    "Content": "Enjoy free rounds &\\ngreater benefits in\\nan Epic Solitaire Level!",
+    "Comment1": "新手引导",
+    "Comment2": "倍率4"
+  },
+  {
+    "ID": 120,
+    "Code": "TXT_TTR_DailyMission1",
+    "Content": "New Daily Missions!\\nAre you up for the challenge?",
+    "Comment1": "新手引导",
+    "Comment2": "日常任务1"
+  },
+  {
+    "ID": 121,
+    "Code": "TXT_TTR_DailyMission2",
+    "Content": "WELCOME ABOARD!\\nYou'll always have several missions to progress in",
+    "Comment1": "新手引导",
+    "Comment2": "日常任务2"
+  },
+  {
+    "ID": 122,
+    "Code": "TXT_TTR_DailyMission3",
+    "Content": "Look, you've progressed\\nin {0} Missions!",
+    "Comment1": "新手引导",
+    "Comment2": "日常任务3"
+  },
+  {
+    "ID": 123,
+    "Code": "TXT_TTR_DailyMission4",
+    "Content": "{0} Mission is completed,\\nway to go!",
+    "Comment1": "新手引导",
+    "Comment2": "日常任务4"
+  },
+  {
+    "ID": 124,
+    "Code": "TXT_TTR_DailyMission5",
+    "Content": "Each completed Mission is\\nalways replaced with a fresh one!",
+    "Comment1": "新手引导",
+    "Comment2": "日常任务5"
+  },
+  {
+    "ID": 125,
+    "Code": "TXT_MEN_BTN_Setting",
+    "Content": "SETTING\\n&HELP",
+    "Comment1": "按钮",
+    "Comment2": "游戏设置"
+  },
+  {
+    "ID": 126,
+    "Code": "TXT_MEN_BTN_Setting_Rule",
+    "Content": "Game Rules",
+    "Comment1": "按钮",
+    "Comment2": "游戏规则"
+  },
+  {
+    "ID": 127,
+    "Code": "TXT_MEN_BTN_Setting_Support",
+    "Content": "Contact Support",
+    "Comment1": "按钮",
+    "Comment2": "游戏帮助"
+  },
+  {
+    "ID": 128,
+    "Code": "TXT_MEN_BTN_Setting_Shop",
+    "Content": "SHOP",
+    "Comment1": "按钮",
+    "Comment2": "商城"
+  },
+  {
+    "ID": 129,
+    "Code": "TXT_MEN_BTN_Share",
+    "Content": "Get Credits",
+    "Comment1": "按钮",
+    "Comment2": "分享按钮"
+  },
+  {
+    "ID": 130,
+    "Code": "TXT_MEN_BTN_Share_Facebook",
+    "Content": "{0} CREDITS",
+    "Comment1": "按钮",
+    "Comment2": "Facebook分享按钮"
+  },
+  {
+    "ID": 131,
+    "Code": "TXT_CRP_BTN_HarvestNow",
+    "Content": "HARVEST\\nNOW",
+    "Comment1": "按钮",
+    "Comment2": "可收获"
+  },
+  {
+    "ID": 132,
+    "Code": "TXT_CRP_BTN_NextHarvest",
+    "Content": "NEXT HARVEST {0}",
+    "Comment1": "按钮",
+    "Comment2": "收获冷却"
+  },
+  {
+    "ID": 133,
+    "Code": "TXT_CRP_BTN_Watch",
+    "Content": "WATCH",
+    "Comment1": "按钮",
+    "Comment2": "观看广告"
+  },
+  {
+    "ID": 134,
+    "Code": "TXT_CRP_BTN_Collect",
+    "Content": "COLLECT",
+    "Comment1": "按钮",
+    "Comment2": "收获"
+  },
+  {
+    "ID": 135,
+    "Code": "TXT_SHP_BTN_TryAgain",
+    "Content": "Try Again",
+    "Comment1": "按钮",
+    "Comment2": "付款失败再次尝试"
+  },
+  {
+    "ID": 136,
+    "Code": "TXT_LVL_BTN_Play",
+    "Content": "PLAY",
+    "Comment1": "按钮",
+    "Comment2": "开始关卡"
+  },
+  {
+    "ID": 137,
+    "Code": "TXT_LVL_BTN_Switch_On",
+    "Content": "ON",
+    "Comment1": "按钮",
+    "Comment2": "功能开启"
+  },
+  {
+    "ID": 138,
+    "Code": "TXT_LVL_BTN_Switch_Off",
+    "Content": "OFF",
+    "Comment1": "按钮",
+    "Comment2": "功能关闭"
+  },
+  {
+    "ID": 139,
+    "Code": "TXT_LVL_BTN_Quit",
+    "Content": "QUIT",
+    "Comment1": "按钮",
+    "Comment2": "退出"
+  },
+  {
+    "ID": 140,
+    "Code": "TXT_LVL_BTN_StreakBonus_Head",
+    "Content": "The Streak Meter",
+    "Comment1": "按钮",
+    "Comment2": "StreakBonus奖励介绍1"
+  },
+  {
+    "ID": 141,
+    "Code": "TXT_LVL_BTN_StreakBonus_Body",
+    "Content": "Play multiple cards in a row to get bonuses.\\nWin rewards such as additonal cards,\\nextra coins or wild cards.",
+    "Comment1": "按钮",
+    "Comment2": "StreakBonus奖励介绍2"
+  },
+  {
+    "ID": 142,
+    "Code": "TXT_LVL_BTN_Ads_2Harvest",
+    "Content": "X2\\nHarvest",
+    "Comment1": "按钮",
+    "Comment2": "双倍收获奖励"
+  },
+  {
+    "ID": 143,
+    "Code": "TXT_CRT_BTN_LetsGo",
+    "Content": "Let's Go",
+    "Comment1": "按钮",
+    "Comment2": "关闭宝箱介绍"
+  },
+  {
+    "ID": 144,
+    "Code": "TXT_CRT_BTN_PlaySolitaire",
+    "Content": "LET'S PLAY SOLITAIRE!",
+    "Comment1": "按钮",
+    "Comment2": "首次进入游戏"
+  },
+  {
+    "ID": 145,
+    "Code": "TXT_CRT_BTN_AceeptTerm",
+    "Content": "Accept & Play",
+    "Comment1": "按钮",
+    "Comment2": "接受条款"
+  },
+  {
+    "ID": 146,
+    "Code": "TXT_PLY_RNK1",
+    "Content": "Wooden",
+    "Comment1": "称号",
+    "Comment2": "段位1"
+  },
+  {
+    "ID": 147,
+    "Code": "TXT_PLY_RNK2",
+    "Content": "Bronze",
+    "Comment1": "称号",
+    "Comment2": "段位2"
+  },
+  {
+    "ID": 148,
+    "Code": "TXT_PLY_RNK3",
+    "Content": "Silver",
+    "Comment1": "称号",
+    "Comment2": "段位3"
+  },
+  {
+    "ID": 149,
+    "Code": "TXT_PLY_RNK4",
+    "Content": "Golden",
+    "Comment1": "称号",
+    "Comment2": "段位4"
+  },
+  {
+    "ID": 150,
+    "Code": "TXT_PLY_RNK5",
+    "Content": "Diamond",
+    "Comment1": "称号",
+    "Comment2": "段位5"
+  },
+  {
+    "ID": 151,
+    "Code": "TXT_PLY_RNK6",
+    "Content": "Platinum",
+    "Comment1": "称号",
+    "Comment2": "段位6"
+  },
+  {
+    "ID": 152,
+    "Code": "TXT_PLY_TIT1",
+    "Content": "Fighter",
+    "Comment1": "称号",
+    "Comment2": "头衔1"
+  },
+  {
+    "ID": 153,
+    "Code": "TXT_PLY_TIT2",
+    "Content": "Challenger",
+    "Comment1": "称号",
+    "Comment2": "头衔2"
+  },
+  {
+    "ID": 154,
+    "Code": "TXT_PLY_TIT3",
+    "Content": "Conqueror",
+    "Comment1": "称号",
+    "Comment2": "头衔3"
+  },
+  {
+    "ID": 155,
+    "Code": "TXT_PLY_TIT4",
+    "Content": "Winner",
+    "Comment1": "称号",
+    "Comment2": "头衔4"
+  },
+  {
+    "ID": 156,
+    "Code": "TXT_PLY_TIT5",
+    "Content": "Victor",
+    "Comment1": "称号",
+    "Comment2": "头衔5"
+  },
+  {
+    "ID": 157,
+    "Code": "TXT_PLY_TIT6",
+    "Content": "Hero",
+    "Comment1": "称号",
+    "Comment2": "头衔6"
+  },
+  {
+    "ID": 158,
+    "Code": "TXT_PLY_TIT7",
+    "Content": "Champion",
+    "Comment1": "称号",
+    "Comment2": "头衔7"
+  },
+  {
+    "ID": 159,
+    "Code": "TXT_PLY_TIT8",
+    "Content": "Commander",
+    "Comment1": "称号",
+    "Comment2": "头衔8"
+  },
+  {
+    "ID": 160,
+    "Code": "TXT_PLY_TIT9",
+    "Content": "Lord",
+    "Comment1": "称号",
+    "Comment2": "头衔9"
+  },
+  {
+    "ID": 161,
+    "Code": "TXT_PLY_TIT10",
+    "Content": "Master",
+    "Comment1": "称号",
+    "Comment2": "头衔10"
+  },
+  {
+    "ID": 162,
+    "Code": "TXT_PLY_TIT11",
+    "Content": "Grand Master",
+    "Comment1": "称号",
+    "Comment2": "头衔11"
+  },
+  {
+    "ID": 163,
+    "Code": "TXT_PLY_TIT12",
+    "Content": "King",
+    "Comment1": "称号",
+    "Comment2": "头衔12"
+  },
+  {
+    "ID": 164,
+    "Code": "TXT_PLY_TIT13",
+    "Content": "Emperor",
+    "Comment1": "称号",
+    "Comment2": "头衔13"
+  },
+  {
+    "ID": 165,
+    "Code": "TXT_CRP_Cabbage",
+    "Content": "Cabbage",
+    "Comment1": "作物",
+    "Comment2": "作物1"
+  },
+  {
+    "ID": 166,
+    "Code": "TXT_CRP_Carrot",
+    "Content": "Carrot",
+    "Comment1": "作物",
+    "Comment2": "作物2"
+  },
+  {
+    "ID": 167,
+    "Code": "TXT_CRP_Wheat",
+    "Content": "Wheat",
+    "Comment1": "作物",
+    "Comment2": "作物3"
+  },
+  {
+    "ID": 168,
+    "Code": "TXT_CRP_Cherry",
+    "Content": "Cherry",
+    "Comment1": "作物",
+    "Comment2": "作物4"
+  },
+  {
+    "ID": 169,
+    "Code": "TXT_CRP_Pumpkin",
+    "Content": "Pumpkin",
+    "Comment1": "作物",
+    "Comment2": "作物5"
+  },
+  {
+    "ID": 170,
+    "Code": "TXT_CRP_Corn",
+    "Content": "Corn",
+    "Comment1": "作物",
+    "Comment2": "作物6"
+  },
+  {
+    "ID": 171,
+    "Code": "TXT_CRP_Eggplant",
+    "Content": "Eggplant",
+    "Comment1": "作物",
+    "Comment2": "作物7"
+  },
+  {
+    "ID": 172,
+    "Code": "TXT_CRP_Reed",
+    "Content": "Reed",
+    "Comment1": "作物",
+    "Comment2": "作物8"
+  },
+  {
+    "ID": 173,
+    "Code": "TXT_CRP_Sunflower",
+    "Content": "Sunflower",
+    "Comment1": "作物",
+    "Comment2": "作物9"
+  },
+  {
+    "ID": 174,
+    "Code": "TXT_CRP_Tomato",
+    "Content": "Tomato",
+    "Comment1": "作物",
+    "Comment2": "作物10"
+  },
+  {
+    "ID": 175,
+    "Code": "TXT_CRP_Watermelon",
+    "Content": "Watermelon",
+    "Comment1": "作物",
+    "Comment2": "作物11"
+  },
+  {
+    "ID": 176,
+    "Code": "TXT_CRP_ITF_HarvestBonus",
+    "Content": "Harvest Bonus",
+    "Comment1": "作物",
+    "Comment2": "收获奖励"
+  },
+  {
+    "ID": 177,
+    "Code": "TXT_CRP_ITF_CropUnlocked",
+    "Content": "CROPS UNLOCKED",
+    "Comment1": "作物",
+    "Comment2": "已解锁作物"
+  },
+  {
+    "ID": 178,
+    "Code": "TXT_CRP_ITF_TotalBonus",
+    "Content": "TOTAL BONUS",
+    "Comment1": "作物",
+    "Comment2": "总奖励"
+  },
+  {
+    "ID": 179,
+    "Code": "TXT_CRP_ITF_CropUnlock_Head",
+    "Content": "Excellent!",
+    "Comment1": "作物",
+    "Comment2": "已解锁作物的标题"
+  },
+  {
+    "ID": 180,
+    "Code": "TXT_CRP_ITF_CropUnlock_Body",
+    "Content": "You Have Grown",
+    "Comment1": "作物",
+    "Comment2": "已解锁作物的说明"
   }
 ]

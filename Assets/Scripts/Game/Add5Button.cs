@@ -1,18 +1,146 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class Add5Button : MonoBehaviour
 {
+    Image numberBG;
+
+    int nItemCount = 0;
+    TMP_Text itemCount;
+
+    GameObject buyPrice;
+    TMP_Text txtPrice;
+
+    private void Awake()
+    {
+        numberBG = gameObject.transform.Find("NumberBG").GetComponent<Image>();
+        if (numberBG == null)
+            Debug.Log("_______________Add5Button::Awake ... ... the numberBG is null...");
+
+        itemCount = numberBG.transform.Find("Number").GetComponent<TMP_Text>();
+        if (itemCount == null)
+            Debug.Log("_______________Add5Button::Awake ... ... the itemCount is null...");
+
+        buyPrice = gameObject.transform.Find("BuyPrice").gameObject;
+        if (buyPrice == null)
+            Debug.Log("_______________Add5Button::Awake ... ... the buyPrice is null...");
+
+        txtPrice = buyPrice.transform.Find("Price").GetComponent<TMP_Text>();
+        if (txtPrice == null)
+            Debug.Log("_______________Add5Button::Awake ... ... the txtPrice is null...");
+
+        nItemCount = Reward.Data[RewardType.MoreCards];
+
+        //UpdateItemCount();
+        //UpdateItemDisplay();
+
+    }
     // Start is called before the first frame update
     void Start()
     {
-        
+        //UpdateItemDisplay();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void UpdateItemCount()
+    {
+        if (nItemCount > 99)
+        {
+            itemCount.text = "99+";
+            numberBG.GetComponent<RectTransform>().sizeDelta = new Vector2(124.0f, 84.0f);
+        }
+        else if (nItemCount >= 10)
+        {
+            itemCount.text = nItemCount.ToString();
+            numberBG.GetComponent<RectTransform>().sizeDelta = new Vector2(104.0f, 84.0f);
+        }
+        else
+        {
+            itemCount.text = nItemCount.ToString();
+            numberBG.GetComponent<RectTransform>().sizeDelta = new Vector2(84.0f, 84.0f);
+        }
+    }
+
+    void UpdateItemDisplay()
+    {
+        if (nItemCount > 0)
+        {
+            ShowAdd5Count();
+            HideAdd5Price();
+        }
+        else
+        {
+            HideAdd5Count();
+            ShowAdd5Price();
+        }
+    }
+
+    public void IncAdd5Item()
+    {
+        nItemCount++;
+
+        UpdateItemCount();
+
+        UpdateItemDisplay();
+
+        Debug.Log("the IncAdd5Item nItemCount is: " + nItemCount);
+    }
+
+    public void DecAdd5Item()
+    {
+        nItemCount--;
+
+        nItemCount = nItemCount < 0 ? 0 : nItemCount;
+
+        UpdateItemCount();
+
+        UpdateItemDisplay();
+
+        Debug.Log("the DecAdd5Item nItemCount is: " + nItemCount);
+    }
+
+    public void SetAdd5ItemCount(int nCount)
+    {
+        nItemCount = nCount;
+
+        UpdateItemCount();
+
+        UpdateItemDisplay();
+    }
+
+    void HideAdd5Count()
+    {
+        numberBG.enabled = false;
+        itemCount.enabled = false;
+    }
+
+    void ShowAdd5Count()
+    {
+        numberBG.enabled = true;
+        itemCount.enabled = true;
+    }
+
+    void ShowAdd5Price()
+    {
+        int nPrice = GameplayMgr.Instance.GetWildCardCost();
+        if (nPrice <= 1000)
+            txtPrice.text = string.Format("{0}", nPrice);
+        else
+            txtPrice.text = string.Format("{0}K", (float)nPrice / 1000.0f);
+
+        buyPrice.SetActive(true);
+    }
+
+    void HideAdd5Price()
+    {
+        buyPrice.SetActive(false);
     }
 }

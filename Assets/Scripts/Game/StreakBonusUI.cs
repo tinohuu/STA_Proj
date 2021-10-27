@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using TMPro;
 
 public class StreakBonusUI : MonoBehaviour
 {
@@ -19,6 +21,8 @@ public class StreakBonusUI : MonoBehaviour
     Image streakBonusBG;
     Image currentStreak;
     Image nextStreak;
+
+    TMP_Text streakBonusText;
 
     Button tipsButton;
 
@@ -75,8 +79,10 @@ public class StreakBonusUI : MonoBehaviour
         currentStreak = rectTrans.transform.Find("BonusImage").GetComponent<Image>();
         nextStreak = rectTrans.transform.Find("NextBonusImage").GetComponent<Image>();
 
+        streakBonusText = rectTrans.transform.Find("BonusText").GetComponent<TMP_Text>();
+
         //test code
-        streakBonusBG.rectTransform.sizeDelta = new Vector2(608.0f, 156.0f);
+        //streakBonusBG.rectTransform.sizeDelta = new Vector2(608.0f, 156.0f);
         Rect rectSize = rectTrans.rect;
         for (int i = 0; i < GameplayMgr.Max_StreakBonus_Count; ++i)
         {
@@ -86,12 +92,14 @@ public class StreakBonusUI : MonoBehaviour
             streakSprites[i].GetComponent<RectTransform>().sizeDelta  = new Vector2(0.4f, 0.4f);
 
             //Vector3 posOffset = new Vector3(rectSize.width * (i * 0.06f - 0.3f), rectSize.height * 0.05f, 0.0f);
-            Vector3 posOffset = new Vector3(- rectSize.width/200 + 0.5f + (i * 0.4f), rectSize.height * 0.01f - 1.6f, 0.0f);
+            Vector3 posOffset = new Vector3(- rectSize.width/200 + 0.5f + (i * 0.4f), (rectSize.height + rectSize.x) * 0.01f - 1.5f, 0.0f);
+
             //streakSprites[i].transform.position = rectTrans.transform.position + posOffset;
             //Vector3 posOffset = new Vector3(0.0f, 0.0f, 0.0f);
             //streakSprites[i].transform.position = posOffset;
-
-            //Debug.Log("the streak sprite pos is: " + streakSprites[i].transform.position + "  posoffset is: " + posOffset);
+            streakSprites[i].transform.position = rectTrans.transform.position + posOffset;
+            /*Debug.Log("the rectSize is: " + rectSize);
+            Debug.Log("the rectTrans.transform.position is: " + rectTrans.transform.position + "  posoffset is: " + posOffset);*/
 
             streakSprites[i].SetActive(false);
         }
@@ -118,7 +126,7 @@ public class StreakBonusUI : MonoBehaviour
 
     void InitDotSprites(int nCount)
     {
-        streakBonusBG.rectTransform.sizeDelta = new Vector2(358.0f + 50.0f * nCount, 156.0f);
+        //streakBonusBG.rectTransform.sizeDelta = new Vector2(358.0f + 50.0f * nCount, 156.0f);
 
         int nOffset = 0;
         if (nCount == 5)
@@ -135,8 +143,12 @@ public class StreakBonusUI : MonoBehaviour
             streakSprites[i].GetComponent<Image>().sprite = whiteDotSprite;
             streakSprites[i].SetActive(true);
 
-            Vector3 posOffset = new Vector3(-rectSize.width / 200 + 1.2f + (i + nOffset) * 0.4f, rectSize.height * 0.01f - 1.5f, 0.0f);
+            //Vector3 posOffset = new Vector3(-rectSize.width / 200 + 1.0f + (i + nOffset) * 0.4f, (rectSize.height + rectSize.y) * 0.01f - 1.5f, 0.0f);
+            Vector3 posOffset = new Vector3(-rectSize.width / 200 + 1.0f + (i + nOffset) * 0.4f, 0.1f, 0.0f);
             streakSprites[i].transform.position = rectTrans.transform.position + posOffset;
+
+            /*Debug.Log("the rectSize is: " + rectSize);
+            Debug.Log("InitDotSprites we set the streak sprite pos is: " + rectTrans.transform.position + "  posoffset is: " + posOffset);*/
         }
 
         for (int i = nCount; i < GameplayMgr.Max_StreakBonus_Count; ++i)
@@ -144,6 +156,120 @@ public class StreakBonusUI : MonoBehaviour
             streakSprites[i].SetActive(false);
         }
 
+        //here we adjust the bonusBG's X scale
+        AdjustImageScale(nCount);
+        
+    }
+
+    void AdjustImageScale(int nCount)
+    {
+        List<GameObject> dotSprites = new List<GameObject>();
+
+        //Debug.Log("111 AdjustImageScale... the rectTrans.transform.position is: " + rectTrans.transform.position);
+        if (nCount == 5)
+            streakBonusBG.rectTransform.DOScaleX(1.0f, 1.0f);
+
+        if(nCount == 4)
+            streakBonusBG.rectTransform.DOScaleX(0.85f, 1.0f);
+
+        if (nCount == 6)
+            streakBonusBG.rectTransform.DOScaleX(1.15f, 1.0f);
+
+        //Debug.Log("222 AdjustImageScale... the rectTrans.transform.position is: " + rectTrans.transform.position);
+
+        for (int i = 0; i < nCount; ++i)
+            dotSprites.Add(streakSprites[i]);
+
+        Rect rectSize = rectTrans.rect;
+        Vector3 offset = new Vector3();
+        Vector3 offsetBonus = new Vector3();
+        Vector3 offsetText = new Vector3();
+
+        if (nCount == 5)
+        {
+            //Rect rectSize = rectTrans.rect;
+            //Vector3 posOffset = new Vector3(-rectSize.width / 200 + 1.2f + (i + nOffset) * 0.4f, rectSize.height * 0.01f - 1.5f, 0.0f);
+            //Vector3 posOffset = new Vector3(-rectSize.width / 200 + 1.0f, rectSize.height * 0.01f - 1.5f, 0.0f);
+            offset.x = -rectSize.width / 200 + 0.8f;
+            offset.y = (rectSize.height + rectSize.y) * 0.01f - 0.7f;
+            offset.z = 0.0f;
+            //streakSprites[0].transform.DOMove(rectTrans.transform.position + posOffset, 1.0f);
+
+            offsetBonus = offset;
+            offsetBonus.x += 0.3f;
+
+            offsetText.x = offset.x + 1.3f;
+            offsetText.y = offset.y + 0.25f;
+            offsetText.z = 0.0f;
+        }
+
+        if(nCount == 4)
+        {
+            //Rect rectSize = rectTrans.rect;
+            //Vector3 posOffset = new Vector3(-rectSize.width / 200 + 1.2f + (i + nOffset) * 0.4f, rectSize.height * 0.01f - 1.5f, 0.0f);
+            //Vector3 posOffset = new Vector3(-rectSize.width / 200 + 2.0f, rectSize.height * 0.01f - 1.5f, 0.0f);
+            offset.x = -rectSize.width / 200 + 1.65f;
+            offset.y = (rectSize.height + rectSize.y) * 0.01f - 0.7f;
+            offset.z = 0.0f;
+            //streakSprites[0].transform.DOMove(rectTrans.transform.position + posOffset, 1.0f);
+
+            offsetBonus = offset;
+            offsetBonus.x += 0.1f;
+
+            offsetText.x = offset.x + 1.0f;
+            offsetText.y = offset.y + 0.25f;
+            offsetText.z = 0.0f;
+        }
+
+        if(nCount == 6)
+        {
+            //Vector3 posOffset = new Vector3(-rectSize.width / 200 + 1.2f + (i + nOffset) * 0.4f, rectSize.height * 0.01f - 1.5f, 0.0f);
+            //Vector3 posOffset = new Vector3(-rectSize.width / 200 - 0.2f, rectSize.height * 0.01f - 1.5f, 0.0f);
+            offset.x = -rectSize.width / 200 + 0.2f;
+            offset.y = (rectSize.height + rectSize.y) * 0.01f - 0.7f;
+            offset.z = 0.0f;
+            //streakSprites[0].transform.DOMove(rectTrans.transform.position + posOffset, 1.0f);
+
+            offsetBonus = offset;
+            offsetBonus.x += 0.2f;
+
+            offsetText.x = offset.x + 1.3f;
+            offsetText.y = offset.y + 0.25f;
+            offsetText.z = 0.0f;
+        }
+
+        AdjustDotSpritesPos(offset, dotSprites);
+
+        AdjustBonusImagePos(offsetBonus, nCount);
+
+        AdjustBonusTextPos(offsetText);
+    }
+
+    void AdjustDotSpritesPos(Vector3 initPos, List<GameObject> dots)
+    {
+        for(int i = 0; i < dots.Count; ++i)
+        {
+            Vector3 posOffset = initPos;
+            posOffset.x += i * 0.4f;
+
+            dots[i].transform.DOMove(rectTrans.transform.position + posOffset, 1.0f);
+        }
+    }
+
+    void AdjustBonusImagePos(Vector3 initPos, int nCount)
+    {
+        Vector3 posOffsetCurrent = initPos;
+        Vector3 posOffsetNext = initPos;
+        posOffsetCurrent.x += (nCount * 0.4f + 0.8f);
+        posOffsetNext.x += (nCount * 0.4f + 2.2f);
+
+        currentStreak.transform.DOMove(rectTrans.transform.position + posOffsetCurrent, 1.0f);
+        nextStreak.transform.DOMove(rectTrans.transform.position + posOffsetNext, 1.0f);
+    }
+
+    void AdjustBonusTextPos(Vector3 initPos)
+    {
+        streakBonusText.transform.DOMove(rectTrans.transform.position + initPos, 1.0f);
     }
 
     public void SetStreakBonusStatus(int nCount, int nStreakBonus)
@@ -154,7 +280,7 @@ public class StreakBonusUI : MonoBehaviour
         string strDebug = "";
         for (int i = 0; i < 6; ++i)
             strDebug += ("  " + streakBonus[i]);
-        //Debug.Log("StreakBonusUI::SetStreakBonusStatus the nStreakBonus is: " + nStreakBonus + "  the array is: " + strDebug);
+        Debug.Log("StreakBonusUI::SetStreakBonusStatus the nStreakBonus is: " + nStreakBonus + "  the array is: " + strDebug + "  count is: " + nCount);
 
         for(int i = 0; i < nCount; ++i)
         {
@@ -177,11 +303,9 @@ public class StreakBonusUI : MonoBehaviour
             streakSprites[i].SetActive(true);
         }
 
-        //int nTotalCount = GameplayMgr.Instance.GetStreakFinishCount(currentStreakType);
+        int nTotalCount = GameplayMgr.Instance.GetStreakFinishCount(currentStreakType);
 
-        //InitDotSprites(nTotalCount);
-
-        /*for (int i = nCount; i < nTotalCount; ++i)
+        for (int i = nCount; i < nTotalCount; ++i)
         {
             streakSprites[i].SetActive(true);
             streakSprites[i].GetComponent<Image>().sprite = whiteDotSprite;
@@ -190,7 +314,7 @@ public class StreakBonusUI : MonoBehaviour
         for (int i = nTotalCount; i < GameplayMgr.Max_StreakBonus_Count; ++i)
         {
             streakSprites[i].SetActive(false);
-        }*/
+        }
     }
 
     public void ShowCoinEffect()
@@ -198,6 +322,19 @@ public class StreakBonusUI : MonoBehaviour
         Vector3 newPos = gameplayUI.streakBonusUI.transform.position + Vector3.forward * 2.0f;
         GameObject streakCoin = Instantiate(GameplayMgr.Instance.FXCoin, gameplayUI.streakBonusUI.transform);
         streakCoin.transform.localScale = new Vector3(100.0f, 100.0f, 1.0f);
+
+        ParticleSystem particleSystem;
+        particleSystem = streakCoin.transform.GetComponentInChildren<ParticleSystem>();
+        ParticleSystemRenderer particleRenderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+
+        ParticleSystem.ExternalForcesModule forcesModule = particleSystem.externalForces;
+        ParticleSystem.TriggerModule triggerModule = particleSystem.trigger;
+
+        foreach (ParticleSystemForceField forceField in GameplayMgr.Instance.forceFields)
+            forcesModule.AddInfluence(forceField);
+
+        Collider2D starDieCollider = GameplayMgr.Instance.starDieBox.GetComponent<BoxCollider2D>();
+        triggerModule.AddCollider(starDieCollider);
 
         /*ParticleSystem particleSystem;
         particleSystem = streakCoin.transform.GetComponentInChildren<ParticleSystem>();
@@ -258,6 +395,8 @@ public class StreakBonusUI : MonoBehaviour
                 break;
             default: break;
         }
+
+        streakImage.SetNativeSize();
     }
 
     void OnClickTipsButton()

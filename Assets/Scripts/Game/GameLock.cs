@@ -32,10 +32,12 @@ public class GameLock : MonoBehaviour
         lockBGImage = GetComponent<SpriteRenderer>();
 
         suitImage = transform.Find("Suit").GetComponent<SpriteRenderer>();
-
         colorImage = transform.Find("Color").GetComponent<SpriteRenderer>();
-
         numberImage = transform.Find("Number").GetComponent<SpriteRenderer>();
+
+        suitImage.sortingOrder = 2;
+        colorImage.sortingOrder = 2;
+        numberImage.sortingOrder = 2;
 
     }
 
@@ -51,7 +53,7 @@ public class GameLock : MonoBehaviour
 
         nGroupID = info.nGroupID;
 
-        Vector3 posOffset = new Vector3(info.fPosX * 1920.0f / 1440.0f, info.fPosY, -1.0f) * 0.01f;// - Vector3.forward * 2.0f;
+        Vector3 posOffset = new Vector3(info.fPosX * 1920.0f / 1440.0f, info.fPosY, -100.0f) * 0.01f;// - Vector3.forward * 2.0f;
         transform.position = pos + posOffset;
 
         pokerSuit = (GameplayMgr.PokerSuit)info.nSuit;

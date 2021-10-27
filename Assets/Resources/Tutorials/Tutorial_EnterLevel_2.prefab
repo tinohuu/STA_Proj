@@ -171,20 +171,20 @@ MonoBehaviour:
     IsScale: 0
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
-  InverseOnFadeOut: 0
+  InQueue: 1
+  IsCrossScene: 0
   ShowPanel: 1
   CanCloseByPanel: 0
-  InQueue: 1
-  IntervalMultiplerOnFadeOut: 1
   FadeInOnEnable: 1
+  FadeInDelay: 0
+  InverseOnFadeOut: 0
+  IntervalMultiplerOnFadeOut: 1
   OnWindowEnable:
     m_PersistentCalls:
       m_Calls: []
   OnWindowFadeIn:
     m_PersistentCalls:
       m_Calls: []
-  FadeInDelay: 0
-  IsCrossScene: 0
 --- !u!114 &8326667025444417324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -505,7 +505,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8326667026459697198}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dc6f794751fc414d9daf838070b3a25, type: 3}
+  m_Script: {fileID: 11500000, guid: df0c8d3aa6fa39f4e9a859e1bb723f08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!225 &8326667026459697195
@@ -636,7 +636,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: We care about your Privacy
+  m_text: TXT_TTR_AcceptTerms_Head
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bf855d451f4022b4cbec3f3d8f4a83e8, type: 2}
   m_sharedMaterial: {fileID: 6799379059928631274, guid: bf855d451f4022b4cbec3f3d8f4a83e8, type: 2}
@@ -663,7 +663,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70.45
+  m_fontSize: 46.35
   m_fontSizeBase: 65
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1129,87 +1129,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Our <u>Terms</u> & <u>Privacy Policy</u> were updated - please read and
-    accept.\r\nBy clicking 'Accept & Play' you agree to our <u>Terms of Service</u>,
-    and confirm you read our <u>Privacy Policy</u> (Summary of the Privacy Policy
-    is available below in which you can learn how we collect, use and share your
-    data and how we use cookies and similar technology. You may receive marketing
-    notification from us and can opt out at any time <u>here</u>.\r\n\r\n<b><size=110%>What
-    personal data is being collected and how we collect it?</b>\r\n\u2022 While registration
-    you are asked to provide us Carta Ltd. and its Affiliates (\"Carta\") with personal
-    details such as your name and e-mail address and/ or social network user profile
-    and D (Facebook for example) or other third-party service. In some cases, such
-    social network will share with us other information that was published on such
-    network since you gave consent to share it with us.\r\n\u2022During in app purchase
-    we collect financial data regarding your purchases and the processes of such
-    purchases for billing purposes.\r\n\u2022To improve and customize your game experience
-    we may collect information when you use any of the Carta games such as the frequency
-    and scope of your use of the Services, the duration of your sessions, the games
-    that you like, your communications with other users, the Internet protocol (IP)
-    address, mobile device's unique identifier (UDID and the geographic location
-    of the device that you are using to log-in on Carta games.\r\n\u2022We may automatically
-    gather information, using log files. If you are registered with Carta games the
-    information we gather may be anonymous or in some instances personally identifiable.
-    If you are not a registered user, then we will not knowingly make use of any
-    information which personally identifies you, except as specifically indicated
-    in the policy.\r\n\u2022 We may receive personal data about you from third parties,
-    that you have authorized to act on your behalf. Any information we receive about
-    you from these third parties will only be processed for the purposes described
-    under 'How will we use the information about you'.\r\n\u2022Further information
-    may be collected if you enter a sweepstake, contest, or similar promotion, or
-    when we exchange communications with you, for example, if you submit a request
-    to our customer support we may collect your telephone number and other data that
-    you provide us with.\r\n<u>Learn More</u>\r\n\r\n<b><size=110%>How will we use
-    the personal data about you?</b>\r\nCarta uses the data we collect for three
-    basic purposes: (1) to operate our business and provide (including improving
-    and personalizing) the products and games we offer such as providing you with
-    support, handle complaints and collect fees, (2) to send communications, including
-    promotional communications, and (3) to enforce the Terms of Use and to comply
-    with any applicable law and assist law enforcement agencies under any applicable
-    law.\r\n\r\n<b><size=110%>Reasons we share personal data? </b>\r\nWe do not sell,
-    rent or lease your personally identifiable information to third parties for any
-    of their marketing purposes unless you give us your consent. We share your personal
-    data with your consent or as necessary to the operation of our business and provide
-    you with better game experience or to complete any transaction or any service
-    you have requested or authorized. We also share data with Carta-controlled affiliates,
-    subsidiaries sister-companies and parent companies; with vendors working on our
-    behalf and business partners, with the express provision that their use of such
-    information must comply with Carta's privacy policy, in order to send you updates
-    and notices, for marketing and advertising purposes, to facilitate communication
-    between you and us, and between you and other users, to contact you as and when
-    we believe it to be necessary, when required by law or to respond to legal process;
-    to protect our customers; to maintain the security of our products; and to protect
-    the rights or property of Carta.\r\n<u>Learn More</u>\r\n\r\n<b><size=110%>Transfer
-    of data outside your territory</b>\r\nThe Service, by its nature as an online
-    service, may store and process in formation in various sites throughout the globe.
-    If you are a resident in a jurisdiction, where transfer of your personal information
-    to another jurisdiction requires your consent, then you provide us your express
-    and unambiguous consent to such transfer.\r\n\r\n<b><size=110%>Consent to communicate
-    with you by different means</b>\r\nYou are consenting for us to communicate with
-    you, including\r\nto send you updates and notices, marketing and advertising
-    purposes, by the following means: SMS, push notifications in your phone or other
-    device that you us, popups and/ or messages through your browser and in any social
-    networks you are related to or your friends belong to, and any other future means.
-    You may withdraw your consent for some or several communications means.\r\n<u>Learn
-    More</u>\r\n\r\n<b><size=110%>Cookies & Similar Technologies</b>\r\nCarta uses
-    cookies (small text files placed on your device) and similar technologies to
-    help our games to collect data. Cookies allow us, among other things, to store
-    your preferences and settings: enable you to sign-in provide interest-based advertising:
-    combat fraud, and analyse how our websites and online services are performing.\r\nWe
-    also use web beacons to help deliver cookies and gather usage and performance
-    data. Our games may include web beacons and cookies from third-party service
-    providers.\r\nYou have a variety of tools to control cookies, web beacons and
-    similar technologies, including browser controls to block and delete cookies
-    and controls from some third-party analytics service providers to opt out of
-    data collection through web beacons and similar technologies. Your browser and
-    other choices may impact your experiences with our products.\r\n<u>Learn More</u>\r\n\r\n<b><size=110%>Users
-    in California</b>\r\n\u2022If you are a user residing in California, a list of
-    the categories of personal information collected about you, and disclosed for
-    a business purposes, generally and in the preceding 12 months, along with the
-    purposes of collection, categories of sources and categories of third party disclosures,
-    is available <u>here</u>;\r\n\u2022If you are a user residing in California,
-    you have various rights in relation to personal information we collect about
-    you. More information is available <u>here</u>;\r\n"
+  m_text: TXT_TTR_AcceptTerms_Body
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 06785ee8df7295f459dd57b23050e7c2, type: 2}

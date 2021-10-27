@@ -4,9 +4,9 @@
     "FunctionID": 1001,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 1,
+    "FunctionParams": 0,
     "IsGuidance": false,
-    "FunctionName": "share",
+    "FunctionName": "Share",
     "Comment": "日常分享界面"
   },
   {
@@ -16,7 +16,7 @@
     "IsOpen": true,
     "FunctionParams": 2,
     "IsGuidance": false,
-    "FunctionName": "dailybonus",
+    "FunctionName": "DailyGoodies",
     "Comment": "每日签到奖励"
   },
   {
@@ -24,9 +24,9 @@
     "FunctionID": 1003,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 1,
+    "FunctionParams": 0,
     "IsGuidance": false,
-    "FunctionName": "setting",
+    "FunctionName": "MenuSetting",
     "Comment": "游戏设置功能"
   },
   {
@@ -34,9 +34,9 @@
     "FunctionID": 1004,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 1,
+    "FunctionParams": 0,
     "IsGuidance": false,
-    "FunctionName": "binding",
+    "FunctionName": "MenuBinding",
     "Comment": "社交账户绑定"
   },
   {
@@ -44,9 +44,9 @@
     "FunctionID": 1005,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 5,
+    "FunctionParams": 4,
     "IsGuidance": true,
-    "FunctionName": "crop",
+    "FunctionName": "CropHarvest",
     "Comment": "作物系统"
   },
   {
@@ -56,8 +56,8 @@
     "IsOpen": true,
     "FunctionParams": 18,
     "IsGuidance": false,
-    "FunctionName": "turntable",
-    "Comment": "转盘功能"
+    "FunctionName": "LuckWheel",
+    "Comment": "转盘功能【编辑器配置】"
   },
   {
     "ID": 7,
@@ -66,8 +66,8 @@
     "IsOpen": true,
     "FunctionParams": 47,
     "IsGuidance": true,
-    "FunctionName": "crate",
-    "Comment": "关卡宝箱"
+    "FunctionName": "Crate",
+    "Comment": "关卡宝箱【编辑器配置】"
   },
   {
     "ID": 8,
@@ -76,7 +76,7 @@
     "IsOpen": true,
     "FunctionParams": 46,
     "IsGuidance": true,
-    "FunctionName": "quest",
+    "FunctionName": "Quest",
     "Comment": "日常任务"
   },
   {
@@ -84,9 +84,9 @@
     "FunctionID": 1009,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 1,
+    "FunctionParams": 0,
     "IsGuidance": false,
-    "FunctionName": "mall",
+    "FunctionName": "Shop",
     "Comment": "商城系统"
   },
   {
@@ -96,7 +96,7 @@
     "IsOpen": true,
     "FunctionParams": 11,
     "IsGuidance": true,
-    "FunctionName": "goldenstage",
+    "FunctionName": "GoldenStage",
     "Comment": "黄金挑战关卡"
   },
   {
@@ -104,9 +104,9 @@
     "FunctionID": 1011,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 13,
+    "FunctionParams": 12,
     "IsGuidance": false,
-    "FunctionName": "addNcards",
+    "FunctionName": "AddNCards",
     "Comment": "加N手牌"
   },
   {
@@ -114,9 +114,9 @@
     "FunctionID": 1012,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 21,
+    "FunctionParams": 20,
     "IsGuidance": true,
-    "FunctionName": "clear3cards",
+    "FunctionName": "RemoveCards",
     "Comment": "移除3张明牌"
   },
   {
@@ -124,9 +124,9 @@
     "FunctionID": 1013,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 31,
+    "FunctionParams": 30,
     "IsGuidance": true,
-    "FunctionName": "clearplayablecards",
+    "FunctionName": "ClearPlayables",
     "Comment": "移除场上所有明牌"
   },
   {
@@ -134,9 +134,9 @@
     "FunctionID": 1014,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 41,
+    "FunctionParams": 40,
     "IsGuidance": true,
-    "FunctionName": "addwildcards",
+    "FunctionName": "WildDrop",
     "Comment": "增加3张狂野牌到牌堆"
   },
   {
@@ -144,9 +144,9 @@
     "FunctionID": 1015,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 53,
+    "FunctionParams": 52,
     "IsGuidance": true,
-    "FunctionName": "valuechanger",
+    "FunctionName": "ValueChanger",
     "Comment": "加减牌机制开启"
   },
   {
@@ -154,9 +154,9 @@
     "FunctionID": 1016,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 54,
+    "FunctionParams": 53,
     "IsGuidance": true,
-    "FunctionName": "clearvaluechanger",
+    "FunctionName": "RemoveValueChanger",
     "Comment": "移除所有加减牌"
   },
   {
@@ -164,7 +164,7 @@
     "FunctionID": 1017,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 73,
+    "FunctionParams": 72,
     "IsGuidance": true,
     "FunctionName": "CodeBreaker",
     "Comment": "牌锁机制开启"
@@ -174,9 +174,9 @@
     "FunctionID": 1018,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 74,
+    "FunctionParams": 73,
     "IsGuidance": true,
-    "FunctionName": "removeCodeBreaker",
+    "FunctionName": "RemoveCodeBreaker",
     "Comment": "移除所有牌锁"
   },
   {
@@ -184,7 +184,7 @@
     "FunctionID": 1019,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 93,
+    "FunctionParams": 92,
     "IsGuidance": true,
     "FunctionName": "Bombs",
     "Comment": "炸弹机制开启"
@@ -194,9 +194,9 @@
     "FunctionID": 1020,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 94,
+    "FunctionParams": 93,
     "IsGuidance": true,
-    "FunctionName": "removeBombs",
+    "FunctionName": "RemoveBombs",
     "Comment": "移除所有炸弹"
   },
   {
@@ -204,9 +204,9 @@
     "FunctionID": 1021,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 46,
+    "FunctionParams": 45,
     "IsGuidance": true,
-    "FunctionName": "double",
+    "FunctionName": "Boost2",
     "Comment": "2倍功能开启"
   },
   {
@@ -214,9 +214,9 @@
     "FunctionID": 1022,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 56,
+    "FunctionParams": 55,
     "IsGuidance": true,
-    "FunctionName": "quattuor",
+    "FunctionName": "Boost4",
     "Comment": "4倍功能开启"
   },
   {
@@ -226,7 +226,7 @@
     "IsOpen": true,
     "FunctionParams": 36,
     "IsGuidance": false,
-    "FunctionName": "advert",
+    "FunctionName": "Ads",
     "Comment": "广告推送功能"
   },
   {
@@ -234,9 +234,9 @@
     "FunctionID": 1024,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 25,
+    "FunctionParams": 10,
     "IsGuidance": false,
-    "FunctionName": "coursebonus",
+    "FunctionName": "Milestone",
     "Comment": "关卡里程奖励"
   },
   {
@@ -244,9 +244,9 @@
     "FunctionID": 1025,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 21,
+    "FunctionParams": 20,
     "IsGuidance": true,
-    "FunctionName": "clear3cardsbonus",
+    "FunctionName": "RemoveCardsBonus",
     "Comment": "移除3张明牌道具开启奖励"
   },
   {
@@ -254,9 +254,9 @@
     "FunctionID": 1026,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 31,
+    "FunctionParams": 30,
     "IsGuidance": true,
-    "FunctionName": "clearplayablecardsbonus",
+    "FunctionName": "ClearPlayablesBonus",
     "Comment": "移除场上所有明牌道具开启奖励"
   },
   {
@@ -264,9 +264,9 @@
     "FunctionID": 1027,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 41,
+    "FunctionParams": 40,
     "IsGuidance": true,
-    "FunctionName": "addwildcardsbonus",
+    "FunctionName": "WildDropBonus",
     "Comment": "增加3张狂野牌到牌堆道具开启奖励"
   },
   {
@@ -274,9 +274,9 @@
     "FunctionID": 1028,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 54,
+    "FunctionParams": 53,
     "IsGuidance": true,
-    "FunctionName": "valuechangerbonus",
+    "FunctionName": "ValueChangerBonus",
     "Comment": "加减牌机制开启奖励"
   },
   {
@@ -284,9 +284,9 @@
     "FunctionID": 1029,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 74,
+    "FunctionParams": 73,
     "IsGuidance": true,
-    "FunctionName": "CodeBreakerbonus",
+    "FunctionName": "CodeBreakerBonus",
     "Comment": "牌锁机制开启奖励"
   },
   {
@@ -294,29 +294,29 @@
     "FunctionID": 1030,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 94,
+    "FunctionParams": 93,
     "IsGuidance": true,
-    "FunctionName": "Bombsbonus",
+    "FunctionName": "BombsBonus",
     "Comment": "炸弹机制开启奖励"
   },
   {
     "ID": 31,
     "FunctionID": 1031,
     "FunctionType": 2,
-    "IsOpen": true,
+    "IsOpen": false,
     "FunctionParams": 33,
     "IsGuidance": true,
-    "FunctionName": "line",
+    "FunctionName": "ScrollingLevel",
     "Comment": "长龙机制开启"
   },
   {
     "ID": 32,
     "FunctionID": 1032,
     "FunctionType": 2,
-    "IsOpen": true,
+    "IsOpen": false,
     "FunctionParams": 108,
     "IsGuidance": true,
-    "FunctionName": "bigcards",
+    "FunctionName": "BigCard",
     "Comment": "大牌机制开启"
   },
   {
@@ -324,9 +324,9 @@
     "FunctionID": 1033,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 21,
+    "FunctionParams": 20,
     "IsGuidance": true,
-    "FunctionName": "powerupsenter",
+    "FunctionName": "MapLevelPowerup",
     "Comment": "PowerUps类关卡入口"
   },
   {
@@ -334,9 +334,9 @@
     "FunctionID": 1034,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 46,
+    "FunctionParams": 45,
     "IsGuidance": true,
-    "FunctionName": "multiplying",
+    "FunctionName": "MapLevelBoost",
     "Comment": "倍率系统类关卡入口"
   },
   {
@@ -344,9 +344,9 @@
     "FunctionID": 1035,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 2,
+    "FunctionParams": 1,
     "IsGuidance": true,
-    "FunctionName": "undo",
+    "FunctionName": "Undo",
     "Comment": "撤回功能开启"
   },
   {
@@ -354,7 +354,7 @@
     "FunctionID": 1036,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 3,
+    "FunctionParams": 2,
     "IsGuidance": true,
     "FunctionName": "StreakBonus",
     "Comment": "StreakBonus功能开启"
@@ -364,19 +364,29 @@
     "FunctionID": 1037,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 6,
+    "FunctionParams": 5,
     "IsGuidance": true,
-    "FunctionName": "wildcard",
+    "FunctionName": "WildCard",
     "Comment": "WildCard功能开启"
   },
   {
-    "ID": 37,
+    "ID": 38,
     "FunctionID": 1038,
     "FunctionType": 2,
     "IsOpen": true,
-    "FunctionParams": 5,
+    "FunctionParams": 2,
     "IsGuidance": true,
-    "FunctionName": "harvest",
-    "Comment": "收获功能开启"
+    "FunctionName": "MoreCards",
+    "Comment": "购买手牌功能开启"
+  },
+  {
+    "ID": 39,
+    "FunctionID": 1039,
+    "FunctionType": 2,
+    "IsOpen": true,
+    "FunctionParams": 0,
+    "IsGuidance": true,
+    "FunctionName": "VipPoint",
+    "Comment": "VIP点数奖励开启"
   }
 ]

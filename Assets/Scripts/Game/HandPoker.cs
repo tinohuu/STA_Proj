@@ -26,7 +26,9 @@ public class HandPoker : MonoBehaviour
 
     float fTime;
 
-    static float fRotateTime = 1.5f;
+    public bool bIsRotating = false;
+
+    static float fRotateTime = 1.0f;
     static float fFlipTotalTime = 1.5f;
 
     public bool bIsFlipping { get; set; } = false;
@@ -66,6 +68,8 @@ public class HandPoker : MonoBehaviour
         pokerInst = transform.Find("Poker_Club_10").gameObject;
         animator = GetComponent<Animator>();
 
+        bIsRotating = true;
+
         pokerType = GameplayMgr.PokerType.HandPoker;
         handPokerSource = GameplayMgr.HandPokerSource.Hand;
 
@@ -77,7 +81,7 @@ public class HandPoker : MonoBehaviour
 
         targetPos.x = pos.x - (leveInfo.handPokerCount - index) * 0.2f;
         targetPos.y = pos.y + screenY * 0.35f;// + pokerInfo.fPosY * 0.01f;
-        targetPos.z = pos.z - index * 0.05f;
+        targetPos.z = pos.z - index * 0.01f;
 
         //Debug.Log("HandPoker:;Init... the target pos is: " + targetPos + "  pos.y is: " + pos.y);
 
@@ -94,6 +98,8 @@ public class HandPoker : MonoBehaviour
     {
         pokerInst = transform.Find("Poker_Club_10").gameObject;
         animator = GetComponent<Animator>();
+
+        //bIsRotating = true;
 
         pokerType = GameplayMgr.PokerType.HandPoker;
         handPokerSource = GameplayMgr.HandPokerSource.StreakBonus;
@@ -120,6 +126,8 @@ public class HandPoker : MonoBehaviour
         pokerInst = transform.Find("Poker_Club_10").gameObject;
         animator = GetComponent<Animator>();
 
+        //bIsRotating = true;
+
         pokerType = GameplayMgr.PokerType.HandPoker;
         handPokerSource = GameplayMgr.HandPokerSource.AddNPoker;
 
@@ -128,7 +136,7 @@ public class HandPoker : MonoBehaviour
         //targetPos = pos;
         targetPos.x = pos.x - 0.2f;
         targetPos.y = pos.y;
-        targetPos.z = pos.z - index * 0.05f;
+        targetPos.z = pos.z - index * 0.01f;
 
         screenX = rendererSize.x;
         screenY = rendererSize.y;
@@ -156,6 +164,8 @@ public class HandPoker : MonoBehaviour
         pokerInst = transform.Find("Poker_Club_10").gameObject;
         animator = GetComponent<Animator>();
 
+        //bIsRotating = true;
+
         pokerType = GameplayMgr.PokerType.HandPoker;
         handPokerSource = GameplayMgr.HandPokerSource.ClearAll;
         pokerSuit = GameplayMgr.PokerSuit.Suit_Club;
@@ -175,7 +185,7 @@ public class HandPoker : MonoBehaviour
         clearAllPos = pos2;
         /*targetPos.x = pos.x - 0.2f;
         targetPos.y = pos.y;
-        targetPos.z = pos.z - index * 0.05f;*/
+        targetPos.z = pos.z - index * 0.01f;*/
 
         fTime = fBeginTime;
 
@@ -211,9 +221,11 @@ public class HandPoker : MonoBehaviour
         Debug.Log("---------------------------------------------------00000000000000 using clear all, trigger the function...----------------------------");
 
         animator.SetTrigger("Use");
-        
+
+        SoundManager.Instance.PlaySFX("gamePUWindmillUsed");
+
         StartCoroutine(ClearAllFirstStage());
-    }
+    }   
 
     public void Test_ClearAllFinishAppear()
     {
@@ -221,8 +233,6 @@ public class HandPoker : MonoBehaviour
 
         StartCoroutine(InsertClearAllPoker());
     }
-
-
 
     IEnumerator InsertClearAllPoker()
     {
@@ -306,6 +316,11 @@ public class HandPoker : MonoBehaviour
 
             transform.rotation = Quaternion.Lerp(transform.rotation, quatTo, fTime / fRotateTime);
 
+            if(fTime >= fRotateTime)
+            {
+                bIsRotating = false;
+            }
+
         }
 
         if (bFlip)
@@ -314,7 +329,7 @@ public class HandPoker : MonoBehaviour
             pos.x = screenX * 0.1f;
             pos.y = targetPos.y;
             //pos.z = targetPos.z;
-            pos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+            pos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
 
             //transform.position = Vector3.MoveTowards(transform.position, pos, 0.08f);
 
@@ -411,7 +426,7 @@ public class HandPoker : MonoBehaviour
         Vector3 pos = Vector3.zero;
         pos.x = screenX * 0.1f;
         pos.y = screenY * -0.35f;
-        pos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.05f;
+        pos.z = GameplayMgr.Instance.GetFoldPokerPosition_Z() - nFoldIndex * 0.01f;
 
         Debug.Log("here we flip the poker, name is: " + gameObject.name + "  number is: " + nPokerNumber + "  pos is: " + pos);
 
@@ -441,7 +456,7 @@ public class HandPoker : MonoBehaviour
         {
             transform.DORotate(new Vector3(0.0f, 180.0f, 0.0f), 0.2f, RotateMode.WorldAxisAdd);
             //Vector3 newPos = GameplayMgr.Instance.GetTopHandPoker().transform.position;
-            newPos.z = newPos.z - 0.05f;
+            newPos.z = newPos.z - 0.01f;
             transform.DOMove(newPos, 0.25f);
 
             GameplayMgr.Instance.AdjustAllHandPokerPosition();
@@ -449,7 +464,7 @@ public class HandPoker : MonoBehaviour
         else if(handPokerSource == GameplayMgr.HandPokerSource.ClearAll)
         {
             //Vector3 newPos = GameplayMgr.Instance.GetTopHandPoker().transform.position;
-            newPos.z = newPos.z - 0.05f;
+            newPos.z = newPos.z - 0.01f;
 
             //transform.DOMove(newPos, 0.5f);
             StartCoroutine(MoveToNewPosition(newPos, 0.5f));
@@ -458,7 +473,7 @@ public class HandPoker : MonoBehaviour
         {
             transform.DORotate(new Vector3(0.0f, 180.0f, 0.0f), 0.2f, RotateMode.WorldAxisAdd);
             //Vector3 newPos = GameplayMgr.Instance.GetTopHandPoker().transform.position;
-            newPos.z = newPos.z - 0.05f;
+            newPos.z = newPos.z - 0.01f;
             //transform.DOMove(newPos, 0.25f);
             //Debug.Log("here we withdraw a hadn poker, the new pos Is: " + newPos + "  the name is: " + gameObject.name + "  top hadn poker is: " + GameplayMgr.Instance.GetTopHandPoker().name);
 
@@ -517,13 +532,13 @@ public class HandPoker : MonoBehaviour
         {
             newPos.x = pos.x - (20 - index) * 0.2f;
             newPos.y = pos.y + rendererSize.y * 0.35f;
-            newPos.z = pos.z - index * 0.05f;
+            newPos.z = pos.z - index * 0.01f;
         }
         else
         {
             newPos.x = pos.x - (nTotalCount - index) * 0.2f;
             newPos.y = pos.y + rendererSize.y * 0.35f;
-            newPos.z = pos.z - index * 0.05f;
+            newPos.z = pos.z - index * 0.01f;
         }
 
         /*if (handPokerSource == GameplayMgr.HandPokerSource.ClearAll)

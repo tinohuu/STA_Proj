@@ -65,4 +65,6 @@ public class GameDefines
         StreakBonus,
         WildDrop
     }
+
+    public static float HandPokerZBase = -2.0f;
 }
