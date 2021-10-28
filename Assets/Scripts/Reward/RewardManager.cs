@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RewardManager : MonoBehaviour
 {
     public RewardManagerData Data = new RewardManagerData();
     public static RewardManager Instance = null;
-    public delegate void RewardHandler(bool add);
-    public RewardHandler[] OnValueChanged = new RewardHandler[Enum.GetValues(typeof(RewardType)).Length];
+    //public delegate void RewardHandler(bool add);
+    public UnityEvent[] OnValueChanged = new UnityEvent[Enum.GetValues(typeof(RewardType)).Length];
 
 
     private void Awake()
@@ -16,7 +17,7 @@ public class RewardManager : MonoBehaviour
         if (!Instance) Instance = this;
         else if (Instance != this) DestroyImmediate(gameObject);
 
-        for (int i = 0; i < OnValueChanged.Length; i++) OnValueChanged[i] = null;
+        for (int i = 0; i < OnValueChanged.Length; i++) OnValueChanged[i] = new UnityEvent();
 
         Data = SaveManager.Instance.Bind(InitialData);
     }
@@ -158,7 +159,7 @@ public class RewardManagerData
         set
         {
             Rewards[(int)type] = Mathf.Clamp(value, 0, int.MaxValue);
-            RewardManager.Instance.OnValueChanged[(int)type]?.Invoke(value >= Rewards[(int)type]);
+            RewardManager.Instance.OnValueChanged[(int)type]?.Invoke();//value >= Rewards[(int)type]
         }
     }
 }

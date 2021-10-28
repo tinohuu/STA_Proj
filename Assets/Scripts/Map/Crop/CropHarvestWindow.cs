@@ -7,21 +7,28 @@ using UnityEngine.UI;
 
 public class CropHarvestWindow : MonoBehaviour
 {
-    [SerializeField] GameObject CellPrefab;
-    [SerializeField] RectTransform TopLayoutGroup;
-    [SerializeField] RectTransform BottomLayoutGroup;
-    [SerializeField] TMP_Text CropsText;
-    [SerializeField] TMP_Text CoinText;
-    [SerializeField] TMP_Text PlusText;
-    [SerializeField] TMP_Text AdText;
-    [SerializeField] List<GameObject> cells = new List<GameObject>();
-    static Vector2 oriGravity = new Vector2();
+    [Header("Setting")]
     [SerializeField] bool enableAnimationTest = true;
     [SerializeField] bool hasCropEffect = false;
     [SerializeField] bool isJointEffect = true;
+
+    [Header("Crop Ref")]
+    [SerializeField] GameObject m_CellPrefab;
+    [SerializeField] RectTransform m_TopLayoutGroup;
+    [SerializeField] RectTransform m_BottomLayoutGroup;
+
+    [Header("Ref")]
+    [SerializeField] TMP_Text m_CropsText;
+    [SerializeField] TMP_Text m_CoinText;
+    [SerializeField] TMP_Text m_PlusText;
+    [SerializeField] TMP_Text m_AdInfoText;
     [SerializeField] ButtonAnimator m_CollectButton;
 
+    [Header("Debug")]
+    [SerializeField] List<GameObject> cells = new List<GameObject>();
+
     float lastGyroTime = 0;
+    static Vector2 oriGravity = new Vector2();
     private void OnEnable()
     {
         if (oriGravity == new Vector2()) oriGravity = Physics2D.gravity;
@@ -29,9 +36,9 @@ public class CropHarvestWindow : MonoBehaviour
     }
     private void OnDisable()
     {
-        CoinText.rectTransform.DOKill();
-        TopLayoutGroup.GetComponent<CanvasGroup>().DOKill();
-        BottomLayoutGroup.GetComponent<CanvasGroup>().DOKill();
+        m_CoinText.rectTransform.DOKill();
+        m_TopLayoutGroup.GetComponent<CanvasGroup>().DOKill();
+        m_BottomLayoutGroup.GetComponent<CanvasGroup>().DOKill();
         Physics2D.gravity = oriGravity;
         Input.gyro.enabled = false;
     }
@@ -41,8 +48,8 @@ public class CropHarvestWindow : MonoBehaviour
     {
         //ShowCrop();
         StartCoroutine(AnimateCrops());
-        CoinText.text = string.Format(CoinText.text, CropHarvest.Instance.GetHarvestCoin().ToString("N0"));
-        AdText.text = string.Format(AdText.text, (CropHarvest.Instance.GetHarvestCoin() * 2).ToString("N0"));
+        m_CoinText.Format(CropHarvest.Instance.GetHarvestCoin().ToString("N0"));
+        m_AdInfoText.Format((CropHarvest.Instance.GetHarvestCoin() * 2).ToString("N0"));
         //CoinText.rectTransform.DOScale(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo);
 
         TutorialManager.Instance.Show("Harvest", 2, m_CollectButton.gameObject, 0.5f);
@@ -117,7 +124,7 @@ public class CropHarvestWindow : MonoBehaviour
         string cropNamesText = "";
         for (int i = 0; i < cropNames.Count; i++)
         {
-            GameObject cell = Instantiate(CellPrefab, i % 2 == 0 && cropNames.Count > 3 ? TopLayoutGroup : BottomLayoutGroup);
+            GameObject cell = Instantiate(m_CellPrefab, i % 2 == 0 && cropNames.Count > 3 ? m_TopLayoutGroup : m_BottomLayoutGroup);
 
             if (cropNames.Count <= 3) cell.transform.Rotate(- Vector3.forward * 45);
 
@@ -131,19 +138,19 @@ public class CropHarvestWindow : MonoBehaviour
         }
 
 
-        CropsText.text = cropNames.Count > 3 ? "" : cropNamesText;
+        m_CropsText.text = cropNames.Count > 3 ? "" : cropNamesText;
 
-        TopLayoutGroup.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = cropNames.Count <= 3;
-        BottomLayoutGroup.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = cropNames.Count <= 3;
+        m_TopLayoutGroup.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = cropNames.Count <= 3;
+        m_BottomLayoutGroup.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = cropNames.Count <= 3;
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(TopLayoutGroup);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(BottomLayoutGroup);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(m_TopLayoutGroup);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(m_BottomLayoutGroup);
     }
 
     IEnumerator AnimateCrops()
     {
-        CanvasGroup topGroup = TopLayoutGroup.GetComponent<CanvasGroup>();
-        CanvasGroup btmGroup = BottomLayoutGroup.GetComponent<CanvasGroup>();
+        CanvasGroup topGroup = m_TopLayoutGroup.GetComponent<CanvasGroup>();
+        CanvasGroup btmGroup = m_BottomLayoutGroup.GetComponent<CanvasGroup>();
 
         if (MapManager.Instance.MapID == 1)
         {
@@ -158,7 +165,7 @@ public class CropHarvestWindow : MonoBehaviour
             ShowCrop();
             topGroup.DOFade(1, 0.5f);
             btmGroup.DOFade(1, 0.5f);
-            CropsText.DOFade(1, 0.5f);
+            m_CropsText.DOFade(1, 0.5f);
             yield return new WaitForSeconds(1.5f);
 
             do yield return null;
@@ -166,17 +173,17 @@ public class CropHarvestWindow : MonoBehaviour
 
             topGroup.DOFade(0, 0.5f);
             btmGroup.DOFade(0, 0.5f);
-            CropsText.DOFade(0, 0.5f);
-            PlusText.DOFade(1, 0.5f);
+            m_CropsText.DOFade(0, 0.5f);
+            m_PlusText.DOFade(1, 0.5f);
             yield return new WaitForSeconds(1);
             hasCropEffect = false;
             cells.Clear();
-            TopLayoutGroup.DestroyChildren();
-            BottomLayoutGroup.DestroyChildren();
+            m_TopLayoutGroup.DestroyChildren();
+            m_BottomLayoutGroup.DestroyChildren();
 
-            PlusText.DOFade(1, 0.5f);
+            m_PlusText.DOFade(1, 0.5f);
             yield return new WaitForSeconds(0.5f);
-            PlusText.DOFade(0, 0.5f);
+            m_PlusText.DOFade(0, 0.5f);
             //yield return new WaitForSeconds(0.5f);
             i = 0;
         }

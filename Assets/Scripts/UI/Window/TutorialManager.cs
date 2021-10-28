@@ -69,6 +69,23 @@ public class TutorialManager : MonoBehaviour
         return true;
     }
 
+
+    public TutorialData GetTutorialData(string code)
+    {
+
+        //if (!m_Enable) return false;
+
+        //if (m_CurTutorial || m_IsShowing) return false;
+
+        //if (!m_DatasByCode.ContainsKey(code) || m_DatasByCode[code].IsComplete || m_DatasByCode[code].Progress != progress - 1) return false;
+
+        if (m_DatasByCode.ContainsKey(code))
+        {
+            return m_DatasByCode[code];
+        }
+        return null;
+    }
+
     public bool HasTutorial(string code, int progress)
     {
 
@@ -81,6 +98,22 @@ public class TutorialManager : MonoBehaviour
 
         return true;
     }
+
+    public void CompleteTutorial(string code, int progress)
+    {
+
+        //if (!m_Enable) return false;
+
+        //if (m_CurTutorial || m_IsShowing) return false;
+
+        //if (!m_DatasByCode.ContainsKey(code) || m_DatasByCode[code].IsComplete || m_DatasByCode[code].Progress != progress - 1) return false;
+
+        if (m_DatasByCode.ContainsKey(code))
+        {
+            m_DatasByCode[code].Progress = progress;
+        }
+    }
+
 
     /*void CreateTutorial(string code, int progress, GameObject target = null, float scale = 1, float delay = 0, UnityAction onClick = null, UnityAction onStart = null, UnityAction onExit = null)
     {

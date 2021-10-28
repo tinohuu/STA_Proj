@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4675841601238117837}
   - component: {fileID: 4948106358549371744}
   - component: {fileID: 4469780639585669847}
+  - component: {fileID: 8811608933158846063}
   m_Layer: 5
-  m_Name: MapLevelPoweupInfoWindow_Powerup
+  m_Name: RewardInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,6 +79,22 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &8811608933158846063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988708792756804078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd335641925ca2741a94428654f64905, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RewardType: 8
+  m_RewardImage: {fileID: 7675358973199137807}
+  m_RewardName: {fileID: 6736275332183326849}
+  m_RewardInfo: {fileID: 6866034287307824845}
 --- !u!1 &3117002252477341307
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,7 +130,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 330, y: 50}
+  m_SizeDelta: {x: 388.4373, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7847384772138746427
 CanvasRenderer:
@@ -143,7 +160,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Remove 3 cards at the start of a level
+  m_text: TXT_RWD_8_Info
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 1409587c60fff29488574c55b1ac66f4, type: 2}
@@ -353,7 +370,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Remove Cards
+  m_text: TXT_RWD_8
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 2afdd806be5254f44b3e13c298c64dc7, type: 2}
@@ -390,9 +407,9 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: -6.6
+  m_characterSpacing: -5
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -20
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0

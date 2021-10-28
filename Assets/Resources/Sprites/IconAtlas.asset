@@ -55,8 +55,8 @@ MonoBehaviour:
     m_Unicode: 65534
     m_GlyphIndex: 2
     m_Scale: 1.4
-    m_Name: Back
-    m_HashCode: 2476363
+    m_Name: Arrow
+    m_HashCode: 74159225
   - m_ElementType: 2
     m_Unicode: 65534
     m_GlyphIndex: 3

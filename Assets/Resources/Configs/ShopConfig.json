@@ -6,9 +6,11 @@
     "IsSmall": false,
     "Price": 12,
     "Background": "StarterKit",
+    "BackgroundText": "TXT_SHP_WRD_StarterKit",
     "Icon": "B",
     "TagIcon": "",
-    "TagText": ""
+    "TagTextA": "",
+    "TagTextB": ""
   },
   {
     "ID": 2,
@@ -17,9 +19,11 @@
     "IsSmall": false,
     "Price": 45,
     "Background": "Normal",
+    "BackgroundText": "",
     "Icon": "C",
     "TagIcon": "",
-    "TagText": ""
+    "TagTextA": "",
+    "TagTextB": ""
   },
   {
     "ID": 3,
@@ -28,9 +32,11 @@
     "IsSmall": false,
     "Price": 108,
     "Background": "Normal",
+    "BackgroundText": "",
     "Icon": "D",
     "TagIcon": "Orange",
-    "TagText": "Most_Popular"
+    "TagTextA": "TXT_SHP_WRD_Most",
+    "TagTextB": "TXT_SHP_WRD_Popular"
   },
   {
     "ID": 4,
@@ -39,9 +45,11 @@
     "IsSmall": false,
     "Price": 238,
     "Background": "Normal",
+    "BackgroundText": "",
     "Icon": "E",
     "TagIcon": "Pink",
-    "TagText": "Best_Value"
+    "TagTextA": "TXT_SHP_WRD_Best",
+    "TagTextB": "TXT_SHP_WRD_Value"
   },
   {
     "ID": 5,
@@ -50,9 +58,11 @@
     "IsSmall": true,
     "Price": 12,
     "Background": "SmallNormal",
+    "BackgroundText": "",
     "Icon": "Coin",
     "TagIcon": "",
-    "TagText": ""
+    "TagTextA": "",
+    "TagTextB": ""
   },
   {
     "ID": 6,
@@ -61,8 +71,10 @@
     "IsSmall": true,
     "Price": 40,
     "Background": "SmallNormal",
+    "BackgroundText": "",
     "Icon": "Coin",
     "TagIcon": "",
-    "TagText": ""
+    "TagTextA": "",
+    "TagTextB": ""
   }
 ]

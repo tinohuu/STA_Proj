@@ -5,12 +5,11 @@ using UnityEngine;
 
 public class Menu : MonoBehaviour
 {
-    [SerializeField] TMP_Text userInfo;
-    [SerializeField] int userAccount = 0;
-    [SerializeField] int verificationCode = 0;
+    [SerializeField] TMP_Text m_UserAccountText;
+    [SerializeField] TMP_Text m_VerificationCodeText;
     private void Start()
     {
-        userInfo.text = "User Account: " + userAccount;
-        userInfo.text += "\n" + "Verification Code: " + verificationCode;
+        //userInfo.text = "User Account: " + userAccount;
+        //userInfo.text += "\n" + "Verification Code: " + verificationCode;
     }
 }

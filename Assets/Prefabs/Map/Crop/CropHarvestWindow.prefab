@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9013664160747599675}
   - component: {fileID: 5120311679115234070}
   m_Layer: 5
-  m_Name: Text_CropsUnlocked
+  m_Name: CropsUnlocked
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Crops Unlocked
+  m_text: TXT_CRP_Harvest_CropUnlocked
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 2304aac1e65871345b6970e0fe875b5c, type: 2}
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.75
+  m_fontSize: 20.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 17
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: -7.5
   m_wordSpacing: 0
@@ -672,7 +672,7 @@ GameObject:
   - component: {fileID: 1451562805239902392}
   - component: {fileID: 6392789520003486382}
   m_Layer: 5
-  m_Name: Text_Coin
+  m_Name: CoinText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1199,18 +1199,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12532db1814d2b64a801a86ae014a565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CellPrefab: {fileID: 4379337435012027703, guid: 4e1509a344781a94c98dba8a79d17dec, type: 3}
-  TopLayoutGroup: {fileID: 5456463433474401512}
-  BottomLayoutGroup: {fileID: 6142581881472086325}
-  CropsText: {fileID: 5631602708984289430}
-  CoinText: {fileID: 1451562805239902392}
-  PlusText: {fileID: 1451562804403452579}
-  AdText: {fileID: 1245452762038925964}
-  cells: []
   enableAnimationTest: 1
   hasCropEffect: 0
   isJointEffect: 0
+  m_CellPrefab: {fileID: 4379337435012027703, guid: 4e1509a344781a94c98dba8a79d17dec, type: 3}
+  m_TopLayoutGroup: {fileID: 5456463433474401512}
+  m_BottomLayoutGroup: {fileID: 6142581881472086325}
+  m_CropsText: {fileID: 5631602708984289430}
+  m_CoinText: {fileID: 1451562805239902392}
+  m_PlusText: {fileID: 1451562804403452579}
+  m_AdInfoText: {fileID: 1245452762038925964}
   m_CollectButton: {fileID: 6339934642931455139}
+  cells: []
 --- !u!114 &1451562805639286462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1273,20 +1273,20 @@ MonoBehaviour:
     IsScale: 0
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
-  InverseOnFadeOut: 1
+  InQueue: 1
+  IsCrossScene: 0
   ShowPanel: 1
   CanCloseByPanel: 1
-  InQueue: 1
-  IntervalMultiplerOnFadeOut: 0
   FadeInOnEnable: 1
+  FadeInDelay: 0
+  InverseOnFadeOut: 1
+  IntervalMultiplerOnFadeOut: 0
   OnWindowEnable:
     m_PersistentCalls:
       m_Calls: []
   OnWindowFadeIn:
     m_PersistentCalls:
       m_Calls: []
-  FadeInDelay: 0
-  IsCrossScene: 0
 --- !u!1 &1451562805985723673
 GameObject:
   m_ObjectHideFlags: 0
@@ -1684,10 +1684,10 @@ RectTransform:
   m_Father: {fileID: 318005091804628020}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.2}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -2}
-  m_SizeDelta: {x: 0, y: -15.4167}
+  m_AnchorMin: {x: 0.15, y: 0.2}
+  m_AnchorMax: {x: 0.85, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &333607815511871903
 CanvasRenderer:
@@ -1717,7 +1717,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Harvest
+  m_text: TXT_CRP_Harvest_Harvest
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 2304aac1e65871345b6970e0fe875b5c, type: 2}
@@ -1744,7 +1744,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1752,7 +1752,7 @@ MonoBehaviour:
   m_fontSizeMax: 100
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 1024
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: -5
   m_wordSpacing: 0
@@ -1760,9 +1760,9 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -1798,7 +1798,7 @@ GameObject:
   - component: {fileID: 2561477959245513624}
   - component: {fileID: 58760744636471168}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Total
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1818,10 +1818,10 @@ RectTransform:
   m_Father: {fileID: 4980363549309307920}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.8}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.12, y: 0.5}
+  m_AnchorMax: {x: 0.88, y: 0.8}
+  m_AnchoredPosition: {x: 0.000015258789, y: 0}
+  m_SizeDelta: {x: 0.000015258789, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2561477959245513624
 CanvasRenderer:
@@ -1851,7 +1851,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <sprite name="Star"> Total <sprite name="Star">
+  m_text: TXT_CRP_Harvest_Total
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 2304aac1e65871345b6970e0fe875b5c, type: 2}
@@ -1878,7 +1878,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 46.55
+  m_fontSize: 39.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1952,8 +1952,8 @@ RectTransform:
   m_Father: {fileID: 4824252592156062536}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.17891793}
-  m_AnchorMax: {x: 1, y: 1.0000101}
+  m_AnchorMin: {x: 0.1, y: 0.15}
+  m_AnchorMax: {x: 0.9, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1985,7 +1985,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Collect
+  m_text: TXT_CRP_Harvest_Collect
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 66f6d64e9cc1d2d47be11fffd522d955, type: 2}
@@ -2012,7 +2012,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 28.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2365,7 +2365,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Test
+  m_text: TXT_CRP_Cabbage
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 06785ee8df7295f459dd57b23050e7c2, type: 2}
@@ -2523,7 +2523,7 @@ GameObject:
   - component: {fileID: 6987377645884404214}
   - component: {fileID: 2766517911993840552}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: Bonus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2543,8 +2543,8 @@ RectTransform:
   m_Father: {fileID: 4980363549309307920}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.15}
-  m_AnchorMax: {x: 1, y: 0.6}
+  m_AnchorMin: {x: 0.12, y: 0.15}
+  m_AnchorMax: {x: 0.88, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2576,7 +2576,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bonus
+  m_text: TXT_CRP_Harvest_Bonus
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 2304aac1e65871345b6970e0fe875b5c, type: 2}
@@ -2603,7 +2603,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 69.85
+  m_fontSize: 38.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2657,7 +2657,7 @@ GameObject:
   - component: {fileID: 4947107347655962601}
   - component: {fileID: 484376873068666033}
   m_Layer: 5
-  m_Name: Crops
+  m_Name: CropBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2760,8 +2760,8 @@ RectTransform:
   m_Father: {fileID: 2950254150113293950}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.17891793}
-  m_AnchorMax: {x: 1, y: 1.0000101}
+  m_AnchorMin: {x: 0.1, y: 0.17891793}
+  m_AnchorMax: {x: 0.9, y: 1.0000101}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2793,7 +2793,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '  Watch  <sprite name="Ad">'
+  m_text: TXT_CRP_Harvest_AdWatch
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 66f6d64e9cc1d2d47be11fffd522d955, type: 2}
@@ -2820,7 +2820,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 29.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3189,7 +3189,7 @@ GameObject:
   - component: {fileID: 1245452762038925964}
   - component: {fileID: 5182859153671504744}
   m_Layer: 5
-  m_Name: X2 Harvest Text
+  m_Name: Ad Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3242,7 +3242,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <sprite name="Ad"> Watch an ad to double your harvest to {0}
+  m_text: TXT_CRP_Harvest_AdWatchInfo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 1409587c60fff29488574c55b1ac66f4, type: 2}

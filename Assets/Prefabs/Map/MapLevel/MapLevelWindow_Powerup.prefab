@@ -148,7 +148,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RefreshOnDisable: 0
-  current: 0
   Type: 8
   BlockAnimation: 1
 --- !u!1 &1659788085011291699
@@ -164,7 +163,7 @@ GameObject:
   - component: {fileID: 8835731235105721874}
   - component: {fileID: 3027915732678007464}
   m_Layer: 5
-  m_Name: Image_Add
+  m_Name: PlusMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -254,7 +253,7 @@ GameObject:
   - component: {fileID: 638902264533911760}
   - component: {fileID: 2402935920788859339}
   m_Layer: 5
-  m_Name: Image_Added
+  m_Name: TickMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -344,7 +343,7 @@ GameObject:
   - component: {fileID: 2113700685681139454}
   - component: {fileID: 1741261785717501545}
   m_Layer: 5
-  m_Name: Image_Text
+  m_Name: TextMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -518,12 +517,12 @@ MonoBehaviour:
   m_ForcePurchase: 0
   m_DiableOnLocked: 0
   m_RewardType: 8
-  PromptWindowPrefab: {fileID: 1853325047715122456, guid: e200e514bfe5dff4eb11c1bd38998b49, type: 3}
-  PurchaseImage: {fileID: 1659788085011291699}
-  InUseImage: {fileID: 3206934863310516311}
-  TextImage: {fileID: 5741143639154493196}
-  rewardNumber: {fileID: 702135138084462488}
-  m_PowerupPurchaseWindow: {fileID: 1853325047715122456, guid: 0be451f5d4d48ef47b2f13e929b95039, type: 3}
+  m_LockWindowPrefab: {fileID: 1853325047715122456, guid: e200e514bfe5dff4eb11c1bd38998b49, type: 3}
+  m_PlusMark: {fileID: 1659788085011291699}
+  m_TickMark: {fileID: 3206934863310516311}
+  m_TextMark: {fileID: 5741143639154493196}
+  m_RewardNumber: {fileID: 702135138084462488}
+  m_PowerupPurchaseWindowPrefab: {fileID: 1853325047715122456, guid: 0be451f5d4d48ef47b2f13e929b95039, type: 3}
   InUse: 0
   Interactable: 0
 --- !u!114 &8155250758019910228
@@ -545,19 +544,7 @@ MonoBehaviour:
   OnceOnly: 0
   OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 214436393202113947}
-        m_TargetAssemblyTypeName: MapLevelPowerup, Assembly-CSharp
-        m_MethodName: OnClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   TargetTransform: {fileID: 0}
 --- !u!225 &7775046065060907073
 CanvasGroup:

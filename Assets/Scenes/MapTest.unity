@@ -5159,6 +5159,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 368653b7fc62ce242a6befe22f53a604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_MatureMainText: TXT_CRP_Harvest_Harvest
+  m_MatureSecondarynText: TXT_CRP_Harvest_Now
+  m_ImmatureMainText: TXT_CRP_Harvest_NextHarvest
   m_FontGoldMat: {fileID: 2100000, guid: f12495bbca3f8d341a45ec96da1d7026, type: 2}
   m_FontOutlineMat: {fileID: 2100000, guid: 50d0fc1ef5fbfca49934b70b9daedc4d, type: 2}
   m_MainText: {fileID: 1773270592}
@@ -5167,7 +5170,6 @@ MonoBehaviour:
   m_Summary: {fileID: 1135818865}
   m_HarvestParticle: {fileID: 63680502}
   m_Rocket: {fileID: 1759552700}
-  m_CoinBoost: {fileID: 304722659}
   _harvestTime: 
   _nowTime: 
 --- !u!1 &1406536370
@@ -7180,9 +7182,9 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -8879,15 +8881,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 290416168, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_Enable
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.CompleteLevel
-      value: 50
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1122259983, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: Data.SelectedLevel
-      value: 51
+      value: 101
       objectReference: {fileID: 0}
     - target: {fileID: 2839194961230771640, guid: ea15f3d7e92f1164cb6ddc7a80ffb251, type: 3}
       propertyPath: m_RootOrder

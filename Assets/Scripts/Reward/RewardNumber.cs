@@ -27,7 +27,7 @@ public class RewardNumber : MonoBehaviour
             m_switches = new bool[System.Enum.GetValues(typeof(RewardType)).Length];
             for (int i = 0; i < m_switches.Length; i++) m_switches[i] = true;
         }
-        RewardManager.Instance.OnValueChanged[(int)Type] += new RewardManager.RewardHandler(Animate);
+        RewardManager.Instance.OnValueChanged[(int)Type].AddListener(() => Animate());
     }
 
 
@@ -126,7 +126,7 @@ public class RewardNumber : MonoBehaviour
 
     private void OnDestroy()
     {
-        RewardManager.Instance.OnValueChanged[(int)Type] -= new RewardManager.RewardHandler(Animate);
+        RewardManager.Instance.OnValueChanged[(int)Type].RemoveListener(() => Animate());// -= new RewardManager.RewardHandler(Animate);
     }
 
     public class RewardNumberSwitches

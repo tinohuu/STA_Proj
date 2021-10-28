@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4715624556040574642}
   - component: {fileID: 4715624556040574640}
   m_Layer: 5
-  m_Name: Shop_ItemReward
+  m_Name: ShopItem_Reward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

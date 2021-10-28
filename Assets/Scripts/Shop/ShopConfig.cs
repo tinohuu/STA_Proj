@@ -10,7 +10,9 @@ public class ShopConfig
     public bool IsSmall;
     public int Price;
     public string Background;
+    public string BackgroundText;
     public string Icon;
     public string TagIcon;
-    public string TagText;
+    public string TagTextA;
+    public string TagTextB;
 }

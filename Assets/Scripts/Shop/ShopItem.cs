@@ -60,18 +60,19 @@ public class ShopItem : MonoBehaviour
         else
         {
             m_BackgroundImage.sprite = GetSprite("Background_" + config.Background);
-            m_BackgroundText.text = config.Background == "Normal" ? "" : System.Text.RegularExpressions.Regex.Replace(config.Background, "([a-z])_?([A-Z])", "$1 $2");
+            m_BackgroundText.text = config.BackgroundText;// == "Normal" ? "" : System.Text.RegularExpressions.Regex.Replace(config.Background, "([a-z])_?([A-Z])", "$1 $2");
         }
 
 
         // Set tag views
-        m_Tag.gameObject.SetActive(config.TagText != "");
+        m_Tag.gameObject.SetActive(config.TagIcon != "");
         if (m_Tag.gameObject.activeSelf)
         {
             m_Tag.sprite = GetSprite("Tag_" + config.TagIcon);
-            var texts = config.TagText.Split('_');
-            m_TagTextA.text = texts[0];
-            if (texts.Length >= 2) m_TagTextB.text = texts[1];
+            //var texts = config.TagText.Split('_');
+            m_TagTextA.text = config.TagTextA;
+            m_TagTextB.text = config.TagTextB;
+            //if (texts.Length >= 2) m_TagTextB.text = texts[1];
         }
 
         m_PurchaseButton.GetComponentInChildren<TMP_Text>().text = (config.Price / 100f).ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("en-au"));

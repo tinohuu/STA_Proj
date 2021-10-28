@@ -17,7 +17,7 @@ public class ShopCoinWindow : MonoBehaviour
         
     }
 
-    public void Initialise(Vector3 pos)
+    public void Initialize(Vector3 pos)
     {
         m_StartPos = pos;
     }
@@ -41,6 +41,6 @@ public class ShopCoinWindow : MonoBehaviour
     {
         StopAllCoroutines();
         GetComponent<WindowAnimator>().Close();
-        ShopManager.Instance.Open();
+        //ShopManager.Instance.Open();
     }
 }

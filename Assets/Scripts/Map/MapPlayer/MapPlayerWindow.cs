@@ -16,11 +16,11 @@ public class MapPlayerWindow : MonoBehaviour
 
     private void Start()
     {
-        RefreshView();
+        UpdateView();
     }
 
 
-    void RefreshView()
+    void UpdateView()
     {
         CropConfig curCrop = CropManager.Instance.LevelToCropConfig(MapManager.Instance.Data.CompleteLevel);
         if (curCrop != null) CropText.Format(curCrop.ID);

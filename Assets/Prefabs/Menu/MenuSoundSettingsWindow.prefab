@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sound Settings
+  m_text: TXT_MEN_SoundSettings
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 2304aac1e65871345b6970e0fe875b5c, type: 2}
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 5259675522206970690}
   - component: {fileID: 5259675522206970691}
   m_Layer: 5
-  m_Name: MenuSoundSettingWindow
+  m_Name: MenuSoundSettingsWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -228,16 +228,20 @@ MonoBehaviour:
     IsScale: 0
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
-  InverseOnFadeOut: 1
+  InQueue: 1
+  IsCrossScene: 0
   ShowPanel: 1
   CanCloseByPanel: 1
-  InQueue: 1
-  IntervalMultiplerOnFadeOut: 0
   FadeInOnEnable: 1
+  FadeInDelay: 0
+  InverseOnFadeOut: 1
+  IntervalMultiplerOnFadeOut: 0
   OnWindowEnable:
     m_PersistentCalls:
       m_Calls: []
-  FadeInDelay: 0
+  OnWindowFadeIn:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5259675522741431876
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,10 +581,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5259675522922300556}
     m_Modifications:
-    - target: {fileID: 736466407, guid: bca44753e71aa9544a8f1d1c0997fe5b, type: 3}
-      propertyPath: MenuDataName
-      value: SoundEffects
-      objectReference: {fileID: 0}
     - target: {fileID: 254143462037158653, guid: bca44753e71aa9544a8f1d1c0997fe5b, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -676,10 +676,6 @@ PrefabInstance:
     - target: {fileID: 4753587703933416087, guid: bca44753e71aa9544a8f1d1c0997fe5b, type: 3}
       propertyPath: m_Name
       value: Setting
-      objectReference: {fileID: 0}
-    - target: {fileID: 4753587704867227722, guid: bca44753e71aa9544a8f1d1c0997fe5b, type: 3}
-      propertyPath: m_text
-      value: Sound Effects
       objectReference: {fileID: 0}
     - target: {fileID: 8787349568240100240, guid: bca44753e71aa9544a8f1d1c0997fe5b, type: 3}
       propertyPath: m_SizeDelta.x
@@ -805,7 +801,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4753587704867227722, guid: bca44753e71aa9544a8f1d1c0997fe5b, type: 3}
       propertyPath: m_text
-      value: Music
+      value: TXT_MEN_SoundSettings_Music
       objectReference: {fileID: 0}
     - target: {fileID: 8787349568240100240, guid: bca44753e71aa9544a8f1d1c0997fe5b, type: 3}
       propertyPath: m_SizeDelta.x

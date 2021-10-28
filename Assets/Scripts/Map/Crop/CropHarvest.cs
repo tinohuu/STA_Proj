@@ -9,8 +9,14 @@ using UnityEngine.UI;
 
 public class CropHarvest : MonoBehaviour, ITimeRefreshable
 {
-    [Header("Assets Ref")]
+    [Header("Settings")]
+    [SerializeField] string m_MatureMainText = "TXT_CRP_Harvest_Harvest";
+    [SerializeField] string m_MatureSecondarynText = "TXT_CRP_Harvest_Now";
+    [SerializeField] string m_ImmatureMainText = "TXT_CRP_Harvest_NextHarvest";
+    //string m_ImmatureSecondarynText = "";
 
+
+    [Header("Assets Ref")]
     [SerializeField] Material m_FontGoldMat;
     [SerializeField] Material m_FontOutlineMat;
 
@@ -21,7 +27,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     [SerializeField] TMP_Text m_Summary;
     [SerializeField] ParticleSystem m_HarvestParticle;
     [SerializeField] GameObject m_Rocket;
-    [SerializeField] GameObject m_CoinBoost;
+    //[SerializeField] GameObject m_CoinBoost;
 
     public static CropHarvest Instance = null;
 
@@ -29,6 +35,7 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
     ButtonAnimator m_ButtonAnimator;
     Tween m_TextGroupTween;
 
+    [Header("Debug")]
     [SerializeField] string _harvestTime;
     [SerializeField] string _nowTime;
     private void Awake()
@@ -45,14 +52,14 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
 
     private void OnEnable()
     {
-        RewardManager.Instance.OnValueChanged[(int)RewardType.Clock] += (bool b) => CheckClock();
-        RewardManager.Instance.OnValueChanged[(int)RewardType.Rocket] += (bool b) => CheckRocket();
+        RewardManager.Instance.OnValueChanged[(int)RewardType.Clock].AddListener(() => CheckClock());
+        RewardManager.Instance.OnValueChanged[(int)RewardType.Rocket].AddListener(() => CheckRocket());
     }
 
     private void OnDisable()
     {
-        RewardManager.Instance.OnValueChanged[(int)RewardType.Clock] -= (bool b) => CheckClock();
-        RewardManager.Instance.OnValueChanged[(int)RewardType.Rocket] -= (bool b) => CheckRocket();
+        RewardManager.Instance.OnValueChanged[(int)RewardType.Clock].RemoveListener(() => CheckClock());
+        RewardManager.Instance.OnValueChanged[(int)RewardType.Rocket].RemoveListener(() => CheckRocket());
     }
     
 
@@ -72,8 +79,8 @@ public class CropHarvest : MonoBehaviour, ITimeRefreshable
             textureModule.startFrame = new ParticleSystem.MinMaxCurve(0, configs.Count * 3f / (textureModule.numTilesX * textureModule.numTilesY));
             SoundManager.Instance.PlaySFX("CropGrowup");
         }
-        m_MainText.text = timeSpan.TotalSeconds > 0 ? "Next Harvest" : "Harvest";
-        m_SecondaryText.text = timeSpan.TotalSeconds > 0 ? timeSpan.ToString(@"mm\:ss") : "Now";
+        m_MainText.text = timeSpan.TotalSeconds > 0 ? m_ImmatureMainText : m_MatureMainText;
+        m_SecondaryText.text = timeSpan.TotalSeconds > 0 ? timeSpan.ToString(@"mm\:ss") : m_MatureSecondarynText;
         m_SecondaryText.fontMaterial = timeSpan.TotalSeconds > 0 ? m_FontOutlineMat : m_FontGoldMat;
 
         //m_TextGroup.enabled = timeSpan.TotalSeconds <= 0;

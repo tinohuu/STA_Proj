@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 147910503727001267}
   - component: {fileID: 5443196874812844987}
   m_Layer: 5
-  m_Name: Shop_SmallItemGroup
+  m_Name: ShopView_SmallItemGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

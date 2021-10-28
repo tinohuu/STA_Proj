@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Settings & Help
+  m_text: TXT_MEN_BTN_SettingsHelp
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 66f6d64e9cc1d2d47be11fffd522d955, type: 2}
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 56.95
+  m_fontSize: 18.5
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <sprite name="Back"> Quit
+  m_text: TXT_MEN_BTN_Quit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 66f6d64e9cc1d2d47be11fffd522d955, type: 2}
@@ -226,7 +226,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 62
+  m_fontSize: 38.7
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -411,7 +411,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <sprite name="Coin"> Shop
+  m_text: TXT_MEN_BTN_Shop
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 66f6d64e9cc1d2d47be11fffd522d955, type: 2}
@@ -438,7 +438,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 62
+  m_fontSize: 37.05
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -875,19 +875,20 @@ MonoBehaviour:
     IsScale: 0
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
-  InverseOnFadeOut: 1
+  InQueue: 1
+  IsCrossScene: 0
   ShowPanel: 1
   CanCloseByPanel: 1
-  InQueue: 1
-  IntervalMultiplerOnFadeOut: 0
   FadeInOnEnable: 1
+  FadeInDelay: 0
+  InverseOnFadeOut: 1
+  IntervalMultiplerOnFadeOut: 0
   OnWindowEnable:
     m_PersistentCalls:
       m_Calls: []
   OnWindowFadeIn:
     m_PersistentCalls:
       m_Calls: []
-  FadeInDelay: 0
 --- !u!1 &2712256434190518453
 GameObject:
   m_ObjectHideFlags: 0

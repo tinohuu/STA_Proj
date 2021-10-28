@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class TextConfig
 {
-    public int ID;
     public string Code;
     public string Content;
-    public string Comment;
 }

@@ -28,7 +28,14 @@ public class LocalizationManager : MonoBehaviour
 
     public void Localize(TMP_Text text)
     {
-        if (!text.richText || text.gameObject.scene.name == null || text.gameObject.scene.rootCount == 0) return;
+#if UNITY_EDITOR
+        if (UnityEditor.SceneManagement.EditorSceneManager.IsPreviewSceneObject(text)) return;
+        //if (UnityEditor.PrefabUtility.IsPartOfPrefabAsset(text.gameObject)) return;
+        //if (!text.richText || text.gameObject.scene.name == null) return;
+#endif
+
+
+        if (!text.richText) return;
         //Debug.LogWarning("Localize " + text.text);
         string code = text.text.ToUpper();
         if (text && TextsByCode.ContainsKey(code))

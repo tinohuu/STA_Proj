@@ -13,32 +13,35 @@ public class MapLevelWindowPowerup : MonoBehaviour
     [SerializeField] RewardType m_RewardType;
 
     [Header("Ref")]
-    public GameObject PromptWindowPrefab;
-    public GameObject PurchaseImage;
-    public GameObject InUseImage;
-    public GameObject TextImage;
-    [SerializeField] RewardNumber rewardNumber;
-    [SerializeField] GameObject m_PowerupPurchaseWindow;
+    [SerializeField] GameObject m_LockWindowPrefab;
+    [SerializeField] GameObject m_PlusMark;
+    [SerializeField] GameObject m_TickMark;
+    [SerializeField] GameObject m_TextMark;
 
+    [SerializeField] RewardNumber m_RewardNumber;
+    [SerializeField] GameObject m_PowerupPurchaseWindowPrefab;
 
-    public RewardType RewardType { get => m_RewardType; private set => m_RewardType = value; }
+    public RewardType RewardType => m_RewardType;
 
     [Header("Data")]
     public bool InUse = false;
     public bool Interactable = false;
 
-    ButtonAnimator button;
-    CanvasGroup canvasGroup;
-    Image image;
-    WindowAnimator windowAnimator;
+    ButtonAnimator m_Button;
+    CanvasGroup m_CanvasGroup;
+    Image m_Image;
     private void Awake()
     {
-        button = GetComponent<ButtonAnimator>();
-        canvasGroup = GetComponent<CanvasGroup>();
-        image = GetComponent<Image>();
-        windowAnimator = GetComponentInParent<WindowAnimator>();
+        m_Button = GetComponent<ButtonAnimator>();
+        m_CanvasGroup = GetComponent<CanvasGroup>();
+        m_Image = GetComponent<Image>();
 
+        m_Button.OnClick.AddListener(() => OnClick());
+    }
 
+    private void OnEnable()
+    {
+        UpdateView();
     }
 
     private void Start()
@@ -46,45 +49,36 @@ public class MapLevelWindowPowerup : MonoBehaviour
         UpdateView();
     }
 
-    public void Initialise(RewardType rewardType)
+    public void Initialize(RewardType rewardType)
     {
-        RewardType = rewardType;
-        UpdateView();
+        m_RewardType = rewardType;
     }
 
     public void UpdateView()
     {
-        var icons = Resources.LoadAll<Sprite>("Sprites/IconAtlas");
-        Sprite sprite = Array.Find(icons, e => e.name == RewardType.ToString());
-        image.sprite = sprite;
-        rewardNumber.Type = RewardType;
+        m_RewardNumber.Type = RewardType;
+
+        m_Image.sprite = RewardType.ToSprite();
 
         Interactable = MapManager.Instance.Data.CompleteLevel + 1 >= MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == (int)RewardType + 1012 - 8).FunctionParams;
 
         if (m_DiableOnLocked && !Interactable)
-        {
             gameObject.SetActive(false);
-        }
         else
         {
-            canvasGroup.alpha = Interactable ? 1 : 0.5f;
-            rewardNumber.UpdateView();
-
-            InUseImage.SetActive(Interactable && InUse);
-            PurchaseImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] == 0);
-            TextImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] != 0);
+            m_CanvasGroup.alpha = Interactable ? 1 : 0.5f;
+            m_RewardNumber.UpdateView();
+            m_TickMark.SetActive(Interactable && InUse);
+            m_PlusMark.SetActive(Interactable && !InUse && Reward.Data[RewardType] == 0);
+            m_TextMark.SetActive(Interactable && !InUse && Reward.Data[RewardType] != 0);
         }
     }
 
-    private void Update()
-    {
-        //UpdateIconImage();
-    }
     public void OnClick()
     {
         if (m_ForcePurchase)
         {
-            RewardPurchaseWindow window = Window.CreateWindowPrefab(m_PowerupPurchaseWindow).GetComponent<RewardPurchaseWindow>();
+            RewardPurchaseWindow window = Window.CreateWindowPrefab(m_PowerupPurchaseWindowPrefab).GetComponent<RewardPurchaseWindow>();
             window.Type = RewardType;
             return;
         }
@@ -93,19 +87,15 @@ public class MapLevelWindowPowerup : MonoBehaviour
         {
             if (Reward.Data[RewardType] == 0)
             {
-                RewardPurchaseWindow window = Window.CreateWindowPrefab(m_PowerupPurchaseWindow).GetComponent<RewardPurchaseWindow>();
+                RewardPurchaseWindow window = Window.CreateWindowPrefab(m_PowerupPurchaseWindowPrefab).GetComponent<RewardPurchaseWindow>();
                 window.Type = RewardType;
             }
-            else
-            {
-                InUse = !InUse;
-            }
+            else InUse = !InUse;
 
         }
-        // Show the window waiting to be locked
         else
         {
-            TMP_Text text = Window.CreateWindowPrefab(PromptWindowPrefab).GetComponentInChildren<TMP_Text>();
+            TMP_Text text = Window.CreateWindowPrefab(m_LockWindowPrefab).GetComponentInChildren<TMP_Text>();
             string rawString = text.text;
             rawString = string.Format(text.text, RewardType.ToString(), MapManager.Instance.FunctionConfigs.Find(e => e.FunctionID == (int)RewardType + 1012 - 8).FunctionParams);
             rawString = System.Text.RegularExpressions.Regex.Replace(rawString, "([a-z])_?([A-Z])", "$1 $2");
@@ -113,18 +103,5 @@ public class MapLevelWindowPowerup : MonoBehaviour
         }
 
         UpdateView();
-    }
-
-    void UpdateIconImage()
-    {
-        InUseImage.SetActive(Interactable && InUse);
-        PurchaseImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] == 0);
-        TextImage.SetActive(Interactable && !InUse && Reward.Data[RewardType] != 0);
-
-        if (RewardPurchaseWindow.LastPurchasedReward == RewardType)
-        {
-            RewardPurchaseWindow.LastPurchasedReward = RewardType.None;
-            OnClick();
-        }
     }
 }

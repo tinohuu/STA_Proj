@@ -153,6 +153,6 @@ public class ShopView : MonoBehaviour
     public void CreateCoinWindow(Vector3 startPos)
     {
         GetComponent<WindowAnimator>().Close();
-        Window.CreateWindowPrefab(m_CoinWindowPrefab).GetComponent<ShopCoinWindow>().Initialise(startPos);
+        Window.CreateWindowPrefab(m_CoinWindowPrefab).GetComponent<ShopCoinWindow>().Initialize(startPos);
     }
 }
