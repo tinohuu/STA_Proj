@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
-    [SavedData] public SettingsData Data = new SettingsData();
+    [SavedData] public MenuData Data = new MenuData();
     public static MenuManager Instance;
     private void Awake()
     {
@@ -18,7 +18,7 @@ public class MenuManager : MonoBehaviour
 }
 
 [System.Serializable]
-public class SettingsData
+public class MenuData
 {
     public bool Sync = true;
     public bool SoundEffects = true;

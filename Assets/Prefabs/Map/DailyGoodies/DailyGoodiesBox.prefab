@@ -267,9 +267,9 @@ MonoBehaviour:
   m_Tick: {fileID: 1198068311301410973}
   m_RewardPrefab: {fileID: 2199663923769920241, guid: 7d4d2743e10c22f45b08b9119d37d8ea, type: 3}
   m_BoxPrefabs:
-  - {fileID: 2109808828064495035, guid: e0cac2b41008fe84998b639366b4718d, type: 3}
-  - {fileID: 7502958853955207141, guid: 7155cccf14f69b04fba84a1276bdc6d1, type: 3}
-  - {fileID: 3477511546523984508, guid: 5836faad66dae0e45856fe8d0e8cf779, type: 3}
+  - {fileID: 1090931682898614243, guid: 20ef25a34fdcaeb43943cbd3a2beea82, type: 3}
+  - {fileID: 5105591866754871477, guid: 6ab9844a2553e2646aef99f4cc8d2290, type: 3}
+  - {fileID: 1699972624215891678, guid: 10bede3a1eff8744385525b2603d0e44, type: 3}
   Day: 0
 --- !u!1 &1198068312832119765
 GameObject:

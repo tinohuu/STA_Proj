@@ -705,10 +705,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236eaab89c73e024ca56d868700d4514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_CostLocCode: TXT_LVL_BTN_Cost
+  m_LeftLocCode: TXT_LVL_BTN_Left
   m_PlayButton: {fileID: 1510462808623988474}
-  m_LevelIDText: {fileID: 0}
-  m_StarGroup: {fileID: 0}
-  m_CostText: {fileID: 0}
+  m_LevelIDText: {fileID: 3239478277727661686}
+  m_StarGroup: {fileID: 2308261368353938143}
+  m_CostText: {fileID: 3168082966387174280}
   m_InfoText: {fileID: 1707941512855685207}
   m_InfoTextLock:
   - TXT_LVL_WinInfo_Lock1

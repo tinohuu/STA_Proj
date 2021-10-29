@@ -8,6 +8,10 @@ using UnityEngine.UI;
 
 public class MapLevelWindow : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField] string m_CostLocCode = "TXT_LVL_BTN_Cost";
+    [SerializeField] string m_LeftLocCode = "TXT_LVL_BTN_Left";
+
     [Header("Ref")]
     [SerializeField] ButtonAnimator m_PlayButton;
     [SerializeField] TMP_Text m_LevelIDText = null;
@@ -42,7 +46,7 @@ public class MapLevelWindow : MonoBehaviour
         m_PlayButton.OnClick.AddListener(() => Play());
         m_PlayButton.OnClick.AddListener(() => m_WindowAnimator.Close());
 
-        m_PowerupInfoButton.OnClick.AddListener(() => ShowPowerupInfo());
+        m_PowerupInfoButton?.OnClick.AddListener(() => ShowPowerupInfo());
     }
 
     private void Start()
@@ -77,19 +81,23 @@ public class MapLevelWindow : MonoBehaviour
 
         // Costs text
         var costs = GetCosts();
-        string text = "";
+
         if (costs.Count == 1 && costs[0].Item1 != RewardType.Coin)
-            text = "FreeRound".ToIcon() + " " + Reward.Data[RewardType.FreeRound] + " Left";
+        {
+            m_CostText.text = m_LeftLocCode;
+            m_CostText.Format("FreeRound".ToIcon() + " " + Reward.Data[RewardType.FreeRound]);
+        }
         else
         {
-            text = "Cost ";
+            m_CostText.text = m_CostLocCode;
+            string text = "";
             for (int i = 0; i < costs.Count; i++)
             {
                 if (i > 0) text += " + ";
                 text += costs[i].Item1.ToString().ToIcon() + " " + costs[i].Item2.ToString(); 
             }
+            m_CostText.Format(text);
         }
-        m_CostText.text = text;
 
         /*int cost = MapManager.Instance.CurMapStageConfigs[LevelData.ID - 1].Cost;
 

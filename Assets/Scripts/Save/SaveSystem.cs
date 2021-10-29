@@ -61,13 +61,22 @@ public static class SaveSystem
 
             // Convert bytes to class
             MemoryStream ms = new MemoryStream(byteSave);
-            Save save = (Save)bf.Deserialize(ms);
-            Debug.LogWarning("Loaded from " + root + path + fileName + " with " + save.Datas.Count + " datas.");
-            ms.Close();
 
-            return save;
+            try
+            {
+                Save save = (Save)bf.Deserialize(ms);
+                Debug.LogWarning("Loaded from " + root + path + fileName + " with " + save.Datas.Count + " datas.");
+                ms.Close();
+                return save;
+            }
+            catch
+            {
+                Debug.LogWarning("Unable to load save. Created an empty one.");
+                return new Save();
+            }
+
         }
-        Debug.LogWarning("Can't find any save and then create a empty one.");
+        Debug.LogWarning("Can't find any save and then create an empty one.");
         return new Save();
     }
     public static Save Load()

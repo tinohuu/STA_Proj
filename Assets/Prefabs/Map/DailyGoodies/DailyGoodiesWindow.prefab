@@ -308,7 +308,7 @@ MonoBehaviour:
   m_text: 2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: fe7bc3134b84c8341b4535236091ab31, type: 2}
+  m_sharedMaterial: {fileID: -4732027964359432133, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -950,7 +950,7 @@ MonoBehaviour:
   m_text: 3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: fe7bc3134b84c8341b4535236091ab31, type: 2}
+  m_sharedMaterial: {fileID: -4732027964359432133, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1317,7 +1317,7 @@ MonoBehaviour:
   m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: fe7bc3134b84c8341b4535236091ab31, type: 2}
+  m_sharedMaterial: {fileID: -4732027964359432133, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1585,7 +1585,7 @@ MonoBehaviour:
   m_text: 4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: fe7bc3134b84c8341b4535236091ab31, type: 2}
+  m_sharedMaterial: {fileID: -4732027964359432133, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2022,7 +2022,7 @@ MonoBehaviour:
   m_text: Week
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: fe7bc3134b84c8341b4535236091ab31, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 2afdd806be5254f44b3e13c298c64dc7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2546,19 +2546,20 @@ MonoBehaviour:
     IsScale: 0
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
-  InverseOnFadeOut: 0
+  InQueue: 1
+  IsCrossScene: 0
   ShowPanel: 0
   CanCloseByPanel: 0
-  InQueue: 1
-  IntervalMultiplerOnFadeOut: 1
   FadeInOnEnable: 1
+  FadeInDelay: 0
+  InverseOnFadeOut: 0
+  IntervalMultiplerOnFadeOut: 1
   OnWindowEnable:
     m_PersistentCalls:
       m_Calls: []
   OnWindowFadeIn:
     m_PersistentCalls:
       m_Calls: []
-  FadeInDelay: 0
 --- !u!1 &5668969312869739888
 GameObject:
   m_ObjectHideFlags: 0

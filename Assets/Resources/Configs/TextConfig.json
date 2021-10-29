@@ -45,19 +45,19 @@
     "Code": "TXT_CRP_Harvest_AdWatch",
     "Content": "WATCH <sprite name=\"Ad\">",
     "Comment1": "按钮",
-    "Comment2": "观看广告"
+    "Comment2": "观看广告作物窗口"
   },
   {
     "Code": "TXT_CRP_Harvest_AdWatchInfo",
     "Content": "<sprite name=\"Ad\"> Watch an ad to double your harvest to <sprite name=\"Coin\"> {0}",
-    "Comment1": null,
-    "Comment2": null
+    "Comment1": "作物",
+    "Comment2": "观看广告奖励说明"
   },
   {
     "Code": "TXT_CRP_Harvest_Bonus",
     "Content": "BONUS",
-    "Comment1": null,
-    "Comment2": null
+    "Comment1": "作物",
+    "Comment2": "收获奖励"
   },
   {
     "Code": "TXT_CRP_Harvest_Collect",
@@ -74,8 +74,8 @@
   {
     "Code": "TXT_CRP_Harvest_Harvest",
     "Content": "HARVEST",
-    "Comment1": null,
-    "Comment2": null
+    "Comment1": "作物",
+    "Comment2": "立即收获1"
   },
   {
     "Code": "TXT_CRP_Harvest_HarvestBonus",
@@ -86,8 +86,8 @@
   {
     "Code": "TXT_CRP_Harvest_Now",
     "Content": "NOW",
-    "Comment1": null,
-    "Comment2": null
+    "Comment1": "作物",
+    "Comment2": "立即收获2"
   },
   {
     "Code": "TXT_CRP_Harvest_Total",
@@ -98,8 +98,8 @@
   {
     "Code": "TXT_CRP_Harvest_NextHarvest",
     "Content": "Next Harvest",
-    "Comment1": null,
-    "Comment2": null
+    "Comment1": "作物",
+    "Comment2": "下次收获"
   },
   {
     "Code": "TXT_CRP_Pumpkin",
@@ -217,7 +217,7 @@
   },
   {
     "Code": "TXT_CRT_Opening_CropMaster_Body2",
-    "Content": "{0} PICKS LEFT",
+    "Content": "PICKS LEFT",
     "Comment1": "关卡宝箱",
     "Comment2": "开启宝箱界面说明"
   },
@@ -256,6 +256,12 @@
     "Content": "Replay",
     "Comment1": "关卡宝箱",
     "Comment2": "解锁宝箱界面小标题"
+  },
+  {
+    "Code": "TXT_CRT_Unlock_Info",
+    "Content": "Get more starts to upgrade your crate and harvest more prizes",
+    "Comment1": null,
+    "Comment2": null
   },
   {
     "Code": "TXT_DGE_Body",
@@ -349,27 +355,33 @@
   },
   {
     "Code": "TXT_LVL_BTN_Cost",
-    "Content": "Cost <sprite name=\"FreeRound\"> {0}",
+    "Content": "Cost {0}",
     "Comment1": "关卡",
     "Comment2": "消耗免费游戏进入关卡"
   },
   {
-    "Code": "TXT_LVL_BTN_CostByCoin",
-    "Content": "Cost <sprite name=\"Coin\"> {0}",
+    "Code": "TXT_LVL_BTN_Left",
+    "Content": "{0} Left",
     "Comment1": null,
     "Comment2": null
+  },
+  {
+    "Code": "TXT_LVL_BTN_CostByCoin",
+    "Content": "Cost <sprite name=\"Coin\"> {0}",
+    "Comment1": "关卡",
+    "Comment2": "消耗金币进入游戏"
   },
   {
     "Code": "TXT_LVL_BTN_CostByFR",
     "Content": "<sprite name=\"FreeRound\"> {0} Left",
-    "Comment1": null,
-    "Comment2": null
+    "Comment1": "关卡",
+    "Comment2": "剩余免费游戏道具"
   },
   {
     "Code": "TXT_LVL_BTN_CostByFRCoin",
     "Content": "Cost <sprite name=\"FreeRound\"> 1 + <sprite name=\"Coin\"> {0}",
-    "Comment1": null,
-    "Comment2": null
+    "Comment1": "关卡",
+    "Comment2": "消耗金币+免费游戏进入游戏"
   },
   {
     "Code": "TXT_LVL_BTN_EndGame",

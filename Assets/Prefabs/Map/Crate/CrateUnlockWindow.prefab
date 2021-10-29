@@ -291,7 +291,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Get more starts to upgrade your crate and harvest more prizes
+  m_text: TXT_CRT_Unlock_Info
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8990ae9aeb31d46a99a422db201c88, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 06785ee8df7295f459dd57b23050e7c2, type: 2}
@@ -318,7 +318,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.1
+  m_fontSize: 68.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -754,20 +754,20 @@ MonoBehaviour:
     IsScale: 0
     OriPos: {x: 0, y: 0, z: 0}
     OriScale: {x: 0, y: 0, z: 0}
-  InverseOnFadeOut: 0
+  InQueue: 1
+  IsCrossScene: 0
   ShowPanel: 1
   CanCloseByPanel: 1
-  InQueue: 1
-  IntervalMultiplerOnFadeOut: 0.1
   FadeInOnEnable: 1
+  FadeInDelay: 0
+  InverseOnFadeOut: 0
+  IntervalMultiplerOnFadeOut: 0.1
   OnWindowEnable:
     m_PersistentCalls:
       m_Calls: []
   OnWindowFadeIn:
     m_PersistentCalls:
       m_Calls: []
-  FadeInDelay: 0
-  IsCrossScene: 0
 --- !u!114 &8735377253740583846
 MonoBehaviour:
   m_ObjectHideFlags: 0

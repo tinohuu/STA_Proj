@@ -18,7 +18,7 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
     [Header("Data")]
     [SerializeField] bool m_IsSuspended = false;
 
-    public DailyGoodyData Data = new DailyGoodyData();
+    public DailyGoodiesManagerData Data = new DailyGoodiesManagerData();
     public Dictionary<int, DailyGoodiesConfig> ConfigsByDay;
     public static DailyGoodiesManager Instance = null;
 
@@ -30,19 +30,19 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
         Data = SaveManager.Instance.Bind(InitializeData());
     }
 
-    DailyGoodyData InitializeData()
+    DailyGoodiesManagerData InitializeData()
     {
         var data = Data;
-        data.LastGoodyTime = TimeManager.Instance.RealNow.Date;
+        data.LastGoodiesTime = TimeManager.Instance.RealNow.Date;
         return data;
     }
 
     void Start()
     {
-        bool canOpen = !m_CurView && m_Enable && (m_ForceOpen || TimeManager.Instance.RealNow.Date > Data.LastGoodyTime.Date && !m_IsSuspended && !TimeManager.Instance.IsGettingTime);
+        bool canOpen = !m_CurView && m_Enable && (m_ForceOpen || TimeManager.Instance.RealNow.Date > Data.LastGoodiesTime.Date && !m_IsSuspended && !TimeManager.Instance.IsGettingTime);
         if (canOpen) // for local time specific + Data.CheckedSystemOffset.ToTimeSpan();
         {
-            TimeDebugText.Log("Last Goody Time: " + Data.LastGoodyTime.Date.ToString());
+            TimeDebugText.Log("Last Goody Time: " + Data.LastGoodiesTime.Date.ToString());
             m_CurView = Instantiate(m_ViewPrefab, MapManager.Instance.UICanvas.transform);
             //view = WindowManager.Instance.OpenView(viewPrefab);
         }
@@ -86,11 +86,11 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
         return (int)coin;
     }
 
-    public bool HasGoody => TimeManager.Instance.RealNow.Date > Data.LastGoodyTime.Date;
+    public bool HasGoody => TimeManager.Instance.RealNow.Date > Data.LastGoodiesTime.Date;
 
     public int CheckDate(bool record)
     {
-        TimeSpan offset = TimeManager.Instance.RealNow - Data.LastGoodyTime;
+        TimeSpan offset = TimeManager.Instance.RealNow - Data.LastGoodiesTime;
         int curDay = 0;
         if (offset >= new TimeSpan(1, 0, 0, 0) && offset < new TimeSpan(2, 0, 0, 0))
         {
@@ -125,11 +125,11 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
     {
         if (timeAuthenticity == TimeAuthenticity.Authentic)
         {
-            if (now.Date < Data.LastGoodyTime)
+            if (now.Date < Data.LastGoodiesTime)
             {
                 // Clamp
                 Debug.Log("Clamp goodies");
-                Data.LastGoodyTime = now.Date;
+                Data.LastGoodiesTime = now.Date;
             }
             if (source == TimeSource.Internet) m_IsSuspended = false;
         }
@@ -155,14 +155,14 @@ public class DailyGoodiesManager : MonoBehaviour, ITimeRefreshable
     public void ResetTime(DateTime now)
     {
         TimeDebugText.Log("Reset goodies time");
-        Data.LastGoodyTime = now.Date;
+        Data.LastGoodiesTime = now.Date;
     }
 }
 
 [Serializable]
-public class DailyGoodyData
+public class DailyGoodiesManagerData
 {
-    public DateTime LastGoodyTime = new DateTime();
+    public DateTime LastGoodiesTime = new DateTime();
     public int StreakDays = 0; // 1 is the first day
     public int Version = 1;
 }
