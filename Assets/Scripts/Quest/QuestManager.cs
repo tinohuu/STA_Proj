@@ -11,12 +11,11 @@ public class QuestManager : MonoBehaviour
     public static QuestManager Instance = null;
 
     List<UnityEvent> m_Events = new List<UnityEvent>();
-    List<Quest> m_Quests = new List<Quest>();
 
     private void Awake()
     {
         if (!Instance) Instance = this;
-        CheckEvents();
+        UpdateEvents();
     }
 
     public UnityEvent this[QuestEventType type]
@@ -25,7 +24,7 @@ public class QuestManager : MonoBehaviour
         //set => m_Events[(int)type] = value;
     }
 
-    void CheckEvents()
+    void UpdateEvents()
     {
         int length = Enum.GetValues(typeof(QuestEventType)).Length;
         for (int i = m_Events.Count; i < length; i++) m_Events.Add(new UnityEvent());
@@ -35,7 +34,7 @@ public class QuestManager : MonoBehaviour
 [Serializable]
 public class QuestManagerData
 {
-    public List<QuestData> QuestDatas = new List<QuestData>();
+    public List<Quest> Quests = new List<Quest>();
 }
 
 public enum QuestEventType
