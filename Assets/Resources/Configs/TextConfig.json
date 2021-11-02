@@ -996,52 +996,58 @@
     "Comment2": "窗口大标题说明"
   },
   {
-    "Code": "TXT_QST_Info1",
+    "Code": "TXT_QST_Type1",
     "Content": "Win Levels",
     "Comment1": "日常任务",
     "Comment2": "任务类型1"
   },
   {
-    "Code": "TXT_QST_Info2",
+    "Code": "TXT_QST_Type2",
     "Content": "Win Levels On Your First Try",
     "Comment1": "日常任务",
     "Comment2": "任务类型2"
   },
   {
-    "Code": "TXT_QST_Info3",
+    "Code": "TXT_QST_Type3",
     "Content": "Win Levels In A Row",
     "Comment1": "日常任务",
     "Comment2": "任务类型3"
   },
   {
-    "Code": "TXT_QST_Info4",
+    "Code": "TXT_QST_Type4",
     "Content": "Win Levels In Highest Mode",
     "Comment1": "日常任务",
     "Comment2": "任务类型4"
   },
   {
-    "Code": "TXT_QST_Info5",
+    "Code": "TXT_QST_Type5",
     "Content": "Win Levels In Medium Mode",
     "Comment1": "日常任务",
     "Comment2": "任务类型5"
   },
   {
-    "Code": "TXT_QST_Info6",
+    "Code": "TXT_QST_Type6",
     "Content": "Collect Deck Cards",
     "Comment1": "日常任务",
     "Comment2": "任务类型6"
   },
   {
-    "Code": "TXT_QST_Info7",
+    "Code": "TXT_QST_Type7",
     "Content": "Collect Stars",
     "Comment1": "日常任务",
     "Comment2": "任务类型7"
   },
   {
-    "Code": "TXT_QST_Info8",
+    "Code": "TXT_QST_Type8",
     "Content": "Complete Streaks",
     "Comment1": "日常任务",
     "Comment2": "任务类型8"
+  },
+  {
+    "Code": "TXT_QST_Competed",
+    "Content": "Completed",
+    "Comment1": "日常任务",
+    "Comment2": "完成日常任务提示"
   },
   {
     "Code": "TXT_QST_TIP_Claim",
@@ -1078,6 +1084,12 @@
     "Content": "PLAY",
     "Comment1": "日常任务",
     "Comment2": "提示界面小标题1"
+  },
+  {
+    "Code": "TXT_QST_QuitTip1",
+    "Content": "WIN ON 1ST TRY",
+    "Comment1": "日常任务",
+    "Comment2": "任务类型退出提示1"
   },
   {
     "Code": "TXT_QST_TIP_Play_Body",

@@ -127,6 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pokerInst: {fileID: 0}
   strClearAllPokerIDs: 
+  bIsRotating: 0
 --- !u!61 &8485146445958553649
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -344,6 +345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pokerInst: {fileID: 0}
   strClearAllPokerIDs: 
+  bIsRotating: 0
 --- !u!61 &3697949478762440225
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -368,5 +370,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.4, y: 2.2}
+  m_Size: {x: 1.34, y: 2.12}
   m_EdgeRadius: 0

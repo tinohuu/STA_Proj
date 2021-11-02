@@ -1,0 +1,68 @@
+[
+  {
+    "ID": 1,
+    "RewardTypeID": 1,
+    "Value": 1,
+    "Comment": "Coin"
+  },
+  {
+    "ID": 2,
+    "RewardTypeID": 2,
+    "Value": 1,
+    "Comment": "Undo"
+  },
+  {
+    "ID": 3,
+    "RewardTypeID": 3,
+    "Value": 1,
+    "Comment": "MoreCards"
+  },
+  {
+    "ID": 4,
+    "RewardTypeID": 4,
+    "Value": 0.5,
+    "Comment": "WildCards"
+  },
+  {
+    "ID": 5,
+    "RewardTypeID": 8,
+    "Value": 0.33,
+    "Comment": "RemoveCards"
+  },
+  {
+    "ID": 6,
+    "RewardTypeID": 9,
+    "Value": 1,
+    "Comment": "ClearPlayables"
+  },
+  {
+    "ID": 7,
+    "RewardTypeID": 10,
+    "Value": 0.25,
+    "Comment": "WildDrop"
+  },
+  {
+    "ID": 8,
+    "RewardTypeID": 11,
+    "Value": 0.5,
+    "Comment": "RemoveValueChangers"
+  },
+  {
+    "ID": 9,
+    "RewardTypeID": 12,
+    "Value": 0.5,
+    "Comment": "removeCodeBreaker"
+  },
+  {
+    "ID": 10,
+    "RewardTypeID": 13,
+    "Value": 0.5,
+    "Comment": "removeBombs"
+  },
+  {
+    "ID": 11,
+    "RewardTypeID": 15,
+    "Value": 1.33,
+    "Comment": "Rocket"
+  }
+]

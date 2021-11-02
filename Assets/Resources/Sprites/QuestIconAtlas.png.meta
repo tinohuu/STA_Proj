@@ -4,28 +4,31 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -2642743969211610894
-    second: QuestIcon_StreakBonus
+    second: CollectStreakBonus
   - first:
       213: -284334217127270723
-    second: QuestIcon_Star
+    second: CollectStar
   - first:
       213: -4459055894666326252
-    second: QuestIcon_Boost
+    second: WinLevelBoost4
   - first:
       213: 9090476256931509425
-    second: QuestIcon_First
+    second: WinLevelFirst
   - first:
       213: -8950665568582768475
-    second: QuestIcon_Complete
+    second: WinLevel
   - first:
       213: 5530204395482402295
-    second: QuestIcon_Row
+    second: WinLevelRow
   - first:
       213: -5017350249650651094
-    second: QuestIcon_Add
+    second: CollectDeckCard
   - first:
       213: 5947321945139937361
-    second: QuestIcon_Tick
+    second: Complete
+  - first:
+      213: -1846375416713489883
+    second: WinLevelBoost2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -127,7 +130,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: QuestIcon_StreakBonus
+      name: CollectStreakBonus
       rect:
         serializedVersion: 2
         x: 0
@@ -148,10 +151,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: QuestIcon_Star
+      name: CollectStar
       rect:
         serializedVersion: 2
-        x: 200
+        x: 201
         y: 800
         width: 200
         height: 200
@@ -169,7 +172,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: QuestIcon_Boost
+      name: WinLevelBoost4
       rect:
         serializedVersion: 2
         x: 400
@@ -190,7 +193,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: QuestIcon_First
+      name: WinLevelFirst
       rect:
         serializedVersion: 2
         x: 600
@@ -211,7 +214,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: QuestIcon_Complete
+      name: WinLevel
       rect:
         serializedVersion: 2
         x: 800
@@ -232,7 +235,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: QuestIcon_Row
+      name: WinLevelRow
       rect:
         serializedVersion: 2
         x: 0
@@ -253,7 +256,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: QuestIcon_Add
+      name: CollectDeckCard
       rect:
         serializedVersion: 2
         x: 200
@@ -274,7 +277,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: QuestIcon_Tick
+      name: Complete
       rect:
         serializedVersion: 2
         x: 400
@@ -290,6 +293,27 @@ TextureImporter:
       bones: []
       spriteID: 15083f08cc1298250800000000000000
       internalID: 5947321945139937361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WinLevelBoost2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 600
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52257cc475b5066e0800000000000000
+      internalID: -1846375416713489883
       vertices: []
       indices: 
       edges: []

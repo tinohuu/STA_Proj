@@ -1,0 +1,74 @@
+[
+  {
+    "TypeID": 1,
+    "ExtraProgressStartLevel": 46,
+    "ExtraProgressEndLevel": 76,
+    "ExtraProgress": 3,
+    "Value": 1,
+    "IsHint": false,
+    "Comment": "WinLvl"
+  },
+  {
+    "TypeID": 2,
+    "ExtraProgressStartLevel": 46,
+    "ExtraProgressEndLevel": 106,
+    "ExtraProgress": 3,
+    "Value": 1,
+    "IsHint": true,
+    "Comment": "WinLvlFirst"
+  },
+  {
+    "TypeID": 3,
+    "ExtraProgressStartLevel": 46,
+    "ExtraProgressEndLevel": 66,
+    "ExtraProgress": 2,
+    "Value": 1,
+    "IsHint": false,
+    "Comment": "WinLvlRow"
+  },
+  {
+    "TypeID": 4,
+    "ExtraProgressStartLevel": 46,
+    "ExtraProgressEndLevel": 71,
+    "ExtraProgress": 3,
+    "Value": 2,
+    "IsHint": false,
+    "Comment": "WinLvlGrand"
+  },
+  {
+    "TypeID": 5,
+    "ExtraProgressStartLevel": 56,
+    "ExtraProgressEndLevel": 206,
+    "ExtraProgress": 3,
+    "Value": 9,
+    "IsHint": false,
+    "Comment": "WinLvlEpic"
+  },
+  {
+    "TypeID": 6,
+    "ExtraProgressStartLevel": 46,
+    "ExtraProgressEndLevel": 256,
+    "ExtraProgress": 7,
+    "Value": 1,
+    "IsHint": false,
+    "Comment": "CollectDeck"
+  },
+  {
+    "TypeID": 7,
+    "ExtraProgressStartLevel": 46,
+    "ExtraProgressEndLevel": 166,
+    "ExtraProgress": 4,
+    "Value": 1,
+    "IsHint": false,
+    "Comment": "CollectStars"
+  },
+  {
+    "TypeID": 8,
+    "ExtraProgressStartLevel": 46,
+    "ExtraProgressEndLevel": 196,
+    "ExtraProgress": 5,
+    "Value": 1,
+    "IsHint": false,
+    "Comment": "CollectStreaks"
+  }
+]

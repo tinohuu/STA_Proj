@@ -67,7 +67,7 @@
   },
   {
     "ID": 7,
-    "Code": "StreakBonus",
+    "Code": "StreakBonus1",
     "Progress": 1,
     "IsJoint": false,
     "Type": 1,
@@ -78,7 +78,7 @@
   },
   {
     "ID": 8,
-    "Code": "StreakBonus",
+    "Code": "StreakBonus2",
     "Progress": 1,
     "IsJoint": false,
     "Type": 1,
