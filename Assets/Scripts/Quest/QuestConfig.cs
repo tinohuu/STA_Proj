@@ -6,9 +6,11 @@ public class QuestConfig
 {
     public int TypeID;
     public int ExtraProgressStartLevel;
-    public int ExtraProgressEndLevel;
+    public int StepLevel;
     public int ExtraProgress;
     public int Value;
+    public string FunctionName;
     public bool IsHint;
     public string Comment;
 }
+

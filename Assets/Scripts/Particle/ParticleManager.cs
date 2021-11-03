@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class ParticleManager : MonoBehaviour
 {
     public Transform ParticleGroup;
+    [SerializeField] RectTransform m_UIParticleGroup;
     public Transform LeftSide;
     public Transform RightSide;
     [SerializeField] Transform triggerGroup;
@@ -22,6 +23,7 @@ public class ParticleManager : MonoBehaviour
     {
         if (!Instance) Instance = this;
         SceneManager.sceneUnloaded += (Scene scene) => ParticleGroup.DestroyChildren();
+        SceneManager.sceneLoaded += OnLoadScene;
     }
 
     void Start()
@@ -30,16 +32,22 @@ public class ParticleManager : MonoBehaviour
         triggers = triggerGroup.GetComponentsInChildren<Collider>();
     }
 
+    void OnLoadScene(Scene scene, LoadSceneMode mode)
+    {
+        m_UIParticleGroup.GetComponent<Canvas>().worldCamera = Camera.main;
+    }
+
     public GameObject CreateCoin(Vector3 pos)
     {
         return CreateParticle(coinPrefab, pos);
     }
 
-    public GameObject CreateParticle(GameObject prefab, Vector3 pos)
+    public GameObject CreateParticle(GameObject prefab, Vector3 pos, bool isUI = false)
     {
+        if (isUI) pos.z = 0;
         //List<Transform> particles = new List<Transform>();
         //GameObject particleObj = Resources.Load<GameObject>("Crops/HarvestParticles/FXHarvest" + cropName);
-        GameObject obj = Instantiate(prefab, ParticleGroup);
+        GameObject obj = Instantiate(prefab, isUI ? m_UIParticleGroup : ParticleGroup);
 
         List<ParticleSystem> particles = new List<ParticleSystem>();
         //ParticleSystem particle;
@@ -53,7 +61,7 @@ public class ParticleManager : MonoBehaviour
 
         //particle.transform.localScale = Vector3.one * Mathf.Abs(crop.Scale);
         obj.transform.position = pos;
-        obj.transform.parent.SetParent(ParticleGroup);
+        obj.transform.parent.SetParent(isUI ? m_UIParticleGroup : ParticleGroup);
 
         foreach (var particle in particles)
         {

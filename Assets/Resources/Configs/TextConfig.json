@@ -1015,13 +1015,13 @@
   },
   {
     "Code": "TXT_QST_Type4",
-    "Content": "Win Levels In Highest Mode",
+    "Content": "Win Levels In Medium Mode",
     "Comment1": "日常任务",
     "Comment2": "任务类型4"
   },
   {
     "Code": "TXT_QST_Type5",
-    "Content": "Win Levels In Medium Mode",
+    "Content": "Win Levels In Highest Mode",
     "Comment1": "日常任务",
     "Comment2": "任务类型5"
   },
@@ -1248,7 +1248,7 @@
     "Comment2": "玩家信息图标"
   },
   {
-    "Code": "TXT_TTR_Bomb",
+    "Code": "TXT_TTR_Bombs",
     "Content": "Very helpful: \\nYou lose the game if\\nthe counter reaches zero. BOOOM!",
     "Comment1": "新手引导",
     "Comment2": "炸弹"
@@ -1344,7 +1344,7 @@
     "Comment2": "开始游戏引导"
   },
   {
-    "Code": "TXT_TTR_Lock",
+    "Code": "TXT_TTR_CodeBreakers",
     "Content": "Very helpful: \\nClear the Code Breaker\\n to complete the level.",
     "Comment1": "新手引导",
     "Comment2": "锁"

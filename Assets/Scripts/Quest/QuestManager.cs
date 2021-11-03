@@ -33,18 +33,49 @@ public class QuestManager : MonoBehaviour
 
     void UpdateData()
     {
-        var configs = ConfigsAsset.GetConfigList<QuestConfig>();
         while (Data.QuestDatas.Count < 3)
         {
-            int typeID = UnityEngine.Random.Range(1, Enum.GetValues(typeof(QuestType)).Length);
-            var config = configs.Find(e => e.TypeID == typeID);
-            float levelStep = (config.ExtraProgressEndLevel - config.ExtraProgressStartLevel) / (float)config.ExtraProgress;
-            float extraProgress = Mathf.Clamp(MapManager.Instance.Data.CompleteLevel, 0, config.ExtraProgressEndLevel) / levelStep;
-            int progress = 2 + (int)extraProgress;
-            QuestData questData = new QuestData((QuestType)typeID, progress, 0);
-            questData.Subscribe(true);
+            QuestData questData = CreateQuestData();
             Data.QuestDatas.Add(questData);
         }
+
+        Data.QuestDatas.ForEach(e => e.Subscribe());
+    }
+
+    public void ComepleteData()
+    {
+        for (int i = 0; i < Data.QuestDatas.Count; i++)
+        {
+            if (Data.QuestDatas[i].IsCompleted)
+            {
+                var rewards = Data.QuestDatas[i].Rewards;
+                foreach (var rewardType in rewards.Keys)
+                {
+                    Reward.Data[rewardType] += rewards[rewardType];
+                }
+
+                Data.QuestDatas[i].Subscribe(false);
+                QuestData questData = CreateQuestData();
+                questData.Subscribe(true);
+                Data.QuestDatas[i] = questData;
+            }
+        }
+    }
+
+    QuestData CreateQuestData()
+    {
+        var configs = ConfigsAsset.GetConfigList<QuestConfig>();
+        int typeID = UnityEngine.Random.Range(1, Enum.GetValues(typeof(QuestType)).Length);
+        var config = configs.Find(e => e.TypeID == typeID);
+        //float levelStep = (config.ExtraProgressEndLevel - config.ExtraProgressStartLevel) / (float)config.ExtraProgress;
+        int step = (MapManager.Instance.Data.CompleteLevel - config.ExtraProgressStartLevel) / config.StepLevel + 1;
+        step = Mathf.Clamp(step, 1, config.ExtraProgress);
+
+        //float extraProgress =  Mathf.Clamp(MapManager.Instance.Data.CompleteLevel, 0, config.ExtraProgressEndLevel) / levelStep;
+        int minProgress = 2 + (step - 1) * config.ExtraProgress;
+        int maxProgress = 2 + step * config.ExtraProgress;
+        int progress = UnityEngine.Random.Range(minProgress, maxProgress);
+        return new QuestData((QuestType)typeID, progress, 0);
     }
 }
 

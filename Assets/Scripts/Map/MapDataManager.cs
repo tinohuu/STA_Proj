@@ -37,6 +37,7 @@ public class MapDataManager : MonoBehaviour
             }
         }
 
+        
         //Data.MapLevelDatas.Find(e => e.ID == 85).Rating = 63;
     }
 
@@ -61,10 +62,29 @@ public class MapDataManager : MonoBehaviour
 
     public static void SetLevelRating(int levelID, int rating)
     {
+
+
         Debug.Log("MapDataManager::SetLevelRating");
         if (levelID <= Instance.Data.MapLevelDatas.Count)
         {
             Instance.NewRating = rating - Instance.Data.MapLevelDatas[levelID - 1].Rating;
+
+            QuestManager.Instance[QuestEventType.OnWin].Invoke();
+            Debug.LogWarning("InvokeQuestEvent: OnWin");
+
+            if (Instance.Data.MapLevelDatas[levelID - 1].Rating == 0)
+            {
+                QuestManager.Instance[QuestEventType.OnWinFirst].Invoke();
+                Debug.LogWarning("InvokeQuestEvent: OnWinFirst");
+            }
+
+            if (Instance.NewRating > 0)
+            {
+                QuestManager.Instance[QuestEventType.OnCollectStar].MultiInvoke(Instance.NewRating);
+                Debug.LogWarning("InvokeQuestEvent: OnCollectStar" + Instance.NewRating);
+            }
+
+
             Instance.Data.MapLevelDatas[levelID - 1].Rating = rating;
             Instance.NewRatingLevel = levelID;
         }

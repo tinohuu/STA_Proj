@@ -22,6 +22,12 @@ public class WindowManager : MonoBehaviour
     {
         if (!Instance) Instance = this;
         SceneManager.sceneLoaded += OnLoadScene;
+
+    }
+
+    void OnEnable()
+    {
+
     }
 
     private void OnDestroy()
@@ -49,6 +55,7 @@ public class WindowManager : MonoBehaviour
 
     void OnLoadScene(Scene scene, LoadSceneMode mode)
     {
+        GetComponent<Canvas>().worldCamera = Camera.main;
         m_ButtonGroup.gameObject.SetActive(!scene.name.Contains("Map"));
         /*for (int i = 0; i < m_ButtonGroup.childCount; i++)
         {

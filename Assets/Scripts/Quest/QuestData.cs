@@ -7,18 +7,18 @@ using System.Linq;
 [Serializable]
 public class QuestData
 {
-    public int ShownProgress = 0;
+    public int ShownProgress = -1; // -1: 1st-time show
 
     QuestType m_Type = QuestType.None;
-    int m_MaxProgress = 0;
-    int m_Progress = 0;
+    [SerializeField] int m_MaxProgress = 0;
+    [SerializeField] int m_Progress = 0;
     List<RewardType> m_rewardTypes = new List<RewardType>();
     List<int> m_rewardCounts = new List<int>();
 
     // Properties
     public QuestType Type => m_Type;
     public int MaxProgress => m_MaxProgress;
-    public int Progress { get => m_Progress; set => Mathf.Clamp(m_Progress, 0, m_MaxProgress); }
+    public int Progress { get => m_Progress; set => m_Progress = Mathf.Clamp(m_Progress + value, 0, m_MaxProgress); }
     public bool IsCompleted => m_Progress == m_MaxProgress;
     
     public Dictionary<RewardType, int> Rewards
