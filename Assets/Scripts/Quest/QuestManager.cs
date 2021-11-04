@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class QuestManager : MonoBehaviour
+public class QuestManager : MonoBehaviour, ITimeRefreshable
 {
     [SavedData] public QuestManagerData Data = new QuestManagerData();
 
@@ -25,6 +25,11 @@ public class QuestManager : MonoBehaviour
         //set => m_Events[(int)type] = value;
     }
 
+    private void Update()
+    {
+        RefreshQuest();
+    }
+
     void UpdateEvents()
     {
         int length = Enum.GetValues(typeof(QuestEventType)).Length;
@@ -40,6 +45,30 @@ public class QuestManager : MonoBehaviour
         }
 
         Data.QuestDatas.ForEach(e => e.Subscribe());
+    }
+
+    public void RefreshQuest()
+    {
+        if (Data.LastRefreshTime.Date + TimeSpan.FromDays(1) + TimeSpan.FromHours(10) < TimeManager.Instance.RealNow)
+        {
+            for (int i = 0; i < Data.QuestDatas.Count; i++)
+            {
+                if (Data.QuestDatas[i].Progress == 0)
+                {
+                    Data.QuestDatas[i].Subscribe(false);
+                    QuestData questData = CreateQuestData();
+                    questData.Subscribe(true);
+                    Data.QuestDatas[i] = questData;
+                }
+            }
+
+            ResetTime(TimeManager.Instance.RealNow);
+        }
+    }
+
+    public TimeSpan GetRemaingTime()
+    {
+        return Data.LastRefreshTime.Date + TimeSpan.FromDays(1) + TimeSpan.FromHours(10) - TimeManager.Instance.RealNow;
     }
 
     public void ComepleteData()
@@ -77,11 +106,36 @@ public class QuestManager : MonoBehaviour
         int progress = UnityEngine.Random.Range(minProgress, maxProgress);
         return new QuestData((QuestType)typeID, progress, 0);
     }
+
+    public List<QuestData> GetDatasToShow()
+    {
+        return Data.QuestDatas.FindAll(e => e.ShownProgress < e.Progress && e.Progress > 0);
+    }
+
+    public void RefreshTime(DateTime now, TimeSource source, TimeAuthenticity timeAuthenticity)
+    {
+        if (timeAuthenticity != TimeAuthenticity.Unauthentic)
+        {
+            bool clamp = now < Data.LastRefreshTime;
+            if (clamp)
+            {
+                TimeDebugText.Log("Clamped Quest. Now: " + now + " Last: " + Data.LastRefreshTime);
+                ResetTime(now - TimeSpan.FromDays(1));
+            }
+        }
+        else ResetTime(now);
+    }
+
+    public void ResetTime(DateTime now)
+    {
+        Data.LastRefreshTime = now.Date + TimeSpan.FromHours(10);
+    }
 }
 
 [Serializable]
 public class QuestManagerData
 {
+    public DateTime LastRefreshTime = new DateTime();
     public List<QuestData> QuestDatas = new List<QuestData>();
 }
 

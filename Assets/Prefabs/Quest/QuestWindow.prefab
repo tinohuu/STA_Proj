@@ -557,7 +557,7 @@ MonoBehaviour:
   InQueue: 1
   IsCrossScene: 0
   ShowPanel: 1
-  CanCloseByPanel: 1
+  CanCloseByPanel: 0
   FadeInOnEnable: 1
   FadeInDelay: 0
   InverseOnFadeOut: 1

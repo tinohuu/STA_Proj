@@ -48,6 +48,8 @@ public class QuestView : MonoBehaviour
         UpdateView();
     }
 
+
+
     void UpdateView(bool blockAnim = false)
     {
         m_IconImage.sprite = Data.Type.ToIcon();

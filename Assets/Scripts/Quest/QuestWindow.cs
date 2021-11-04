@@ -152,5 +152,7 @@ public class QuestWindow : MonoBehaviour
         m_CompletedQuestViewGroup.DestroyChildren();
 
         UpdateView();
+
+        FindObjectOfType<QuestMapButton>().CheckCollectable();
     }
 }
