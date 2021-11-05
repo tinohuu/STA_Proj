@@ -32,9 +32,17 @@ public class ParticleManager : MonoBehaviour
         triggers = triggerGroup.GetComponentsInChildren<Collider>();
     }
 
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLoadScene;
+    }
+
     void OnLoadScene(Scene scene, LoadSceneMode mode)
     {
-        m_UIParticleGroup.GetComponent<Canvas>().worldCamera = Camera.main;
+        if (m_UIParticleGroup.GetComponent<Canvas>())
+        {
+            m_UIParticleGroup.GetComponent<Canvas>().worldCamera = Camera.main;
+        }
     }
 
     public GameObject CreateCoin(Vector3 pos)

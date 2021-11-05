@@ -188,9 +188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1185be1ba53c4f5409919f2bd7da05ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokerInst: {fileID: 0}
-  pokerStatus: 0
-  wildSource: 0
   pokerFacing: 0
   nAddNCount: 1
   strHandPokerIDs: 
@@ -215,8 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a035bd364bb40f74c98b9857ee2a43e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokerInst: {fileID: 0}
-  strClearAllPokerIDs: 
 --- !u!61 &1827070749596405806
 BoxCollider2D:
   m_ObjectHideFlags: 0
